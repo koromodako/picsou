@@ -22,6 +22,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 # You can also select to disable deprecated APIs only up to a certain version of Qt.
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
+LIBS += -lgcrypt
 
 SOURCES += \
     main.cpp \
@@ -33,7 +34,13 @@ SOURCES += \
     model/paymentmethod.cpp \
     model/operation.cpp \
     model/scheduledoperation.cpp \
-    model/picsoumodelobj.cpp
+    model/picsoumodelobj.cpp \
+    utils/crypto/qcrypto.cpp \
+    utils/crypto/qmessageauthcode.cpp \
+    utils/crypto/qrandombytes.cpp \
+    utils/crypto/qpassphrase.cpp \
+    utils/crypto/qnonce.cpp \
+    utils/crypto/qsecurememory.cpp
 
 HEADERS += \
     ui/mainwindow.h \
@@ -44,7 +51,13 @@ HEADERS += \
     model/paymentmethod.h \
     model/operation.h \
     model/scheduledoperation.h \
-    model/picsoumodelobj.h
+    model/picsoumodelobj.h \
+    utils/crypto/qcrypto.h \
+    utils/crypto/qmessageauthcode.h \
+    utils/crypto/qrandombytes.h \
+    utils/crypto/qpassphrase.h \
+    utils/crypto/qnonce.h \
+    utils/crypto/qsecurememory.h
 
 FORMS += \
         ui/mainwindow.ui
