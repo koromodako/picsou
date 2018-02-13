@@ -217,13 +217,13 @@ public:
     virtual ~QMessageAuthCode();
     QMessageAuthCode(MACAlgorithm algo,
                      MACFlag flags,
-                     QSecureMemory key,
-                     QSecureMemory iv);
+                     const QSecureMemory key,
+                     const QSecureMemory iv);
 
     bool valid();
-    bool reset(QSecureMemory iv);
-    bool update(QSecureMemory data);
-    bool verify(QSecureMemory mac);
+    bool reset(const QSecureMemory iv);
+    bool update(const QSecureMemory data);
+    bool verify(const QSecureMemory mac);
     bool digest(QSecureMemory mac);
 
 private:

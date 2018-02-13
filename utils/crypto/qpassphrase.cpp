@@ -19,7 +19,7 @@ QPassphrase::QPassphrase(size_t length) :
 
 bool QPassphrase::derived(KDFAlgorithm algo,
                           int subalgo,
-                          QSecureMemory salt,
+                          const QSecureMemory salt,
                           QSecureMemory key,
                           ulong iterations)
 {

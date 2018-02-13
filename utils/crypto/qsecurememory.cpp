@@ -15,6 +15,13 @@ QSecureMemory::~QSecureMemory()
     _length=-1;
 }
 
+QSecureMemory::QSecureMemory() :
+    _sbuf(NULL),
+    _length(-1)
+{
+
+}
+
 QSecureMemory::QSecureMemory(size_t length)
 {
     _sbuf=NULL;
@@ -40,7 +47,7 @@ QSecureMemory::QSecureMemory(uchar *sbuf, size_t length)
     }
 }
 
-bool QSecureMemory::valid()
+bool QSecureMemory::valid() const
 {
     return ((_sbuf!=NULL)&&(_length>0));
 }

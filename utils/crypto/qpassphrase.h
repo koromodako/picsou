@@ -44,7 +44,7 @@ public:
 
     bool derived(KDFAlgorithm algo,
                  int subalgo,
-                 QSecureMemory salt,
+                 const QSecureMemory salt,
                  QSecureMemory key,
                  ulong iterations);
 };

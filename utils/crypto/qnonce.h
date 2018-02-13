@@ -8,9 +8,6 @@ class QNonce : public QSecureMemory
 public:
     virtual ~QNonce();
     QNonce(size_t length);
-
-private:
-    unsigned char *_d;
 };
 
 #endif // QNONCE_H
