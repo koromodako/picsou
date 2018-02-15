@@ -24,8 +24,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 # You can also select to disable deprecated APIs only up to a certain version of Qt.
 DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
-DEFINES += GCRYPT_NO_DEPRECATED \
-           GCRYPT_NO_MPI_MACROS
+DEFINES += GCRYPT_NO_DEPRECATED
 
 LIBS += -lgcrypt
 
@@ -50,7 +49,8 @@ SOURCES += \
     utils/crypto/qpassphrase.cpp \
     utils/crypto/qnonce.cpp \
     utils/crypto/qsecurememory.cpp \
-    utils/crypto/qsecurehash.cpp
+    utils/crypto/qsecurehash.cpp \
+    utils/crypto/qcipher.cpp
 
 HEADERS += \
     ui/mainwindow.h \
@@ -69,7 +69,8 @@ HEADERS += \
     utils/crypto/qnonce.h \
     utils/crypto/qsecurememory.h \
     utils/crypto/qsecurehash.h \
-    utils/macro.h
+    utils/macro.h \
+    utils/crypto/qcipher.h
 
 FORMS += \
         ui/mainwindow.ui

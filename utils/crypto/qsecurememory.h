@@ -7,11 +7,11 @@ class QSecureMemory
 {
 public:
     virtual ~QSecureMemory();
-    QSecureMemory();
-    QSecureMemory(size_t length);
+    QSecureMemory(size_t length=0);
     QSecureMemory(uchar *sbuf, size_t length);
 
     bool valid() const;
+    bool empty() const;
     void erase();
     bool resize(size_t length);
 
