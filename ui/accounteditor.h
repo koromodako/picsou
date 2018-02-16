@@ -3,17 +3,19 @@
 
 #include <QWidget>
 
+#include "picsouui.h"
+
 namespace Ui {
 class AccountEditor;
 }
 
-class AccountEditor : public QWidget
+class AccountEditor : public QWidget, public PicsouUI
 {
     Q_OBJECT
 
 public:
-    explicit AccountEditor(QWidget *parent = 0);
-    ~AccountEditor();
+    virtual ~AccountEditor();
+    explicit AccountEditor(PicsouUIService *ui_svc, QWidget *parent = 0);
 
 private:
     Ui::AccountEditor *ui;

@@ -3,17 +3,19 @@
 
 #include <QWidget>
 
+#include "picsouui.h"
+
 namespace Ui {
 class BudgetEditor;
 }
 
-class BudgetEditor : public QWidget
+class BudgetEditor : public QWidget, public PicsouUI
 {
     Q_OBJECT
 
 public:
-    explicit BudgetEditor(QWidget *parent = 0);
-    ~BudgetEditor();
+    virtual ~BudgetEditor();
+    explicit BudgetEditor(PicsouUIService *ui_svc, QWidget *parent = 0);
 
 private:
     Ui::BudgetEditor *ui;

@@ -3,17 +3,19 @@
 
 #include <QWidget>
 
+#include"picsouui.h"
+
 namespace Ui {
 class UserViewer;
 }
 
-class UserViewer : public QWidget
+class UserViewer : public QWidget, public PicsouUI
 {
     Q_OBJECT
 
 public:
-    explicit UserViewer(QWidget *parent = 0);
-    ~UserViewer();
+    virtual ~UserViewer();
+    explicit UserViewer(PicsouUIService * ui_svc, QWidget *parent = 0);
 
 private:
     Ui::UserViewer *ui;

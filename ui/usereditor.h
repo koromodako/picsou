@@ -3,17 +3,19 @@
 
 #include <QWidget>
 
+#include "picsouui.h"
+
 namespace Ui {
 class UserEditor;
 }
 
-class UserEditor : public QWidget
+class UserEditor : public QWidget, public PicsouUI
 {
     Q_OBJECT
 
 public:
-    explicit UserEditor(QWidget *parent = 0);
-    ~UserEditor();
+    virtual ~UserEditor();
+    explicit UserEditor(PicsouUIService *ui_svc, QWidget *parent = 0);
 
 private:
     Ui::UserEditor *ui;

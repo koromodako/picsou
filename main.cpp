@@ -1,6 +1,7 @@
 #include <QApplication>
 
 #include "app/picsouapplication.h"
+#include "app/picsouuiservice.h"
 #include "ui/mainwindow.h"
 
 QCoreApplication* createApplication(int &argc, char *argv[])
@@ -34,8 +35,7 @@ int main(int argc, char *argv[])
 
     if(qobject_cast<QApplication *>(app.data())) {
         /* start GUI version */
-        MainWindow w;
-        w.show();
+        papp.ui_svc()->show_mainwindow();
     } else {
        /* start non-GUI version */
         exit(1);

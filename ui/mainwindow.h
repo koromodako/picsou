@@ -3,17 +3,19 @@
 
 #include <QMainWindow>
 
+#include "picsouui.h"
+
 namespace Ui {
 class MainWindow;
 }
 
-class MainWindow : public QMainWindow
+class MainWindow : public QMainWindow, public PicsouUI
 {
     Q_OBJECT
 
 public:
     virtual ~MainWindow();
-    explicit MainWindow(QWidget *parent = nullptr);
+    explicit MainWindow(PicsouUIService *ui_svc, QWidget *parent = nullptr);
 
 private:
     Ui::MainWindow *ui;

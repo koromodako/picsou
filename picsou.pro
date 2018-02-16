@@ -66,7 +66,8 @@ SOURCES += \
     ui/scheduledoperationeditor.cpp \
     ui/operationeditor.cpp \
     ui/usereditor.cpp \
-    ui/picsoudbviewer.cpp
+    ui/picsoudbviewer.cpp \
+    ui/picsouui.cpp
 
 HEADERS += \
     ui/mainwindow.h \
@@ -102,7 +103,8 @@ HEADERS += \
     ui/scheduledoperationeditor.h \
     ui/operationeditor.h \
     ui/usereditor.h \
-    ui/picsoudbviewer.h
+    ui/picsoudbviewer.h \
+    ui/picsouui.h
 
 FORMS += \
         ui/mainwindow.ui \

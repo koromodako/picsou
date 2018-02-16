@@ -3,17 +3,19 @@
 
 #include <QWidget>
 
+#include "picsouui.h"
+
 namespace Ui {
 class ScheduledOperationEditor;
 }
 
-class ScheduledOperationEditor : public QWidget
+class ScheduledOperationEditor : public QWidget, public PicsouUI
 {
     Q_OBJECT
 
 public:
-    explicit ScheduledOperationEditor(QWidget *parent = 0);
-    ~ScheduledOperationEditor();
+    virtual ~ScheduledOperationEditor();
+    explicit ScheduledOperationEditor(PicsouUIService *ui_svc, QWidget *parent = 0);
 
 private:
     Ui::ScheduledOperationEditor *ui;

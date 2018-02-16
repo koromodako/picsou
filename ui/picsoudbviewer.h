@@ -3,17 +3,19 @@
 
 #include <QWidget>
 
+#include "picsouui.h"
+
 namespace Ui {
 class PicsouDBViewer;
 }
 
-class PicsouDBViewer : public QWidget
+class PicsouDBViewer : public QWidget, public PicsouUI
 {
     Q_OBJECT
 
 public:
-    explicit PicsouDBViewer(QWidget *parent = 0);
-    ~PicsouDBViewer();
+    virtual ~PicsouDBViewer();
+    explicit PicsouDBViewer(PicsouUIService *ui_svc, QWidget *parent = 0);
 
 private:
     Ui::PicsouDBViewer *ui;

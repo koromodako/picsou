@@ -2,7 +2,8 @@
 #define PICSOUUISERVICE_H
 
 #include "picsouabstractservice.h"
-#include "ui/mainwindow.h"
+
+class MainWindow;
 
 class PicsouUIService : public PicsouAbstractService
 {
@@ -14,12 +15,14 @@ public:
     bool initialize();
     void terminate();
 
+
 signals:
 
 public slots:
+    void show_mainwindow();
 
 private:
-    MainWindow _mw;
+    MainWindow *_mw;
 };
 
 #endif // PICSOUUISERVICE_H
