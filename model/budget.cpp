@@ -1,5 +1,10 @@
 #include "budget.h"
 
+#define KW_NAME "name"
+#define KW_AMOUNT "amount"
+#define KW_DESCRIPTION "description"
+#define KEYS (QStringList() << KW_NAME << KW_AMOUNT << KW_DESCRIPTION)
+
 Budget::Budget() :
     PicsouModelObj(false)
 {
@@ -23,16 +28,11 @@ Budget::~Budget()
 bool Budget::read(const QJsonObject &json)
 {
     /**/
-    if(!json.contains("name") ||
-       !json.contains("amount") ||
-       !json.contains("description")) {
-        /* TRACE */
-        _valid = false;
-        goto end;
-    }
-    _name = json["name"].toString();
-    _amount = json["amount"].toDouble();
-    _description = json["description"].toString();
+    JSON_CHECK_KEYS(KEYS);
+    /**/
+    _name = json[KW_NAME].toString();
+    _amount = json[KW_AMOUNT].toDouble();
+    _description = json[KW_DESCRIPTION].toString();
     /**/
     _valid = true;
 end:
@@ -42,9 +42,9 @@ end:
 bool Budget::write(QJsonObject &json) const
 {
     /**/
-    json["name"] = _name;
-    json["amount"] = _amount;
-    json["description"] = _description;
+    json[KW_NAME] = _name;
+    json[KW_AMOUNT] = _amount;
+    json[KW_DESCRIPTION] = _description;
     /**/
     return true;
 }

@@ -1,6 +1,7 @@
 #ifndef QMESSAGEAUTHCODE_H
 #define QMESSAGEAUTHCODE_H
 
+#include "qcryptowrapper.h"
 #include "qsecurememory.h"
 
 #ifndef USE_WIN_CRYPTO_API
@@ -9,7 +10,7 @@ typedef struct gcry_mac_handle *gcry_mac_hd_t;
 #   error   not implemented !
 #endif
 
-class QMessageAuthCode
+class QMessageAuthCode : public QCryptoWrapper
 {
 public:
     enum MACAlgorithm {

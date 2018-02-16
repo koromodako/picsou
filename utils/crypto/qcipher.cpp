@@ -11,7 +11,7 @@
 QCipher::~QCipher()
 {
     gcry_cipher_close(_hd);
-    _hd=NULL;
+    _hd=nullptr;
 }
 
 QCipher::QCipher(CipherAlgorithm algo,
@@ -19,7 +19,8 @@ QCipher::QCipher(CipherAlgorithm algo,
                  CipherFlags flags,
                  const QSecureMemory key,
                  const QSecureMemory iv,
-                 const QSecureMemory ctr)
+                 const QSecureMemory ctr) :
+    QCryptoWrapper()
 {
     int cipher_algo;
     int cipher_mode;
@@ -76,23 +77,19 @@ QCipher::QCipher(CipherAlgorithm algo,
     cipher_flags |= (IS_FLAG_SET(flags, CBC_CTS)? GCRY_CIPHER_CBC_CTS: 0);
     cipher_flags |= (IS_FLAG_SET(flags, CBC_MAC)? GCRY_CIPHER_CBC_MAC: 0);
 
-    if(GCRYPT_FAILED(gcry_cipher_open, &_hd,
-                     cipher_algo, cipher_mode, cipher_flags)) {
+    if(!wrap(gcry_cipher_open(&_hd, cipher_algo, cipher_mode, cipher_flags))) {
         goto end;
     }
 
-    if(GCRYPT_FAILED(gcry_cipher_setkey, _hd,
-                     key.const_data(), key.length())) {
+    if(!wrap(gcry_cipher_setkey(_hd, key.const_data(), key.length()))) {
         goto failed;
     }
 
-    if(GCRYPT_FAILED(gcry_cipher_setiv, _hd,
-                     iv.const_data(), iv.length())) {
+    if(!wrap(gcry_cipher_setiv(_hd, iv.const_data(), iv.length()))) {
         goto failed;
     }
 
-    if(GCRYPT_FAILED(gcry_cipher_setctr, _hd,
-                     ctr.const_data(), ctr.length())) {
+    if(wrap(gcry_cipher_setctr(_hd, ctr.const_data(), ctr.length()))) {
         goto failed;
     }
 
@@ -100,7 +97,7 @@ QCipher::QCipher(CipherAlgorithm algo,
 
 failed:
     gcry_cipher_close(_hd);
-    _hd=NULL;
+    _hd=nullptr;
 end:
     return;
 }
@@ -110,15 +107,15 @@ bool QCipher::reset(const QSecureMemory iv,
 {
     bool success=false;
 
-    if(GCRYPT_FAILED(gcry_cipher_reset, _hd)) {
+    if(!wrap(gcry_cipher_reset(_hd))) {
         goto end;
     }
 
-    if(GCRYPT_FAILED(gcry_cipher_setiv, _hd, iv.const_data(), iv.length())) {
+    if(!wrap(gcry_cipher_setiv(_hd, iv.const_data(), iv.length()))) {
         goto end;
     }
 
-    if(GCRYPT_FAILED(gcry_cipher_setctr, _hd, ctr.const_data(), ctr.length())) {
+    if(!wrap(gcry_cipher_setctr(_hd, ctr.const_data(), ctr.length()))) {
         goto end;
     }
     success=true;
@@ -128,17 +125,17 @@ end:
 
 bool QCipher::add_auth_data(const QSecureMemory aad)
 {
-    return !GCRYPT_FAILED(gcry_cipher_authenticate, _hd, aad.const_data(), aad.length());
+    return wrap(gcry_cipher_authenticate(_hd, aad.const_data(), aad.length()));
 }
 
 bool QCipher::auth_tag(QSecureMemory tag)
 {
-    return !GCRYPT_FAILED(gcry_cipher_gettag, _hd, tag.data(), tag.length());
+    return wrap(gcry_cipher_gettag(_hd, tag.data(), tag.length()));
 }
 
 bool QCipher::auth_tag_check(const QSecureMemory tag)
 {
-    return !GCRYPT_FAILED(gcry_cipher_checktag, _hd, tag.const_data(), tag.length());
+    return wrap(gcry_cipher_checktag(_hd, tag.const_data(), tag.length()));
 }
 
 bool QCipher::encrypt(QSecureMemory out,
@@ -148,14 +145,14 @@ bool QCipher::encrypt(QSecureMemory out,
     bool success=false;
 
     if(final) {
-        if(GCRYPT_FAILED(gcry_cipher_final, _hd)) {
+        if(!wrap(gcry_cipher_final(_hd))) {
             goto end;
         }
     }
 
-    success=!GCRYPT_FAILED(gcry_cipher_encrypt, _hd,
-                           out.data(), out.length(),
-                           in.const_data(), in.length());
+    success=wrap(gcry_cipher_encrypt(_hd,
+                                     out.data(), out.length(),
+                                     in.const_data(), in.length()));
 end:
     return success;
 }
@@ -167,14 +164,14 @@ bool QCipher::decrypt(QSecureMemory out,
     bool success=false;
 
     if(final) {
-        if(GCRYPT_FAILED(gcry_cipher_final, _hd)) {
+        if(!wrap(gcry_cipher_final(_hd))) {
             goto end;
         }
     }
 
-    success=!GCRYPT_FAILED(gcry_cipher_decrypt, _hd,
-                           out.data(), out.length(),
-                           in.const_data(), in.length());
+    success=wrap(gcry_cipher_decrypt(_hd,
+                                     out.data(), out.length(),
+                                     in.const_data(), in.length()));
 end:
     return success;
 }

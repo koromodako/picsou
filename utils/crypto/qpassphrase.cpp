@@ -12,6 +12,7 @@ QPassphrase::~QPassphrase()
 }
 
 QPassphrase::QPassphrase(size_t length) :
+    QCryptoWrapper(),
     QSecureMemory(length)
 {
 
@@ -23,7 +24,7 @@ bool QPassphrase::derived(KDFAlgorithm algo,
                           QSecureMemory key,
                           ulong iterations)
 {
-    gpg_error_t success=-1;
+    bool success=false;
     int kdf_algo;
 
     if(!valid()) {
@@ -46,11 +47,11 @@ bool QPassphrase::derived(KDFAlgorithm algo,
             break;
     }
 
-    success=gcry_kdf_derive(const_data(), length(),
-                            kdf_algo, subalgo,
-                            salt.const_data(), salt.length(),
-                            iterations,
-                            key.length(), key.data());
+    success=wrap(gcry_kdf_derive(const_data(), length(),
+                                 kdf_algo, subalgo,
+                                 salt.const_data(), salt.length(),
+                                 iterations,
+                                 key.length(), key.data()));
 end:
-    return (success==0);
+    return success;
 }

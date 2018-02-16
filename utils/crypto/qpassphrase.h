@@ -1,16 +1,17 @@
 #ifndef QPASSPHRASE_H
 #define QPASSPHRASE_H
 
+#include "qcryptowrapper.h"
 #include "qsecurememory.h"
 
-class QPassphrase : public QSecureMemory
+class QPassphrase : public QCryptoWrapper, public QSecureMemory
 {
 public:
     enum KDFAlgorithm {
         /*
          * The OpenPGP simple S2K algorithm (cf. RFC4880). Its use is strongly
          * deprecated. salt and iterations are not needed and may be passed as
-         * NULL/0.
+         * nullptr/0.
          */
         //SIMPLE_S2K,
         /*

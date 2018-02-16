@@ -1,5 +1,8 @@
 #include "paymentmethod.h"
 
+#define KW_NAME "name"
+#define KEYS (QStringList() << KW_NAME)
+
 PaymentMethod::PaymentMethod() :
     PicsouModelObj(false)
 {
@@ -21,12 +24,9 @@ PaymentMethod::~PaymentMethod()
 bool PaymentMethod::read(const QJsonObject &json)
 {
     /**/
-    if(!json.contains("name")) {
-        /* TRACE */
-        _valid = false;
-        goto end;
-    }
-    _name = json["name"].toString();
+    JSON_CHECK_KEYS(KEYS);
+    /**/
+    _name = json[KW_NAME].toString();
     /**/
     _valid = true;
 end:
@@ -36,7 +36,7 @@ end:
 bool PaymentMethod::write(QJsonObject &json) const
 {
     /**/
-    json["name"] = _name;
+    json[KW_NAME] = _name;
     /**/
     return true;
 }

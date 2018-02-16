@@ -19,8 +19,13 @@ public:
     inline void add_account(Account a) { _accounts.insert(a.id(), a); }
     bool remove_account(QUuid id);
 
+    inline QString name() const { return _name; }
+    inline QList<Budget> budgets() const { return _budgets.values(); }
+    inline QList<Account> accounts() const { return _accounts.values(); }
+
     bool read(const QJsonObject &json);
     bool write(QJsonObject &json) const;
+
 private:
     QString _name;
     QHash<QUuid, Budget> _budgets;

@@ -14,5 +14,7 @@ QNonce::~QNonce()
 QNonce::QNonce(size_t length) :
     QSecureMemory(length)
 {
-    gcry_create_nonce(data(), this->length());
+    if(valid()) {
+        gcry_create_nonce(data(), this->length());
+    }
 }

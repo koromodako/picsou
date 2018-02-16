@@ -1,5 +1,18 @@
 #include "operation.h"
 
+#include "paymentmethod.h"
+
+#define KW_AMOUNT "amount"
+#define KW_DAY "day"
+#define KW_MONTH "month"
+#define KW_YEAR "year"
+#define KW_RECIPIENT "recipient"
+#define KW_DESCRIPTION "description"
+#define KW_PAYMENT_METHOD "payment_method"
+#define KEYS \
+    (QStringList() << KW_AMOUNT << KW_DAY << KW_MONTH << KW_YEAR \
+    << KW_RECIPIENT << KW_DESCRIPTION << KW_PAYMENT_METHOD)
+
 Operation::Operation() :
     PicsouModelObj(false)
 {
@@ -8,13 +21,15 @@ Operation::Operation() :
 
 Operation::Operation(double amount,
                      QDate date,
+                     QString recipient,
                      QString description,
-                     QString payment_method) :
+                     const PaymentMethod *payment_method) :
     PicsouModelObj(true),
     _amount(amount),
     _date(date),
+    _recipient(recipient),
     _description(description),
-    _payment_method(payment_method)
+    _payment_method(payment_method->name())
 {
 
 }
@@ -27,19 +42,15 @@ Operation::~Operation()
 bool Operation::read(const QJsonObject &json)
 {
     /**/
-    if(!json.contains("amount") ||
-       !json.contains("day") ||
-       !json.contains("month") ||
-       !json.contains("year") ||
-       !json.contains("description") ||
-       !json.contains("payment_method")) {
-        _valid = false;
-        goto end;
-    }
-    _amount = json["amount"].toDouble();
-    _date = QDate(json["year"].toInt(), json["month"].toInt(), json["day"].toInt());
-    _description = json["description"].toString();
-    _payment_method = json["payment_method"].toString();
+    JSON_CHECK_KEYS(KEYS);
+    /**/
+    _amount = json[KW_AMOUNT].toDouble();
+    _date = QDate(json[KW_YEAR].toInt(),
+                  json[KW_MONTH].toInt(),
+                  json[KW_DAY].toInt());
+    _recipient = json[KW_RECIPIENT].toString();
+    _description = json[KW_DESCRIPTION].toString();
+    _payment_method = json[KW_PAYMENT_METHOD].toString();
     /**/
     _valid = true;
 end:
@@ -49,12 +60,13 @@ end:
 bool Operation::write(QJsonObject &json) const
 {
     /**/
-    json["amount"] = _amount;
-    json["day"] = _date.day();
-    json["month"] = _date.month();
-    json["year"] = _date.year();
-    json["description"] = _description;
-    json["payment_method"] = _payment_method;
+    json[KW_AMOUNT] = _amount;
+    json[KW_DAY] = _date.day();
+    json[KW_MONTH] = _date.month();
+    json[KW_YEAR] = _date.year();
+    json[KW_RECIPIENT] = _recipient;
+    json[KW_DESCRIPTION] = _description;
+    json[KW_PAYMENT_METHOD] = _payment_method;
     /**/
     return true;
 }

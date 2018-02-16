@@ -43,14 +43,30 @@ SOURCES += \
     model/operation.cpp \
     model/scheduledoperation.cpp \
     model/picsoumodelobj.cpp \
-    utils/crypto/qcrypto.cpp \
     utils/crypto/qmessageauthcode.cpp \
     utils/crypto/qrandombytes.cpp \
     utils/crypto/qpassphrase.cpp \
     utils/crypto/qnonce.cpp \
     utils/crypto/qsecurememory.cpp \
     utils/crypto/qsecurehash.cpp \
-    utils/crypto/qcipher.cpp
+    utils/crypto/qcipher.cpp \
+    utils/crypto/qcryptomodule.cpp \
+    app/picsouapplication.cpp \
+    utils/crypto/qcryptowrapper.cpp \
+    app/picsoucryptoservice.cpp \
+    app/picsoumodelservice.cpp \
+    app/picsouuiservice.cpp \
+    app/picsouconsoleservice.cpp \
+    app/picsouabstractservice.cpp \
+    ui/budgeteditor.cpp \
+    ui/accounteditor.cpp \
+    ui/userviewer.cpp \
+    ui/accountviewer.cpp \
+    ui/paymentmethodeditor.cpp \
+    ui/scheduledoperationeditor.cpp \
+    ui/operationeditor.cpp \
+    ui/usereditor.cpp \
+    ui/picsoudbviewer.cpp
 
 HEADERS += \
     ui/mainwindow.h \
@@ -62,7 +78,6 @@ HEADERS += \
     model/operation.h \
     model/scheduledoperation.h \
     model/picsoumodelobj.h \
-    utils/crypto/qcrypto.h \
     utils/crypto/qmessageauthcode.h \
     utils/crypto/qrandombytes.h \
     utils/crypto/qpassphrase.h \
@@ -70,7 +85,33 @@ HEADERS += \
     utils/crypto/qsecurememory.h \
     utils/crypto/qsecurehash.h \
     utils/macro.h \
-    utils/crypto/qcipher.h
+    utils/crypto/qcipher.h \
+    utils/crypto/qcryptomodule.h \
+    app/picsouapplication.h \
+    utils/crypto/qcryptowrapper.h \
+    app/picsoucryptoservice.h \
+    app/picsoumodelservice.h \
+    app/picsouuiservice.h \
+    app/picsouconsoleservice.h \
+    app/picsouabstractservice.h \
+    ui/budgeteditor.h \
+    ui/accounteditor.h \
+    ui/userviewer.h \
+    ui/accountviewer.h \
+    ui/paymentmethodeditor.h \
+    ui/scheduledoperationeditor.h \
+    ui/operationeditor.h \
+    ui/usereditor.h \
+    ui/picsoudbviewer.h
 
 FORMS += \
-        ui/mainwindow.ui
+        ui/mainwindow.ui \
+    ui/budgeteditor.ui \
+    ui/accounteditor.ui \
+    ui/userviewer.ui \
+    ui/accountviewer.ui \
+    ui/paymentmethodeditor.ui \
+    ui/scheduledoperationeditor.ui \
+    ui/operationeditor.ui \
+    ui/usereditor.ui \
+    ui/picsoudbviewer.ui

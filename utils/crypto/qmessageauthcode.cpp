@@ -18,7 +18,8 @@ QMessageAuthCode::~QMessageAuthCode()
 QMessageAuthCode::QMessageAuthCode(MACAlgorithm algo,
                                    MACFlag flags,
                                    const QSecureMemory key,
-                                   const QSecureMemory iv)
+                                   const QSecureMemory iv) :
+    QCryptoWrapper()
 {
     int mac_algo;
     uint mac_flags;
@@ -67,19 +68,15 @@ QMessageAuthCode::QMessageAuthCode(MACAlgorithm algo,
     mac_flags = 0;
     mac_flags |= (IS_FLAG_SET(flags, SECURE)? GCRY_MAC_FLAG_SECURE: 0);
 
-    if(GCRYPT_FAILED(gcry_mac_open, &_hd, mac_algo, mac_flags, NULL)) {
+    if(!wrap(gcry_mac_open(&_hd, mac_algo, mac_flags, nullptr))) {
         goto end;
     }
 
-    if(!valid()) {
-        goto end;
-    }
-
-    if(GCRYPT_FAILED(gcry_mac_setkey, _hd, key.const_data(), key.length())){
+    if(!wrap(gcry_mac_setkey(_hd, key.const_data(), key.length()))){
         goto failed;
     }
 
-    if(GCRYPT_FAILED(gcry_mac_setiv, _hd, iv.const_data(), iv.length())) {
+    if(!wrap(gcry_mac_setiv(_hd, iv.const_data(), iv.length()))) {
         goto failed;
     }
 
@@ -87,7 +84,7 @@ QMessageAuthCode::QMessageAuthCode(MACAlgorithm algo,
 
 failed:
     gcry_mac_close(_hd);
-    _hd=NULL;
+    _hd=nullptr;
 
 end:
     return;
@@ -95,42 +92,40 @@ end:
 
 bool QMessageAuthCode::valid()
 {
-    return (_hd!=NULL);
+    return (_hd!=nullptr);
 }
 
 bool QMessageAuthCode::reset(const QSecureMemory iv)
 {
     bool success=false;
 
-    if(GCRYPT_FAILED(gcry_mac_reset, _hd)) {
+    if(!wrap(gcry_mac_reset(_hd))) {
         goto end;
     }
-
-    if(GCRYPT_FAILED(gcry_mac_setiv, _hd, iv.const_data(), iv.length())) {
+    if(!wrap(gcry_mac_setiv(_hd, iv.const_data(), iv.length()))) {
         goto end;
     }
 
     success=true;
-
 end:
     return success;
 }
 
 bool QMessageAuthCode::update(const QSecureMemory data)
 {
-    return (!GCRYPT_FAILED(gcry_mac_write, _hd, data.const_data(), data.length()));
+    return wrap(gcry_mac_write(_hd, data.const_data(), data.length()));
 }
 
 bool QMessageAuthCode::verify(const QSecureMemory mac)
 {
-    return (!GCRYPT_FAILED(gcry_mac_verify, _hd, mac.const_data(), mac.length()));
+    return wrap(gcry_mac_verify(_hd, mac.const_data(), mac.length()));
 }
 
 bool QMessageAuthCode::digest(QSecureMemory mac)
 {
     size_t buflen = mac.length();
 
-    if(GCRYPT_FAILED(gcry_mac_read, _hd, mac.data(), &buflen)) {
+    if(!wrap(gcry_mac_read(_hd, mac.data(), &buflen))) {
         goto failed;
     }
 

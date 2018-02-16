@@ -1,6 +1,9 @@
 #include "user.h"
 
-#include <QJsonArray>
+#define KW_NAME "name"
+#define KW_BUDGETS "budgets"
+#define KW_ACCOUNTS "accounts"
+#define KEYS (QStringList() << KW_NAME << KW_BUDGETS << KW_ACCOUNTS)
 
 User::User() :
     PicsouModelObj(false)
@@ -40,18 +43,11 @@ bool User::remove_account(QUuid id)
 
 bool User::read(const QJsonObject &json)
 {
-    QJsonArray array;
+    JSON_CHECK_KEYS(KEYS);
     /**/
-    if(!json.contains("name") ||
-       !json.contains("budgets") ||
-       !json.contains("accounts")) {
-        /* TRACE */
-        _valid = false;
-        goto end;
-    }
-    _name = json["name"].toString();
-    JSON_READ_LIST(json, "budgets", _budgets, Budget)
-    JSON_READ_LIST(json, "accounts", _accounts, Account)
+    _name = json[KW_NAME].toString();
+    JSON_READ_LIST(json, KW_BUDGETS, _budgets, Budget);
+    JSON_READ_LIST(json, KW_ACCOUNTS, _accounts, Account);
     /**/
     _valid = true;
 end:
@@ -61,12 +57,10 @@ end:
 bool User::write(QJsonObject &json) const
 {
     bool ok;
-    QJsonArray array;
-    QJsonObject obj;
     /**/
-    json["name"] = _name;
-    JSON_WRITE_LIST(json, "budgets", _budgets.values());
-    JSON_WRITE_LIST(json, "accounts", _accounts.values());
+    json[KW_NAME] = _name;
+    JSON_WRITE_LIST(json, KW_BUDGETS, _budgets.values());
+    JSON_WRITE_LIST(json, KW_ACCOUNTS, _accounts.values());
     /**/
     ok = true;
 end:

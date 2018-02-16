@@ -6,7 +6,7 @@
 #   error   not implemented !
 #endif
 
-#define FREE(buf) gcry_free((buf)); (buf)=NULL
+#define FREE(buf) gcry_free((buf)); (buf)=nullptr
 
 QSecureMemory::~QSecureMemory()
 {
@@ -16,28 +16,28 @@ QSecureMemory::~QSecureMemory()
 }
 
 QSecureMemory::QSecureMemory(size_t length) :
-    _sbuf(NULL),
+    _sbuf(nullptr),
     _length(length)
 {
     if(_length>0) {
         _sbuf=static_cast<uchar*>(gcry_malloc_secure(_length));
-        if(_sbuf==NULL) {
+        if(_sbuf==nullptr) {
             _length=-1; // malloc failed
         }
     }
 }
 
-QSecureMemory::QSecureMemory(uchar *sbuf, size_t length) :
-    _sbuf(NULL),
-    _length(length)
+QSecureMemory::QSecureMemory(const QByteArray ba) :
+    _sbuf(nullptr),
+    _length(ba.length())
 {
     if(_length>0) {
-        _sbuf=static_cast<uchar*>(gcry_malloc_secure(length));
-        if(_sbuf==NULL) {
+        _sbuf=static_cast<uchar*>(gcry_malloc_secure(_length));
+        if(_sbuf==nullptr) {
             _length=-1; // malloc failed
             goto end;
         }
-        memcpy(_sbuf, sbuf, _length);
+        memcpy(_sbuf, ba.constData(), _length);
     }
 end:
     return;
@@ -45,7 +45,7 @@ end:
 
 bool QSecureMemory::valid() const
 {
-    return ((_length==0&&_sbuf!=NULL)||(_length>0&&_sbuf==NULL));
+    return ((_length==0&&_sbuf!=nullptr)||(_length>0&&_sbuf==nullptr));
 }
 
 bool QSecureMemory::empty() const
@@ -66,13 +66,13 @@ bool QSecureMemory::resize(size_t length)
     bool success=false;
 
     if(length>0) {
-        if(_sbuf!=NULL) {
+        if(_sbuf!=nullptr) {
             nbuf=static_cast<uchar*>(gcry_realloc(_sbuf, length));
         } else {
             nbuf=static_cast<uchar*>(gcry_malloc_secure(length));
         }
 
-        success=(nbuf!=NULL);
+        success=(nbuf!=nullptr);
 
         if(success) {
             _sbuf=nbuf;

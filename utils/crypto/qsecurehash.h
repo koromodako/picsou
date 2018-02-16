@@ -1,6 +1,7 @@
 #ifndef QSECUREHASH_H
 #define QSECUREHASH_H
 
+#include "qcryptowrapper.h"
 #include "qsecurememory.h"
 
 #ifndef USE_WIN_CRYPTO_API
@@ -9,7 +10,7 @@ typedef struct gcry_md_handle *gcry_md_hd_t;
 #   error   not implemented !
 #endif
 
-class QSecureHash
+class QSecureHash : public QCryptoWrapper
 {
 public:
     enum HashAlgorithm {
@@ -151,49 +152,7 @@ public:
         /*  This is the 512-bit version of hash algorithm described in GOST R
          *  34.11-2012 which yields a message digest of 64 bytes.
          */
-        STRIBOG512,
-#ifdef ENABLE_BLAKE_HASH_ALGORITHM
-        /*
-         *  This is the BLAKE2b-512 algorithm which yields a message digest of
-         *  64 bytes. See RFC 7693 for the specification.
-         */
-        BLAKE2B_512,
-        /*
-         *  This is the BLAKE2b-384 algorithm which yields a message digest of
-         *  48 bytes. See RFC 7693 for the specification.
-         */
-        BLAKE2B_384,
-        /*
-         *  This is the BLAKE2b-256 algorithm which yields a message digest of
-         *  32 bytes. See RFC 7693 for the specification.
-         */
-        BLAKE2B_256,
-        /*
-         *  This is the BLAKE2b-160 algorithm which yields a message digest of
-         *  20 bytes. See RFC 7693 for the specification.
-         */
-        BLAKE2B_160,
-        /*
-         *  This is the BLAKE2s-256 algorithm which yields a message digest of
-         *  32 bytes. See RFC 7693 for the specification.
-         */
-        BLAKE2S_256,
-        /*
-         *  This is the BLAKE2s-224 algorithm which yields a message digest of
-         *  28 bytes. See RFC 7693 for the specification.
-         */
-        BLAKE2S_224,
-        /*
-         *  This is the BLAKE2s-160 algorithm which yields a message digest of
-         *  20 bytes. See RFC 7693 for the specification.
-         */
-        BLAKE2S_160,
-        /*
-         *  This is the BLAKE2s-128 algorithm which yields a message digest of
-         *  16 bytes. See RFC 7693 for the specification.
-         */
-        BLAKE2S_128
-#endif
+        STRIBOG512
     };
 
     enum HashFlag {

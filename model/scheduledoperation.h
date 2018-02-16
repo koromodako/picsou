@@ -3,6 +3,8 @@
 
 #include "operation.h"
 
+class PaymentMethod;
+
 class ScheduledOperation : public Operation
 {
 public:
@@ -14,16 +16,20 @@ public:
             DAILY = 0x05
     };
 
+    virtual ~ScheduledOperation();
     ScheduledOperation();
     ScheduledOperation(Frequency freq,
                        double amount,
                        QDate date,
+                       QString recipient,
                        QString description,
-                       QString payment_method);
-    virtual ~ScheduledOperation();
+                       const PaymentMethod *payment_method);
+
+    inline Frequency frequency() const { return _freq; }
 
     bool read(const QJsonObject &json);
     bool write(QJsonObject &json) const;
+
 private:
     Frequency _freq;
 };

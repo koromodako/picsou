@@ -11,12 +11,13 @@
 QSecureHash::~QSecureHash()
 {
     gcry_md_close(_hd);
-    _hd=NULL;
+    _hd=nullptr;
 }
 
 QSecureHash::QSecureHash(HashAlgorithm algo,
                          HashFlag flags,
-                         const QSecureMemory key)
+                         const QSecureMemory key) :
+    QCryptoWrapper()
 {
     uint hash_flags;
 
@@ -47,16 +48,6 @@ QSecureHash::QSecureHash(HashAlgorithm algo,
         case GOSTR3411_94: _algo=GCRY_MD_GOSTR3411_94; break;
         case STRIBOG256: _algo=GCRY_MD_STRIBOG256; break;
         case STRIBOG512: _algo=GCRY_MD_STRIBOG512; break;
-#ifdef ENABLE_BLAKE__algoRITHM
-        case BLAKE2B_512: _algo=GCRY_MD_BLAKE2B_512; break;
-        case BLAKE2B_384: _algo=GCRY_MD_BLAKE2B_384; break;
-        case BLAKE2B_256: _algo=GCRY_MD_BLAKE2B_256; break;
-        case BLAKE2B_160: _algo=GCRY_MD_BLAKE2B_160; break;
-        case BLAKE2S_256: _algo=GCRY_MD_BLAKE2S_256; break;
-        case BLAKE2S_224: _algo=GCRY_MD_BLAKE2S_224; break;
-        case BLAKE2S_160: _algo=GCRY_MD_BLAKE2S_160; break;
-        case BLAKE2S_128: _algo=GCRY_MD_BLAKE2S_128; break;
-#endif
     }
 
     hash_flags = 0;
@@ -64,12 +55,12 @@ QSecureHash::QSecureHash(HashAlgorithm algo,
     hash_flags |= (IS_FLAG_SET(flags, HMAC)? GCRY_MD_FLAG_HMAC: 0);
     hash_flags |= (IS_FLAG_SET(flags, BUGEMU1)? GCRY_MD_FLAG_BUGEMU1: 0);
 
-    if(GCRYPT_FAILED(gcry_md_open, &_hd, _algo, hash_flags)) {
+    if(!wrap(gcry_md_open(&_hd, _algo, hash_flags))) {
         goto end;
     }
 
     if(IS_FLAG_SET(flags, HMAC)) {
-        if(GCRYPT_FAILED(gcry_md_setkey, _hd, key.const_data(), key.length())) {
+        if(!wrap(gcry_md_setkey(_hd, key.const_data(), key.length()))) {
             goto failed;
         }
     }
@@ -77,14 +68,14 @@ QSecureHash::QSecureHash(HashAlgorithm algo,
 
 failed:
     gcry_md_close(_hd);
-    _hd=NULL;
+    _hd=nullptr;
 end:
     return;
 }
 
 bool QSecureHash::valid() const
 {
-    return (_hd!=NULL);
+    return (_hd!=nullptr);
 }
 
 void QSecureHash::reset()
@@ -99,5 +90,5 @@ void QSecureHash::update(const QSecureMemory data)
 
 bool QSecureHash::digest(QSecureMemory digest)
 {
-    return !GCRYPT_FAILED(gcry_md_extract, _hd, _algo, digest.data(), digest.length());
+    return wrap(gcry_md_extract(_hd, _algo, digest.data(), digest.length()));
 }

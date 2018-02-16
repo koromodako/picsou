@@ -8,7 +8,7 @@ class QSecureMemory
 public:
     virtual ~QSecureMemory();
     QSecureMemory(size_t length=0);
-    QSecureMemory(uchar *sbuf, size_t length);
+    QSecureMemory(const QByteArray ba);
 
     bool valid() const;
     bool empty() const;

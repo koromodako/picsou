@@ -1,6 +1,7 @@
 #ifndef QCIPHER_H
 #define QCIPHER_H
 
+#include "qcryptowrapper.h"
 #include "qsecurememory.h"
 
 #ifndef USE_WIN_CRYPTO_API
@@ -9,7 +10,7 @@ typedef struct gcry_cipher_handle *gcry_cipher_hd_t;
 #   error   not implemented !
 #endif
 
-class QCipher
+class QCipher : public QCryptoWrapper
 {
 public:
     enum CipherAlgorithm {

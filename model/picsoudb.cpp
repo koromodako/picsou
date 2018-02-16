@@ -1,10 +1,9 @@
 #include "picsoudb.h"
 
-#include <QFile>
-#include <QJsonArray>
-#include <QStringList>
-#include <QJsonDocument>
-#include <QJsonParseError>
+#define KW_VERSION "version"
+#define KW_DESCRIPTION "description"
+#define KW_USERS "users"
+#define KEYS (QStringList() << KW_VERSION << KW_DESCRIPTION << KW_USERS)
 
 PicsouDB::PicsouDB() :
     PicsouModelObj(false)
@@ -27,61 +26,6 @@ PicsouDB::PicsouDB(QString fpath,
 PicsouDB::~PicsouDB()
 {
 
-}
-
-bool PicsouDB::open()
-{
-    bool ok;
-    QJsonParseError err;
-    QJsonDocument doc;
-    QFile f(_fpath);
-    /**/
-    if(!f.open(QIODevice::ReadOnly)) {
-        /* TRACE */
-        ok = false;
-        goto end;
-    }
-    doc = QJsonDocument::fromJson(f.readAll(), &err);
-    f.close();
-    if(doc.isNull()) {
-        /* TRACE err.errorString() */
-        ok = false;
-        goto end;
-    }
-    /**/
-    ok = read(doc.object());
-end:
-    return ok;
-}
-
-bool PicsouDB::save()
-{
-    bool ok;
-    QJsonObject obj;
-    QJsonDocument doc;
-    QFile f(_fpath);
-    /**/
-    if(!f.open(QIODevice::WriteOnly)) {
-        /* TRACE */
-        ok = false;
-        goto end;
-    }
-    if(!write(obj)) {
-        /* TRACE */
-        ok = false;
-        goto end;
-    }
-    doc = QJsonDocument(obj);
-#ifdef QT_DEBUG
-    f.write(doc.toJson(QJsonDocument::Indented));
-#else
-    f.write(doc.toJson(QJsonDocument::Compact));
-#endif
-    f.close();
-    /**/
-    ok = true;
-end:
-    return ok;
 }
 
 bool PicsouDB::remove_user(QUuid id)
@@ -125,19 +69,12 @@ end:
 
 bool PicsouDB::read(const QJsonObject &json)
 {
-    User user;
-    QJsonArray array;
     /**/
-    if(!json.contains("version") ||
-       !json.contains("description") ||
-       !json.contains("users")) {
-        /* TRACE */
-        _valid = false;
-        goto end;
-    }
-    _version = str2vers(json["version"].toString());
-    _description = json["description"].toString();
-    JSON_READ_LIST(json, "users", _users, User)
+    JSON_CHECK_KEYS(KEYS);
+    /**/
+    _version = str2vers(json[KW_VERSION].toString());
+    _description = json[KW_DESCRIPTION].toString();
+    JSON_READ_LIST(json, KW_USERS, _users, User);
     /**/
     _valid = true;
 end:
@@ -150,9 +87,9 @@ bool PicsouDB::write(QJsonObject &json) const
     QJsonObject obj;
     QJsonArray array;
     /**/
-    json["version"] = vers2str(_version);
-    json["description"] = _description;
-    JSON_WRITE_LIST(json, "users", _users.values());
+    json[KW_VERSION] = vers2str(_version);
+    json[KW_DESCRIPTION] = _description;
+    JSON_WRITE_LIST(json, KW_USERS, _users.values());
     /**/
     ok = true;
 end:
