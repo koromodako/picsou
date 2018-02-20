@@ -41,6 +41,24 @@ bool User::remove_account(QUuid id)
     }
 }
 
+QList<Budget> User::budgets(bool sorted) const
+{
+    QList<Budget> budgets = _budgets.values();
+    if(sorted) {
+        std::sort(budgets.begin(), budgets.end());
+    }
+    return budgets;
+}
+
+QList<Account> User::accounts(bool sorted) const
+{
+    QList<Account> accounts = _accounts.values();
+    if(sorted) {
+        std::sort(accounts.begin(), accounts.end());
+    }
+    return accounts;
+}
+
 bool User::read(const QJsonObject &json)
 {
     JSON_CHECK_KEYS(KEYS);
@@ -65,4 +83,9 @@ bool User::write(QJsonObject &json) const
     ok = true;
 end:
     return ok;
+}
+
+bool User::operator <(const User &other)
+{
+    return (_name < other._name);
 }

@@ -14,6 +14,9 @@ public:
 
     bool read(const QJsonObject &json);
     bool write(QJsonObject &json) const;
+
+    bool operator <(const PaymentMethod &other);
+
 private:
     QString _name;
 };

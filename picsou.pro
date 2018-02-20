@@ -67,7 +67,9 @@ SOURCES += \
     ui/operationeditor.cpp \
     ui/usereditor.cpp \
     ui/picsoudbviewer.cpp \
-    ui/picsouui.cpp
+    ui/picsouui.cpp \
+    ui/aboutpicsou.cpp \
+    ui/picsoudbeditor.cpp
 
 HEADERS += \
     ui/mainwindow.h \
@@ -104,7 +106,10 @@ HEADERS += \
     ui/operationeditor.h \
     ui/usereditor.h \
     ui/picsoudbviewer.h \
-    ui/picsouui.h
+    ui/picsouui.h \
+    ui/aboutpicsou.h \
+    picsou.h \
+    ui/picsoudbeditor.h
 
 FORMS += \
         ui/mainwindow.ui \
@@ -116,4 +121,6 @@ FORMS += \
     ui/scheduledoperationeditor.ui \
     ui/operationeditor.ui \
     ui/usereditor.ui \
-    ui/picsoudbviewer.ui
+    ui/picsoudbviewer.ui \
+    ui/aboutpicsou.ui \
+    ui/picsoudbeditor.ui

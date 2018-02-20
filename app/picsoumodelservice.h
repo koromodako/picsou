@@ -3,6 +3,8 @@
 
 #include "picsouabstractservice.h"
 
+class PicsouDB;
+
 class PicsouModelService : public PicsouAbstractService
 {
     Q_OBJECT
@@ -13,9 +15,26 @@ public:
     bool initialize();
     void terminate();
 
+    bool new_db(QString filename,
+                QString name,
+                QString description);
+    bool open_db(QString filename);
+    bool save_db();
+    bool save_db_as(QString filename);
+    bool close_db();
+    bool is_db_opened();
+
+    inline const PicsouDB *db() const { return _db; }
+    inline bool is_db_modified() const { return _is_db_modified; }
+
 signals:
 
 public slots:
+
+private:
+    PicsouDB *_db;
+    QString _filename;
+    bool _is_db_modified;
 
 };
 

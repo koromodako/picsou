@@ -33,6 +33,8 @@ public:
     bool read(const QJsonObject &json);
     bool write(QJsonObject &json) const;
 
+    bool operator <(const Operation &other);
+
 private:
     double _amount;
     QDate _date;

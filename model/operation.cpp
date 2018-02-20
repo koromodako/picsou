@@ -70,3 +70,8 @@ bool Operation::write(QJsonObject &json) const
     /**/
     return true;
 }
+
+bool Operation::operator <(const Operation &other)
+{
+    return (_date < other._date);
+}

@@ -25,12 +25,16 @@ public:
 
     inline QString name() const { return _name; }
     inline QString description() const { return _description; }
-    inline QList<PaymentMethod> payment_methods() const { return _payment_methods.values(); }
     inline QList<ScheduledOperation> scheduled_ops() const { return _scheduled_ops.values(); }
-    inline QList<Operation> ops() const { return _ops.values(); }
+
+    QList<int> years(bool sorted=false) const;
+    QList<Operation> ops(bool sorted=false) const;
+    QList<PaymentMethod> payment_methods(bool sorted=false) const;
 
     bool read(const QJsonObject &json);
     bool write(QJsonObject &json) const;
+
+    bool operator <(const Account &other);
 
 private:
     QString _name;

@@ -1,5 +1,6 @@
 #include "account.h"
 
+#include <QSet>
 #include <QJsonArray>
 
 #define KW_NAME "name"
@@ -58,6 +59,39 @@ bool Account::remove_operation(QUuid id)
     }
 }
 
+QList<int> Account::years(bool sorted) const
+{
+    QList<Operation> operations=ops();
+    QSet<int> years_set;
+    QList<int> years_list;
+    foreach (Operation op, operations) {
+        years_set << op.date().year();
+    }
+    years_list=years_set.toList();
+    if(sorted) {
+        std::sort(years_list.begin(), years_list.end());
+    }
+    return years_list;
+}
+
+QList<Operation> Account::ops(bool sorted) const
+{
+    QList<Operation> ops=_ops.values();
+    if(sorted) {
+        std::sort(ops.begin(), ops.end());
+    }
+    return ops;
+}
+
+QList<PaymentMethod> Account::payment_methods(bool sorted) const
+{
+    QList<PaymentMethod> p_methods=_payment_methods.values();
+    if(sorted) {
+        std::sort(p_methods.begin(), p_methods.end());
+    }
+    return p_methods;
+}
+
 bool Account::read(const QJsonObject &json)
 {
     JSON_CHECK_KEYS(KEYS);
@@ -84,4 +118,9 @@ bool Account::write(QJsonObject &json) const
     ok = true;
 end:
     return ok;
+}
+
+bool Account::operator <(const Account &other)
+{
+    return (_name < other._name);
 }

@@ -20,11 +20,13 @@ public:
     bool remove_account(QUuid id);
 
     inline QString name() const { return _name; }
-    inline QList<Budget> budgets() const { return _budgets.values(); }
-    inline QList<Account> accounts() const { return _accounts.values(); }
+    QList<Budget> budgets(bool sorted=false) const;
+    QList<Account> accounts(bool sorted=false) const;
 
     bool read(const QJsonObject &json);
     bool write(QJsonObject &json) const;
+
+    bool operator <(const User &other);
 
 private:
     QString _name;

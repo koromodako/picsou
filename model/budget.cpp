@@ -49,3 +49,8 @@ bool Budget::write(QJsonObject &json) const
     return true;
 }
 
+bool Budget::operator <(const Budget &other)
+{
+    return (_name < other._name);
+}
+

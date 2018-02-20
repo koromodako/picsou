@@ -1,9 +1,10 @@
 #include "picsoudb.h"
 
+#define KW_NAME "name"
 #define KW_VERSION "version"
 #define KW_DESCRIPTION "description"
 #define KW_USERS "users"
-#define KEYS (QStringList() << KW_VERSION << KW_DESCRIPTION << KW_USERS)
+#define KEYS (QStringList() << KW_NAME << KW_VERSION << KW_DESCRIPTION << KW_USERS)
 
 PicsouDB::PicsouDB() :
     PicsouModelObj(false)
@@ -11,13 +12,13 @@ PicsouDB::PicsouDB() :
 
 }
 
-PicsouDB::PicsouDB(QString fpath,
-                   uint version_major,
+PicsouDB::PicsouDB(uint version_major,
                    uint version_minor,
+                   QString name,
                    QString description) :
     PicsouModelObj(true),
-    _fpath(fpath),
     _version(version_major, version_minor),
+    _name(name),
     _description(description)
 {
 
@@ -35,6 +36,15 @@ bool PicsouDB::remove_user(QUuid id)
         case 1: return true;
         default: /* TRACE */ return false;
     }
+}
+
+QList<User> PicsouDB::users(bool sorted) const
+{
+    QList<User> users = _users.values();
+    if(sorted) {
+        std::sort(users.begin(), users.end());
+    }
+    return users;
 }
 
 QString vers2str(QPair<uint, uint> version)
@@ -72,6 +82,7 @@ bool PicsouDB::read(const QJsonObject &json)
     /**/
     JSON_CHECK_KEYS(KEYS);
     /**/
+    _name = json[KW_NAME].toString();
     _version = str2vers(json[KW_VERSION].toString());
     _description = json[KW_DESCRIPTION].toString();
     JSON_READ_LIST(json, KW_USERS, _users, User);
@@ -87,6 +98,7 @@ bool PicsouDB::write(QJsonObject &json) const
     QJsonObject obj;
     QJsonArray array;
     /**/
+    json[KW_NAME] = _name;
     json[KW_VERSION] = vers2str(_version);
     json[KW_DESCRIPTION] = _description;
     JSON_WRITE_LIST(json, KW_USERS, _users.values());

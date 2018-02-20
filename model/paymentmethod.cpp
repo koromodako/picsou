@@ -40,3 +40,8 @@ bool PaymentMethod::write(QJsonObject &json) const
     /**/
     return true;
 }
+
+bool PaymentMethod::operator <(const PaymentMethod &other)
+{
+    return (_name < other._name);
+}
