@@ -7,12 +7,16 @@ class ScheduledOperation : public Operation
 {
 public:
     enum Frequency {
-           YEARLY = 0x01,
-        QUARTERLY = 0x02,
-          MONTHLY = 0x03,
-           WEEKLY = 0x04,
-            DAILY = 0x05
+           YEARLY = 0,
+        QUARTERLY = 1,
+          MONTHLY = 2,
+           WEEKLY = 3,
+            DAILY = 4
     };
+
+    static QString freq2str(Frequency freq);
+    static Frequency str2freq(const QString &freq);
+    static QStringList frequencies();
 
     virtual ~ScheduledOperation();
     ScheduledOperation(PicsouModelObj *parent);

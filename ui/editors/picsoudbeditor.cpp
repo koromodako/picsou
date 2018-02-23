@@ -1,6 +1,12 @@
 #include "picsoudbeditor.h"
 #include "ui_picsoudbeditor.h"
 
+PicsouDBEditor::~PicsouDBEditor()
+{
+    delete ui;
+    /* do not delete anything else here */
+}
+
 PicsouDBEditor::PicsouDBEditor(QString *name,
                                QString *description,
                                QWidget *parent) :
@@ -15,12 +21,6 @@ PicsouDBEditor::PicsouDBEditor(QString *name,
             this, &PicsouDBEditor::accept);
     connect(ui->buttons, &QDialogButtonBox::rejected,
             this, &PicsouDBEditor::reject);
-}
-
-PicsouDBEditor::~PicsouDBEditor()
-{
-    delete ui;
-    /* do not delete anything else here */
 }
 
 void PicsouDBEditor::accept()

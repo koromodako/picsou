@@ -12,10 +12,10 @@ class PicsouDBEditor : public QDialog
     Q_OBJECT
 
 public:
+    virtual ~PicsouDBEditor();
     explicit PicsouDBEditor(QString *name,
                             QString *description,
                             QWidget *parent = 0);
-    ~PicsouDBEditor();
 
 public slots:
     void accept();

@@ -8,12 +8,21 @@
 
 #include "picsou.h"
 
+#include "ui/editors/scheduledoperationeditor.h"
+#include "ui/editors/paymentmethodeditor.h"
+#include "ui/editors/operationeditor.h"
 #include "ui/editors/picsoudbeditor.h"
+#include "ui/editors/accounteditor.h"
+#include "ui/editors/budgeteditor.h"
+#include "ui/editors/usereditor.h"
+
 #include "ui/viewers/operationviewer.h"
 #include "ui/viewers/picsoudbviewer.h"
 #include "ui/viewers/accountviewer.h"
 #include "ui/viewers/userviewer.h"
+
 #include "ui/items/picsoutreeitem.h"
+
 #include "ui/mainwindow.h"
 #include "ui/aboutpicsou.h"
 

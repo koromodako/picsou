@@ -3,21 +3,18 @@
 
 #include <QDialog>
 
-#include "ui/picsouui.h"
 #include "utils/crypto/qsecurememory.h"
 
 namespace Ui {
 class UserEditor;
 }
 
-class UserEditor : public QDialog, public PicsouUI
+class UserEditor : public QDialog
 {
     Q_OBJECT
-
 public:
     virtual ~UserEditor();
-    explicit UserEditor(PicsouUIService *ui_svc,
-                        QString *username,
+    explicit UserEditor(QString *username,
                         QSecureMemory *old_pwd,
                         QSecureMemory *new_pwd,
                         QWidget *parent = 0);

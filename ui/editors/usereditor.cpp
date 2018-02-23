@@ -7,13 +7,11 @@ UserEditor::~UserEditor()
     /* do not delete private members here */
 }
 
-UserEditor::UserEditor(PicsouUIService *ui_svc,
-                       QString *username,
+UserEditor::UserEditor(QString *username,
                        QSecureMemory *old_pwd,
                        QSecureMemory *new_pwd,
                        QWidget *parent) :
     QDialog(parent),
-    PicsouUI(ui_svc),
     _username(username),
     _old_pwd(old_pwd),
     _new_pwd(new_pwd),

@@ -1,23 +1,30 @@
 #ifndef BUDGETEDITOR_H
 #define BUDGETEDITOR_H
 
-#include <QWidget>
-
-#include "ui/picsouui.h"
+#include <QDialog>
 
 namespace Ui {
 class BudgetEditor;
 }
 
-class BudgetEditor : public QWidget, public PicsouUI
+class BudgetEditor : public QDialog
 {
     Q_OBJECT
 
 public:
     virtual ~BudgetEditor();
-    explicit BudgetEditor(PicsouUIService *ui_svc, QWidget *parent = 0);
+    explicit BudgetEditor(double *amount,
+                          QString *name,
+                          QString *description,
+                          QWidget *parent = 0);
+
+public slots:
+    void accept();
 
 private:
+    double *_amount;
+    QString *_name;
+    QString *_description;
     Ui::BudgetEditor *ui;
 };
 

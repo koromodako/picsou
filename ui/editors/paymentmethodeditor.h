@@ -1,23 +1,25 @@
 #ifndef PAYMENTMETHODEDITOR_H
 #define PAYMENTMETHODEDITOR_H
 
-#include <QWidget>
-
-#include "ui/picsouui.h"
+#include <QDialog>
 
 namespace Ui {
 class PaymentMethodEditor;
 }
 
-class PaymentMethodEditor : public QWidget, public PicsouUI
+class PaymentMethodEditor : public QDialog
 {
     Q_OBJECT
-
 public:
     virtual ~PaymentMethodEditor();
-    explicit PaymentMethodEditor(PicsouUIService *ui_svc, QWidget *parent = 0);
+    explicit PaymentMethodEditor(QString *name,
+                                 QWidget *parent = 0);
+
+public slots:
+    void accept();
 
 private:
+    QString *_name;
     Ui::PaymentMethodEditor *ui;
 };
 

@@ -3,6 +3,13 @@
 #define KW_FREQ "freq"
 #define KEYS (QStringList() << KW_FREQ)
 
+static QStringList gfrequencies=QStringList()
+        << "YEARLY"
+        << "QUARTERLY"
+        << "MONTHLY"
+        << "WEEKLY"
+        << "DAILY";
+
 ScheduledOperation::ScheduledOperation(PicsouModelObj *parent) :
     Operation(parent)
 {
@@ -27,6 +34,21 @@ ScheduledOperation::ScheduledOperation(Frequency freq,
     _freq(freq)
 {
 
+}
+
+QString ScheduledOperation::freq2str(Frequency freq)
+{
+    return gfrequencies.at(freq);
+}
+
+ScheduledOperation::Frequency ScheduledOperation::str2freq(const QString &freq)
+{
+    return Frequency(gfrequencies.indexOf(freq));
+}
+
+QStringList ScheduledOperation::frequencies()
+{
+    return gfrequencies;
 }
 
 ScheduledOperation::~ScheduledOperation()

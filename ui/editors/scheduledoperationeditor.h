@@ -1,23 +1,41 @@
 #ifndef SCHEDULEDOPERATIONEDITOR_H
 #define SCHEDULEDOPERATIONEDITOR_H
 
-#include <QWidget>
-
-#include "ui/picsouui.h"
+#include <QDialog>
 
 namespace Ui {
 class ScheduledOperationEditor;
 }
 
-class ScheduledOperationEditor : public QWidget, public PicsouUI
+class ScheduledOperationEditor : public QDialog
 {
     Q_OBJECT
-
 public:
     virtual ~ScheduledOperationEditor();
-    explicit ScheduledOperationEditor(PicsouUIService *ui_svc, QWidget *parent = 0);
+    explicit ScheduledOperationEditor(double *amount,
+                                      QString *freq,
+                                      QDate *date,
+                                      QString *payment_method,
+                                      QString *budget,
+                                      QString *recipient,
+                                      QString *description,
+                                      QWidget *parent = 0);
+
+    void set_budgets(const QStringList &budgets);
+    void set_frequencies(const QStringList &frequencies);
+    void set_payment_methods(const QStringList &payment_methods);
+
+public slots:
+    void accept();
 
 private:
+    double *_amount;
+    QString *_freq;
+    QDate *_date;
+    QString *_payment_method;
+    QString *_budget;
+    QString *_recipient;
+    QString *_description;
     Ui::ScheduledOperationEditor *ui;
 };
 
