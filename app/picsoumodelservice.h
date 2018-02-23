@@ -1,9 +1,10 @@
 #ifndef PICSOUMODELSERVICE_H
 #define PICSOUMODELSERVICE_H
 
-#include "picsouabstractservice.h"
+#include <QUuid>
 
-class PicsouDB;
+#include "model/picsoudb.h"
+#include "picsouabstractservice.h"
 
 class PicsouModelService : public PicsouAbstractService
 {
@@ -24,15 +25,20 @@ public:
     bool close_db();
     bool is_db_opened();
 
-    inline const PicsouDB *db() const { return _db; }
+    inline const PicsouDBPtr db() const { return _db; }
     inline bool is_db_modified() const { return _is_db_modified; }
 
+    UserPtr find_user(QUuid id) const;
+    AccountPtr find_account(QUuid id) const;
+
 signals:
+    void updated(const PicsouDBPtr db);
 
 public slots:
+    void notify_ui();
 
 private:
-    PicsouDB *_db;
+    PicsouDBPtr _db;
     QString _filename;
     bool _is_db_modified;
 

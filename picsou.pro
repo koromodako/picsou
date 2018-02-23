@@ -35,44 +35,50 @@ QMAKE_CXXFLAGS += -W \
 SOURCES += \
     main.cpp \
     ui/mainwindow.cpp \
-    model/picsoudb.cpp \
-    model/user.cpp \
-    model/budget.cpp \
-    model/account.cpp \
-    model/paymentmethod.cpp \
-    model/operation.cpp \
     model/scheduledoperation.cpp \
     model/picsoumodelobj.cpp \
+    model/paymentmethod.cpp \
+    model/operation.cpp \
+    model/picsoudb.cpp \
+    model/account.cpp \
+    model/budget.cpp \
+    model/user.cpp \
     utils/crypto/qmessageauthcode.cpp \
+    utils/crypto/qcryptowrapper.cpp \
+    utils/crypto/qsecurememory.cpp \
+    utils/crypto/qcryptomodule.cpp \
     utils/crypto/qrandombytes.cpp \
     utils/crypto/qpassphrase.cpp \
-    utils/crypto/qnonce.cpp \
-    utils/crypto/qsecurememory.cpp \
     utils/crypto/qsecurehash.cpp \
     utils/crypto/qcipher.cpp \
-    utils/crypto/qcryptomodule.cpp \
+    utils/crypto/qnonce.cpp \
     app/picsouapplication.cpp \
-    utils/crypto/qcryptowrapper.cpp \
     app/picsoucryptoservice.cpp \
     app/picsoumodelservice.cpp \
     app/picsouuiservice.cpp \
     app/picsouconsoleservice.cpp \
     app/picsouabstractservice.cpp \
-    ui/budgeteditor.cpp \
-    ui/accounteditor.cpp \
-    ui/userviewer.cpp \
-    ui/accountviewer.cpp \
-    ui/paymentmethodeditor.cpp \
-    ui/scheduledoperationeditor.cpp \
-    ui/operationeditor.cpp \
-    ui/usereditor.cpp \
-    ui/picsoudbviewer.cpp \
-    ui/picsouui.cpp \
+    ui/editors/paymentmethodeditor.cpp \
+    ui/editors/scheduledoperationeditor.cpp \
+    ui/editors/operationeditor.cpp \
+    ui/editors/picsoudbeditor.cpp \
+    ui/editors/accounteditor.cpp \
+    ui/editors/budgeteditor.cpp \
+    ui/editors/usereditor.cpp \
+    ui/viewers/operationviewer.cpp \
+    ui/viewers/picsoudbviewer.cpp \
+    ui/viewers/accountviewer.cpp \
+    ui/viewers/userviewer.cpp \
+    ui/items/picsoulistitem.cpp \
+    ui/items/picsoutreeitem.cpp \
+    ui/picsouuiviewer.cpp \
     ui/aboutpicsou.cpp \
-    ui/picsoudbeditor.cpp
+    ui/picsouui.cpp \
+    ui/picsouitem.cpp \
+    ui/items/picsoutableitem.cpp
 
 HEADERS += \
-    ui/mainwindow.h \
+    picsou.h \
     model/picsoudb.h \
     model/user.h \
     model/budget.h \
@@ -82,45 +88,52 @@ HEADERS += \
     model/scheduledoperation.h \
     model/picsoumodelobj.h \
     utils/crypto/qmessageauthcode.h \
-    utils/crypto/qrandombytes.h \
-    utils/crypto/qpassphrase.h \
-    utils/crypto/qnonce.h \
-    utils/crypto/qsecurememory.h \
-    utils/crypto/qsecurehash.h \
-    utils/macro.h \
-    utils/crypto/qcipher.h \
-    utils/crypto/qcryptomodule.h \
-    app/picsouapplication.h \
     utils/crypto/qcryptowrapper.h \
+    utils/crypto/qrandombytes.h \
+    utils/crypto/qsecurememory.h \
+    utils/crypto/qcryptomodule.h \
+    utils/crypto/qpassphrase.h \
+    utils/crypto/qsecurehash.h \
+    utils/crypto/qcipher.h \
+    utils/crypto/qnonce.h \
+    utils/macro.h \
+    app/picsouapplication.h \
     app/picsoucryptoservice.h \
     app/picsoumodelservice.h \
     app/picsouuiservice.h \
     app/picsouconsoleservice.h \
     app/picsouabstractservice.h \
-    ui/budgeteditor.h \
-    ui/accounteditor.h \
-    ui/userviewer.h \
-    ui/accountviewer.h \
-    ui/paymentmethodeditor.h \
-    ui/scheduledoperationeditor.h \
-    ui/operationeditor.h \
-    ui/usereditor.h \
-    ui/picsoudbviewer.h \
-    ui/picsouui.h \
+    ui/editors/scheduledoperationeditor.h \
+    ui/editors/paymentmethodeditor.h \
+    ui/editors/operationeditor.h \
+    ui/editors/picsoudbeditor.h \
+    ui/editors/accounteditor.h \
+    ui/editors/budgeteditor.h \
+    ui/editors/usereditor.h \
+    ui/viewers/operationviewer.h \
+    ui/viewers/picsoudbviewer.h \
+    ui/viewers/accountviewer.h \
+    ui/viewers/userviewer.h \
+    ui/items/picsoulistitem.h \
+    ui/items/picsoutreeitem.h \
+    ui/picsouuiviewer.h \
     ui/aboutpicsou.h \
-    picsou.h \
-    ui/picsoudbeditor.h
+    ui/mainwindow.h \
+    ui/picsouui.h \
+    ui/picsouitem.h \
+    ui/items/picsoutableitem.h
 
 FORMS += \
-        ui/mainwindow.ui \
-    ui/budgeteditor.ui \
-    ui/accounteditor.ui \
-    ui/userviewer.ui \
-    ui/accountviewer.ui \
-    ui/paymentmethodeditor.ui \
-    ui/scheduledoperationeditor.ui \
-    ui/operationeditor.ui \
-    ui/usereditor.ui \
-    ui/picsoudbviewer.ui \
-    ui/aboutpicsou.ui \
-    ui/picsoudbeditor.ui
+    ui/mainwindow.ui \
+    ui/editors/scheduledoperationeditor.ui \
+    ui/editors/paymentmethodeditor.ui \
+    ui/editors/operationeditor.ui \
+    ui/editors/picsoudbeditor.ui \
+    ui/editors/accounteditor.ui \
+    ui/editors/budgeteditor.ui \
+    ui/editors/usereditor.ui \
+    ui/viewers/operationviewer.ui \
+    ui/viewers/picsoudbviewer.ui \
+    ui/viewers/accountviewer.ui \
+    ui/viewers/userviewer.ui \
+    ui/aboutpicsou.ui

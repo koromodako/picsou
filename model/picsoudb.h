@@ -10,25 +10,33 @@ public:
     PicsouDB();
     PicsouDB(uint version_major,
              uint version_minor,
-             QString name,
-             QString description);
+             const QString &name,
+             const QString &description);
 
-    inline void add_user(User user) { _users.insert(user.id(), user); }
+    void add_user(UserPtr user);
     bool remove_user(QUuid id);
 
-    inline QPair<uint, uint> version() const { return _version; }
     inline QString name() const { return _name; }
+    inline QString version() const { return _version; }
     inline QString description() const { return _description; }
-    QList<User> users(bool sorted=false) const;
+    QList<UserPtr> users(bool sorted=false) const;
+
+    UserPtr find_user(QUuid id) const;
+    AccountPtr find_account(QUuid id) const;
+    QList<OperationPtr> ops(QUuid account_id,
+                            int year=-1,
+                            int month=-1) const;
 
     bool read(const QJsonObject &json);
     bool write(QJsonObject &json) const;
 
 private:
-    QPair<uint, uint> _version;
     QString _name;
+    QString _version;
     QString _description;
-    QHash<QUuid, User> _users;
+    QHash<QUuid, UserPtr> _users;
 };
+
+DECL_PICSOU_MOD_OBJ_PTR(PicsouDB, PicsouDBPtr);
 
 #endif // PICSOUDB_H

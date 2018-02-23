@@ -48,6 +48,9 @@ MainWindow::MainWindow(PicsouUIService *ui_svc, QWidget *parent) :
     connect(ui->action_star_me_on_github, &QAction::triggered,
             ui_svc, &PicsouUIService::show_github_repo);
 
+    /* database tree */
+    connect(ui->tree, &QTreeWidget::itemClicked, this, &MainWindow::update_viewer);
+
     /* signal handlers */
     connect(ui_svc, &PicsouUIService::db_opened,this, &MainWindow::db_opened);
     connect(ui_svc, &PicsouUIService::db_saved, this, &MainWindow::db_saved);
@@ -84,6 +87,14 @@ void MainWindow::op_failed(QString error)
                           error,
                           QMessageBox::Ok,
                           QMessageBox::Ok);
+}
+
+void MainWindow::update_viewer(QTreeWidgetItem *item, int)
+{
+    QWidget *w=ui_svc()->viewer_from_item(item);
+    if(w!=nullptr) {
+        ui->mdi->addSubWindow(w);
+    }
 }
 
 void MainWindow::refresh(MainWindow::State state)

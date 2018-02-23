@@ -3,8 +3,6 @@
 
 #include "operation.h"
 
-class PaymentMethod;
-
 class ScheduledOperation : public Operation
 {
 public:
@@ -17,13 +15,15 @@ public:
     };
 
     virtual ~ScheduledOperation();
-    ScheduledOperation();
+    ScheduledOperation(PicsouModelObj *parent);
     ScheduledOperation(Frequency freq,
                        double amount,
-                       QDate date,
-                       QString recipient,
-                       QString description,
-                       const PaymentMethod *payment_method);
+                       const QDate &date,
+                       const QString &budget,
+                       const QString &recipient,
+                       const QString &description,
+                       const QString &payment_method,
+                       PicsouModelObj *parent);
 
     inline Frequency frequency() const { return _freq; }
 
@@ -33,5 +33,7 @@ public:
 private:
     Frequency _freq;
 };
+
+DECL_PICSOU_MOD_OBJ_PTR(ScheduledOperation, ScheduledOperationPtr);
 
 #endif // SCHEDULEDOPERATION_H

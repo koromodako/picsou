@@ -3,7 +3,7 @@
 
 #include <QWidget>
 
-#include "picsouui.h"
+#include "ui/picsouui.h"
 
 namespace Ui {
 class PaymentMethodEditor;

@@ -5,14 +5,17 @@
 #define KW_DESCRIPTION "description"
 #define KEYS (QStringList() << KW_NAME << KW_AMOUNT << KW_DESCRIPTION)
 
-Budget::Budget() :
-    PicsouModelObj(false)
+Budget::Budget(PicsouModelObj *parent) :
+    PicsouModelObj(false, parent)
 {
 
 }
 
-Budget::Budget(double amount, QString name, QString description) :
-    PicsouModelObj(true),
+Budget::Budget(double amount,
+               QString name,
+               QString description,
+               PicsouModelObj *parent) :
+    PicsouModelObj(true, parent),
     _amount(amount),
     _name(name),
     _description(description)
@@ -34,9 +37,9 @@ bool Budget::read(const QJsonObject &json)
     _amount = json[KW_AMOUNT].toDouble();
     _description = json[KW_DESCRIPTION].toString();
     /**/
-    _valid = true;
+    set_valid();
 end:
-    return _valid;
+    return valid();
 }
 
 bool Budget::write(QJsonObject &json) const

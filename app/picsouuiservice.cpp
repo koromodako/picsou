@@ -4,16 +4,18 @@
 #include <QFileDialog>
 #include <QMessageBox>
 #include <QInputDialog>
-#include <QTreeWidgetItem>
 #include <QDesktopServices>
 
 #include "picsou.h"
 
+#include "ui/editors/picsoudbeditor.h"
+#include "ui/viewers/operationviewer.h"
+#include "ui/viewers/picsoudbviewer.h"
+#include "ui/viewers/accountviewer.h"
+#include "ui/viewers/userviewer.h"
+#include "ui/items/picsoutreeitem.h"
 #include "ui/mainwindow.h"
 #include "ui/aboutpicsou.h"
-#include "ui/picsoudbeditor.h"
-
-#include "model/picsoudb.h"
 
 #include "app/picsouapplication.h"
 #include "app/picsoumodelservice.h"
@@ -27,6 +29,9 @@ PicsouUIService::PicsouUIService(PicsouApplication *papp) :
     PicsouAbstractService(papp)
 {
     _mw = new MainWindow(this);
+
+    connect(papp->model_svc(), &PicsouModelService::updated,
+            this, &PicsouUIService::model_updated);
 }
 
 bool PicsouUIService::initialize()
@@ -42,8 +47,8 @@ void PicsouUIService::terminate()
 bool PicsouUIService::populate_db_tree(QTreeWidget* const tree)
 {
     bool success;
-    QList<User> users;
-    QList<Account> accounts;
+    QList<UserPtr> users;
+    QList<AccountPtr> accounts;
     const PicsouDB * db;
     QTreeWidgetItem *root_itm, *user_itm, *account_itm, *year_itm, *month_itm;
 
@@ -53,26 +58,36 @@ bool PicsouUIService::populate_db_tree(QTreeWidget* const tree)
 
     db=papp()->model_svc()->db();
 
-    root_itm=new QTreeWidgetItem(tree);
-    root_itm->setText(0, db->name());
+    root_itm=new PicsouTreeItem(tree,
+                                PicsouTreeItem::T_ROOT,
+                                db->name(),
+                                db->id());
 
     users=db->users(true);
-    foreach(User user, users) {
-        user_itm=new QTreeWidgetItem(root_itm);
-        user_itm->setText(0, user.name());
+    foreach(UserPtr user, users) {
+        user_itm=new PicsouTreeItem(root_itm,
+                                    PicsouTreeItem::T_USER,
+                                    user->name(),
+                                    user->id());
 
-        accounts=user.accounts(true);
-        foreach(Account account, accounts) {
-            account_itm=new QTreeWidgetItem(user_itm);
-            account_itm->setText(0, account.name());
+        accounts=user->accounts(true);
+        foreach(AccountPtr account, accounts) {
+            account_itm=new PicsouTreeItem(user_itm,
+                                           PicsouTreeItem::T_ACCOUNT,
+                                           account->name(),
+                                           account->id());
 
-            foreach (int year, account.years()) {
-                year_itm=new QTreeWidgetItem(account_itm);
-                year_itm->setText(0, QString("%0").arg(year));
+            foreach (int year, account->years()) {
+                year_itm=new PicsouTreeItem(account_itm,
+                                            PicsouTreeItem::T_YEAR,
+                                            QString("%0").arg(year),
+                                            account->id());
 
-                for(int month=1; month<13; month++) {
-                    month_itm=new QTreeWidgetItem(year_itm);
-                    month_itm->setText(0, QString("%0").arg(month));
+                for(int month=0; month<12; month++) {
+                    month_itm=new PicsouTreeItem(year_itm,
+                                                 PicsouTreeItem::T_MONTH,
+                                                 QString("%0").arg(month+1),
+                                                 account->id());
                 }
             }
         }
@@ -81,6 +96,41 @@ bool PicsouUIService::populate_db_tree(QTreeWidget* const tree)
     success=true;
 end:
     return success;
+}
+
+QWidget *PicsouUIService::viewer_from_item(QTreeWidgetItem *item)
+{
+    QWidget *w=nullptr;
+    PicsouTreeItem *pitem=static_cast<PicsouTreeItem*>(item);
+    switch (pitem->type()) {
+    case PicsouTreeItem::T_ROOT:
+        w=new PicsouDBViewer(this, pitem->mod_obj_id());
+        static_cast<PicsouDBViewer*>(w)->refresh(papp()->model_svc()->db());
+        break;
+    case PicsouTreeItem::T_USER:
+        w=new UserViewer(this, pitem->mod_obj_id());
+        static_cast<UserViewer*>(w)->refresh(papp()->model_svc()->db());
+        break;
+    case PicsouTreeItem::T_ACCOUNT:
+        w=new AccountViewer(this, pitem->mod_obj_id());
+        static_cast<AccountViewer*>(w)->refresh(papp()->model_svc()->db());
+        break;
+    case PicsouTreeItem::T_YEAR:
+        w=new OperationViewer(this,
+                              pitem->mod_obj_id(),
+                              OperationViewer::VS_YEAR,
+                              pitem->text(0).toInt());
+        static_cast<OperationViewer*>(w)->refresh(papp()->model_svc()->db());
+        break;
+    case PicsouTreeItem::T_MONTH:
+        w=new OperationViewer(this,
+                              pitem->mod_obj_id(),
+                              OperationViewer::VS_MONTH,
+                              pitem->text(0).toInt());
+        static_cast<OperationViewer*>(w)->refresh(papp()->model_svc()->db());
+        break;
+    }
+    return w;
 }
 
 void PicsouUIService::show_mainwindow()
@@ -216,6 +266,81 @@ void PicsouUIService::db_save_as()
     emit op_failed(tr("Failed to save database in specified file."));
 end:
     return;
+}
+
+void PicsouUIService::user_add()
+{
+
+}
+
+void PicsouUIService::user_edit(QUuid id)
+{
+
+}
+
+void PicsouUIService::user_remove(QUuid id)
+{
+
+}
+
+void PicsouUIService::budget_add(QUuid user_id)
+{
+
+}
+
+void PicsouUIService::budget_edit(QUuid user_id, QUuid budget_id)
+{
+
+}
+
+void PicsouUIService::budget_remove(QUuid user_id, QUuid budget_id)
+{
+
+}
+
+void PicsouUIService::account_add(QUuid user_id)
+{
+
+}
+
+void PicsouUIService::account_edit(QUuid user_id, QUuid account_id)
+{
+
+}
+
+void PicsouUIService::account_remove(QUuid user_id, QUuid account_id)
+{
+
+}
+
+void PicsouUIService::pm_add(QUuid account_id)
+{
+
+}
+
+void PicsouUIService::pm_edit(QUuid account_id, QUuid pm_id)
+{
+
+}
+
+void PicsouUIService::pm_remove(QUuid account_id, QUuid pm_id)
+{
+
+}
+
+void PicsouUIService::op_add(QUuid account_id)
+{
+
+}
+
+void PicsouUIService::op_edit(QUuid account_id, QUuid op_id)
+{
+
+}
+
+void PicsouUIService::op_remove(QUuid account_id, QUuid op_id)
+{
+
 }
 
 bool PicsouUIService::has_opened_db()

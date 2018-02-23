@@ -5,58 +5,99 @@
 #define KW_ACCOUNTS "accounts"
 #define KEYS (QStringList() << KW_NAME << KW_BUDGETS << KW_ACCOUNTS)
 
-User::User() :
-    PicsouModelObj(false)
-{
-
-}
-
-User::User(QString name) :
-    PicsouModelObj(true),
-    _name(name)
-{
-
-}
-
 User::~User()
+{
+    DELETE_HASH_CONTENT(BudgetPtr, _budgets);
+    DELETE_HASH_CONTENT(AccountPtr, _accounts);
+}
+
+void User::add_budget(BudgetPtr b)
+{
+    _budgets.insert(b->id(), b);
+    emit modified();
+}
+
+User::User(PicsouModelObj *parent) :
+    PicsouModelObj(false, parent)
+{
+
+}
+
+User::User(QString name, PicsouModelObj *parent) :
+    PicsouModelObj(true, parent),
+    _name(name)
 {
 
 }
 
 bool User::remove_budget(QUuid id)
 {
+    bool success=false;
     switch (_budgets.remove(id)) {
-        case 0: /* TRACE */ return false;
-        case 1: return true;
-        default: /* TRACE */ return false;
+    case 0:
+        /* TRACE */
+        break;
+    case 1:
+        success=true;
+        emit modified();
+        break;
+    default:
+        /* TRACE */
+        break;
     }
+    return success;
+}
+
+void User::add_account(AccountPtr a)
+{
+    _accounts.insert(a->id(), a);
+    emit modified();
 }
 
 bool User::remove_account(QUuid id)
 {
+    bool success=false;
     switch (_accounts.remove(id)) {
-        case 0: /* TRACE */ return false;
-        case 1: return true;
-        default: /* TRACE */ return false;
+    case 0:
+        /* TRACE */
+        break;
+    case 1:
+        success=true;
+        emit modified();
+        break;
+    default:
+        /* TRACE */
+        break;
     }
+    return success;
 }
 
-QList<Budget> User::budgets(bool sorted) const
+QList<BudgetPtr> User::budgets(bool sorted) const
 {
-    QList<Budget> budgets = _budgets.values();
+    QList<BudgetPtr> budgets = _budgets.values();
     if(sorted) {
         std::sort(budgets.begin(), budgets.end());
     }
     return budgets;
 }
 
-QList<Account> User::accounts(bool sorted) const
+QList<AccountPtr> User::accounts(bool sorted) const
 {
-    QList<Account> accounts = _accounts.values();
+    QList<AccountPtr> accounts = _accounts.values();
     if(sorted) {
         std::sort(accounts.begin(), accounts.end());
     }
     return accounts;
+}
+
+AccountPtr User::find_account(QUuid id) const
+{
+    AccountPtr account;
+    QHash<QUuid, AccountPtr>::const_iterator it=_accounts.find(id);
+    if(it!=_accounts.end()) {
+        account=*it;
+    }
+    return account;
 }
 
 bool User::read(const QJsonObject &json)
@@ -64,12 +105,12 @@ bool User::read(const QJsonObject &json)
     JSON_CHECK_KEYS(KEYS);
     /**/
     _name = json[KW_NAME].toString();
-    JSON_READ_LIST(json, KW_BUDGETS, _budgets, Budget);
-    JSON_READ_LIST(json, KW_ACCOUNTS, _accounts, Account);
+    JSON_READ_LIST(json, KW_BUDGETS, _budgets, Budget, this);
+    JSON_READ_LIST(json, KW_ACCOUNTS, _accounts, Account, this);
     /**/
-    _valid = true;
+    set_valid();
 end:
-    return _valid;
+    return valid();
 }
 
 bool User::write(QJsonObject &json) const
@@ -84,6 +125,7 @@ bool User::write(QJsonObject &json) const
 end:
     return ok;
 }
+
 
 bool User::operator <(const User &other)
 {

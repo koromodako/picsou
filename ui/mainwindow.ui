@@ -16,17 +16,7 @@
   <widget class="QWidget" name="centralWidget">
    <layout class="QVBoxLayout" name="verticalLayout">
     <item>
-     <widget class="QMdiArea" name="mdi">
-      <property name="background">
-       <brush brushstyle="SolidPattern">
-        <color alpha="255">
-         <red>208</red>
-         <green>208</green>
-         <blue>208</blue>
-        </color>
-       </brush>
-      </property>
-     </widget>
+     <widget class="QMdiArea" name="mdi"/>
     </item>
    </layout>
   </widget>

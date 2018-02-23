@@ -7,9 +7,10 @@ class PicsouUI
 {
 public:
     virtual ~PicsouUI();
-    explicit PicsouUI(PicsouUIService *ui_svc);
 
 protected:
+    explicit PicsouUI(PicsouUIService *ui_svc);
+
     inline PicsouUIService *ui_svc() { return _ui_svc; }
 
 private:

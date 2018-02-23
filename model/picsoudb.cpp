@@ -6,75 +6,98 @@
 #define KW_USERS "users"
 #define KEYS (QStringList() << KW_NAME << KW_VERSION << KW_DESCRIPTION << KW_USERS)
 
+PicsouDB::~PicsouDB()
+{
+    DELETE_HASH_CONTENT(UserPtr, _users);
+}
+
 PicsouDB::PicsouDB() :
-    PicsouModelObj(false)
+    PicsouModelObj(false, nullptr)
 {
 
 }
 
 PicsouDB::PicsouDB(uint version_major,
                    uint version_minor,
-                   QString name,
-                   QString description) :
-    PicsouModelObj(true),
-    _version(version_major, version_minor),
+                   const QString &name,
+                   const QString &description) :
+    PicsouModelObj(true, nullptr),
     _name(name),
+    _version(QString("%0.%1").arg(version_major).arg(version_minor)),
     _description(description)
 {
 
 }
 
-PicsouDB::~PicsouDB()
+void PicsouDB::add_user(UserPtr user)
 {
-
+    _users.insert(user->id(), user);
+    emit modified();
 }
 
 bool PicsouDB::remove_user(QUuid id)
 {
+    bool success=false;
     switch (_users.remove(id)) {
-        case 0: /* TRACE */ return false;
-        case 1: return true;
-        default: /* TRACE */ return false;
+    case 0:
+        /* TRACE */
+        break;
+    case 1:
+        success=true;
+        emit modified();
+        break;
+    default:
+        /* TRACE */
+        break;
     }
+    return success;
 }
 
-QList<User> PicsouDB::users(bool sorted) const
+QList<UserPtr> PicsouDB::users(bool sorted) const
 {
-    QList<User> users = _users.values();
+    QList<UserPtr> users=_users.values();
     if(sorted) {
         std::sort(users.begin(), users.end());
     }
     return users;
 }
 
-QString vers2str(QPair<uint, uint> version)
+UserPtr PicsouDB::find_user(QUuid id) const
 {
-    return QString("%0.%1").arg(version.first).arg(version.second);
+    UserPtr user;
+    QHash<QUuid, UserPtr>::const_iterator it=_users.find(id);
+    if(it!=_users.end()) {
+        user=*it;
+    }
+    return user;
 }
 
-QPair<uint,uint> str2vers(QString version_str)
+QList<OperationPtr> PicsouDB::ops(QUuid account_id, int year, int month) const
 {
-    bool ok;
-    QPair<uint,uint> version(-1, -1);
-    QStringList parts = version_str.split('.');
-    /**/
-    if(parts.length()!=2) {
-        /* TRACE */
-        goto end;
+    QList<OperationPtr> selected_ops;
+    AccountPtr account=find_account(account_id);
+    foreach (OperationPtr op, account->ops(true)) {
+        if(year!=-1&&op->date().year()!=year) {
+            continue;
+        }
+        if(month!=-1&&op->date().month()!=month) {
+            continue;
+        }
+        selected_ops.append(op);
     }
-    version.first = parts.first().toUInt(&ok);
-    if(!ok) {
-        /* TRACE */
-        goto end;
+    return selected_ops;
+}
+
+AccountPtr PicsouDB::find_account(QUuid id) const
+{
+    AccountPtr account;
+    foreach (UserPtr user, _users.values()) {
+        account=user->find_account(id);
+        if(account->valid()) {
+            break;
+        }
     }
-    version.second = parts.last().toUInt(&ok);
-    if(!ok) {
-        /* TRACE */
-        goto end;
-    }
-    /**/
-end:
-    return version;
+    return account;
 }
 
 bool PicsouDB::read(const QJsonObject &json)
@@ -83,13 +106,13 @@ bool PicsouDB::read(const QJsonObject &json)
     JSON_CHECK_KEYS(KEYS);
     /**/
     _name = json[KW_NAME].toString();
-    _version = str2vers(json[KW_VERSION].toString());
+    _version = json[KW_VERSION].toString();
     _description = json[KW_DESCRIPTION].toString();
-    JSON_READ_LIST(json, KW_USERS, _users, User);
+    JSON_READ_LIST(json, KW_USERS, _users, User, this);
     /**/
-    _valid = true;
+    set_valid();
 end:
-    return _valid;
+    return valid();
 }
 
 bool PicsouDB::write(QJsonObject &json) const
@@ -99,7 +122,7 @@ bool PicsouDB::write(QJsonObject &json) const
     QJsonArray array;
     /**/
     json[KW_NAME] = _name;
-    json[KW_VERSION] = vers2str(_version);
+    json[KW_VERSION] = _version;
     json[KW_DESCRIPTION] = _description;
     JSON_WRITE_LIST(json, KW_USERS, _users.values());
     /**/

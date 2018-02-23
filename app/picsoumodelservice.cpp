@@ -41,7 +41,11 @@ bool PicsouModelService::new_db(QString filename,
         success=false; goto end;
     }
 
-    _db=new PicsouDB(PICSOU_DB_MAJOR, PICSOU_DB_MINOR, name, description);
+    _db=PicsouDBPtr(new PicsouDB(PICSOU_DB_MAJOR,
+                                 PICSOU_DB_MINOR,
+                                 name,
+                                 description));
+    connect(_db, &PicsouDB::modified, this, &PicsouModelService::notify_ui);
     _filename=filename;
 
     success=true;
@@ -71,7 +75,8 @@ bool PicsouModelService::open_db(QString filename)
         success=false; goto end;
     }
 
-    _db=new PicsouDB;
+    _db=PicsouDBPtr(new PicsouDB);
+    connect(_db, &PicsouDB::modified, this, &PicsouModelService::notify_ui);
 
     if(!_db->read(doc.object())) {
         success=false; goto end;
@@ -126,7 +131,7 @@ bool PicsouModelService::close_db()
 
     if(is_db_opened()) {
         _filename.clear();
-        delete _db; _db=nullptr;
+        delete _db;
         success=true; goto end;
     }
 
@@ -138,4 +143,19 @@ end:
 bool PicsouModelService::is_db_opened()
 {
     return (_db!=nullptr);
+}
+
+UserPtr PicsouModelService::find_user(QUuid id) const
+{
+    return _db->find_user(id);
+}
+
+AccountPtr PicsouModelService::find_account(QUuid id) const
+{
+    return _db->find_account(id);
+}
+
+void PicsouModelService::notify_ui()
+{
+    emit updated(_db);
 }

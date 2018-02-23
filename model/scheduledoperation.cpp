@@ -3,22 +3,27 @@
 #define KW_FREQ "freq"
 #define KEYS (QStringList() << KW_FREQ)
 
-ScheduledOperation::ScheduledOperation() :
-    Operation()
+ScheduledOperation::ScheduledOperation(PicsouModelObj *parent) :
+    Operation(parent)
 {
 
 }
 
-ScheduledOperation::ScheduledOperation(Frequency freq, double amount,
-                                       QDate date,
-                                       QString recipient,
-                                       QString description,
-                                       const PaymentMethod *payment_method) :
+ScheduledOperation::ScheduledOperation(Frequency freq,
+                                       double amount,
+                                       const QDate &date,
+                                       const QString &budget,
+                                       const QString &recipient,
+                                       const QString &description,
+                                       const QString &payment_method,
+                                       PicsouModelObj *parent) :
     Operation(amount,
               date,
+              budget,
               recipient,
               description,
-              payment_method),
+              payment_method,
+              parent),
     _freq(freq)
 {
 
@@ -35,9 +40,9 @@ bool ScheduledOperation::read(const QJsonObject &json)
     JSON_CHECK_KEYS(KEYS);
     /**/
     _freq = Frequency(qRound(json[KW_FREQ].toDouble()));
-    _valid = Operation::read(json);
+    set_valid(Operation::read(json));
 end:
-    return _valid;
+    return valid();
 }
 
 bool ScheduledOperation::write(QJsonObject &json) const

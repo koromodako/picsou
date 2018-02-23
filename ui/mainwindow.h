@@ -9,6 +9,8 @@ namespace Ui {
 class MainWindow;
 }
 
+class QTreeWidgetItem;
+
 class MainWindow : public QMainWindow, public PicsouUI
 {
     Q_OBJECT
@@ -31,6 +33,8 @@ public slots:
 
     void op_canceled();
     void op_failed(QString error);
+
+    void update_viewer(QTreeWidgetItem *item, int column);
 
 private:
     void refresh(State state);

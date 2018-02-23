@@ -9,19 +9,22 @@
 class User : public PicsouModelObj
 {
 public:
-    User();
-    User(QString name);
+    User(PicsouModelObj *parent);
+    User(QString name,
+         PicsouModelObj *parent);
     virtual ~User();
 
-    inline void add_budget(Budget b) { _budgets.insert(b.id(), b); }
+    void add_budget(BudgetPtr b);
     bool remove_budget(QUuid id);
 
-    inline void add_account(Account a) { _accounts.insert(a.id(), a); }
+    void add_account(AccountPtr a);
     bool remove_account(QUuid id);
 
     inline QString name() const { return _name; }
-    QList<Budget> budgets(bool sorted=false) const;
-    QList<Account> accounts(bool sorted=false) const;
+    QList<BudgetPtr> budgets(bool sorted=false) const;
+    QList<AccountPtr> accounts(bool sorted=false) const;
+
+    AccountPtr find_account(QUuid id) const;
 
     bool read(const QJsonObject &json);
     bool write(QJsonObject &json) const;
@@ -30,8 +33,10 @@ public:
 
 private:
     QString _name;
-    QHash<QUuid, Budget> _budgets;
-    QHash<QUuid, Account> _accounts;
+    QHash<QUuid, BudgetPtr> _budgets;
+    QHash<QUuid, AccountPtr> _accounts;
 };
+
+DECL_PICSOU_MOD_OBJ_PTR(User, UserPtr);
 
 #endif // USER_H

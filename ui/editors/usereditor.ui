@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>478</width>
-    <height>168</height>
+    <height>189</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -57,16 +57,35 @@
      <item>
       <layout class="QVBoxLayout" name="verticalLayout_2">
        <item>
-        <widget class="QLineEdit" name="username"/>
+        <widget class="QLineEdit" name="username">
+         <property name="text">
+          <string/>
+         </property>
+         <property name="placeholderText">
+          <string>Username goes here...</string>
+         </property>
+        </widget>
        </item>
        <item>
-        <widget class="QLineEdit" name="old_pwd"/>
+        <widget class="QLineEdit" name="new_pwd">
+         <property name="placeholderText">
+          <string>Old password goes here...</string>
+         </property>
+        </widget>
        </item>
        <item>
-        <widget class="QLineEdit" name="new_pwd"/>
+        <widget class="QLineEdit" name="old_pwd">
+         <property name="placeholderText">
+          <string>New password goes here...</string>
+         </property>
+        </widget>
        </item>
        <item>
-        <widget class="QLineEdit" name="repeat_new_pwd"/>
+        <widget class="QLineEdit" name="repeat_new_pwd">
+         <property name="placeholderText">
+          <string>Repeat new password here...</string>
+         </property>
+        </widget>
        </item>
       </layout>
      </item>
@@ -84,6 +103,19 @@
       </size>
      </property>
     </spacer>
+   </item>
+   <item>
+    <widget class="QLabel" name="error">
+     <property name="enabled">
+      <bool>true</bool>
+     </property>
+     <property name="text">
+      <string>&lt;error&gt;</string>
+     </property>
+     <property name="textFormat">
+      <enum>Qt::AutoText</enum>
+     </property>
+    </widget>
    </item>
    <item>
     <widget class="QDialogButtonBox" name="button_box">

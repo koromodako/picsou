@@ -7,8 +7,11 @@ class Budget : public PicsouModelObj
 {
 public:
     virtual ~Budget();
-    Budget();
-    Budget(double amount, QString name, QString description);
+    Budget(PicsouModelObj *parent);
+    Budget(double amount,
+           QString name,
+           QString description,
+           PicsouModelObj *parent);
 
     inline double amount() const { return _amount; }
     inline QString name() const { return _name; }
@@ -24,5 +27,7 @@ private:
     QString _name;
     QString _description;
 };
+
+DECL_PICSOU_MOD_OBJ_PTR(Budget, BudgetPtr);
 
 #endif // BUDGET_H
