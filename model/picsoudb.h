@@ -13,7 +13,7 @@ public:
              const QString &name,
              const QString &description);
 
-    void add_user(UserPtr user);
+    void add_user(const QString &username);
     bool remove_user(QUuid id);
 
     inline QString name() const { return _name; }

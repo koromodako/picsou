@@ -8,7 +8,7 @@ QCoreApplication* createApplication(int &argc, char *argv[])
 {
   QCoreApplication *app=nullptr;
 
-  for (int i = 1; i < argc; ++i) {
+  for (int i=1; i < argc; ++i) {
       if (!qstrcmp(argv[i], "--no-gui")) {
           app=new QCoreApplication(argc, argv);
           goto end;

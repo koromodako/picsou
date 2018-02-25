@@ -8,7 +8,10 @@ class PaymentMethod : public PicsouModelObj
 public:
     virtual ~PaymentMethod();
     PaymentMethod(PicsouModelObj *parent);
-    PaymentMethod(QString name, PicsouModelObj *parent);
+    PaymentMethod(const QString &name,
+                  PicsouModelObj *parent);
+
+    void update(const QString &name);
 
     inline QString name() const { return _name; }
 

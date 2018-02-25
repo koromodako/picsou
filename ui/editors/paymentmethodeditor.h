@@ -13,7 +13,7 @@ class PaymentMethodEditor : public QDialog
 public:
     virtual ~PaymentMethodEditor();
     explicit PaymentMethodEditor(QString *name,
-                                 QWidget *parent = 0);
+                                 QWidget *parent=nullptr);
 
 public slots:
     void accept();

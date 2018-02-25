@@ -12,8 +12,8 @@ Budget::Budget(PicsouModelObj *parent) :
 }
 
 Budget::Budget(double amount,
-               QString name,
-               QString description,
+               const QString &name,
+               const QString &description,
                PicsouModelObj *parent) :
     PicsouModelObj(true, parent),
     _amount(amount),
@@ -21,6 +21,16 @@ Budget::Budget(double amount,
     _description(description)
 {
 
+}
+
+void Budget::update(double amount,
+                    const QString &name,
+                    const QString &description)
+{
+    _amount=amount;
+    _name=name;
+    _description=description;
+    emit modified();
 }
 
 Budget::~Budget()
@@ -33,9 +43,9 @@ bool Budget::read(const QJsonObject &json)
     /**/
     JSON_CHECK_KEYS(KEYS);
     /**/
-    _name = json[KW_NAME].toString();
-    _amount = json[KW_AMOUNT].toDouble();
-    _description = json[KW_DESCRIPTION].toString();
+    _name=json[KW_NAME].toString();
+    _amount=json[KW_AMOUNT].toDouble();
+    _description=json[KW_DESCRIPTION].toString();
     /**/
     set_valid();
 end:
@@ -45,9 +55,9 @@ end:
 bool Budget::write(QJsonObject &json) const
 {
     /**/
-    json[KW_NAME] = _name;
-    json[KW_AMOUNT] = _amount;
-    json[KW_DESCRIPTION] = _description;
+    json[KW_NAME]=_name;
+    json[KW_AMOUNT]=_amount;
+    json[KW_DESCRIPTION]=_description;
     /**/
     return true;
 }

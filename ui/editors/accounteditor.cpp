@@ -16,6 +16,13 @@ AccountEditor::AccountEditor(QString *name,
 {
     ui->setupUi(this);
 
+    if(!_name->isNull()) {
+        ui->name->setText(*_name);
+    }
+    if(!_description->isNull()) {
+        ui->description->setPlainText(*_description);
+    }
+
     connect(ui->buttons, &QDialogButtonBox::accepted,
             this, &AccountEditor::accept);
     connect(ui->buttons, &QDialogButtonBox::rejected,

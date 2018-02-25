@@ -16,12 +16,13 @@ public:
         VS_MONTH
     };
 
+    virtual ~OperationViewer();
     explicit OperationViewer(PicsouUIService *ui_svc,
+                             QUuid user_id,
                              QUuid account_id,
                              ViewerScale scale,
                              int ym,
-                             QWidget *parent = 0);
-    ~OperationViewer();
+                             QWidget *parent=nullptr);
 
 public slots:
     void refresh(const PicsouDBPtr db);
@@ -32,6 +33,7 @@ public slots:
     void remove_op();
 
 private:
+    QUuid _user_id;
     int _ym;
     ViewerScale _scale;
     Ui::OperationViewer *ui;

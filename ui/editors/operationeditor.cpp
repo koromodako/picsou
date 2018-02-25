@@ -26,22 +26,41 @@ OperationEditor::OperationEditor(double *amount,
 
     ui->budget->setEditable(false);
 
+    ui->amount->setValue(*_amount);
+    if(!_date->isNull()){
+        ui->date->setDate(*_date);
+    }
+    if(!_recipient->isNull()){
+        ui->recipient->setText(*_recipient);
+    }
+    if(!_description->isNull()){
+        ui->description->setPlainText(*_description);
+    }
+
     connect(ui->buttons, &QDialogButtonBox::accepted,
             this, &OperationEditor::accept);
     connect(ui->buttons, &QDialogButtonBox::rejected,
             this, &OperationEditor::reject);
 }
 
-void OperationEditor::set_budgets(const QStringList &budgets)
+void OperationEditor::set_budgets(const QStringList &budgets,
+                                  const QString &current)
 {
     ui->budget->clear();
     ui->budget->addItems(budgets);
+    if(!current.isNull()){
+        ui->budget->setCurrentText(current);
+    }
 }
 
-void OperationEditor::set_payment_methods(const QStringList &payment_methods)
+void OperationEditor::set_payment_methods(const QStringList &payment_methods,
+                                          const QString &current)
 {
     ui->payment_method->clear();
     ui->payment_method->addItems(payment_methods);
+    if(!current.isNull()){
+        ui->payment_method->setCurrentText(current);
+    }
 }
 
 

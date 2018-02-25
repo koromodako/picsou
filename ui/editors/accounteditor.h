@@ -15,7 +15,7 @@ public:
     virtual ~AccountEditor();
     explicit AccountEditor(QString *name,
                            QString *description,
-                           QWidget *parent = 0);
+                           QWidget *parent=nullptr);
 
 public slots:
     void accept();

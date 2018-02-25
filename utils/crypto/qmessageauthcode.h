@@ -207,12 +207,12 @@ public:
     };
 
     enum MACFlag {
-        NONE = 0x00,
+        NONE=0x00,
         /*
          * Allocate all buffers and the resulting MAC in "secure memory". Use
          * this if the MAC data is highly confidential.
          */
-        SECURE = 0x01
+        SECURE=0x01
     };
 
     virtual ~QMessageAuthCode();

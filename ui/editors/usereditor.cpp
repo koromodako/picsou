@@ -25,6 +25,10 @@ UserEditor::UserEditor(QString *username,
     ui->new_pwd->setEchoMode(QLineEdit::Password);
     ui->repeat_new_pwd->setEchoMode(QLineEdit::Password);
 
+    if(!_username->isNull()) {
+        ui->username->setText(*_username);
+    }
+
     connect(ui->button_box, &QDialogButtonBox::accepted,
             this, &UserEditor::accept);
     connect(ui->button_box, &QDialogButtonBox::rejected,

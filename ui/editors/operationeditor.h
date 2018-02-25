@@ -18,10 +18,12 @@ public:
                              QString *budget,
                              QString *recipient,
                              QString *description,
-                             QWidget *parent = 0);
+                             QWidget *parent=nullptr);
 
-    inline void set_budgets(const QStringList &budgets);
-    inline void set_payment_methods(const QStringList &payment_methods);
+    void set_budgets(const QStringList &budgets,
+                     const QString &current=QString());
+    void set_payment_methods(const QStringList &payment_methods,
+                             const QString &current=QString());
 
 public slots:
     void accept();

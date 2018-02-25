@@ -20,6 +20,8 @@ MainWindow::MainWindow(PicsouUIService *ui_svc, QWidget *parent) :
 {
     ui->setupUi(this);
     /* initialize connections */
+    setWindowIcon(QIcon());
+    setWindowTitle("Picsou");
     /* file menu */
     connect(ui->action_new, &QAction::triggered,
             ui_svc, &PicsouUIService::db_new);
@@ -49,19 +51,35 @@ MainWindow::MainWindow(PicsouUIService *ui_svc, QWidget *parent) :
             ui_svc, &PicsouUIService::show_github_repo);
 
     /* database tree */
-    connect(ui->tree, &QTreeWidget::itemClicked, this, &MainWindow::update_viewer);
+    connect(ui->tree, &QTreeWidget::itemClicked,
+            this, &MainWindow::update_viewer);
 
     /* signal handlers */
-    connect(ui_svc, &PicsouUIService::db_opened,this, &MainWindow::db_opened);
-    connect(ui_svc, &PicsouUIService::db_saved, this, &MainWindow::db_saved);
-    connect(ui_svc, &PicsouUIService::db_closed, this, &MainWindow::db_closed);
-    connect(ui_svc, &PicsouUIService::op_canceled, this, &MainWindow::op_canceled);
-    connect(ui_svc, &PicsouUIService::op_failed, this, &MainWindow::op_failed);
+    connect(ui_svc, &PicsouUIService::db_opened,
+            this, &MainWindow::db_opened);
+    connect(ui_svc, &PicsouUIService::db_saved,
+            this, &MainWindow::db_saved);
+    connect(ui_svc, &PicsouUIService::db_modified,
+            this, &MainWindow::db_modified);
+    connect(ui_svc, &PicsouUIService::db_closed,
+            this, &MainWindow::db_closed);
+    connect(ui_svc, &PicsouUIService::svc_op_canceled,
+            this, &MainWindow::op_canceled);
+    connect(ui_svc, &PicsouUIService::svc_op_failed,
+            this, &MainWindow::op_failed);
+
+
+    refresh(DB_CLOSED);
 }
 
 void MainWindow::db_opened()
 {
     refresh(DB_OPENED);
+}
+
+void MainWindow::db_modified()
+{
+    refresh(DB_MODIFIED);
 }
 
 void MainWindow::db_saved()
@@ -93,7 +111,7 @@ void MainWindow::update_viewer(QTreeWidgetItem *item, int)
 {
     QWidget *w=ui_svc()->viewer_from_item(item);
     if(w!=nullptr) {
-        ui->mdi->addSubWindow(w);
+        setCentralWidget(w);
     }
 }
 
@@ -111,9 +129,8 @@ void MainWindow::refresh(MainWindow::State state)
         /* update tree widget */
         ui->tree->clear();
         ui->tree->setEnabled(false);
-        /* update mdi */
-        ui->mdi->closeAllSubWindows();
-        ui->mdi->setEnabled(false);
+        /* central widget */
+        setCentralWidget(nullptr);
         break;
     case DB_OPENED:
         /* update menu actions */
@@ -122,8 +139,6 @@ void MainWindow::refresh(MainWindow::State state)
         /* update tree widget */
         refresh_tree();
         ui->tree->setEnabled(true);
-        /* update mdi */
-        ui->mdi->setEnabled(true);
         break;
     case DB_MODIFIED:
         /* update menu actions */

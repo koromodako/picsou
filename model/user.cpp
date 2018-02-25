@@ -11,23 +11,33 @@ User::~User()
     DELETE_HASH_CONTENT(AccountPtr, _accounts);
 }
 
-void User::add_budget(BudgetPtr b)
-{
-    _budgets.insert(b->id(), b);
-    emit modified();
-}
-
 User::User(PicsouModelObj *parent) :
     PicsouModelObj(false, parent)
 {
 
 }
 
-User::User(QString name, PicsouModelObj *parent) :
+User::User(const QString &name,
+           PicsouModelObj *parent) :
     PicsouModelObj(true, parent),
     _name(name)
 {
 
+}
+
+void User::update(const QString &name)
+{
+    _name=name;
+    modified();
+}
+
+void User::add_budget(double amount,
+                      const QString &name,
+                      const QString &description)
+{
+    BudgetPtr budget=BudgetPtr(new Budget(amount, name, description, this));
+    _budgets.insert(budget->id(), budget);
+    emit modified();
 }
 
 bool User::remove_budget(QUuid id)
@@ -48,9 +58,11 @@ bool User::remove_budget(QUuid id)
     return success;
 }
 
-void User::add_account(AccountPtr a)
+void User::add_account(const QString &name,
+                       const QString &description)
 {
-    _accounts.insert(a->id(), a);
+    AccountPtr account=AccountPtr(new Account(name, description, this));
+    _accounts.insert(account->id(), account);
     emit modified();
 }
 
@@ -74,20 +86,40 @@ bool User::remove_account(QUuid id)
 
 QList<BudgetPtr> User::budgets(bool sorted) const
 {
-    QList<BudgetPtr> budgets = _budgets.values();
+    QList<BudgetPtr> budgets=_budgets.values();
     if(sorted) {
         std::sort(budgets.begin(), budgets.end());
     }
     return budgets;
 }
 
+QStringList User::budgets_str(bool sorted) const
+{
+    QStringList budgets_str;
+    QList<BudgetPtr> budget_list=budgets(sorted);
+    foreach (BudgetPtr budget, budget_list) {
+        budgets_str << budget->name();
+    }
+    return budgets_str;
+}
+
 QList<AccountPtr> User::accounts(bool sorted) const
 {
-    QList<AccountPtr> accounts = _accounts.values();
+    QList<AccountPtr> accounts=_accounts.values();
     if(sorted) {
         std::sort(accounts.begin(), accounts.end());
     }
     return accounts;
+}
+
+BudgetPtr User::find_budget(QUuid id) const
+{
+    BudgetPtr budget;
+    QHash<QUuid, BudgetPtr>::const_iterator it=_budgets.find(id);
+    if(it!=_budgets.end()) {
+        budget=*it;
+    }
+    return budget;
 }
 
 AccountPtr User::find_account(QUuid id) const
@@ -104,7 +136,7 @@ bool User::read(const QJsonObject &json)
 {
     JSON_CHECK_KEYS(KEYS);
     /**/
-    _name = json[KW_NAME].toString();
+    _name=json[KW_NAME].toString();
     JSON_READ_LIST(json, KW_BUDGETS, _budgets, Budget, this);
     JSON_READ_LIST(json, KW_ACCOUNTS, _accounts, Account, this);
     /**/
@@ -117,11 +149,11 @@ bool User::write(QJsonObject &json) const
 {
     bool ok;
     /**/
-    json[KW_NAME] = _name;
+    json[KW_NAME]=_name;
     JSON_WRITE_LIST(json, KW_BUDGETS, _budgets.values());
     JSON_WRITE_LIST(json, KW_ACCOUNTS, _accounts.values());
     /**/
-    ok = true;
+    ok=true;
 end:
     return ok;
 }

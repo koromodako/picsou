@@ -17,7 +17,7 @@ public:
     explicit UserEditor(QString *username,
                         QSecureMemory *old_pwd,
                         QSecureMemory *new_pwd,
-                        QWidget *parent = 0);
+                        QWidget *parent=nullptr);
 
 public slots:
     void accept();

@@ -24,3 +24,8 @@ PicsouTreeItem::PicsouTreeItem(QTreeWidgetItem *parent,
 {
     setText(0, text);
 }
+
+PicsouTreeItem *PicsouTreeItem::parent() const
+{
+    return static_cast<PicsouTreeItem*>(QTreeWidgetItem::parent());
+}

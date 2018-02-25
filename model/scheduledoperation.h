@@ -7,11 +7,11 @@ class ScheduledOperation : public Operation
 {
 public:
     enum Frequency {
-           YEARLY = 0,
-        QUARTERLY = 1,
-          MONTHLY = 2,
-           WEEKLY = 3,
-            DAILY = 4
+           YEARLY=0,
+        QUARTERLY=1,
+          MONTHLY=2,
+           WEEKLY=3,
+            DAILY=4
     };
 
     static QString freq2str(Frequency freq);

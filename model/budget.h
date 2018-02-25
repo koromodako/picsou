@@ -9,9 +9,13 @@ public:
     virtual ~Budget();
     Budget(PicsouModelObj *parent);
     Budget(double amount,
-           QString name,
-           QString description,
+           const QString &name,
+           const QString &description,
            PicsouModelObj *parent);
+
+    void update(double amount,
+                const QString &name,
+                const QString &description);
 
     inline double amount() const { return _amount; }
     inline QString name() const { return _name; }

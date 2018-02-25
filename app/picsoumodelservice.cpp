@@ -45,8 +45,10 @@ bool PicsouModelService::new_db(QString filename,
                                  PICSOU_DB_MINOR,
                                  name,
                                  description));
-    connect(_db, &PicsouDB::modified, this, &PicsouModelService::notify_ui);
     _filename=filename;
+    _is_db_modified=true;
+
+    connect(_db, &PicsouDB::modified, this, &PicsouModelService::notify_ui);
 
     success=true;
 end:
@@ -76,13 +78,15 @@ bool PicsouModelService::open_db(QString filename)
     }
 
     _db=PicsouDBPtr(new PicsouDB);
-    connect(_db, &PicsouDB::modified, this, &PicsouModelService::notify_ui);
 
     if(!_db->read(doc.object())) {
         success=false; goto end;
     }
 
-    _filename = filename;
+    _filename=filename;
+
+    connect(_db, &PicsouDB::modified, this, &PicsouModelService::notify_ui);
+
     success=true;
 end:
     return success;
@@ -112,14 +116,15 @@ bool PicsouModelService::save_db_as(QString filename)
         success=false; goto end;
     }
 
-    json_data = QJsonDocument(json).toJson();
+    json_data=QJsonDocument(json).toJson();
 
     if(f.write(json_data)!=json_data.size()) {
         success=false; goto end;
     }
 
     f.close();
-    _filename = filename;
+    _filename=filename;
+    _is_db_modified=false;
     success=true;
 end:
     return success;
@@ -157,5 +162,6 @@ AccountPtr PicsouModelService::find_account(QUuid id) const
 
 void PicsouModelService::notify_ui()
 {
+    _is_db_modified=true;
     emit updated(_db);
 }

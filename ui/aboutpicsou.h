@@ -13,7 +13,7 @@ class AboutPicsou : public QWidget
 
 public:
     virtual ~AboutPicsou();
-    explicit AboutPicsou(QWidget *parent = 0);
+    explicit AboutPicsou(QWidget *parent=nullptr);
 
 private:
     Ui::AboutPicsou *ui;

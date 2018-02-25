@@ -24,11 +24,12 @@ public:
     };
 
     virtual ~MainWindow();
-    explicit MainWindow(PicsouUIService *ui_svc, QWidget *parent = nullptr);
+    explicit MainWindow(PicsouUIService *ui_svc, QWidget *parent=nullptr);
 
 public slots:
     void db_opened();
     void db_saved();
+    void db_modified();
     void db_closed();
 
     void op_canceled();

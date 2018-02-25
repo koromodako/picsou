@@ -19,7 +19,7 @@ public:
                                       QString *budget,
                                       QString *recipient,
                                       QString *description,
-                                      QWidget *parent = 0);
+                                      QWidget *parent=nullptr);
 
     void set_budgets(const QStringList &budgets);
     void set_frequencies(const QStringList &frequencies);

@@ -10,11 +10,13 @@ OperationViewer::~OperationViewer()
 }
 
 OperationViewer::OperationViewer(PicsouUIService *ui_svc,
+                                 QUuid user_id,
                                  QUuid account_id,
                                  ViewerScale scale,
                                  int ym,
                                  QWidget *parent) :
     PicsouUIViewer(ui_svc, account_id, parent),
+    _user_id(user_id),
     _ym(ym),
     _scale(scale),
     ui(new Ui::OperationViewer)
@@ -69,14 +71,14 @@ void OperationViewer::refresh(const PicsouDBPtr db)
 
 void OperationViewer::add_op()
 {
-    ui_svc()->op_add(mod_obj_id());
+    ui_svc()->op_add(_user_id, mod_obj_id());
 }
 
 void OperationViewer::edit_op()
 {
     PicsouTableItem *item;
     item=static_cast<PicsouTableItem*>(ui->table->item(ui->table->currentRow(), 0));
-    ui_svc()->op_edit(mod_obj_id(), item->mod_obj_id());
+    ui_svc()->op_edit(_user_id, mod_obj_id(), item->mod_obj_id());
 }
 
 void OperationViewer::remove_op()

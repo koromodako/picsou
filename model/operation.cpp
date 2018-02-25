@@ -47,13 +47,13 @@ bool Operation::read(const QJsonObject &json)
     /**/
     JSON_CHECK_KEYS(KEYS);
     /**/
-    _amount = json[KW_AMOUNT].toDouble();
-    _date = QDate(json[KW_YEAR].toInt(),
-                  json[KW_MONTH].toInt(),
-                  json[KW_DAY].toInt());
-    _recipient = json[KW_RECIPIENT].toString();
-    _description = json[KW_DESCRIPTION].toString();
-    _payment_method = json[KW_PAYMENT_METHOD].toString();
+    _amount=json[KW_AMOUNT].toDouble();
+    _date=QDate(json[KW_YEAR].toInt(),
+                json[KW_MONTH].toInt(),
+                json[KW_DAY].toInt());
+    _recipient=json[KW_RECIPIENT].toString();
+    _description=json[KW_DESCRIPTION].toString();
+    _payment_method=json[KW_PAYMENT_METHOD].toString();
     /**/
     set_valid();
 end:
@@ -63,13 +63,13 @@ end:
 bool Operation::write(QJsonObject &json) const
 {
     /**/
-    json[KW_AMOUNT] = _amount;
-    json[KW_DAY] = _date.day();
-    json[KW_MONTH] = _date.month();
-    json[KW_YEAR] = _date.year();
-    json[KW_RECIPIENT] = _recipient;
-    json[KW_DESCRIPTION] = _description;
-    json[KW_PAYMENT_METHOD] = _payment_method;
+    json[KW_AMOUNT]=_amount;
+    json[KW_DAY]=_date.day();
+    json[KW_MONTH]=_date.month();
+    json[KW_YEAR]=_date.year();
+    json[KW_RECIPIENT]=_recipient;
+    json[KW_DESCRIPTION]=_description;
+    json[KW_PAYMENT_METHOD]=_payment_method;
     /**/
     return true;
 }

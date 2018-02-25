@@ -186,7 +186,7 @@ public:
     virtual ~QSecureHash();
     QSecureHash(HashAlgorithm algo,
                 HashFlag flags,
-                const QSecureMemory key = QSecureMemory());
+                const QSecureMemory key=QSecureMemory());
 
     bool valid() const;
     void reset();

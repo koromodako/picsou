@@ -71,11 +71,11 @@ QCipher::QCipher(CipherAlgorithm algo,
         //case XTS: cipher_mode=GCRY_CIPHER_MODE_XTS; break;
     }
 
-    cipher_flags = 0;
-    cipher_flags |= (IS_FLAG_SET(flags, SECURE)? GCRY_CIPHER_SECURE: 0);
-    cipher_flags |= (IS_FLAG_SET(flags, ENABLE_SYNC)? GCRY_CIPHER_ENABLE_SYNC: 0);
-    cipher_flags |= (IS_FLAG_SET(flags, CBC_CTS)? GCRY_CIPHER_CBC_CTS: 0);
-    cipher_flags |= (IS_FLAG_SET(flags, CBC_MAC)? GCRY_CIPHER_CBC_MAC: 0);
+    cipher_flags=0;
+    cipher_flags|=(IS_FLAG_SET(flags, SECURE)? GCRY_CIPHER_SECURE: 0);
+    cipher_flags|=(IS_FLAG_SET(flags, ENABLE_SYNC)? GCRY_CIPHER_ENABLE_SYNC: 0);
+    cipher_flags|=(IS_FLAG_SET(flags, CBC_CTS)? GCRY_CIPHER_CBC_CTS: 0);
+    cipher_flags|=(IS_FLAG_SET(flags, CBC_MAC)? GCRY_CIPHER_CBC_MAC: 0);
 
     if(!wrap(gcry_cipher_open(&_hd, cipher_algo, cipher_mode, cipher_flags))) {
         goto end;

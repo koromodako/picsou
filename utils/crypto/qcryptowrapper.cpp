@@ -22,8 +22,8 @@ bool QCryptoWrapper::wrap(gcry_error_t err)
 {
     bool success=true;
     if(err!=GPG_ERR_NO_ERROR) {
-        _latest_error_source = QString(gcry_strsource(err));
-        _latest_error_description = QString(gcry_strerror(err));
+        _latest_error_source=QString(gcry_strsource(err));
+        _latest_error_description=QString(gcry_strerror(err));
         success=false;
     }
     return success;

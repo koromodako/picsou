@@ -22,13 +22,36 @@ public:
     QWidget *viewer_from_item(QTreeWidgetItem *item);
 
 signals:
-    void db_opened();
-    void db_saved();
-    void db_closed();
-    void op_failed(QString error);
-    void op_canceled();
+    void svc_op_failed(QString error);
+    void svc_op_canceled();
 
     void model_updated(const PicsouDBPtr db);
+
+    void db_opened();
+    void db_saved();
+    void db_modified();
+    void db_closed();
+
+    void user_added();
+    void user_edited();
+    void user_removed();
+    /* Budget ops */
+    void budget_added();
+    void budget_edited();
+    void budget_removed();
+    /* Account ops */
+    void account_added();
+    void account_edited();
+    void account_removed();
+    /* Payment Methods ops */
+    void pm_added();
+    void pm_edited();
+    void pm_removed();
+    /* Scheduled Operation ops */
+    /* Operation ops */
+    void op_added();
+    void op_edited();
+    void op_removed();
 
 public slots:
     /*  */
@@ -60,9 +83,11 @@ public slots:
     void pm_remove(QUuid account_id, QUuid pm_id);
     /* Scheduled Operation ops */
     /* Operation ops */
-    void op_add(QUuid account_id);
-    void op_edit(QUuid account_id, QUuid op_id);
+    void op_add(QUuid user_id, QUuid account_id);
+    void op_edit(QUuid user_id, QUuid account_id, QUuid op_id);
     void op_remove(QUuid account_id, QUuid op_id);
+
+    void notify_model_updated(const PicsouDBPtr db);
 
 private:
     bool has_opened_db();

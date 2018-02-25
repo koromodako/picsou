@@ -15,7 +15,7 @@ public:
     virtual ~AccountViewer();
     explicit AccountViewer(PicsouUIService *ui_svc,
                            QUuid uuid,
-                           QWidget *parent = 0);
+                           QWidget *parent=nullptr);
 
 public slots:
     void refresh(const PicsouDBPtr db);

@@ -50,10 +50,10 @@ QSecureHash::QSecureHash(HashAlgorithm algo,
         case STRIBOG512: _algo=GCRY_MD_STRIBOG512; break;
     }
 
-    hash_flags = 0;
-    hash_flags |= (IS_FLAG_SET(flags, SECURE)? GCRY_MD_FLAG_SECURE: 0);
-    hash_flags |= (IS_FLAG_SET(flags, HMAC)? GCRY_MD_FLAG_HMAC: 0);
-    hash_flags |= (IS_FLAG_SET(flags, BUGEMU1)? GCRY_MD_FLAG_BUGEMU1: 0);
+    hash_flags=0;
+    hash_flags|=(IS_FLAG_SET(flags, SECURE)? GCRY_MD_FLAG_SECURE: 0);
+    hash_flags|=(IS_FLAG_SET(flags, HMAC)? GCRY_MD_FLAG_HMAC: 0);
+    hash_flags|=(IS_FLAG_SET(flags, BUGEMU1)? GCRY_MD_FLAG_BUGEMU1: 0);
 
     if(!wrap(gcry_md_open(&_hd, _algo, hash_flags))) {
         goto end;

@@ -7,8 +7,8 @@
 
 PicsouApplication::~PicsouApplication()
 {
-    delete _ui_svc;
     delete _console_svc;
+    delete _ui_svc;
     delete _model_svc;
     delete _crypto_svc;
 }
@@ -16,10 +16,10 @@ PicsouApplication::~PicsouApplication()
 PicsouApplication::PicsouApplication(QObject *parent) :
     QObject(parent)
 {
-    _ui_svc = new PicsouUIService(this);
-    _model_svc = new PicsouModelService(this);
-    _crypto_svc = new PicsouCryptoService(this);
-    _console_svc = new PicsouConsoleService(this);
+    _ui_svc=new PicsouUIService(this);
+    _model_svc=new PicsouModelService(this);
+    _crypto_svc=new PicsouCryptoService(this);
+    _console_svc=new PicsouConsoleService(this);
 }
 
 bool PicsouApplication::initialize()

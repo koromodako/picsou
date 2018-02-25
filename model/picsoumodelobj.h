@@ -41,6 +41,7 @@ private:
         QHash<QUuid, Class>::iterator it=(hash).begin(); \
         while(it!=(hash).end()) { \
             delete it.value(); \
+            it++; \
         } \
         (hash).clear(); \
     } while(0)
@@ -60,9 +61,10 @@ private:
 
 #define JSON_READ_LIST(json, name, member, Class, parent) \
     do { \
-        QJsonArray array = (json)[(name)].toArray(); \
+        Class *obj; \
+        QJsonArray array=(json)[(name)].toArray(); \
         for(int i=0; i < array.size(); ++i) { \
-            Class *obj = new Class(parent); \
+            obj=new Class(parent); \
             if(!obj->read(array[i].toObject())) { \
                 /* TRACE */ \
                 set_valid(false); \
@@ -74,17 +76,18 @@ private:
 
 #define JSON_WRITE_LIST(json, name, list) \
     do { \
-        QJsonArray array = QJsonArray(); \
+        QJsonObject obj; \
+        QJsonArray array; \
         for(int i=0; i<(list).size(); ++i) { \
-            QJsonObject obj = QJsonObject(); \
+            obj=QJsonObject(); \
             if(!(list)[i]->write(obj)) { \
                 /* TRACE */ \
-                ok = false; \
+                ok=false; \
                 goto end; \
             } \
             array.append(obj); \
         } \
-        (json)[(name)] = array; \
+        (json)[(name)]=array; \
     } while(0)
 
 #endif // PICSOUMODELOBJ_H

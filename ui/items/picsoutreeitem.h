@@ -26,6 +26,8 @@ public:
                    const QString &text,
                    QUuid id);
 
+    PicsouTreeItem *parent() const;
+
 };
 
 #endif // PICSOUTREEWIDGETITEM_H

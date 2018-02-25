@@ -29,8 +29,9 @@ PicsouDB::PicsouDB(uint version_major,
 
 }
 
-void PicsouDB::add_user(UserPtr user)
+void PicsouDB::add_user(const QString &username)
 {
+    UserPtr user=UserPtr(new User(username, this));
     _users.insert(user->id(), user);
     emit modified();
 }
@@ -105,9 +106,9 @@ bool PicsouDB::read(const QJsonObject &json)
     /**/
     JSON_CHECK_KEYS(KEYS);
     /**/
-    _name = json[KW_NAME].toString();
-    _version = json[KW_VERSION].toString();
-    _description = json[KW_DESCRIPTION].toString();
+    _name=json[KW_NAME].toString();
+    _version=json[KW_VERSION].toString();
+    _description=json[KW_DESCRIPTION].toString();
     JSON_READ_LIST(json, KW_USERS, _users, User, this);
     /**/
     set_valid();
@@ -121,12 +122,12 @@ bool PicsouDB::write(QJsonObject &json) const
     QJsonObject obj;
     QJsonArray array;
     /**/
-    json[KW_NAME] = _name;
-    json[KW_VERSION] = _version;
-    json[KW_DESCRIPTION] = _description;
+    json[KW_NAME]=_name;
+    json[KW_VERSION]=_version;
+    json[KW_DESCRIPTION]=_description;
     JSON_WRITE_LIST(json, KW_USERS, _users.values());
     /**/
-    ok = true;
+    ok=true;
 end:
     return ok;
 }

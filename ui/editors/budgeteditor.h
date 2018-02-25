@@ -16,7 +16,7 @@ public:
     explicit BudgetEditor(double *amount,
                           QString *name,
                           QString *description,
-                          QWidget *parent = 0);
+                          QWidget *parent=nullptr);
 
 public slots:
     void accept();

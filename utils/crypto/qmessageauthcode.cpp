@@ -65,8 +65,8 @@ QMessageAuthCode::QMessageAuthCode(MACAlgorithm algo,
         case POLY1305_SEED: mac_algo=GCRY_MAC_POLY1305_SEED; break;
     }
 
-    mac_flags = 0;
-    mac_flags |= (IS_FLAG_SET(flags, SECURE)? GCRY_MAC_FLAG_SECURE: 0);
+    mac_flags=0;
+    mac_flags|=(IS_FLAG_SET(flags, SECURE)? GCRY_MAC_FLAG_SECURE: 0);
 
     if(!wrap(gcry_mac_open(&_hd, mac_algo, mac_flags, nullptr))) {
         goto end;

@@ -3,22 +3,28 @@
 #define KW_NAME "name"
 #define KEYS (QStringList() << KW_NAME)
 
+PaymentMethod::~PaymentMethod()
+{
+
+}
+
 PaymentMethod::PaymentMethod(PicsouModelObj *parent) :
     PicsouModelObj(false, parent)
 {
 
 }
 
-PaymentMethod::PaymentMethod(QString name, PicsouModelObj *parent) :
+PaymentMethod::PaymentMethod(const QString &name, PicsouModelObj *parent) :
     PicsouModelObj(true, parent),
     _name(name)
 {
 
 }
 
-PaymentMethod::~PaymentMethod()
+void PaymentMethod::update(const QString &name)
 {
-
+    _name=name;
+    emit modified();
 }
 
 bool PaymentMethod::read(const QJsonObject &json)
@@ -26,7 +32,7 @@ bool PaymentMethod::read(const QJsonObject &json)
     /**/
     JSON_CHECK_KEYS(KEYS);
     /**/
-    _name = json[KW_NAME].toString();
+    _name=json[KW_NAME].toString();
     /**/
     set_valid();
 end:
@@ -36,7 +42,7 @@ end:
 bool PaymentMethod::write(QJsonObject &json) const
 {
     /**/
-    json[KW_NAME] = _name;
+    json[KW_NAME]=_name;
     /**/
     return true;
 }

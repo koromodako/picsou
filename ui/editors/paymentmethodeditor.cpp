@@ -8,6 +8,10 @@ PaymentMethodEditor::PaymentMethodEditor(QString *name, QWidget *parent) :
 {
     ui->setupUi(this);
 
+    if(!_name->isNull()) {
+        ui->name->setText(*_name);
+    }
+
     connect(ui->buttons, &QDialogButtonBox::accepted,
             this, &PaymentMethodEditor::accept);
     connect(ui->buttons, &QDialogButtonBox::rejected,
