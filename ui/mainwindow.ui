@@ -78,7 +78,7 @@
   <widget class="QStatusBar" name="statusbar"/>
   <widget class="QDockWidget" name="sidebar_dock">
    <property name="windowIcon">
-    <iconset resource="../picsou.qrc">
+    <iconset>
      <normaloff>:/resources/MaterialDesign-SVG/svg/file-tree.svg</normaloff>:/resources/MaterialDesign-SVG/svg/file-tree.svg</iconset>
    </property>
    <property name="features">
@@ -116,7 +116,7 @@
   <action name="action_open">
    <property name="icon">
     <iconset resource="../picsou.qrc">
-     <normaloff>:/resources/MaterialDesign-SVG/svg/folder-open.svg</normaloff>:/resources/MaterialDesign-SVG/svg/folder-open.svg</iconset>
+     <normaloff>:/resources/material-design/svg/folder-open.svg</normaloff>:/resources/material-design/svg/folder-open.svg</iconset>
    </property>
    <property name="text">
     <string>Open...</string>
@@ -128,7 +128,7 @@
   <action name="action_quit">
    <property name="icon">
     <iconset resource="../picsou.qrc">
-     <normaloff>:/resources/MaterialDesign-SVG/svg/exit-to-app.svg</normaloff>:/resources/MaterialDesign-SVG/svg/exit-to-app.svg</iconset>
+     <normaloff>:/resources/material-design/svg/exit-to-app.svg</normaloff>:/resources/material-design/svg/exit-to-app.svg</iconset>
    </property>
    <property name="text">
     <string>Quit</string>
@@ -140,7 +140,7 @@
   <action name="action_close">
    <property name="icon">
     <iconset resource="../picsou.qrc">
-     <normaloff>:/resources/MaterialDesign-SVG/svg/folder-remove.svg</normaloff>:/resources/MaterialDesign-SVG/svg/folder-remove.svg</iconset>
+     <normaloff>:/resources/material-design/svg/folder-remove.svg</normaloff>:/resources/material-design/svg/folder-remove.svg</iconset>
    </property>
    <property name="text">
     <string>Close</string>
@@ -166,7 +166,7 @@
   <action name="action_star_me_on_github">
    <property name="icon">
     <iconset resource="../picsou.qrc">
-     <normaloff>:/resources/MaterialDesign-SVG/svg/github-box.svg</normaloff>:/resources/MaterialDesign-SVG/svg/github-box.svg</iconset>
+     <normaloff>:/resources/material-design/svg/github-box.svg</normaloff>:/resources/material-design/svg/github-box.svg</iconset>
    </property>
    <property name="text">
     <string>Star me on Github !</string>
@@ -175,7 +175,7 @@
   <action name="action_save">
    <property name="icon">
     <iconset resource="../picsou.qrc">
-     <normaloff>:/resources/MaterialDesign-SVG/svg/content-save.svg</normaloff>:/resources/MaterialDesign-SVG/svg/content-save.svg</iconset>
+     <normaloff>:/resources/material-design/svg/content-save.svg</normaloff>:/resources/material-design/svg/content-save.svg</iconset>
    </property>
    <property name="text">
     <string>Save</string>
@@ -195,7 +195,7 @@
   <action name="action_new">
    <property name="icon">
     <iconset resource="../picsou.qrc">
-     <normaloff>:/resources/MaterialDesign-SVG/svg/folder-plus.svg</normaloff>:/resources/MaterialDesign-SVG/svg/folder-plus.svg</iconset>
+     <normaloff>:/resources/material-design/svg/folder-plus.svg</normaloff>:/resources/material-design/svg/folder-plus.svg</iconset>
    </property>
    <property name="text">
     <string>New...</string>

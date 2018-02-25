@@ -42,7 +42,7 @@
        </property>
        <property name="icon">
         <iconset resource="../../picsou.qrc">
-         <normaloff>:/resources/MaterialDesign-SVG/svg/cart-plus.svg</normaloff>:/resources/MaterialDesign-SVG/svg/cart-plus.svg</iconset>
+         <normaloff>:/resources/material-design/svg/cart-plus.svg</normaloff>:/resources/material-design/svg/cart-plus.svg</iconset>
        </property>
       </widget>
      </item>
@@ -53,7 +53,7 @@
        </property>
        <property name="icon">
         <iconset resource="../../picsou.qrc">
-         <normaloff>:/resources/MaterialDesign-SVG/svg/pencil.svg</normaloff>:/resources/MaterialDesign-SVG/svg/pencil.svg</iconset>
+         <normaloff>:/resources/material-design/svg/pencil.svg</normaloff>:/resources/material-design/svg/pencil.svg</iconset>
        </property>
       </widget>
      </item>
@@ -64,7 +64,7 @@
        </property>
        <property name="icon">
         <iconset resource="../../picsou.qrc">
-         <normaloff>:/resources/MaterialDesign-SVG/svg/cart-off.svg</normaloff>:/resources/MaterialDesign-SVG/svg/cart-off.svg</iconset>
+         <normaloff>:/resources/material-design/svg/cart-off.svg</normaloff>:/resources/material-design/svg/cart-off.svg</iconset>
        </property>
       </widget>
      </item>

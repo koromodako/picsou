@@ -121,7 +121,7 @@
           </property>
           <property name="icon">
            <iconset resource="../../picsou.qrc">
-            <normaloff>:/resources/MaterialDesign-SVG/svg/playlist-plus.svg</normaloff>:/resources/MaterialDesign-SVG/svg/playlist-plus.svg</iconset>
+            <normaloff>:/resources/material-design/svg/playlist-plus.svg</normaloff>:/resources/material-design/svg/playlist-plus.svg</iconset>
           </property>
          </widget>
         </item>
@@ -132,7 +132,7 @@
           </property>
           <property name="icon">
            <iconset resource="../../picsou.qrc">
-            <normaloff>:/resources/MaterialDesign-SVG/svg/pencil.svg</normaloff>:/resources/MaterialDesign-SVG/svg/pencil.svg</iconset>
+            <normaloff>:/resources/material-design/svg/pencil.svg</normaloff>:/resources/material-design/svg/pencil.svg</iconset>
           </property>
          </widget>
         </item>
@@ -143,7 +143,7 @@
           </property>
           <property name="icon">
            <iconset resource="../../picsou.qrc">
-            <normaloff>:/resources/MaterialDesign-SVG/svg/playlist-remove.svg</normaloff>:/resources/MaterialDesign-SVG/svg/playlist-remove.svg</iconset>
+            <normaloff>:/resources/material-design/svg/playlist-remove.svg</normaloff>:/resources/material-design/svg/playlist-remove.svg</iconset>
           </property>
          </widget>
         </item>
@@ -174,7 +174,7 @@
           </property>
           <property name="icon">
            <iconset resource="../../picsou.qrc">
-            <normaloff>:/resources/MaterialDesign-SVG/svg/playlist-plus.svg</normaloff>:/resources/MaterialDesign-SVG/svg/playlist-plus.svg</iconset>
+            <normaloff>:/resources/material-design/svg/playlist-plus.svg</normaloff>:/resources/material-design/svg/playlist-plus.svg</iconset>
           </property>
          </widget>
         </item>
@@ -185,7 +185,7 @@
           </property>
           <property name="icon">
            <iconset resource="../../picsou.qrc">
-            <normaloff>:/resources/MaterialDesign-SVG/svg/pencil.svg</normaloff>:/resources/MaterialDesign-SVG/svg/pencil.svg</iconset>
+            <normaloff>:/resources/material-design/svg/pencil.svg</normaloff>:/resources/material-design/svg/pencil.svg</iconset>
           </property>
          </widget>
         </item>
@@ -196,7 +196,7 @@
           </property>
           <property name="icon">
            <iconset resource="../../picsou.qrc">
-            <normaloff>:/resources/MaterialDesign-SVG/svg/playlist-remove.svg</normaloff>:/resources/MaterialDesign-SVG/svg/playlist-remove.svg</iconset>
+            <normaloff>:/resources/material-design/svg/playlist-remove.svg</normaloff>:/resources/material-design/svg/playlist-remove.svg</iconset>
           </property>
          </widget>
         </item>

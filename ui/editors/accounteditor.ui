@@ -86,7 +86,7 @@
        </property>
        <property name="icon">
         <iconset resource="../../picsou.qrc">
-         <normaloff>:/resources/MaterialDesign-SVG/svg/check.svg</normaloff>:/resources/MaterialDesign-SVG/svg/check.svg</iconset>
+         <normaloff>:/resources/material-design/svg/check.svg</normaloff>:/resources/material-design/svg/check.svg</iconset>
        </property>
       </widget>
      </item>
@@ -97,7 +97,7 @@
        </property>
        <property name="icon">
         <iconset resource="../../picsou.qrc">
-         <normaloff>:/resources/MaterialDesign-SVG/svg/cancel.svg</normaloff>:/resources/MaterialDesign-SVG/svg/cancel.svg</iconset>
+         <normaloff>:/resources/material-design/svg/cancel.svg</normaloff>:/resources/material-design/svg/cancel.svg</iconset>
        </property>
       </widget>
      </item>

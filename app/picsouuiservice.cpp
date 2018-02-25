@@ -60,10 +60,10 @@ bool PicsouUIService::populate_db_tree(QTreeWidget* const tree)
     QList<AccountPtr> accounts;
     const PicsouDB * db;
     QTreeWidgetItem *root_itm, *user_itm, *account_itm, *year_itm, *month_itm;
-    QIcon root_ico=QIcon(":/resources/MaterialDesign-SVG/svg/database.svg"),
-          user_ico=QIcon(":/resources/MaterialDesign-SVG/svg/account-circle.svg"),
-          account_ico=QIcon(":/resources/MaterialDesign-SVG/svg/account-card-details.svg"),
-          calendar_ico=QIcon(":/resources/MaterialDesign-SVG/svg/calendar-blank.svg");
+    QIcon root_ico=QIcon(":/resources/material-design/svg/database.svg"),
+          user_ico=QIcon(":/resources/material-design/svg/account-circle.svg"),
+          account_ico=QIcon(":/resources/material-design/svg/account-card-details.svg"),
+          calendar_ico=QIcon(":/resources/material-design/svg/calendar-blank.svg");
 
     if(!papp()->model_svc()->is_db_opened()) {
         success=false; goto end;
