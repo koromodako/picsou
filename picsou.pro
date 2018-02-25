@@ -137,3 +137,6 @@ FORMS += \
     ui/viewers/accountviewer.ui \
     ui/viewers/userviewer.ui \
     ui/aboutpicsou.ui
+
+RESOURCES += \
+    picsou.qrc
