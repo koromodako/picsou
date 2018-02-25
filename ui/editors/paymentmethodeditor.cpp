@@ -8,13 +8,15 @@ PaymentMethodEditor::PaymentMethodEditor(QString *name, QWidget *parent) :
 {
     ui->setupUi(this);
 
+    setWindowTitle(tr("Payment Method Editor"));
+
     if(!_name->isNull()) {
         ui->name->setText(*_name);
     }
 
-    connect(ui->buttons, &QDialogButtonBox::accepted,
+    connect(ui->save, &QPushButton::clicked,
             this, &PaymentMethodEditor::accept);
-    connect(ui->buttons, &QDialogButtonBox::rejected,
+    connect(ui->cancel, &QPushButton::clicked,
             this, &PaymentMethodEditor::reject);
 }
 

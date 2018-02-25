@@ -40,12 +40,20 @@
        <property name="text">
         <string>Add</string>
        </property>
+       <property name="icon">
+        <iconset resource="../../picsou.qrc">
+         <normaloff>:/resources/MaterialDesign-SVG/svg/cart-plus.svg</normaloff>:/resources/MaterialDesign-SVG/svg/cart-plus.svg</iconset>
+       </property>
       </widget>
      </item>
      <item>
       <widget class="QPushButton" name="edit_op">
        <property name="text">
         <string>Edit</string>
+       </property>
+       <property name="icon">
+        <iconset resource="../../picsou.qrc">
+         <normaloff>:/resources/MaterialDesign-SVG/svg/pencil.svg</normaloff>:/resources/MaterialDesign-SVG/svg/pencil.svg</iconset>
        </property>
       </widget>
      </item>
@@ -54,12 +62,18 @@
        <property name="text">
         <string>Remove</string>
        </property>
+       <property name="icon">
+        <iconset resource="../../picsou.qrc">
+         <normaloff>:/resources/MaterialDesign-SVG/svg/cart-off.svg</normaloff>:/resources/MaterialDesign-SVG/svg/cart-off.svg</iconset>
+       </property>
       </widget>
      </item>
     </layout>
    </item>
   </layout>
  </widget>
- <resources/>
+ <resources>
+  <include location="../../picsou.qrc"/>
+ </resources>
  <connections/>
 </ui>

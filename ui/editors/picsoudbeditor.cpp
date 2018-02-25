@@ -17,9 +17,11 @@ PicsouDBEditor::PicsouDBEditor(QString *name,
 {
     ui->setupUi(this);
 
-    connect(ui->buttons, &QDialogButtonBox::accepted,
+    setWindowTitle(tr("PicsouDB Editor"));
+
+    connect(ui->save, &QPushButton::clicked,
             this, &PicsouDBEditor::accept);
-    connect(ui->buttons, &QDialogButtonBox::rejected,
+    connect(ui->cancel, &QPushButton::clicked,
             this, &PicsouDBEditor::reject);
 }
 

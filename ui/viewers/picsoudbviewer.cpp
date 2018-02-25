@@ -47,9 +47,6 @@ void PicsouDBViewer::refresh(const PicsouDBPtr db)
     ui->add_user->setEnabled(true);
     ui->edit_user->setEnabled(has_users);
     ui->remove_user->setEnabled(has_users);
-    if(has_users) {
-        ui->users_list->setItemSelected(ui->users_list->item(0), true);
-    }
 }
 
 void PicsouDBViewer::add_user()
@@ -61,13 +58,17 @@ void PicsouDBViewer::edit_user()
 {
     PicsouListItem *item;
     item=static_cast<PicsouListItem*>(ui->users_list->currentItem());
-    ui_svc()->user_edit(item->mod_obj_id());
+    if(item!=nullptr) {
+        ui_svc()->user_edit(item->mod_obj_id());
+    }
 }
 
 void PicsouDBViewer::remove_user()
 {
     PicsouListItem *item;
     item=static_cast<PicsouListItem*>(ui->users_list->currentItem());
-    ui_svc()->user_remove(item->mod_obj_id());
+    if(item!=nullptr) {
+        ui_svc()->user_remove(item->mod_obj_id());
+    }
 }
 

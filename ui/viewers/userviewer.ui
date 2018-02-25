@@ -29,6 +29,9 @@
             <property name="text">
              <string>Username:</string>
             </property>
+            <property name="alignment">
+             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+            </property>
            </widget>
           </item>
           <item>
@@ -36,12 +39,18 @@
             <property name="text">
              <string>Last connection:</string>
             </property>
+            <property name="alignment">
+             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+            </property>
            </widget>
           </item>
           <item>
            <widget class="QLabel" name="uuid_key">
             <property name="text">
              <string>Uuid:</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
             </property>
            </widget>
           </item>
@@ -87,43 +96,6 @@
         </property>
        </spacer>
       </item>
-      <item>
-       <layout class="QHBoxLayout" name="user_buttons">
-        <item>
-         <spacer name="left_hspacer">
-          <property name="orientation">
-           <enum>Qt::Horizontal</enum>
-          </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>40</width>
-            <height>20</height>
-           </size>
-          </property>
-         </spacer>
-        </item>
-        <item>
-         <widget class="QPushButton" name="edit_user">
-          <property name="text">
-           <string>Edit</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <spacer name="right_hspacer">
-          <property name="orientation">
-           <enum>Qt::Horizontal</enum>
-          </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>40</width>
-            <height>20</height>
-           </size>
-          </property>
-         </spacer>
-        </item>
-       </layout>
-      </item>
      </layout>
     </widget>
    </item>
@@ -145,7 +117,11 @@
         <item>
          <widget class="QPushButton" name="add_budget">
           <property name="text">
-           <string>Add</string>
+           <string> Add</string>
+          </property>
+          <property name="icon">
+           <iconset resource="../../picsou.qrc">
+            <normaloff>:/resources/MaterialDesign-SVG/svg/playlist-plus.svg</normaloff>:/resources/MaterialDesign-SVG/svg/playlist-plus.svg</iconset>
           </property>
          </widget>
         </item>
@@ -154,12 +130,20 @@
           <property name="text">
            <string>Edit</string>
           </property>
+          <property name="icon">
+           <iconset resource="../../picsou.qrc">
+            <normaloff>:/resources/MaterialDesign-SVG/svg/pencil.svg</normaloff>:/resources/MaterialDesign-SVG/svg/pencil.svg</iconset>
+          </property>
          </widget>
         </item>
         <item>
          <widget class="QPushButton" name="remove_budget">
           <property name="text">
            <string>Remove</string>
+          </property>
+          <property name="icon">
+           <iconset resource="../../picsou.qrc">
+            <normaloff>:/resources/MaterialDesign-SVG/svg/playlist-remove.svg</normaloff>:/resources/MaterialDesign-SVG/svg/playlist-remove.svg</iconset>
           </property>
          </widget>
         </item>
@@ -188,6 +172,10 @@
           <property name="text">
            <string>Add</string>
           </property>
+          <property name="icon">
+           <iconset resource="../../picsou.qrc">
+            <normaloff>:/resources/MaterialDesign-SVG/svg/playlist-plus.svg</normaloff>:/resources/MaterialDesign-SVG/svg/playlist-plus.svg</iconset>
+          </property>
          </widget>
         </item>
         <item>
@@ -195,12 +183,20 @@
           <property name="text">
            <string>Edit</string>
           </property>
+          <property name="icon">
+           <iconset resource="../../picsou.qrc">
+            <normaloff>:/resources/MaterialDesign-SVG/svg/pencil.svg</normaloff>:/resources/MaterialDesign-SVG/svg/pencil.svg</iconset>
+          </property>
          </widget>
         </item>
         <item>
          <widget class="QPushButton" name="remove_account">
           <property name="text">
            <string>Remove</string>
+          </property>
+          <property name="icon">
+           <iconset resource="../../picsou.qrc">
+            <normaloff>:/resources/MaterialDesign-SVG/svg/playlist-remove.svg</normaloff>:/resources/MaterialDesign-SVG/svg/playlist-remove.svg</iconset>
           </property>
          </widget>
         </item>
@@ -211,6 +207,8 @@
    </item>
   </layout>
  </widget>
- <resources/>
+ <resources>
+  <include location="../../picsou.qrc"/>
+ </resources>
  <connections/>
 </ui>

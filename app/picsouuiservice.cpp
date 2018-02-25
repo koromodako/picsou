@@ -60,6 +60,10 @@ bool PicsouUIService::populate_db_tree(QTreeWidget* const tree)
     QList<AccountPtr> accounts;
     const PicsouDB * db;
     QTreeWidgetItem *root_itm, *user_itm, *account_itm, *year_itm, *month_itm;
+    QIcon root_ico=QIcon(":/resources/MaterialDesign-SVG/svg/database.svg"),
+          user_ico=QIcon(":/resources/MaterialDesign-SVG/svg/account-circle.svg"),
+          account_ico=QIcon(":/resources/MaterialDesign-SVG/svg/account-card-details.svg"),
+          calendar_ico=QIcon(":/resources/MaterialDesign-SVG/svg/calendar-blank.svg");
 
     if(!papp()->model_svc()->is_db_opened()) {
         success=false; goto end;
@@ -69,6 +73,7 @@ bool PicsouUIService::populate_db_tree(QTreeWidget* const tree)
 
     root_itm=new PicsouTreeItem(tree,
                                 PicsouTreeItem::T_ROOT,
+                                root_ico,
                                 db->name(),
                                 db->id());
 
@@ -76,6 +81,7 @@ bool PicsouUIService::populate_db_tree(QTreeWidget* const tree)
     foreach(UserPtr user, users) {
         user_itm=new PicsouTreeItem(root_itm,
                                     PicsouTreeItem::T_USER,
+                                    user_ico,
                                     user->name(),
                                     user->id());
 
@@ -83,18 +89,21 @@ bool PicsouUIService::populate_db_tree(QTreeWidget* const tree)
         foreach(AccountPtr account, accounts) {
             account_itm=new PicsouTreeItem(user_itm,
                                            PicsouTreeItem::T_ACCOUNT,
+                                           account_ico,
                                            account->name(),
                                            account->id());
 
             foreach (int year, account->years()) {
                 year_itm=new PicsouTreeItem(account_itm,
                                             PicsouTreeItem::T_YEAR,
+                                            calendar_ico,
                                             QString("%0").arg(year),
                                             account->id());
 
                 for(int month=0; month<12; month++) {
                     month_itm=new PicsouTreeItem(year_itm,
                                                  PicsouTreeItem::T_MONTH,
+                                                 calendar_ico,
                                                  QString("%0").arg(month+1),
                                                  account->id());
                 }

@@ -19,6 +19,8 @@ BudgetEditor::BudgetEditor(double *amount,
 {
     ui->setupUi(this);
 
+    setWindowTitle(tr("Budget Editor"));
+
     ui->amount->setValue(*_amount);
     if(!_name->isNull()) {
         ui->name->setText(*_name);
@@ -27,9 +29,9 @@ BudgetEditor::BudgetEditor(double *amount,
         ui->description->setPlainText(*_description);
     }
 
-    connect(ui->buttons, &QDialogButtonBox::accepted,
+    connect(ui->save, &QPushButton::clicked,
             this, &BudgetEditor::accept);
-    connect(ui->buttons, &QDialogButtonBox::rejected,
+    connect(ui->cancel, &QPushButton::clicked,
             this, &BudgetEditor::reject);
 }
 

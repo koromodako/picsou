@@ -24,6 +24,8 @@ OperationEditor::OperationEditor(double *amount,
 {
     ui->setupUi(this);
 
+    setWindowTitle(tr("Operation Editor"));
+
     ui->budget->setEditable(false);
 
     ui->amount->setValue(*_amount);
@@ -37,9 +39,9 @@ OperationEditor::OperationEditor(double *amount,
         ui->description->setPlainText(*_description);
     }
 
-    connect(ui->buttons, &QDialogButtonBox::accepted,
+    connect(ui->save, &QPushButton::clicked,
             this, &OperationEditor::accept);
-    connect(ui->buttons, &QDialogButtonBox::rejected,
+    connect(ui->cancel, &QPushButton::clicked,
             this, &OperationEditor::reject);
 }
 

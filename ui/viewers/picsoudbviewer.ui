@@ -110,21 +110,33 @@
         <item>
          <widget class="QPushButton" name="add_user">
           <property name="text">
-           <string>Add</string>
+           <string> Add</string>
+          </property>
+          <property name="icon">
+           <iconset resource="../../picsou.qrc">
+            <normaloff>:/resources/MaterialDesign-SVG/svg/account-plus.svg</normaloff>:/resources/MaterialDesign-SVG/svg/account-plus.svg</iconset>
           </property>
          </widget>
         </item>
         <item>
          <widget class="QPushButton" name="edit_user">
           <property name="text">
-           <string>Edit</string>
+           <string> Edit</string>
+          </property>
+          <property name="icon">
+           <iconset resource="../../picsou.qrc">
+            <normaloff>:/resources/MaterialDesign-SVG/svg/account-edit.svg</normaloff>:/resources/MaterialDesign-SVG/svg/account-edit.svg</iconset>
           </property>
          </widget>
         </item>
         <item>
          <widget class="QPushButton" name="remove_user">
           <property name="text">
-           <string>Remove</string>
+           <string> Remove</string>
+          </property>
+          <property name="icon">
+           <iconset resource="../../picsou.qrc">
+            <normaloff>:/resources/MaterialDesign-SVG/svg/account-remove.svg</normaloff>:/resources/MaterialDesign-SVG/svg/account-remove.svg</iconset>
           </property>
          </widget>
         </item>
@@ -135,6 +147,8 @@
    </item>
   </layout>
  </widget>
- <resources/>
+ <resources>
+  <include location="../../picsou.qrc"/>
+ </resources>
  <connections/>
 </ui>

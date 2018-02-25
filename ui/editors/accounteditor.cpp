@@ -16,6 +16,8 @@ AccountEditor::AccountEditor(QString *name,
 {
     ui->setupUi(this);
 
+    setWindowTitle(tr("Account Editor"));
+
     if(!_name->isNull()) {
         ui->name->setText(*_name);
     }
@@ -23,9 +25,9 @@ AccountEditor::AccountEditor(QString *name,
         ui->description->setPlainText(*_description);
     }
 
-    connect(ui->buttons, &QDialogButtonBox::accepted,
+    connect(ui->save, &QPushButton::clicked,
             this, &AccountEditor::accept);
-    connect(ui->buttons, &QDialogButtonBox::rejected,
+    connect(ui->cancel, &QPushButton::clicked,
             this, &AccountEditor::reject);
 }
 

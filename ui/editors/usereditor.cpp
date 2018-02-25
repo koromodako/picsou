@@ -19,6 +19,8 @@ UserEditor::UserEditor(QString *username,
 {
     ui->setupUi(this);
 
+    setWindowTitle(tr("User Editor"));
+
     ui->error->setVisible(false);
 
     ui->old_pwd->setEchoMode(QLineEdit::Password);
@@ -29,9 +31,9 @@ UserEditor::UserEditor(QString *username,
         ui->username->setText(*_username);
     }
 
-    connect(ui->button_box, &QDialogButtonBox::accepted,
+    connect(ui->save, &QPushButton::clicked,
             this, &UserEditor::accept);
-    connect(ui->button_box, &QDialogButtonBox::rejected,
+    connect(ui->cancel, &QPushButton::clicked,
             this, &UserEditor::reject);
 }
 
@@ -42,15 +44,17 @@ UserEditor::UserEditor(QString *username,
     do{ \
         QByteArray ba; \
         ba=(src)->text().toUtf8(); \
-        ERASE_LINE_EDIT(src); \
-        if(!(dst)->resize(ba.length())) { \
-            goto exception; \
+        if(ba.length()>0) { \
+            ERASE_LINE_EDIT(src); \
+            if(!(dst)->resize(ba.length())) { \
+                goto exception; \
+            } \
+            memcpy((dst)->data(), ba.constData(), ba.length()); \
+            for(int i=0; i<ba.length(); i++) { \
+                ba[i]=0; \
+            } \
+            ba.clear(); \
         } \
-        memcpy((dst)->data(), ba.constData(), ba.length()); \
-        for(int i=0; i<ba.length(); i++) { \
-            ba[i]=0; \
-        } \
-        ba.clear(); \
     } while(0)
 
 void UserEditor::accept()

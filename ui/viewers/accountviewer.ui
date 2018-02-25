@@ -30,6 +30,10 @@
           <property name="text">
            <string>Add</string>
           </property>
+          <property name="icon">
+           <iconset resource="../../picsou.qrc">
+            <normaloff>:/resources/MaterialDesign-SVG/svg/credit-card-plus.svg</normaloff>:/resources/MaterialDesign-SVG/svg/credit-card-plus.svg</iconset>
+          </property>
          </widget>
         </item>
         <item>
@@ -37,12 +41,20 @@
           <property name="text">
            <string>Edit</string>
           </property>
+          <property name="icon">
+           <iconset resource="../../picsou.qrc">
+            <normaloff>:/resources/MaterialDesign-SVG/svg/pencil.svg</normaloff>:/resources/MaterialDesign-SVG/svg/pencil.svg</iconset>
+          </property>
          </widget>
         </item>
         <item>
          <widget class="QPushButton" name="payment_methods_remove">
           <property name="text">
            <string>Remove</string>
+          </property>
+          <property name="icon">
+           <iconset resource="../../picsou.qrc">
+            <normaloff>:/resources/MaterialDesign-SVG/svg/credit-card-off.svg</normaloff>:/resources/MaterialDesign-SVG/svg/credit-card-off.svg</iconset>
           </property>
          </widget>
         </item>
@@ -83,6 +95,10 @@
           <property name="text">
            <string>Add</string>
           </property>
+          <property name="icon">
+           <iconset resource="../../picsou.qrc">
+            <normaloff>:/resources/MaterialDesign-SVG/svg/calendar-clock.svg</normaloff>:/resources/MaterialDesign-SVG/svg/calendar-clock.svg</iconset>
+          </property>
          </widget>
         </item>
         <item>
@@ -90,12 +106,20 @@
           <property name="text">
            <string>Edit</string>
           </property>
+          <property name="icon">
+           <iconset resource="../../picsou.qrc">
+            <normaloff>:/resources/MaterialDesign-SVG/svg/pencil.svg</normaloff>:/resources/MaterialDesign-SVG/svg/pencil.svg</iconset>
+          </property>
          </widget>
         </item>
         <item>
          <widget class="QPushButton" name="scheduled_ops_remove">
           <property name="text">
            <string>Remove</string>
+          </property>
+          <property name="icon">
+           <iconset resource="../../picsou.qrc">
+            <normaloff>:/resources/MaterialDesign-SVG/svg/playlist-remove.svg</normaloff>:/resources/MaterialDesign-SVG/svg/playlist-remove.svg</iconset>
           </property>
          </widget>
         </item>
@@ -106,6 +130,8 @@
    </item>
   </layout>
  </widget>
- <resources/>
+ <resources>
+  <include location="../../picsou.qrc"/>
+ </resources>
  <connections/>
 </ui>

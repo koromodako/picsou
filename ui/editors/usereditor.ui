@@ -2,16 +2,19 @@
 <ui version="4.0">
  <class>UserEditor</class>
  <widget class="QWidget" name="UserEditor">
+  <property name="windowModality">
+   <enum>Qt::ApplicationModal</enum>
+  </property>
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>478</width>
-    <height>189</height>
+    <width>504</width>
+    <height>191</height>
    </rect>
   </property>
   <property name="sizePolicy">
-   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+   <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
     <horstretch>0</horstretch>
     <verstretch>0</verstretch>
    </sizepolicy>
@@ -67,14 +70,14 @@
         </widget>
        </item>
        <item>
-        <widget class="QLineEdit" name="new_pwd">
+        <widget class="QLineEdit" name="old_pwd">
          <property name="placeholderText">
           <string>Old password goes here...</string>
          </property>
         </widget>
        </item>
        <item>
-        <widget class="QLineEdit" name="old_pwd">
+        <widget class="QLineEdit" name="new_pwd">
          <property name="placeholderText">
           <string>New password goes here...</string>
          </property>
@@ -92,6 +95,19 @@
     </layout>
    </item>
    <item>
+    <widget class="QLabel" name="error">
+     <property name="enabled">
+      <bool>true</bool>
+     </property>
+     <property name="text">
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; color:#aa0000;&quot;&gt;Error: new password fields differs...&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     </property>
+     <property name="textFormat">
+      <enum>Qt::AutoText</enum>
+     </property>
+    </widget>
+   </item>
+   <item>
     <spacer name="vspacer">
      <property name="orientation">
       <enum>Qt::Vertical</enum>
@@ -105,27 +121,48 @@
     </spacer>
    </item>
    <item>
-    <widget class="QLabel" name="error">
-     <property name="enabled">
-      <bool>true</bool>
-     </property>
-     <property name="text">
-      <string>&lt;error&gt;</string>
-     </property>
-     <property name="textFormat">
-      <enum>Qt::AutoText</enum>
-     </property>
-    </widget>
-   </item>
-   <item>
-    <widget class="QDialogButtonBox" name="button_box">
-     <property name="standardButtons">
-      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Save</set>
-     </property>
-    </widget>
+    <layout class="QHBoxLayout" name="horizontalLayout">
+     <item>
+      <spacer name="hspacer">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <widget class="QPushButton" name="save">
+       <property name="text">
+        <string>Save</string>
+       </property>
+       <property name="icon">
+        <iconset resource="../../picsou.qrc">
+         <normaloff>:/resources/MaterialDesign-SVG/svg/check.svg</normaloff>:/resources/MaterialDesign-SVG/svg/check.svg</iconset>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="cancel">
+       <property name="text">
+        <string>Cancel</string>
+       </property>
+       <property name="icon">
+        <iconset resource="../../picsou.qrc">
+         <normaloff>:/resources/MaterialDesign-SVG/svg/cancel.svg</normaloff>:/resources/MaterialDesign-SVG/svg/cancel.svg</iconset>
+       </property>
+      </widget>
+     </item>
+    </layout>
    </item>
   </layout>
  </widget>
- <resources/>
+ <resources>
+  <include location="../../picsou.qrc"/>
+ </resources>
  <connections/>
 </ui>

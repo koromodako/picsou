@@ -19,10 +19,12 @@ public:
     virtual ~PicsouTreeItem();
     PicsouTreeItem(QTreeWidget *view,
                    Type type,
+                   const QIcon &icon,
                    const QString &text,
                    QUuid id);
     PicsouTreeItem(QTreeWidgetItem *parent,
                    Type type,
+                   const QIcon &icon,
                    const QString &text,
                    QUuid id);
 

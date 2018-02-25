@@ -78,12 +78,16 @@ void OperationViewer::edit_op()
 {
     PicsouTableItem *item;
     item=static_cast<PicsouTableItem*>(ui->table->item(ui->table->currentRow(), 0));
-    ui_svc()->op_edit(_user_id, mod_obj_id(), item->mod_obj_id());
+    if(item!=nullptr) {
+        ui_svc()->op_edit(_user_id, mod_obj_id(), item->mod_obj_id());
+    }
 }
 
 void OperationViewer::remove_op()
 {
     PicsouTableItem *item;
     item=static_cast<PicsouTableItem*>(ui->table->item(ui->table->currentRow(), 0));
-    ui_svc()->op_remove(mod_obj_id(), item->mod_obj_id());
+    if(item!=nullptr) {
+        ui_svc()->op_remove(mod_obj_id(), item->mod_obj_id());
+    }
 }

@@ -59,14 +59,18 @@ void UserViewer::edit_account()
 {
     PicsouListItem *item;
     item=static_cast<PicsouListItem*>(ui->list_accounts->currentItem());
-    ui_svc()->account_edit(mod_obj_id(), item->mod_obj_id());
+    if(item!=nullptr) {
+        ui_svc()->account_edit(mod_obj_id(), item->mod_obj_id());
+    }
 }
 
 void UserViewer::remove_account()
 {
     PicsouListItem *item;
     item=static_cast<PicsouListItem*>(ui->list_accounts->currentItem());
-    ui_svc()->account_remove(mod_obj_id(), item->mod_obj_id());
+    if(item!=nullptr) {
+        ui_svc()->account_remove(mod_obj_id(), item->mod_obj_id());
+    }
 }
 
 void UserViewer::add_budget()
@@ -78,13 +82,17 @@ void UserViewer::edit_budget()
 {
     PicsouListItem *item;
     item=static_cast<PicsouListItem*>(ui->list_budgets->currentItem());
-    ui_svc()->budget_edit(mod_obj_id(), item->mod_obj_id());
+    if(item!=nullptr) {
+        ui_svc()->budget_edit(mod_obj_id(), item->mod_obj_id());
+    }
 }
 
 void UserViewer::remove_budget()
 {
     PicsouListItem *item;
     item=static_cast<PicsouListItem*>(ui->list_budgets->currentItem());
-    ui_svc()->budget_remove(mod_obj_id(), item->mod_obj_id());
+    if(item!=nullptr) {
+        ui_svc()->budget_remove(mod_obj_id(), item->mod_obj_id());
+    }
 }
 

@@ -37,6 +37,8 @@ public slots:
 
     void update_viewer(QTreeWidgetItem *item, int column);
 
+    bool close();
+
 private:
     void refresh(State state);
     void refresh_tree();

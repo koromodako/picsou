@@ -36,12 +36,9 @@ MainWindow::MainWindow(PicsouUIService *ui_svc, QWidget *parent) :
             ui_svc, &PicsouUIService::db_save_as);
 
     connect(ui->action_quit, &QAction::triggered,
-            this, &QWidget::close);
-    /* view menu */
+            this, &MainWindow::close);
+    /* edit menu */
 
-    /* tools menu */
-    connect(ui->action_statistics, &QAction::triggered,
-            ui_svc, &PicsouUIService::show_statistics);
     /* help menu */
     connect(ui->action_about_qt, &QAction::triggered,
             qApp, &QApplication::aboutQt);
@@ -115,6 +112,12 @@ void MainWindow::update_viewer(QTreeWidgetItem *item, int)
     }
 }
 
+bool MainWindow::close()
+{
+    ui_svc()->db_close();
+    return QWidget::close();
+}
+
 void MainWindow::refresh(MainWindow::State state)
 {
     _state=state;
@@ -139,6 +142,7 @@ void MainWindow::refresh(MainWindow::State state)
         /* update tree widget */
         refresh_tree();
         ui->tree->setEnabled(true);
+        update_viewer(ui->tree->topLevelItem(0), 0);
         break;
     case DB_MODIFIED:
         /* update menu actions */

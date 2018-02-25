@@ -26,9 +26,11 @@ ScheduledOperationEditor::ScheduledOperationEditor(double *amount,
 {
     ui->setupUi(this);
 
-    connect(ui->buttons, &QDialogButtonBox::accepted,
+    setWindowTitle(tr("Scheduled Operation Editor"));
+
+    connect(ui->save, &QPushButton::clicked,
             this, &ScheduledOperationEditor::accept);
-    connect(ui->buttons, &QDialogButtonBox::rejected,
+    connect(ui->cancel, &QPushButton::clicked,
             this, &ScheduledOperationEditor::reject);
 }
 

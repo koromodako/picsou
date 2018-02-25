@@ -61,12 +61,16 @@ void AccountViewer::edit_pm()
 {
     PicsouListItem *item;
     item=static_cast<PicsouListItem*>(ui->payment_methods_list->currentItem());
-    ui_svc()->pm_edit(mod_obj_id(), item->mod_obj_id());
+    if(item!=nullptr) {
+        ui_svc()->pm_edit(mod_obj_id(), item->mod_obj_id());
+    }
 }
 
 void AccountViewer::remove_pm()
 {
     PicsouListItem *item;
     item=static_cast<PicsouListItem*>(ui->payment_methods_list->currentItem());
-    ui_svc()->pm_remove(mod_obj_id(), item->mod_obj_id());
+    if(item!=nullptr) {
+        ui_svc()->pm_remove(mod_obj_id(), item->mod_obj_id());
+    }
 }
