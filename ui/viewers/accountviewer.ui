@@ -15,18 +15,18 @@
   </property>
   <layout class="QHBoxLayout" name="horizontalLayout">
    <item>
-    <widget class="QGroupBox" name="payment_methods_group">
+    <widget class="QGroupBox" name="pm_group">
      <property name="title">
       <string>Payment Methods</string>
      </property>
      <layout class="QVBoxLayout" name="verticalLayout">
       <item>
-       <widget class="QListWidget" name="payment_methods_list"/>
+       <widget class="QListWidget" name="payment_methods"/>
       </item>
       <item>
-       <layout class="QHBoxLayout" name="payment_methods_buttons">
+       <layout class="QHBoxLayout" name="pm_buttons">
         <item>
-         <widget class="QPushButton" name="payment_methods_add">
+         <widget class="QPushButton" name="pm_add">
           <property name="text">
            <string>Add</string>
           </property>
@@ -37,7 +37,7 @@
          </widget>
         </item>
         <item>
-         <widget class="QPushButton" name="payment_methods_edit">
+         <widget class="QPushButton" name="pm_edit">
           <property name="text">
            <string>Edit</string>
           </property>
@@ -48,7 +48,7 @@
          </widget>
         </item>
         <item>
-         <widget class="QPushButton" name="payment_methods_remove">
+         <widget class="QPushButton" name="pm_remove">
           <property name="text">
            <string>Remove</string>
           </property>
@@ -70,7 +70,7 @@
      </property>
      <layout class="QVBoxLayout" name="verticalLayout_2">
       <item>
-       <widget class="QTableWidget" name="scheduled_ops_table">
+       <widget class="QTableWidget" name="sops_table">
         <property name="rowCount">
          <number>0</number>
         </property>
@@ -89,9 +89,9 @@
        </widget>
       </item>
       <item>
-       <layout class="QHBoxLayout" name="scheduled_ops_buttons">
+       <layout class="QHBoxLayout" name="sops_buttons">
         <item>
-         <widget class="QPushButton" name="scheduled_ops_add">
+         <widget class="QPushButton" name="sops_add">
           <property name="text">
            <string>Add</string>
           </property>
@@ -102,7 +102,7 @@
          </widget>
         </item>
         <item>
-         <widget class="QPushButton" name="scheduled_ops_edit">
+         <widget class="QPushButton" name="sops_edit">
           <property name="text">
            <string>Edit</string>
           </property>
@@ -113,7 +113,7 @@
          </widget>
         </item>
         <item>
-         <widget class="QPushButton" name="scheduled_ops_remove">
+         <widget class="QPushButton" name="sops_remove">
           <property name="text">
            <string>Remove</string>
           </property>

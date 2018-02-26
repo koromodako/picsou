@@ -9,7 +9,7 @@ AboutPicsou::~AboutPicsou()
 }
 
 AboutPicsou::AboutPicsou(QWidget *parent) :
-    QWidget(parent),
+    QDialog(parent),
     ui(new Ui::AboutPicsou)
 {
     ui->setupUi(this);

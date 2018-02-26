@@ -13,6 +13,11 @@
     (QStringList() << KW_AMOUNT << KW_DAY << KW_MONTH << KW_YEAR \
     << KW_RECIPIENT << KW_DESCRIPTION << KW_PAYMENT_METHOD)
 
+Operation::~Operation()
+{
+
+}
+
 Operation::Operation(PicsouModelObj *parent) :
     PicsouModelObj(false, parent)
 {
@@ -37,10 +42,22 @@ Operation::Operation(double amount,
 
 }
 
-Operation::~Operation()
+void Operation::update(double amount,
+                       const QDate &date,
+                       const QString &budget,
+                       const QString &recipient,
+                       const QString &description,
+                       const QString &payment_method)
 {
-
+    _amount=amount;
+    _date=date;
+    _budget=budget;
+    _recipient=recipient;
+    _description=description;
+    _payment_method=payment_method;
+    emit modified();
 }
+
 
 bool Operation::read(const QJsonObject &json)
 {

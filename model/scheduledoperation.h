@@ -29,6 +29,14 @@ public:
                        const QString &payment_method,
                        PicsouModelObj *parent);
 
+    void update(Frequency freq,
+                double amount,
+                const QDate &date,
+                const QString &budget,
+                const QString &recipient,
+                const QString &description,
+                const QString &payment_method);
+
     inline Frequency frequency() const { return _freq; }
 
     bool read(const QJsonObject &json);

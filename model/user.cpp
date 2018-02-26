@@ -28,7 +28,7 @@ User::User(const QString &name,
 void User::update(const QString &name)
 {
     _name=name;
-    modified();
+    emit modified();
 }
 
 void User::add_budget(double amount,

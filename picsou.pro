@@ -140,3 +140,6 @@ FORMS += \
 
 RESOURCES += \
     picsou.qrc
+
+DISTFILES += \
+    TODO.md

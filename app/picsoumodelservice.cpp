@@ -132,22 +132,21 @@ end:
 
 bool PicsouModelService::close_db()
 {
-    bool success;
+    bool success=false;
 
     if(is_db_opened()) {
         _filename.clear();
+        _is_db_modified=false;
         delete _db;
-        success=true; goto end;
+        success=true;
     }
 
-    success=false;
-end:
     return success;
 }
 
 bool PicsouModelService::is_db_opened()
 {
-    return (_db!=nullptr);
+    return (!_db.isNull());
 }
 
 UserPtr PicsouModelService::find_user(QUuid id) const

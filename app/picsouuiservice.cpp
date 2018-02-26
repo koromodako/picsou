@@ -550,14 +550,14 @@ void PicsouUIService::op_edit(QUuid user_id, QUuid account_id, QUuid op_id)
         emit svc_op_canceled(); goto end;
     }
 
-    account->add_operation(amount,
-                           date,
-                           budget,
-                           recipient,
-                           description,
-                           payment_method);
+    op->update(amount,
+               date,
+               budget,
+               recipient,
+               description,
+               payment_method);
 
-    emit op_added();
+    emit op_edited();
 end:
     return;
 }

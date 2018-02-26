@@ -47,24 +47,43 @@ void Account::add_payment_method(const QString &name)
 {
     PaymentMethodPtr pm=PaymentMethodPtr(new PaymentMethod(name, this));
     _payment_methods.insert(pm->id(), pm);
+    emit modified();
 }
 
 bool Account::remove_payment_method(QUuid id)
 {
+    bool success=false;
     switch (_payment_methods.remove(id)) {
-        case 0: /* TRACE */ return false;
-        case 1: return true;
-        default: /* TRACE */ return false;
+    case 0:
+        /* TRACE */
+        break;
+    case 1:
+        success=true;
+        emit modified();
+        break;
+    default:
+        /* TRACE */
+        break;
     }
+    return success;
 }
 
 bool Account::remove_scheduled_operation(QUuid id)
 {
+    bool success=false;
     switch (_scheduled_ops.remove(id)) {
-        case 0: /* TRACE */ return false;
-        case 1: return true;
-        default: /* TRACE */ return false;
+    case 0:
+        /* TRACE */
+        break;
+    case 1:
+        success=true;
+        emit modified();
+        break;
+    default:
+        /* TRACE */
+        break;
     }
+    return success;
 }
 
 void Account::add_operation(double amount,
@@ -82,15 +101,25 @@ void Account::add_operation(double amount,
                                                payment_method,
                                                this));
      _ops.insert(op->id(), op);
+     emit modified();
 }
 
 bool Account::remove_operation(QUuid id)
 {
+    bool success=false;
     switch (_ops.remove(id)) {
-        case 0: /* TRACE */ return false;
-        case 1: return true;
-        default: /* TRACE */ return false;
+    case 0:
+        /* TRACE */
+        break;
+    case 1:
+        success=true;
+        emit modified();
+        break;
+    default:
+        /* TRACE */
+        break;
     }
+    return success;
 }
 
 PaymentMethodPtr Account::find_payment_method(QUuid id)

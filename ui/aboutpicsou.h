@@ -1,13 +1,13 @@
 #ifndef ABOUTPICSOU_H
 #define ABOUTPICSOU_H
 
-#include <QWidget>
+#include <QDialog>
 
 namespace Ui {
 class AboutPicsou;
 }
 
-class AboutPicsou : public QWidget
+class AboutPicsou : public QDialog
 {
     Q_OBJECT
 

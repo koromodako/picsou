@@ -26,6 +26,13 @@ public:
               const QString &payment_method,
               PicsouModelObj *parent);
 
+    void update(double amount,
+                const QDate &date,
+                const QString &budget,
+                const QString &recipient,
+                const QString &description,
+                const QString &payment_method);
+
     inline double amount() const { return _amount; }
     inline QString amount_str() const { return QString("%0").arg(_amount, 0, 'f', 2); }
     inline QDate date() const { return _date; }

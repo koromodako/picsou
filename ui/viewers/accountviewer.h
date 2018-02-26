@@ -14,7 +14,7 @@ class AccountViewer : public PicsouUIViewer
 public:
     virtual ~AccountViewer();
     explicit AccountViewer(PicsouUIService *ui_svc,
-                           QUuid uuid,
+                           QUuid account_uuid,
                            QWidget *parent=nullptr);
 
 public slots:

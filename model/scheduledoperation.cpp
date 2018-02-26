@@ -36,6 +36,23 @@ ScheduledOperation::ScheduledOperation(Frequency freq,
 
 }
 
+void ScheduledOperation::update(Frequency freq,
+                                double amount,
+                                const QDate &date,
+                                const QString &budget,
+                                const QString &recipient,
+                                const QString &description,
+                                const QString &payment_method)
+{
+    _freq=freq;
+    Operation::update(amount,
+                      date,
+                      budget,
+                      recipient,
+                      description,
+                      payment_method);
+}
+
 QString ScheduledOperation::freq2str(Frequency freq)
 {
     return gfrequencies.at(freq);
