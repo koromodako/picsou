@@ -572,6 +572,7 @@ void PicsouUIService::op_add(QUuid user_id, QUuid account_id)
     QDate date;
     UserPtr user;
     AccountPtr account;
+    QStringList budgets, payment_methods;
     QString payment_method, budget, recipient, description;
     OperationEditor editor(&amount,
                            &date,
@@ -592,8 +593,18 @@ void PicsouUIService::op_add(QUuid user_id, QUuid account_id)
         goto end;
     }
 
-    editor.set_budgets(user->budgets_str(true));
-    editor.set_payment_methods(account->payment_methods_str(true));
+    budgets=user->budgets_str(true);
+    payment_methods=account->payment_methods_str(true);
+
+    if(budgets.empty()||payment_methods.empty()) {
+        emit svc_op_failed(tr("Logical error: make sure you have defined at "
+                              "least one budget and one payment method before "
+                              "adding operations."));
+        goto end;
+    }
+
+    editor.set_budgets(budgets);
+    editor.set_payment_methods(payment_methods);
 
     if(editor.exec()==QDialog::Rejected) {
         emit svc_op_canceled(); goto end;
