@@ -18,16 +18,27 @@ PicsouDBViewer::PicsouDBViewer(PicsouUIService *ui_svc,
     ui(new Ui::PicsouDBViewer)
 {
     ui->setupUi(this);
-
     connect(ui_svc, &PicsouUIService::model_updated,
             this, &PicsouDBViewer::refresh);
 
+    /* user editor */
     connect(ui->add_user, &QPushButton::clicked,
             this, &PicsouDBViewer::add_user);
+    connect(ui->action_add_user, &QAction::triggered,
+            this, &PicsouDBViewer::add_user);
+    addAction(ui->action_add_user);
+
     connect(ui->edit_user, &QPushButton::clicked,
             this, &PicsouDBViewer::edit_user);
+    connect(ui->action_edit_user, &QAction::triggered,
+            this, &PicsouDBViewer::edit_user);
+    addAction(ui->action_edit_user);
+
     connect(ui->remove_user, &QPushButton::clicked,
             this, &PicsouDBViewer::remove_user);
+    connect(ui->action_remove_user, &QAction::triggered,
+            this, &PicsouDBViewer::remove_user);
+    addAction(ui->action_remove_user);
 }
 
 void PicsouDBViewer::refresh(const PicsouDBPtr db)

@@ -71,6 +71,33 @@
     </layout>
    </item>
   </layout>
+  <action name="action_add_op">
+   <property name="icon">
+    <iconset resource="../../picsou.qrc">
+     <normaloff>:/resources/material-design/svg/cart-plus.svg</normaloff>:/resources/material-design/svg/cart-plus.svg</iconset>
+   </property>
+   <property name="text">
+    <string>Add operation</string>
+   </property>
+  </action>
+  <action name="action_edit_op">
+   <property name="icon">
+    <iconset resource="../../picsou.qrc">
+     <normaloff>:/resources/material-design/svg/pencil.svg</normaloff>:/resources/material-design/svg/pencil.svg</iconset>
+   </property>
+   <property name="text">
+    <string>Edit operation</string>
+   </property>
+  </action>
+  <action name="action_remove_op">
+   <property name="icon">
+    <iconset resource="../../picsou.qrc">
+     <normaloff>:/resources/material-design/svg/cart-off.svg</normaloff>:/resources/material-design/svg/cart-off.svg</iconset>
+   </property>
+   <property name="text">
+    <string>Remove operation</string>
+   </property>
+  </action>
  </widget>
  <resources>
   <include location="../../picsou.qrc"/>

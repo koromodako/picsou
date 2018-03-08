@@ -116,9 +116,9 @@ end:
     return success;
 }
 
-QWidget *PicsouUIService::viewer_from_item(QTreeWidgetItem *item)
+PicsouUIViewer *PicsouUIService::viewer_from_item(QTreeWidgetItem *item)
 {
-    QWidget *w=nullptr;
+    PicsouUIViewer *w=nullptr;
     PicsouTreeItem *pitem=static_cast<PicsouTreeItem*>(item);
     switch (pitem->type()) {
     case PicsouTreeItem::T_ROOT:

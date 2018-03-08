@@ -19,20 +19,42 @@ UserViewer::UserViewer(PicsouUIService *ui_svc,
 
     connect(ui_svc, &PicsouUIService::model_updated,
             this, &UserViewer::refresh);
-
-    connect(ui->add_account, &QPushButton::clicked,
-            this, &UserViewer::add_account);
-    connect(ui->edit_account, &QPushButton::clicked,
-            this, &UserViewer::edit_account);
-    connect(ui->remove_account, &QPushButton::clicked,
-            this, &UserViewer::remove_account);
-
+    /* budget editor */
     connect(ui->add_budget, &QPushButton::clicked,
             this, &UserViewer::add_budget);
+    connect(ui->action_add_budget, &QAction::triggered,
+            this, &UserViewer::add_budget);
+    addAction(ui->action_add_budget);
+
     connect(ui->edit_budget, &QPushButton::clicked,
             this, &UserViewer::edit_budget);
+    connect(ui->action_edit_budget, &QAction::triggered,
+            this, &UserViewer::edit_budget);
+    addAction(ui->action_edit_budget);
+
     connect(ui->remove_budget, &QPushButton::clicked,
             this, &UserViewer::remove_budget);
+    connect(ui->action_remove_budget, &QAction::triggered,
+            this, &UserViewer::remove_budget);
+    addAction(ui->action_remove_budget);
+    /* account editor */
+    connect(ui->add_account, &QPushButton::clicked,
+            this, &UserViewer::add_account);
+    connect(ui->action_add_account, &QAction::triggered,
+            this, &UserViewer::add_account);
+    addAction(ui->action_add_account);
+
+    connect(ui->edit_account, &QPushButton::clicked,
+            this, &UserViewer::edit_account);
+    connect(ui->action_edit_account, &QAction::triggered,
+            this, &UserViewer::edit_account);
+    addAction(ui->action_edit_account);
+
+    connect(ui->remove_account, &QPushButton::clicked,
+            this, &UserViewer::remove_account);
+    connect(ui->action_remove_account, &QAction::triggered,
+            this, &UserViewer::remove_account);
+    addAction(ui->action_remove_account);
 }
 
 void UserViewer::refresh(const PicsouDBPtr db)

@@ -108,7 +108,7 @@
           </property>
           <property name="icon">
            <iconset resource="../../picsou.qrc">
-            <normaloff>:/resources/material-design/svg/pencil.svg</normaloff>:/resources/material-design/svg/pencil.svg</iconset>
+            <normaloff>:/resources/material-design/svg/calendar-range.svg</normaloff>:/resources/material-design/svg/calendar-range.svg</iconset>
           </property>
          </widget>
         </item>
@@ -129,7 +129,71 @@
     </widget>
    </item>
   </layout>
+  <action name="action_add_pm">
+   <property name="icon">
+    <iconset resource="../../picsou.qrc">
+     <normaloff>:/resources/material-design/svg/credit-card-plus.svg</normaloff>:/resources/material-design/svg/credit-card-plus.svg</iconset>
+   </property>
+   <property name="text">
+    <string>Add payment method</string>
+   </property>
+  </action>
+  <action name="action_edit_pm">
+   <property name="icon">
+    <iconset resource="../../picsou.qrc">
+     <normaloff>:/resources/material-design/svg/pencil.svg</normaloff>:/resources/material-design/svg/pencil.svg</iconset>
+   </property>
+   <property name="text">
+    <string>Edit payment method</string>
+   </property>
+  </action>
+  <action name="action_remove_pm">
+   <property name="icon">
+    <iconset resource="../../picsou.qrc">
+     <normaloff>:/resources/material-design/svg/credit-card-off.svg</normaloff>:/resources/material-design/svg/credit-card-off.svg</iconset>
+   </property>
+   <property name="text">
+    <string>Remove payment method</string>
+   </property>
+  </action>
+  <action name="action_add_sop">
+   <property name="icon">
+    <iconset resource="../../picsou.qrc">
+     <normaloff>:/resources/material-design/svg/calendar-plus.svg</normaloff>:/resources/material-design/svg/calendar-plus.svg</iconset>
+   </property>
+   <property name="text">
+    <string>Add scheduled operation</string>
+   </property>
+  </action>
+  <action name="action_edit_sop">
+   <property name="icon">
+    <iconset resource="../../picsou.qrc">
+     <normaloff>:/resources/material-design/svg/calendar-range.svg</normaloff>:/resources/material-design/svg/calendar-range.svg</iconset>
+   </property>
+   <property name="text">
+    <string>Edit scheduled operation</string>
+   </property>
+  </action>
+  <action name="action_remove_sop">
+   <property name="icon">
+    <iconset resource="../../picsou.qrc">
+     <normaloff>:/resources/material-design/svg/calendar-remove.svg</normaloff>:/resources/material-design/svg/calendar-remove.svg</iconset>
+   </property>
+   <property name="text">
+    <string>Remove scheduled operation</string>
+   </property>
+  </action>
  </widget>
+ <tabstops>
+  <tabstop>payment_methods</tabstop>
+  <tabstop>pm_add</tabstop>
+  <tabstop>pm_edit</tabstop>
+  <tabstop>pm_remove</tabstop>
+  <tabstop>sops_table</tabstop>
+  <tabstop>sops_add</tabstop>
+  <tabstop>sops_edit</tabstop>
+  <tabstop>sops_remove</tabstop>
+ </tabstops>
  <resources>
   <include location="../../picsou.qrc"/>
  </resources>

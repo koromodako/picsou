@@ -3,6 +3,7 @@
 
 #include <QMessageBox>
 
+#include "ui/picsouuiviewer.h"
 #include "app/picsouuiservice.h"
 
 #define TIMEOUT 5000
@@ -106,9 +107,16 @@ void MainWindow::op_failed(QString error)
 
 void MainWindow::update_viewer(QTreeWidgetItem *item, int)
 {
-    QWidget *w=ui_svc()->viewer_from_item(item);
+    QWidget *before;
+    PicsouUIViewer *w=ui_svc()->viewer_from_item(item);
     if(w!=nullptr) {
+        if((before=centralWidget())!=nullptr) {
+            foreach (QAction *action, before->actions()) {
+                ui->toolbar->removeAction(action);
+            }
+        }
         setCentralWidget(w);
+        ui->toolbar->addActions(w->actions());
     }
 }
 
@@ -131,7 +139,7 @@ void MainWindow::refresh(MainWindow::State state)
         ui->action_close->setEnabled(false);
         /* update tree widget */
         ui->tree->clear();
-        ui->tree->setEnabled(false);
+        ui->tree_dock->setVisible(false);
         /* central widget */
         setCentralWidget(nullptr);
         break;
@@ -141,7 +149,7 @@ void MainWindow::refresh(MainWindow::State state)
         ui->action_close->setEnabled(true);
         /* update tree widget */
         refresh_tree();
-        ui->tree->setEnabled(true);
+        ui->tree_dock->setVisible(true);
         update_viewer(ui->tree->topLevelItem(0), 0);
         break;
     case DB_MODIFIED:

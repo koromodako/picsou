@@ -22,17 +22,27 @@ OperationViewer::OperationViewer(PicsouUIService *ui_svc,
     ui(new Ui::OperationViewer)
 {
     ui->setupUi(this);
-
     connect(ui_svc, &PicsouUIService::model_updated,
             this, &OperationViewer::refresh);
 
     /* ops */
     connect(ui->add_op, &QPushButton::clicked,
             this, &OperationViewer::add_op);
+    connect(ui->action_add_op, &QAction::triggered,
+            this, &OperationViewer::add_op);
+    addAction(ui->action_add_op);
+
     connect(ui->edit_op, &QPushButton::clicked,
             this, &OperationViewer::edit_op);
+    connect(ui->action_edit_op, &QAction::triggered,
+            this, &OperationViewer::edit_op);
+    addAction(ui->action_edit_op);
+
     connect(ui->remove_op, &QPushButton::clicked,
             this, &OperationViewer::remove_op);
+    connect(ui->action_remove_op, &QAction::triggered,
+            this, &OperationViewer::remove_op);
+    addAction(ui->action_remove_op);
 }
 
 void OperationViewer::refresh(const PicsouDBPtr db)

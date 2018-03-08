@@ -6,6 +6,7 @@
 
 class MainWindow;
 class QTreeWidget;
+class PicsouUIViewer;
 class QTreeWidgetItem;
 
 class PicsouUIService : public PicsouAbstractService
@@ -19,7 +20,7 @@ public:
     void terminate();
 
     bool populate_db_tree(QTreeWidget* const tree);
-    QWidget *viewer_from_item(QTreeWidgetItem *item);
+    PicsouUIViewer *viewer_from_item(QTreeWidgetItem *item);
 
 signals:
     void svc_op_failed(QString error);

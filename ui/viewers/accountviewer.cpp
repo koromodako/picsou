@@ -16,16 +16,27 @@ AccountViewer::AccountViewer(PicsouUIService *ui_svc,
     ui(new Ui::AccountViewer)
 {
     ui->setupUi(this);
-
     connect(ui_svc, &PicsouUIService::model_updated,
             this, &AccountViewer::refresh);
+
     /* payment methods */
     connect(ui->pm_add, &QPushButton::clicked,
             this, &AccountViewer::add_pm);
+    connect(ui->action_add_pm, &QAction::triggered,
+            this, &AccountViewer::add_pm);
+    addAction(ui->action_add_pm);
+
     connect(ui->pm_edit, &QPushButton::clicked,
             this, &AccountViewer::edit_pm);
+    connect(ui->action_edit_pm, &QAction::triggered,
+            this, &AccountViewer::edit_pm);
+    addAction(ui->action_edit_pm);
+
     connect(ui->pm_remove, &QPushButton::clicked,
             this, &AccountViewer::remove_pm);
+    connect(ui->action_remove_pm, &QAction::triggered,
+            this, &AccountViewer::remove_pm);
+    addAction(ui->action_remove_pm);
     /* scheduled ops */
     ui->sops_table->setEnabled(false);
     ui->sops_add->setEnabled(false);

@@ -36,7 +36,7 @@
           </property>
           <property name="icon">
            <iconset resource="../../picsou.qrc">
-            <normaloff>:/resources/material-design/svg/playlist-plus.svg</normaloff>:/resources/material-design/svg/playlist-plus.svg</iconset>
+            <normaloff>:/resources/material-design/svg/book-plus.svg</normaloff>:/resources/material-design/svg/book-plus.svg</iconset>
           </property>
          </widget>
         </item>
@@ -47,7 +47,7 @@
           </property>
           <property name="icon">
            <iconset resource="../../picsou.qrc">
-            <normaloff>:/resources/material-design/svg/pencil.svg</normaloff>:/resources/material-design/svg/pencil.svg</iconset>
+            <normaloff>:/resources/material-design/svg/book-open.svg</normaloff>:/resources/material-design/svg/book-open.svg</iconset>
           </property>
          </widget>
         </item>
@@ -58,7 +58,7 @@
           </property>
           <property name="icon">
            <iconset resource="../../picsou.qrc">
-            <normaloff>:/resources/material-design/svg/playlist-remove.svg</normaloff>:/resources/material-design/svg/playlist-remove.svg</iconset>
+            <normaloff>:/resources/material-design/svg/book-minus.svg</normaloff>:/resources/material-design/svg/book-minus.svg</iconset>
           </property>
          </widget>
         </item>
@@ -121,6 +121,60 @@
     </widget>
    </item>
   </layout>
+  <action name="action_add_budget">
+   <property name="icon">
+    <iconset resource="../../picsou.qrc">
+     <normaloff>:/resources/material-design/svg/book-plus.svg</normaloff>:/resources/material-design/svg/book-plus.svg</iconset>
+   </property>
+   <property name="text">
+    <string>Add budget</string>
+   </property>
+  </action>
+  <action name="action_edit_budget">
+   <property name="icon">
+    <iconset resource="../../picsou.qrc">
+     <normaloff>:/resources/material-design/svg/book-open.svg</normaloff>:/resources/material-design/svg/book-open.svg</iconset>
+   </property>
+   <property name="text">
+    <string>Edit budget</string>
+   </property>
+  </action>
+  <action name="action_remove_budget">
+   <property name="icon">
+    <iconset resource="../../picsou.qrc">
+     <normaloff>:/resources/material-design/svg/book-minus.svg</normaloff>:/resources/material-design/svg/book-minus.svg</iconset>
+   </property>
+   <property name="text">
+    <string>Remove budget</string>
+   </property>
+  </action>
+  <action name="action_add_account">
+   <property name="icon">
+    <iconset resource="../../picsou.qrc">
+     <normaloff>:/resources/material-design/svg/playlist-plus.svg</normaloff>:/resources/material-design/svg/playlist-plus.svg</iconset>
+   </property>
+   <property name="text">
+    <string>Add account</string>
+   </property>
+  </action>
+  <action name="action_edit_account">
+   <property name="icon">
+    <iconset resource="../../picsou.qrc">
+     <normaloff>:/resources/material-design/svg/pencil.svg</normaloff>:/resources/material-design/svg/pencil.svg</iconset>
+   </property>
+   <property name="text">
+    <string>Edit account</string>
+   </property>
+  </action>
+  <action name="action_remove_account">
+   <property name="icon">
+    <iconset resource="../../picsou.qrc">
+     <normaloff>:/resources/material-design/svg/playlist-remove.svg</normaloff>:/resources/material-design/svg/playlist-remove.svg</iconset>
+   </property>
+   <property name="text">
+    <string>Remove account</string>
+   </property>
+  </action>
  </widget>
  <resources>
   <include location="../../picsou.qrc"/>

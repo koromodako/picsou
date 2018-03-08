@@ -76,10 +76,10 @@
    <addaction name="separator"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
-  <widget class="QDockWidget" name="sidebar_dock">
+  <widget class="QDockWidget" name="tree_dock">
    <property name="windowIcon">
-    <iconset>
-     <normaloff>:/resources/MaterialDesign-SVG/svg/file-tree.svg</normaloff>:/resources/MaterialDesign-SVG/svg/file-tree.svg</iconset>
+    <iconset resource="../picsou.qrc">
+     <normaloff>:/resources/material-design/svg/file-tree.svg</normaloff>:/resources/material-design/svg/file-tree.svg</iconset>
    </property>
    <property name="features">
     <set>QDockWidget::DockWidgetFloatable</set>

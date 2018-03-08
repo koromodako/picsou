@@ -146,7 +146,41 @@
     </widget>
    </item>
   </layout>
+  <action name="action_add_user">
+   <property name="icon">
+    <iconset resource="../../picsou.qrc">
+     <normaloff>:/resources/material-design/svg/account-plus.svg</normaloff>:/resources/material-design/svg/account-plus.svg</iconset>
+   </property>
+   <property name="text">
+    <string>Add user</string>
+   </property>
+  </action>
+  <action name="action_edit_user">
+   <property name="icon">
+    <iconset resource="../../picsou.qrc">
+     <normaloff>:/resources/material-design/svg/account-edit.svg</normaloff>:/resources/material-design/svg/account-edit.svg</iconset>
+   </property>
+   <property name="text">
+    <string>Edit user</string>
+   </property>
+  </action>
+  <action name="action_remove_user">
+   <property name="icon">
+    <iconset resource="../../picsou.qrc">
+     <normaloff>:/resources/material-design/svg/account-remove.svg</normaloff>:/resources/material-design/svg/account-remove.svg</iconset>
+   </property>
+   <property name="text">
+    <string>Remove user</string>
+   </property>
+  </action>
  </widget>
+ <tabstops>
+  <tabstop>users_list</tabstop>
+  <tabstop>add_user</tabstop>
+  <tabstop>edit_user</tabstop>
+  <tabstop>remove_user</tabstop>
+  <tabstop>description</tabstop>
+ </tabstops>
  <resources>
   <include location="../../picsou.qrc"/>
  </resources>
