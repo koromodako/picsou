@@ -56,6 +56,8 @@ void PicsouUIService::terminate()
 bool PicsouUIService::populate_db_tree(QTreeWidget* const tree)
 {
     bool success;
+    int month, year, month_stop;
+    QDate today=QDate::currentDate();
     QList<UserPtr> users;
     QList<AccountPtr> accounts;
     const PicsouDB * db;
@@ -93,18 +95,22 @@ bool PicsouUIService::populate_db_tree(QTreeWidget* const tree)
                                            account->name(),
                                            account->id());
 
-            foreach (int year, account->years()) {
+            foreach (year, account->years()) {
                 year_itm=new PicsouTreeItem(account_itm,
                                             PicsouTreeItem::T_YEAR,
                                             calendar_ico,
                                             QString("%0").arg(year),
                                             account->id());
-
-                for(int month=0; month<12; month++) {
+                if(year==today.year()) {
+                    month_stop=today.month();
+                } else {
+                    month_stop=12;
+                }
+                for(month=1; month<month_stop+1; month++) {
                     month_itm=new PicsouTreeItem(year_itm,
                                                  PicsouTreeItem::T_MONTH,
                                                  calendar_ico,
-                                                 QString("%0").arg(month+1),
+                                                 QDate(1,month,1).toString("MMMM"),
                                                  account->id());
                 }
             }
@@ -132,15 +138,15 @@ PicsouUIViewer *PicsouUIService::viewer_from_item(QTreeWidgetItem *item)
         break;
     case PicsouTreeItem::T_YEAR:
         w=new OperationViewer(this,
+                              pitem->parent()->parent()->mod_obj_id(),
                               pitem->parent()->mod_obj_id(),
-                              pitem->mod_obj_id(),
                               OperationViewer::VS_YEAR,
                               pitem->text(0).toInt());
         break;
     case PicsouTreeItem::T_MONTH:
         w=new OperationViewer(this,
+                              pitem->parent()->parent()->parent()->mod_obj_id(),
                               pitem->parent()->parent()->mod_obj_id(),
-                              pitem->mod_obj_id(),
                               OperationViewer::VS_MONTH,
                               pitem->text(0).toInt());
         break;
@@ -308,12 +314,19 @@ end:
 
 void PicsouUIService::user_edit(QUuid id)
 {
+    UserPtr user;
+    QString username;
     QSecureMemory old_pwd, new_pwd;
-    UserPtr user=papp()->model_svc()->db()->find_user(id);
-    QString username=user->name();
-    UserEditor editor(&username, &old_pwd, &new_pwd, _mw);
 
-    if(editor.exec()==QDialog::Rejected) {
+    user=papp()->model_svc()->db()->find_user(id);
+    if(user.isNull()) {
+        emit svc_op_failed(tr("Internal error: invalid user pointer."));
+        goto end;
+    }
+
+    username=user->name();
+
+    if(UserEditor(&username, &old_pwd, &new_pwd, _mw).exec()==QDialog::Rejected) {
         emit svc_op_canceled(); goto end;
     }
 
@@ -337,11 +350,17 @@ end:
 
 void PicsouUIService::budget_add(QUuid user_id)
 {
+    UserPtr user;
     double amount=0.;
     QString name, description;
     BudgetEditor editor(&amount, &name, &description, _mw);
 
-    UserPtr user=papp()->model_svc()->db()->find_user(user_id);
+
+    user=papp()->model_svc()->db()->find_user(user_id);
+    if(user.isNull()) {
+        emit svc_op_failed(tr("Internal error: invalid user pointer."));
+        goto end;
+    }
 
     if(editor.exec()==QDialog::Rejected) {
         emit svc_op_canceled(); goto end;
@@ -356,14 +375,28 @@ end:
 
 void PicsouUIService::budget_edit(QUuid user_id, QUuid budget_id)
 {
-    UserPtr user=papp()->model_svc()->db()->find_user(user_id);
-    BudgetPtr budget=user->find_budget(budget_id);
-    double amount=budget->amount();
-    QString name=budget->name(),
-            description=budget->description();
-    BudgetEditor editor(&amount, &name, &description, _mw);
+    UserPtr user;
+    double amount;
+    BudgetPtr budget;
+    QString name, description;
 
-    if(editor.exec()==QDialog::Rejected) {
+    user=papp()->model_svc()->db()->find_user(user_id);
+    if(user.isNull()) {
+        emit svc_op_failed(tr("Internal error: invalid user pointer."));
+        goto end;
+    }
+
+    budget=user->find_budget(budget_id);
+    if(budget.isNull()) {
+        emit svc_op_failed(tr("Internal error: invalid budget pointer."));
+        goto end;
+    }
+
+    amount=budget->amount();
+    name=budget->name();
+    description=budget->description();
+
+    if(BudgetEditor(&amount, &name, &description, _mw).exec()==QDialog::Rejected) {
         emit svc_op_canceled(); goto end;
     }
 
@@ -376,7 +409,13 @@ end:
 
 void PicsouUIService::budget_remove(QUuid user_id, QUuid budget_id)
 {
-    UserPtr user=papp()->model_svc()->db()->find_user(user_id);
+    UserPtr user;
+
+    user=papp()->model_svc()->db()->find_user(user_id);
+    if(user.isNull()) {
+        emit svc_op_failed(tr("Internal error: invalid user pointer."));
+        goto end;
+    }
 
     if(user->remove_budget(budget_id)) {
         emit budget_removed(); goto end;
@@ -389,10 +428,15 @@ end:
 
 void PicsouUIService::account_add(QUuid user_id)
 {
+    UserPtr user;
     QString name, description;
     AccountEditor editor(&name, &description, _mw);
 
-    UserPtr user=papp()->model_svc()->db()->find_user(user_id);
+    user=papp()->model_svc()->db()->find_user(user_id);
+    if(user.isNull()) {
+        emit svc_op_failed(tr("Internal error: invalid account pointer."));
+        goto end;
+    }
 
     if(editor.exec()==QDialog::Rejected) {
         emit svc_op_canceled(); goto end;
@@ -407,13 +451,26 @@ end:
 
 void PicsouUIService::account_edit(QUuid user_id, QUuid account_id)
 {
-    UserPtr user=papp()->model_svc()->db()->find_user(user_id);
-    AccountPtr account=user->find_account(account_id);
-    QString name=account->name(),
-            description=account->description();
-    AccountEditor editor(&name, &description, _mw);
+    UserPtr user;
+    AccountPtr account;
+    QString name, description;
 
-    if(editor.exec()==QDialog::Rejected) {
+    user=papp()->model_svc()->db()->find_user(user_id);
+    if(user.isNull()) {
+        emit svc_op_failed(tr("Internal error: invalid user pointer."));
+        goto end;
+    }
+
+    account=user->find_account(account_id);
+    if(account.isNull()) {
+        emit svc_op_failed(tr("Internal error: invalid account pointer."));
+        goto end;
+    }
+
+    name=account->name();
+    description=account->description();
+
+    if(AccountEditor(&name, &description, _mw).exec()==QDialog::Rejected) {
         emit svc_op_canceled(); goto end;
     }
 
@@ -426,7 +483,13 @@ end:
 
 void PicsouUIService::account_remove(QUuid user_id, QUuid account_id)
 {
-    UserPtr user=papp()->model_svc()->db()->find_user(user_id);
+    UserPtr user;
+
+    user=papp()->model_svc()->db()->find_user(user_id);
+    if(user.isNull()) {
+        emit svc_op_failed(tr("Internal error: invalid user pointer."));
+        goto end;
+    }
 
     if(user->remove_account(account_id)) {
         emit account_removed(); goto end;
@@ -441,7 +504,13 @@ void PicsouUIService::pm_add(QUuid account_id)
 {
     QString name;
     PaymentMethodEditor editor(&name, _mw);
-    AccountPtr account=papp()->model_svc()->find_account(account_id);
+    AccountPtr account;
+
+    account=papp()->model_svc()->find_account(account_id);
+    if(account.isNull()) {
+        emit svc_op_failed(tr("Internal error: invalid account pointer."));
+        goto end;
+    }
 
     if(editor.exec()==QDialog::Rejected) {
         emit svc_op_canceled(); goto end;
@@ -456,14 +525,20 @@ end:
 
 void PicsouUIService::pm_edit(QUuid account_id, QUuid pm_id)
 {
-    AccountPtr account=papp()->model_svc()->find_account(account_id);
+    QString name;
+    AccountPtr account;
+    PaymentMethodPtr pm;
 
-    PaymentMethodPtr pm=account->find_payment_method(pm_id);
+    account=papp()->model_svc()->find_account(account_id);
+    if(account.isNull()) {
+        emit svc_op_failed(tr("Internal error: invalid account pointer."));
+        goto end;
+    }
 
-    QString name=pm->name();
-    PaymentMethodEditor editor(&name, _mw);
+    pm=account->find_payment_method(pm_id);
+    name=pm->name();
 
-    if(editor.exec()==QDialog::Rejected) {
+    if(PaymentMethodEditor(&name, _mw).exec()==QDialog::Rejected) {
         emit svc_op_canceled(); goto end;
     }
 
@@ -477,6 +552,10 @@ end:
 void PicsouUIService::pm_remove(QUuid account_id, QUuid pm_id)
 {
     AccountPtr account=papp()->model_svc()->db()->find_account(account_id);
+    if(account.isNull()) {
+        emit svc_op_failed(tr("Internal error: invalid account pointer."));
+        goto end;
+    }
 
     if(account->remove_payment_method(pm_id)) {
         emit pm_removed(); goto end;
@@ -491,6 +570,8 @@ void PicsouUIService::op_add(QUuid user_id, QUuid account_id)
 {
     double amount;
     QDate date;
+    UserPtr user;
+    AccountPtr account;
     QString payment_method, budget, recipient, description;
     OperationEditor editor(&amount,
                            &date,
@@ -499,8 +580,17 @@ void PicsouUIService::op_add(QUuid user_id, QUuid account_id)
                            &recipient,
                            &description);
 
-    UserPtr user=papp()->model_svc()->find_user(user_id);
-    AccountPtr account=papp()->model_svc()->find_account(account_id);
+    user=papp()->model_svc()->find_user(user_id);
+    if(user.isNull()) {
+        emit svc_op_failed(tr("Internal error: invalid user pointer."));
+        goto end;
+    }
+
+    account=papp()->model_svc()->find_account(account_id);
+    if(account.isNull()) {
+        emit svc_op_failed(tr("Internal error: invalid account pointer."));
+        goto end;
+    }
 
     editor.set_budgets(user->budgets_str(true));
     editor.set_payment_methods(account->payment_methods_str(true));
@@ -523,26 +613,42 @@ end:
 
 void PicsouUIService::op_edit(QUuid user_id, QUuid account_id, QUuid op_id)
 {
-    AccountPtr account=papp()->model_svc()->find_account(account_id);
-    OperationPtr op=account->find_operation(op_id);
+    QDate date;
+    UserPtr user;
+    double amount;
+    OperationPtr op;
+    AccountPtr account;
+    QString payment_method, budget, recipient, description;
 
-    double amount=op->amount();
-    QDate date=op->date();
-    QString payment_method=op->payment_method(),
-            budget=op->budget(),
-            recipient=op->recipient(),
-            description=op->description();
-    OperationEditor editor(&amount,
-                           &date,
-                           &payment_method,
-                           &budget,
-                           &recipient,
-                           &description);
+    account=papp()->model_svc()->find_account(account_id);
+    if(account.isNull()) {
+        emit svc_op_failed(tr("Internal error: invalid account pointer."));
+        return;
+    }
 
-    UserPtr user=papp()->model_svc()->find_user(user_id);
+    op=account->find_operation(op_id);
+    if(op.isNull()) {
+        emit svc_op_failed(tr("Internal error: invalid op pointer."));
+        return;
+    }
 
-    editor.set_budgets(user->budgets_str(true),
-                       budget);
+    amount=op->amount();
+    date=op->date();
+    payment_method=op->payment_method();
+    budget=op->budget();
+    recipient=op->recipient();
+    description=op->description();
+
+    user=papp()->model_svc()->find_user(user_id);
+    if(user.isNull()) {
+        emit svc_op_failed(tr("Internal error: invalid user pointer."));
+        return;
+    }
+
+    OperationEditor editor(&amount, &date, &payment_method,
+                           &budget, &recipient, &description);
+
+    editor.set_budgets(user->budgets_str(true), budget);
     editor.set_payment_methods(account->payment_methods_str(true),
                                payment_method);
 
@@ -564,7 +670,13 @@ end:
 
 void PicsouUIService::op_remove(QUuid account_id, QUuid op_id)
 {
-    AccountPtr account=papp()->model_svc()->db()->find_account(account_id);
+    AccountPtr account;
+
+    account=papp()->model_svc()->db()->find_account(account_id);
+    if(account.isNull()) {
+        emit svc_op_failed(tr("Internal error: invalid account pointer."));
+        goto end;
+    }
 
     if(account->remove_operation(op_id)) {
         emit op_removed(); goto end;

@@ -17,6 +17,7 @@ UserEditor::UserEditor(QString *username,
     _new_pwd(new_pwd),
     ui(new Ui::UserEditor)
 {
+    bool user_edit=false;
     ui->setupUi(this);
 
     setWindowTitle(tr("User Editor"));
@@ -27,9 +28,12 @@ UserEditor::UserEditor(QString *username,
     ui->new_pwd->setEchoMode(QLineEdit::Password);
     ui->repeat_new_pwd->setEchoMode(QLineEdit::Password);
 
-    if(!_username->isNull()) {
+    if((user_edit=!_username->isNull())) {
         ui->username->setText(*_username);
     }
+
+    ui->old_pwd->setVisible(user_edit);
+    ui->old_pwd_label->setVisible(user_edit);
 
     connect(ui->save, &QPushButton::clicked,
             this, &UserEditor::accept);

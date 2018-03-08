@@ -172,6 +172,6 @@ void MainWindow::refresh_tree()
         ui->tree->clear();
         ui->statusbar->showMessage(tr("Failed to update database tree."), TIMEOUT);
     }
-    ui->tree->expandToDepth(3);
+    ui->tree->expandToDepth(2);
 }
 

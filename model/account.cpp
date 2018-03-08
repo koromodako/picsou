@@ -164,6 +164,9 @@ QList<int> Account::years(bool sorted) const
     if(sorted) {
         std::sort(years_list.begin(), years_list.end());
     }
+    if(years_list.empty()) {
+        years_list << QDate::currentDate().year();
+    }
     return years_list;
 }
 
