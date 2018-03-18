@@ -49,7 +49,9 @@ MainWindow::MainWindow(PicsouUIService *ui_svc, QWidget *parent) :
             ui_svc, &PicsouUIService::show_github_repo);
 
     /* database tree */
-    connect(ui->tree, &QTreeWidget::itemClicked,
+    //connect(ui->tree, &QTreeWidget::itemClicked,
+    //        this, &MainWindow::update_viewer);
+    connect(ui->tree, &QTreeWidget::itemSelectionChanged,
             this, &MainWindow::update_viewer);
 
     /* signal handlers */
@@ -105,7 +107,7 @@ void MainWindow::op_failed(QString error)
                           QMessageBox::Ok);
 }
 
-void MainWindow::update_viewer(QTreeWidgetItem *item, int)
+void MainWindow::_update_viewer(QTreeWidgetItem *item, int)
 {
     QWidget *before;
     PicsouUIViewer *w=ui_svc()->viewer_from_item(item);
@@ -117,6 +119,15 @@ void MainWindow::update_viewer(QTreeWidgetItem *item, int)
         }
         setCentralWidget(w);
         ui->toolbar->addActions(w->actions());
+    }
+}
+
+void MainWindow::update_viewer()
+{
+    QList<QTreeWidgetItem*> items;
+    items=ui->tree->selectedItems();
+    if(items.length()>0) {
+        _update_viewer(items.first(), 0);
     }
 }
 
@@ -150,7 +161,7 @@ void MainWindow::refresh(MainWindow::State state)
         /* update tree widget */
         refresh_tree();
         ui->tree_dock->setVisible(true);
-        update_viewer(ui->tree->topLevelItem(0), 0);
+        _update_viewer(ui->tree->topLevelItem(0), 0);
         break;
     case DB_MODIFIED:
         /* update menu actions */

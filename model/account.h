@@ -31,6 +31,7 @@ public:
                        const QString &recipient,
                        const QString &description,
                        const QString &payment_method);
+    void add_operations(QList<OperationPtr> ops);
     bool remove_operation(QUuid id);
 
     PaymentMethodPtr find_payment_method(QUuid id);

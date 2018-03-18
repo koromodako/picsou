@@ -104,6 +104,14 @@ void Account::add_operation(double amount,
      emit modified();
 }
 
+void Account::add_operations(QList<OperationPtr> ops)
+{
+    foreach (OperationPtr op, ops) {
+        op->set_parent(this);
+        _ops.insert(op->id(), op);
+    }
+}
+
 bool Account::remove_operation(QUuid id)
 {
     bool success=false;

@@ -26,6 +26,7 @@ public:
     virtual ~MainWindow();
     explicit MainWindow(PicsouUIService *ui_svc, QWidget *parent=nullptr);
 
+
 public slots:
     void db_opened();
     void db_saved();
@@ -35,9 +36,12 @@ public slots:
     void op_canceled();
     void op_failed(QString error);
 
-    void update_viewer(QTreeWidgetItem *item, int column);
+    void update_viewer();
 
     bool close();
+
+protected:
+    void _update_viewer(QTreeWidgetItem *item, int column);
 
 private:
     void refresh(State state);

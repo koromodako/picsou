@@ -12,6 +12,8 @@ OperationEditor::OperationEditor(double *amount,
                                  QString *budget,
                                  QString *recipient,
                                  QString *description,
+                                 int year,
+                                 int month,
                                  QWidget *parent) :
     QDialog(parent),
     _amount(amount),
@@ -20,18 +22,38 @@ OperationEditor::OperationEditor(double *amount,
     _budget(budget),
     _recipient(recipient),
     _description(description),
+    _year(year),
+    _month(month),
     ui(new Ui::OperationEditor)
 {
+    QDate min, max;
+
     ui->setupUi(this);
 
     setWindowTitle(tr("Operation Editor"));
 
-    ui->budget->setEditable(false);
-
     ui->amount->setValue(*_amount);
     if(!_date->isNull()){
         ui->date->setDate(*_date);
+    } else {
+        ui->date->setDate(QDate::currentDate());
     }
+
+    if(_year>0) {
+        min.setDate(_year, 1, 1);
+        max.setDate(_year, 12, 31);
+
+        if(_month>0) {
+            min.setDate(_year, _month, 1);
+            max.setDate(_year, _month, min.daysInMonth());
+        }
+
+        ui->date->setDateRange(min, max);
+    }
+
+    ui->budget->setEditable(false);
+    ui->payment_method->setEditable(false);
+
     if(!_recipient->isNull()){
         ui->recipient->setText(*_recipient);
     }
@@ -45,23 +67,21 @@ OperationEditor::OperationEditor(double *amount,
             this, &OperationEditor::reject);
 }
 
-void OperationEditor::set_budgets(const QStringList &budgets,
-                                  const QString &current)
+void OperationEditor::set_budgets(const QStringList &budgets)
 {
     ui->budget->clear();
     ui->budget->addItems(budgets);
-    if(!current.isNull()){
-        ui->budget->setCurrentText(current);
+    if(!_budget->isNull()){
+        ui->budget->setCurrentText(*_budget);
     }
 }
 
-void OperationEditor::set_payment_methods(const QStringList &payment_methods,
-                                          const QString &current)
+void OperationEditor::set_payment_methods(const QStringList &payment_methods)
 {
     ui->payment_method->clear();
     ui->payment_method->addItems(payment_methods);
-    if(!current.isNull()){
-        ui->payment_method->setCurrentText(current);
+    if(!_payment_method->isNull()){
+        ui->payment_method->setCurrentText(*_payment_method);
     }
 }
 

@@ -2,6 +2,7 @@
 #define OPERATIONVIEWER_H
 
 #include "ui/picsouuiviewer.h"
+#include "ui/widgets/picsoutablewidget.h"
 
 namespace Ui {
 class OperationViewer;
@@ -21,7 +22,8 @@ public:
                              QUuid user_id,
                              QUuid account_id,
                              ViewerScale scale,
-                             int ym,
+                             int year=-1,
+                             int month=-1,
                              QWidget *parent=nullptr);
 
 public slots:
@@ -34,8 +36,10 @@ public slots:
 
 private:
     QUuid _user_id;
-    int _ym;
+    int _year;
+    int _month;
     ViewerScale _scale;
+    PicsouTableWidget *_table;
     Ui::OperationViewer *ui;
 };
 

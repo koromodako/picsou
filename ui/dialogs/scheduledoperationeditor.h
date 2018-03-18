@@ -13,7 +13,7 @@ class ScheduledOperationEditor : public QDialog
 public:
     virtual ~ScheduledOperationEditor();
     explicit ScheduledOperationEditor(double *amount,
-                                      QString *freq,
+                                      QString *frequency,
                                       QDate *date,
                                       QString *payment_method,
                                       QString *budget,
@@ -30,7 +30,7 @@ public slots:
 
 private:
     double *_amount;
-    QString *_freq;
+    QString *_frequency;
     QDate *_date;
     QString *_payment_method;
     QString *_budget;

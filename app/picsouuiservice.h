@@ -53,6 +53,8 @@ signals:
     void op_added();
     void op_edited();
     void op_removed();
+    void ops_imported();
+    void ops_exported();
 
 public slots:
     /*  */
@@ -84,9 +86,11 @@ public slots:
     void pm_remove(QUuid account_id, QUuid pm_id);
     /* Scheduled Operation ops */
     /* Operation ops */
-    void op_add(QUuid user_id, QUuid account_id);
-    void op_edit(QUuid user_id, QUuid account_id, QUuid op_id);
+    void op_add(QUuid user_id, QUuid account_id, int year, int month);
+    void op_edit(QUuid user_id, QUuid account_id, QUuid op_id, int year, int month);
     void op_remove(QUuid account_id, QUuid op_id);
+    void ops_import(QUuid account_id);
+    void ops_export(QUuid account_id);
 
     void notify_model_updated(const PicsouDBPtr db);
 

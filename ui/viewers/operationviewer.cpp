@@ -6,6 +6,7 @@
 
 OperationViewer::~OperationViewer()
 {
+    delete _table;
     delete ui;
 }
 
@@ -13,17 +14,23 @@ OperationViewer::OperationViewer(PicsouUIService *ui_svc,
                                  QUuid user_id,
                                  QUuid account_id,
                                  ViewerScale scale,
-                                 int ym,
+                                 int year,
+                                 int month,
                                  QWidget *parent) :
     PicsouUIViewer(ui_svc, account_id, parent),
     _user_id(user_id),
-    _ym(ym),
+    _year(year),
+    _month(month),
     _scale(scale),
     ui(new Ui::OperationViewer)
 {
     ui->setupUi(this);
     connect(ui_svc, &PicsouUIService::model_updated,
             this, &OperationViewer::refresh);
+
+    _table = new PicsouTableWidget;
+
+    ui->main_layout->insertWidget(0, _table);
 
     /* ops */
     connect(ui->add_op, &QPushButton::clicked,
@@ -47,57 +54,39 @@ OperationViewer::OperationViewer(PicsouUIService *ui_svc,
 
 void OperationViewer::refresh(const PicsouDBPtr db)
 {
-    int year=-1, month=-1, k;
-    QList<OperationPtr> ops;
-    QIcon icon;
-
-    ui->table->clear();
+    int year=-1, month=-1;
 
     switch (_scale) {
-    case VS_YEAR: year=_ym; break;
-    case VS_MONTH: month=_ym; break;
+        case VS_YEAR:
+            year=_year;
+            break;
+        case VS_MONTH:
+            month=_month;
+            break;
     }
 
-    k=0;
-    ops=db->ops(mod_obj_id(), year, month);
-    foreach (OperationPtr op, ops) {
-        switch (op->type()) {
-        case Operation::DEBIT: icon=QIcon(); break;
-        case Operation::CREDIT: icon=QIcon(); break;
-        }
-
-        ui->table->setItem(k, 0, new PicsouTableItem(icon,
-                                                     op->date().toString(),
-                                                     op->id()));
-        ui->table->setItem(k, 1, new QTableWidgetItem(op->description()));
-        ui->table->setItem(k, 2, new QTableWidgetItem(op->recipient()));
-        ui->table->setItem(k, 3, new QTableWidgetItem(op->payment_method()));
-        ui->table->setItem(k, 4, new QTableWidgetItem(op->budget()));
-        ui->table->setItem(k, 5, new QTableWidgetItem(op->amount_str()));
-
-        k++;
-    }
+    _table->refresh(db->ops(mod_obj_id(), year, month));
 }
 
 void OperationViewer::add_op()
 {
-    ui_svc()->op_add(_user_id, mod_obj_id());
+    ui_svc()->op_add(_user_id, mod_obj_id(), _year, _month);
 }
 
 void OperationViewer::edit_op()
 {
-    PicsouTableItem *item;
-    item=static_cast<PicsouTableItem*>(ui->table->item(ui->table->currentRow(), 0));
-    if(item!=nullptr) {
-        ui_svc()->op_edit(_user_id, mod_obj_id(), item->mod_obj_id());
+    QUuid op_id;
+    op_id=_table->current_op();
+    if(!op_id.isNull()) {
+        ui_svc()->op_edit(_user_id, mod_obj_id(), op_id, _year, _month);
     }
 }
 
 void OperationViewer::remove_op()
 {
-    PicsouTableItem *item;
-    item=static_cast<PicsouTableItem*>(ui->table->item(ui->table->currentRow(), 0));
-    if(item!=nullptr) {
-        ui_svc()->op_remove(mod_obj_id(), item->mod_obj_id());
+    QUuid op_id;
+    op_id=_table->current_op();
+    if(!op_id.isNull()) {
+        ui_svc()->op_remove(mod_obj_id(), op_id);
     }
 }

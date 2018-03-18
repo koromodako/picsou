@@ -9,9 +9,13 @@ PicsouTreeItem::PicsouTreeItem(QTreeWidget *view,
                                Type type,
                                const QIcon &icon,
                                const QString &text,
-                               QUuid id) :
+                               QUuid id,
+                               int year,
+                               int month) :
     QTreeWidgetItem(view, type),
-    PicsouItem(id)
+    PicsouItem(id),
+    _year(year),
+    _month(month)
 {
     setIcon(0, icon);
     setText(0, text);
@@ -21,9 +25,13 @@ PicsouTreeItem::PicsouTreeItem(QTreeWidgetItem *parent,
                                Type type,
                                const QIcon &icon,
                                const QString &text,
-                               QUuid id) :
+                               QUuid id,
+                               int year,
+                               int month) :
     QTreeWidgetItem(parent, type),
-    PicsouItem(id)
+    PicsouItem(id),
+    _year(year),
+    _month(month)
 {
     setIcon(0, icon);
     setText(0, text);

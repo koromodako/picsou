@@ -17,6 +17,8 @@ public:
     inline QUuid id() const { return _id; }
     inline bool valid() const { return _valid; }
 
+    inline void set_parent(PicsouModelObj *parent) { _parent=parent; }
+
     virtual bool read(const QJsonObject &json) = 0;
     virtual bool write(QJsonObject &json) const = 0;
 

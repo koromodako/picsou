@@ -2,6 +2,7 @@
 #define ACCOUNTVIEWER_H
 
 #include "ui/picsouuiviewer.h"
+#include "ui/widgets/picsoutablewidget.h"
 
 namespace Ui {
 class AccountViewer;
@@ -14,6 +15,7 @@ class AccountViewer : public PicsouUIViewer
 public:
     virtual ~AccountViewer();
     explicit AccountViewer(PicsouUIService *ui_svc,
+                           QUuid user_uuid,
                            QUuid account_uuid,
                            QWidget *parent=nullptr);
 
@@ -26,8 +28,16 @@ public slots:
     void remove_pm();
     /* scheduled ops */
     // TODO
+    /* ops */
+    void add_op();
+    void edit_op();
+    void remove_op();
+    void import_ops();
+    void export_ops();
 
 private:
+    QUuid _user_id;
+    PicsouTableWidget *_table;
     Ui::AccountViewer *ui;
 };
 

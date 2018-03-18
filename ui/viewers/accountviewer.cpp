@@ -3,21 +3,28 @@
 
 #include "app/picsouuiservice.h"
 #include "ui/items/picsoulistitem.h"
+#include "ui/viewers/operationviewer.h"
 
 AccountViewer::~AccountViewer()
 {
+    delete _table;
     delete ui;
 }
 
 AccountViewer::AccountViewer(PicsouUIService *ui_svc,
+                             QUuid user_uuid,
                              QUuid account_uuid,
                              QWidget *parent) :
     PicsouUIViewer(ui_svc, account_uuid, parent),
+   _user_id(user_uuid),
     ui(new Ui::AccountViewer)
 {
     ui->setupUi(this);
     connect(ui_svc, &PicsouUIService::model_updated,
             this, &AccountViewer::refresh);
+
+    _table = new PicsouTableWidget;
+    ui->ops_layout->insertWidget(0, _table);
 
     /* payment methods */
     connect(ui->pm_add, &QPushButton::clicked,
@@ -43,11 +50,42 @@ AccountViewer::AccountViewer(PicsouUIService *ui_svc,
     ui->sops_edit->setEnabled(false);
     ui->sops_remove->setEnabled(false);
     ui->scheduled_ops_group->setVisible(false);
+    /* ops */
+    connect(ui->add_op, &QPushButton::clicked,
+            this, &AccountViewer::add_op);
+    connect(ui->action_add_op, &QAction::triggered,
+            this, &AccountViewer::add_op);
+    addAction(ui->action_add_op);
+
+    connect(ui->edit_op, &QPushButton::clicked,
+            this, &AccountViewer::edit_op);
+    connect(ui->action_edit_op, &QAction::triggered,
+            this, &AccountViewer::edit_op);
+    addAction(ui->action_edit_op);
+
+    connect(ui->remove_op, &QPushButton::clicked,
+            this, &AccountViewer::remove_op);
+    connect(ui->action_remove_op, &QAction::triggered,
+            this, &AccountViewer::remove_op);
+    addAction(ui->action_remove_op);
+
+    connect(ui->import_ops, &QPushButton::clicked,
+            this, &AccountViewer::import_ops);
+    connect(ui->action_import_ops, &QAction::triggered,
+            this, &AccountViewer::import_ops);
+    addAction(ui->action_import_ops);
+
+    connect(ui->export_ops, &QPushButton::clicked,
+            this, &AccountViewer::export_ops);
+    connect(ui->action_export_ops, &QAction::triggered,
+            this, &AccountViewer::export_ops);
+    addAction(ui->action_export_ops);
 }
 
 void AccountViewer::refresh(const PicsouDBPtr db)
 {
-    bool has_pm;
+    bool has_pm, has_ops;
+    QList<OperationPtr> ops;
     AccountPtr account=db->find_account(mod_obj_id());
     /* payment methods */
     ui->payment_methods->clear();
@@ -63,6 +101,12 @@ void AccountViewer::refresh(const PicsouDBPtr db)
         TODO
     }
     */
+    /* ops */
+    ops=db->ops(mod_obj_id());
+    has_ops=(ops.length()>0);
+    _table->refresh(ops);
+    ui->remove_op->setEnabled(has_ops);
+    ui->edit_op->setEnabled(has_ops);
 }
 
 void AccountViewer::add_pm()
@@ -87,3 +131,37 @@ void AccountViewer::remove_pm()
         ui_svc()->pm_remove(mod_obj_id(), item->mod_obj_id());
     }
 }
+
+void AccountViewer::add_op()
+{
+    ui_svc()->op_add(_user_id, mod_obj_id(), -1, -1);
+}
+
+void AccountViewer::edit_op()
+{
+    QUuid op_id;
+    op_id=_table->current_op();
+    if(!op_id.isNull()) {
+        ui_svc()->op_edit(_user_id, mod_obj_id(), op_id, -1, -1);
+    }
+}
+
+void AccountViewer::remove_op()
+{
+    QUuid op_id;
+    op_id=_table->current_op();
+    if(!op_id.isNull()) {
+        ui_svc()->op_remove(mod_obj_id(), op_id);
+    }
+}
+
+void AccountViewer::import_ops()
+{
+    ui_svc()->ops_import(mod_obj_id());
+}
+
+void AccountViewer::export_ops()
+{
+    ui_svc()->ops_export(mod_obj_id());
+}
+

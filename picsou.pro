@@ -58,13 +58,15 @@ SOURCES += \
     app/picsouuiservice.cpp \
     app/picsouconsoleservice.cpp \
     app/picsouabstractservice.cpp \
-    ui/editors/paymentmethodeditor.cpp \
-    ui/editors/scheduledoperationeditor.cpp \
-    ui/editors/operationeditor.cpp \
-    ui/editors/picsoudbeditor.cpp \
-    ui/editors/accounteditor.cpp \
-    ui/editors/budgeteditor.cpp \
-    ui/editors/usereditor.cpp \
+    ui/dialogs/paymentmethodeditor.cpp \
+    ui/dialogs/scheduledoperationeditor.cpp \
+    ui/dialogs/operationeditor.cpp \
+    ui/dialogs/picsoudbeditor.cpp \
+    ui/dialogs/accounteditor.cpp \
+    ui/dialogs/budgeteditor.cpp \
+    ui/dialogs/usereditor.cpp \
+    ui/dialogs/importdialog.cpp \
+    ui/dialogs/aboutpicsou.cpp \
     ui/viewers/operationviewer.cpp \
     ui/viewers/picsoudbviewer.cpp \
     ui/viewers/accountviewer.cpp \
@@ -72,10 +74,10 @@ SOURCES += \
     ui/items/picsoulistitem.cpp \
     ui/items/picsoutreeitem.cpp \
     ui/picsouuiviewer.cpp \
-    ui/aboutpicsou.cpp \
     ui/picsouui.cpp \
     ui/picsouitem.cpp \
-    ui/items/picsoutableitem.cpp
+    ui/items/picsoutableitem.cpp \
+    ui/widgets/picsoutablewidget.cpp
 
 HEADERS += \
     picsou.h \
@@ -103,13 +105,15 @@ HEADERS += \
     app/picsouuiservice.h \
     app/picsouconsoleservice.h \
     app/picsouabstractservice.h \
-    ui/editors/scheduledoperationeditor.h \
-    ui/editors/paymentmethodeditor.h \
-    ui/editors/operationeditor.h \
-    ui/editors/picsoudbeditor.h \
-    ui/editors/accounteditor.h \
-    ui/editors/budgeteditor.h \
-    ui/editors/usereditor.h \
+    ui/dialogs/scheduledoperationeditor.h \
+    ui/dialogs/paymentmethodeditor.h \
+    ui/dialogs/operationeditor.h \
+    ui/dialogs/picsoudbeditor.h \
+    ui/dialogs/accounteditor.h \
+    ui/dialogs/budgeteditor.h \
+    ui/dialogs/usereditor.h \
+    ui/dialogs/importdialog.h \
+    ui/dialogs/aboutpicsou.h \
     ui/viewers/operationviewer.h \
     ui/viewers/picsoudbviewer.h \
     ui/viewers/accountviewer.h \
@@ -117,26 +121,27 @@ HEADERS += \
     ui/items/picsoulistitem.h \
     ui/items/picsoutreeitem.h \
     ui/picsouuiviewer.h \
-    ui/aboutpicsou.h \
     ui/mainwindow.h \
     ui/picsouui.h \
     ui/picsouitem.h \
-    ui/items/picsoutableitem.h
+    ui/items/picsoutableitem.h \
+    ui/widgets/picsoutablewidget.h
 
 FORMS += \
     ui/mainwindow.ui \
-    ui/editors/scheduledoperationeditor.ui \
-    ui/editors/paymentmethodeditor.ui \
-    ui/editors/operationeditor.ui \
-    ui/editors/picsoudbeditor.ui \
-    ui/editors/accounteditor.ui \
-    ui/editors/budgeteditor.ui \
-    ui/editors/usereditor.ui \
+    ui/dialogs/scheduledoperationeditor.ui \
+    ui/dialogs/paymentmethodeditor.ui \
+    ui/dialogs/operationeditor.ui \
+    ui/dialogs/picsoudbeditor.ui \
+    ui/dialogs/accounteditor.ui \
+    ui/dialogs/budgeteditor.ui \
+    ui/dialogs/usereditor.ui \
+    ui/dialogs/importdialog.ui \
+    ui/dialogs/aboutpicsou.ui \
     ui/viewers/operationviewer.ui \
     ui/viewers/picsoudbviewer.ui \
     ui/viewers/accountviewer.ui \
-    ui/viewers/userviewer.ui \
-    ui/aboutpicsou.ui
+    ui/viewers/userviewer.ui
 
 RESOURCES += \
     picsou.qrc

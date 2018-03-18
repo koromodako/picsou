@@ -8,13 +8,15 @@
 
 #include "picsou.h"
 
-#include "ui/editors/scheduledoperationeditor.h"
-#include "ui/editors/paymentmethodeditor.h"
-#include "ui/editors/operationeditor.h"
-#include "ui/editors/picsoudbeditor.h"
-#include "ui/editors/accounteditor.h"
-#include "ui/editors/budgeteditor.h"
-#include "ui/editors/usereditor.h"
+#include "ui/dialogs/scheduledoperationeditor.h"
+#include "ui/dialogs/paymentmethodeditor.h"
+#include "ui/dialogs/operationeditor.h"
+#include "ui/dialogs/picsoudbeditor.h"
+#include "ui/dialogs/accounteditor.h"
+#include "ui/dialogs/budgeteditor.h"
+#include "ui/dialogs/importdialog.h"
+#include "ui/dialogs/aboutpicsou.h"
+#include "ui/dialogs/usereditor.h"
 
 #include "ui/viewers/operationviewer.h"
 #include "ui/viewers/picsoudbviewer.h"
@@ -24,7 +26,6 @@
 #include "ui/items/picsoutreeitem.h"
 
 #include "ui/mainwindow.h"
-#include "ui/aboutpicsou.h"
 
 #include "app/picsouapplication.h"
 #include "app/picsoumodelservice.h"
@@ -100,7 +101,8 @@ bool PicsouUIService::populate_db_tree(QTreeWidget* const tree)
                                             PicsouTreeItem::T_YEAR,
                                             calendar_ico,
                                             QString("%0").arg(year),
-                                            account->id());
+                                            account->id(),
+                                            year);
                 if(year==today.year()) {
                     month_stop=today.month();
                 } else {
@@ -111,7 +113,8 @@ bool PicsouUIService::populate_db_tree(QTreeWidget* const tree)
                                                  PicsouTreeItem::T_MONTH,
                                                  calendar_ico,
                                                  QDate(1,month,1).toString("MMMM"),
-                                                 account->id());
+                                                 account->id(),
+                                                 year, month);
                 }
             }
         }
@@ -134,21 +137,24 @@ PicsouUIViewer *PicsouUIService::viewer_from_item(QTreeWidgetItem *item)
         w=new UserViewer(this, pitem->mod_obj_id());
         break;
     case PicsouTreeItem::T_ACCOUNT:
-        w=new AccountViewer(this, pitem->mod_obj_id());
+        w=new AccountViewer(this,
+                            pitem->parent()->mod_obj_id(),
+                            pitem->mod_obj_id());
         break;
     case PicsouTreeItem::T_YEAR:
         w=new OperationViewer(this,
                               pitem->parent()->parent()->mod_obj_id(),
                               pitem->parent()->mod_obj_id(),
                               OperationViewer::VS_YEAR,
-                              pitem->text(0).toInt());
+                              pitem->year());
         break;
     case PicsouTreeItem::T_MONTH:
         w=new OperationViewer(this,
                               pitem->parent()->parent()->parent()->mod_obj_id(),
                               pitem->parent()->parent()->mod_obj_id(),
                               OperationViewer::VS_MONTH,
-                              pitem->text(0).toInt());
+                              pitem->year(),
+                              pitem->month());
         break;
     }
     /* trigger viewer content update */
@@ -566,7 +572,7 @@ end:
     return;
 }
 
-void PicsouUIService::op_add(QUuid user_id, QUuid account_id)
+void PicsouUIService::op_add(QUuid user_id, QUuid account_id, int year, int month)
 {
     double amount;
     QDate date;
@@ -579,7 +585,9 @@ void PicsouUIService::op_add(QUuid user_id, QUuid account_id)
                            &payment_method,
                            &budget,
                            &recipient,
-                           &description);
+                           &description,
+                           year,
+                           month);
 
     user=papp()->model_svc()->find_user(user_id);
     if(user.isNull()) {
@@ -594,11 +602,11 @@ void PicsouUIService::op_add(QUuid user_id, QUuid account_id)
     }
 
     budgets=user->budgets_str(true);
-    payment_methods=account->payment_methods_str(true);
 
-    if(budgets.empty()||payment_methods.empty()) {
+    payment_methods=account->payment_methods_str(true);
+    if(payment_methods.empty()) {
         emit svc_op_failed(tr("Logical error: make sure you have defined at "
-                              "least one budget and one payment method before "
+                              "least one payment method before "
                               "adding operations."));
         goto end;
     }
@@ -622,7 +630,7 @@ end:
     return;
 }
 
-void PicsouUIService::op_edit(QUuid user_id, QUuid account_id, QUuid op_id)
+void PicsouUIService::op_edit(QUuid user_id, QUuid account_id, QUuid op_id, int year, int month)
 {
     QDate date;
     UserPtr user;
@@ -657,11 +665,10 @@ void PicsouUIService::op_edit(QUuid user_id, QUuid account_id, QUuid op_id)
     }
 
     OperationEditor editor(&amount, &date, &payment_method,
-                           &budget, &recipient, &description);
+                           &budget, &recipient, &description, year, month);
 
-    editor.set_budgets(user->budgets_str(true), budget);
-    editor.set_payment_methods(account->payment_methods_str(true),
-                               payment_method);
+    editor.set_budgets(user->budgets_str(true));
+    editor.set_payment_methods(account->payment_methods_str(true));
 
     if(editor.exec()==QDialog::Rejected) {
         emit svc_op_canceled(); goto end;
@@ -694,6 +701,102 @@ void PicsouUIService::op_remove(QUuid account_id, QUuid op_id)
     }
 
     emit svc_op_failed(tr("Failed to remove operation from database."));
+end:
+    return;
+}
+
+void PicsouUIService::ops_import(QUuid account_id)
+{
+    QString filename;
+    AccountPtr account;
+    QList<OperationPtr> ops;
+    PicsouModelService::ImportExportFormat fmt;
+
+    account=papp()->model_svc()->find_account(account_id);
+    if(account.isNull()) {
+        emit svc_op_failed(tr("Internal error: invalid account pointer."));
+        goto end;
+    }
+
+    filename=QFileDialog::getOpenFileName(_mw,
+                                          tr("Import file"),
+                                          QString(),
+                                          tr("Files (*.csv *.xml *.json)"));
+
+    if(filename.isNull()) {
+        emit svc_op_canceled(); goto end;
+    }
+
+    if(filename.contains(".csv", Qt::CaseInsensitive)) {
+        fmt=PicsouModelService::CSV;
+    } else if(filename.contains(".xml", Qt::CaseInsensitive)) {
+        fmt=PicsouModelService::XML;
+    } else {
+        fmt=PicsouModelService::JSON;
+    }
+
+    ops=papp()->model_svc()->load_ops(fmt, filename);
+
+    if(ImportDialog(ops, _mw).exec()==QDialog::Rejected) {
+        emit svc_op_canceled(); goto clean;
+    }
+
+    account->add_operations(ops);
+
+    emit ops_imported();
+    goto end;
+
+clean:
+    foreach(OperationPtr op, ops) {
+        delete op;
+    }
+    ops.clear();
+end:
+    return;
+}
+
+void PicsouUIService::ops_export(QUuid account_id)
+{
+    bool ok;
+    QString filename, fmt_str;
+    AccountPtr account;
+    QStringList formats;
+
+    account=papp()->model_svc()->find_account(account_id);
+    if(account.isNull()) {
+        emit svc_op_failed(tr("Internal error: invalid account pointer."));
+        goto end;
+    }
+
+    filename=QFileDialog::getOpenFileName(_mw,
+                                          tr("Import file"),
+                                          QString(),
+                                          tr("Files (*.csv *.json *.xml)"));
+
+    if(filename.isNull()) {
+        emit svc_op_canceled(); goto end;
+    }
+
+    formats << "CSV" << "XML" << "JSON";
+
+    fmt_str=QInputDialog::getItem(_mw,
+                                  tr("Which format?"),
+                                  tr("Select output format"),
+                                  formats,
+                                  0,
+                                  false,
+                                  &ok);
+
+    if(!ok) {
+        emit svc_op_canceled(); goto end;
+    }
+
+    if(!papp()->model_svc()->dump_ops(PicsouModelService::JSON, filename, account->ops(true))) {
+        emit svc_op_failed(tr("Internal error: failed to export operations."));
+        goto end;
+    }
+
+    emit ops_exported();
 end:
     return;
 }
