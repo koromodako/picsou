@@ -11,7 +11,7 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 TARGET = picsou
 TEMPLATE = app
 
-CONFIG += c++11
+CONFIG += c++14
 
 # The following define makes your compiler emit warnings if you use
 # any feature of Qt which as been marked as deprecated (the exact warnings
@@ -28,9 +28,9 @@ DEFINES += GCRYPT_NO_DEPRECATED
 
 LIBS += -lgcrypt
 
-QMAKE_CXXFLAGS += -W \
-                  -Wall \
-                  -Werror
+QMAKE_CXXFLAGS += -Wall \
+                  -Werror \
+                  -pedantic-errors
 
 SOURCES += \
     main.cpp \
@@ -147,4 +147,5 @@ RESOURCES += \
     picsou.qrc
 
 DISTFILES += \
-    TODO.md
+    TODO.md \
+    README.md
