@@ -2,6 +2,8 @@
 
 Keep track of your income and expenses.
 
+**Note: as long as you are not using a release, it might not build or the app might be unstable.**
+
 ## Build
 
 Tested with the following configuration:
