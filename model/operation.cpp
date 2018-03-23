@@ -8,7 +8,7 @@
 #define KW_YEAR "year"
 #define KW_RECIPIENT "recipient"
 #define KW_DESCRIPTION "description"
-#define KW_PAYMENT_METHOD "payment_method"
+#define KW_PAYMENT_METHOD "paymentMethod"
 #define KEYS \
     (QStringList() << KW_AMOUNT << KW_DAY << KW_MONTH << KW_YEAR \
     << KW_RECIPIENT << KW_DESCRIPTION << KW_PAYMENT_METHOD)

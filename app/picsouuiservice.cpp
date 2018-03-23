@@ -737,6 +737,11 @@ void PicsouUIService::ops_import(QUuid account_id)
 
     ops=papp()->model_svc()->load_ops(fmt, filename);
 
+    if(ops.length()==0) {
+        QMessageBox::warning(_mw, tr("Empty import"), tr("Import result is empty. Invalid or empty input file."));
+        goto end;
+    }
+
     if(ImportDialog(ops, _mw).exec()==QDialog::Rejected) {
         emit svc_op_canceled(); goto clean;
     }
@@ -761,6 +766,8 @@ void PicsouUIService::ops_export(QUuid account_id)
     QString filename, fmt_str;
     AccountPtr account;
     QStringList formats;
+    PicsouModelService::ImportExportFormat eformat;
+    QList<PicsouModelService::ImportExportFormat> eformats;
 
     account=papp()->model_svc()->find_account(account_id);
     if(account.isNull()) {
@@ -768,16 +775,12 @@ void PicsouUIService::ops_export(QUuid account_id)
         goto end;
     }
 
-    filename=QFileDialog::getOpenFileName(_mw,
-                                          tr("Import file"),
-                                          QString(),
-                                          tr("Files (*.csv *.json *.xml)"));
-
-    if(filename.isNull()) {
-        emit svc_op_canceled(); goto end;
-    }
-
-    formats << "CSV" << "XML" << "JSON";
+    formats << "CSV (*.csv)"
+            << "XML (*.xml)"
+            << "JSON (*.json)";
+    eformats << PicsouModelService::CSV
+             << PicsouModelService::XML
+             << PicsouModelService::JSON;
 
     fmt_str=QInputDialog::getItem(_mw,
                                   tr("Which format?"),
@@ -791,11 +794,23 @@ void PicsouUIService::ops_export(QUuid account_id)
         emit svc_op_canceled(); goto end;
     }
 
-    if(!papp()->model_svc()->dump_ops(PicsouModelService::JSON, filename, account->ops(true))) {
+    filename=QFileDialog::getSaveFileName(_mw,
+                                          tr("Export file"),
+                                          QString(),
+                                          fmt_str);
+
+    if(filename.isNull()) {
+        emit svc_op_canceled(); goto end;
+    }
+
+    eformat=eformats.at(formats.indexOf(fmt_str));
+
+    if(!papp()->model_svc()->dump_ops(eformat, filename, account->ops(true))) {
         emit svc_op_failed(tr("Internal error: failed to export operations."));
         goto end;
     }
 
+    QMessageBox::information(_mw, tr("Export successful"), tr("Operation successfully exported to %0").arg(filename));
     emit ops_exported();
 end:
     return;

@@ -1,6 +1,7 @@
 #include "picsoumodelservice.h"
 
 #include <QFile>
+#include <QDebug>
 #include <QJsonObject>
 #include <QJsonDocument>
 #include <QXmlStreamReader>
@@ -186,18 +187,18 @@ bool PicsouModelService::dump_ops(ImportExportFormat fmt,
                                   QString filename,
                                   QList<OperationPtr> ops)
 {
-    bool success=true;
+    bool success=false;
     QFile f(filename);
-    QJsonObject obj;
 
     if(!f.open(QIODevice::WriteOnly)) {
         success=false; goto end;
     }
 
     switch (fmt) {
-        case CSV: success=csv_dump_ops(f, ops); break;
-        case XML: success=xml_dump_ops(f, ops); break;
-        case JSON: success=json_dump_ops(f, ops); break;
+    case CSV: success=csv_dump_ops(f, ops); break;
+    case XML: success=xml_dump_ops(f, ops); break;
+    case JSON: success=json_dump_ops(f, ops); break;
+    default: break;
     }
 
     f.close();
@@ -225,29 +226,48 @@ QList<OperationPtr> PicsouModelService::xml_load_ops(QFile &f)
 {
     bool ok;
     int y,m,d;
+    QDate date;
     double amount;
     OperationPtr op;
     QList<OperationPtr> ops;
     QXmlStreamReader xml(&f);
     QXmlStreamAttributes attrs;
+    QXmlStreamReader::TokenType token;
+
     while (!xml.atEnd()) {
 
-        switch (xml.readNext()) {
+        switch (token=xml.readNext()) {
         case QXmlStreamReader::Invalid:
             goto error;
-        case QXmlStreamReader::StartDocument:
-            if(xml.qualifiedName()=="operation") {
+        case QXmlStreamReader::StartElement:
+            if(xml.name()=="operation") {
                 attrs=xml.attributes();
 
                 amount=attrs.value(XML_ATTR_AMOUNT).toDouble(&ok);
-                if(!ok) { goto error; }
+                if(!ok) {
+                    qWarning() << "XML import parsing error: invalid amount.";
+                    goto error;
+                }
                 y=attrs.value(XML_ATTR_YEAR).toInt(&ok);
-                if(!ok) { goto error; }
+                if(!ok) {
+                    qWarning() << "XML import parsing error: invalid year.";
+                    goto error;
+                }
                 m=attrs.value(XML_ATTR_MONTH).toInt(&ok);
-                if(!ok) { goto error; }
+                if(!ok) {
+                    qWarning() << "XML import parsing error: invalid month.";
+                    goto error;
+                }
                 d=attrs.value(XML_ATTR_DAY).toInt(&ok);
-                if(!ok) { goto error; }
-
+                if(!ok) {
+                    qWarning() << "XML import parsing error: invalid day.";
+                    goto error;
+                }
+                date=QDate(y, m, d);
+                if(!date.isValid()) {
+                    qWarning() << "import parsing error: invalid date.";
+                    goto error;
+                }
                 op=OperationPtr(new Operation(amount,
                                               QDate(y, m, d),
                                               attrs.value(XML_ATTR_BUDGET).toString(),
@@ -268,7 +288,6 @@ QList<OperationPtr> PicsouModelService::xml_load_ops(QFile &f)
     }
 
 error:
-    qWarning("import parsing error:");
     foreach (OperationPtr op, ops) {
         delete op;
     }
@@ -279,6 +298,7 @@ end:
 
 QList<OperationPtr> PicsouModelService::csv_load_ops(QFile &f)
 {
+    QDate date;
     double amount;
     bool ok, instr;
     QByteArray line;
@@ -304,19 +324,31 @@ QList<OperationPtr> PicsouModelService::csv_load_ops(QFile &f)
                         switch (idx) {
                         case 0: /* year */
                             y=buffer.toInt(&ok);
-                            if(!ok) { goto error; }
+                            if(!ok) {
+                                qWarning() << "CSV import parsing error: invalid year.";
+                                goto error;
+                            }
                             break;
                         case 1: /* month */
                             m=buffer.toInt(&ok);
-                            if(!ok) { goto error; }
+                            if(!ok) {
+                                qWarning() << "CSV import parsing error: invalid month.";
+                                goto error;
+                            }
                             break;
                         case 2: /* day */
                             d=buffer.toInt(&ok);
-                            if(!ok) { goto error; }
+                            if(!ok) {
+                                qWarning() << "CSV import parsing error: invalid day.";
+                                goto error;
+                            }
                             break;
                         case 3: /* amount */
                             amount=buffer.toDouble(&ok);
-                            if(!ok) { goto error; }
+                            if(!ok) {
+                                qWarning() << "CSV import parsing error: invalid amount.";
+                                goto error;
+                            }
                             break;
                         case 4: /* budget */
                             budget=buffer;
@@ -327,32 +359,34 @@ QList<OperationPtr> PicsouModelService::csv_load_ops(QFile &f)
                         case 6: /* payment method */
                             payment_method=buffer;
                             break;
-                        case 7: /* description */
-                            op=OperationPtr(new Operation(amount,
-                                                          QDate(y, m, d),
-                                                          budget,
-                                                          recipient,
-                                                          buffer,
-                                                          payment_method,
-                                                          nullptr));
-                            ops.append(op);
-                            break;
                         }
                         buffer.clear();
                         idx++;
                     }
                     break;
                 default:
-                    buffer.append(c);
+                    buffer.append(*c);
                 }
             }
-
+            date=QDate(y, m, d);
+            if(!date.isValid()) {
+                qWarning() << "CSV import parsing error: invalid date.";
+                goto error;
+            }
+            op=OperationPtr(new Operation(amount,
+                                          QDate(y, m, d),
+                                          budget,
+                                          recipient,
+                                          buffer.replace(';', '\n'),
+                                          payment_method,
+                                          nullptr));
+            ops.append(op);
+            buffer.clear();
         }
     }
     goto end;
 
 error:
-    qWarning("import parsing error:");
     foreach (OperationPtr op, ops) {
         delete op;
     }
@@ -376,6 +410,7 @@ QList<OperationPtr> PicsouModelService::json_load_ops(QFile &f)
                 op=OperationPtr(new Operation(nullptr));
                 ops.append(op);
                 if(!op->read(doc.object())) {
+                    qWarning() << "JSON import parsing error: failed to read operation.";
                     goto error;
                 }
             }
@@ -384,7 +419,6 @@ QList<OperationPtr> PicsouModelService::json_load_ops(QFile &f)
     goto end;
 
 error:
-    qWarning("import parsing error:");
     foreach (OperationPtr op, ops) {
         delete op;
     }
@@ -429,7 +463,7 @@ bool PicsouModelService::csv_dump_ops(QFile &f, QList<OperationPtr> ops)
                     op->budget().replace('"', '\''),
                     op->recipient().replace('"', '\''),
                     op->payment_method().replace('"', '\''),
-                    op->description().replace('"', '\''))
+                    op->description().replace('"', '\'').replace('\n', ';'))
                 .toUtf8());
     }
     success=true;
@@ -447,6 +481,7 @@ bool PicsouModelService::json_dump_ops(QFile &f, QList<OperationPtr> ops)
             success=false; goto end;
         }
         f.write(QJsonDocument(obj).toJson(QJsonDocument::Compact));
+        f.write("\n");
     }
     success=true;
 end:

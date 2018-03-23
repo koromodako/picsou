@@ -110,6 +110,9 @@ void Account::add_operations(QList<OperationPtr> ops)
         op->set_parent(this);
         _ops.insert(op->id(), op);
     }
+    if(ops.length()>0) {
+        emit modified();
+    }
 }
 
 bool Account::remove_operation(QUuid id)

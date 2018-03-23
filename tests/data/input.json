@@ -1,0 +1,6 @@
+{"year": 2010, "month": 1, "day": 4, "amount": 1.0, "budget": "LOGEMENT", "recipient": "Mr A", "paymentMethod": "CB", "description": "Test description 1\nEcho"}
+{"year": 2010, "month": 1, "day": 5, "amount": 1.0, "budget": "LOGEMENT", "recipient": "Mr A", "paymentMethod": "CB", "description": "Test description 2\nEcho"}
+{"year": 2010, "month": 1, "day": 10, "amount": -1.0, "budget": "LOGEMENT", "recipient": "Mr A", "paymentMethod": "CB", "description": "Test description 3\nEcho"}
+{"year": 2010, "month": 1, "day": 7, "amount": 1.0, "budget": "LOGEMENT", "recipient": "Mr A", "paymentMethod": "CB", "description": "Test description 4\nEcho"}
+{"year": 2010, "month": 1, "day": 8, "amount": 1.0, "budget": "LOGEMENT", "recipient": "Mr A", "paymentMethod": "CB", "description": "Test description 5\nEcho"}
+{"year": 2010, "month": 1, "day": 9, "amount": 1.0, "budget": "LOGEMENT", "recipient": "Mr A", "paymentMethod": "CB", "description": "Test description 6\nEcho"}
