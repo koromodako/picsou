@@ -13,6 +13,15 @@ TEMPLATE = app
 
 CONFIG += console c++14
 
+# Run prebuild script
+system(./prebuild)
+# Force qmake to run
+qmakeforce.target = dummy
+qmakeforce.commands = rm -f Makefile ##to force rerun of qmake
+qmakeforce.depends = FORCE
+PRE_TARGETDEPS += $$qmakeforce.target
+QMAKE_EXTRA_TARGETS += qmakeforce
+
 # The following define makes your compiler emit warnings if you use
 # any feature of Qt which as been marked as deprecated (the exact warnings
 # depend on your compiler). Please consult the documentation of the
@@ -81,6 +90,7 @@ SOURCES += \
 
 HEADERS += \
     picsou.h \
+    picsou.h.dist \
     model/picsoudb.h \
     model/user.h \
     model/budget.h \

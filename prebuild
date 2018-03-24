@@ -1,0 +1,25 @@
+#!/usr/bin/env python3
+# -!- encoding:utf8 -!-
+
+from subprocess import getoutput
+
+def sanitize(s):
+    return s.split('\n')[0].strip()
+
+status = sanitize(getoutput('git status --porcelain'))
+commit = sanitize(getoutput('git rev-parse HEAD'))
+version = sanitize(getoutput('git tag -l --points-at HEAD'))
+if len(version) == 0:
+    version = 'dev'
+status = 'clean' if len(status) == 0 else 'dirty'
+
+with open('picsou.h.dist') as f:
+    data = f.read()
+
+data = data.replace('%{STATUS}%', status)
+data = data.replace('%{COMMIT}%', commit)
+data = data.replace('%{VERSION}%', version)
+
+with open('picsou.h', 'w') as f:
+    f.write(data)
+
