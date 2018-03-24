@@ -209,6 +209,16 @@
         <translation>Montant :</translation>
     </message>
     <message>
+        <location filename="../ui/dialogs/budgeteditor.cpp" line="24"/>
+        <source>$</source>
+        <translation> </translation>
+    </message>
+    <message>
+        <location filename="../ui/dialogs/budgeteditor.cpp" line="25"/>
+        <source> </source>
+        <translation> €</translation>
+    </message>
+    <message>
         <location filename="../ui/dialogs/budgeteditor.ui" line="55"/>
         <source>Name:</source>
         <translation>Nom :</translation>
@@ -396,6 +406,16 @@
         <location filename="../ui/dialogs/operationeditor.ui" line="33"/>
         <source>Amount:</source>
         <translation>Montant :</translation>
+    </message>
+    <message>
+        <location filename="../ui/dialogs/operationeditor.cpp" line="35"/>
+        <source>$</source>
+        <translation> </translation>
+    </message>
+    <message>
+        <location filename="../ui/dialogs/operationeditor.cpp" line="36"/>
+        <source> </source>
+        <translation> €</translation>
     </message>
     <message>
         <location filename="../ui/dialogs/operationeditor.ui" line="66"/>
@@ -633,6 +653,16 @@
 <context>
     <name>PicsouModelService</name>
     <message>
+        <location filename="../app/picsoumodelservice.cpp" line="462"/>
+        <source>$</source>
+        <translation> </translation>
+    </message>
+    <message>
+        <location filename="../app/picsoumodelservice.cpp" line="462"/>
+        <source> </source>
+        <translation> €</translation>
+    </message>
+    <message>
         <location filename="../app/picsoumodelservice.cpp" line="480"/>
         <source>-- [export error] --</source>
         <translation>-- [erreur d&apos;export] --</translation>
@@ -669,6 +699,16 @@
         <location filename="../ui/widgets/picsoutablewidget.cpp" line="37"/>
         <source>Amount</source>
         <translation>Montant</translation>
+    </message>
+    <message>
+        <location filename="../ui/widgets/picsoutablewidget.cpp" line="82"/>
+        <source>$</source>
+        <translation> </translation>
+    </message>
+    <message>
+        <location filename="../ui/widgets/picsoutablewidget.cpp" line="82"/>
+        <source> </source>
+        <translation> €</translation>
     </message>
 </context>
 <context>
@@ -866,6 +906,16 @@
         <translation>Montant :</translation>
     </message>
     <message>
+        <location filename="../ui/dialogs/scheduledoperationeditor.cpp" line="31"/>
+        <source>$</source>
+        <translation> </translation>
+    </message>
+    <message>
+        <location filename="../ui/dialogs/scheduledoperationeditor.cpp" line="32"/>
+        <source> </source>
+        <translation> €</translation>
+    </message>
+    <message>
         <location filename="../ui/dialogs/scheduledoperationeditor.ui" line="62"/>
         <source>Frequency:</source>
         <translation>Fréquence :</translation>
@@ -924,7 +974,7 @@
 <context>
     <name>User</name>
     <message>
-        <location filename="../model/user.cpp" line="103"/>
+        <location filename="../model/user.cpp" line="108"/>
         <source>OTHER</source>
         <translation>AUTRE</translation>
     </message>

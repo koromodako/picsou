@@ -181,20 +181,30 @@ QList<int> Account::years(bool sorted) const
     return years_list;
 }
 
+bool op_cmp(const OperationPtr &a, const OperationPtr &b)
+{
+    return a->date() < b->date();
+}
+
 QList<OperationPtr> Account::ops(bool sorted) const
 {
     QList<OperationPtr> ops=_ops.values();
     if(sorted) {
-        std::sort(ops.begin(), ops.end());
+        std::sort(ops.begin(), ops.end(), op_cmp);
     }
     return ops;
+}
+
+bool pm_cmp(const PaymentMethodPtr &a, const PaymentMethodPtr &b)
+{
+    return a->name() < b->name();
 }
 
 QList<PaymentMethodPtr> Account::payment_methods(bool sorted) const
 {
     QList<PaymentMethodPtr> p_methods=_payment_methods.values();
     if(sorted) {
-        std::sort(p_methods.begin(), p_methods.end());
+        std::sort(p_methods.begin(), p_methods.end(), pm_cmp);
     }
     return p_methods;
 }

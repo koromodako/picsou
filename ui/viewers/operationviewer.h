@@ -33,6 +33,7 @@ public slots:
     void add_op();
     void edit_op();
     void remove_op();
+    void table_edit_op(int row, int col);
 
 private:
     QUuid _user_id;

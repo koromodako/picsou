@@ -32,7 +32,10 @@ OperationEditor::OperationEditor(double *amount,
 
     setWindowTitle(tr("Operation Editor"));
 
+    ui->amount->setPrefix(tr("$"));
+    ui->amount->setSuffix(tr(" "));
     ui->amount->setValue(*_amount);
+
     if(!_date->isNull()){
         ui->date->setDate(*_date);
     } else {

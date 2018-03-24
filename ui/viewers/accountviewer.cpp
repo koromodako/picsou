@@ -26,6 +26,7 @@ AccountViewer::AccountViewer(PicsouUIService *ui_svc,
     _table = new PicsouTableWidget;
     ui->ops_layout->insertWidget(0, _table);
 
+
     /* payment methods */
     connect(ui->pm_add, &QPushButton::clicked,
             this, &AccountViewer::add_pm);
@@ -61,6 +62,8 @@ AccountViewer::AccountViewer(PicsouUIService *ui_svc,
             this, &AccountViewer::edit_op);
     connect(ui->action_edit_op, &QAction::triggered,
             this, &AccountViewer::edit_op);
+    connect(_table, &PicsouTableWidget::cellDoubleClicked,
+            this, &AccountViewer::table_edit_op);
     addAction(ui->action_edit_op);
 
     connect(ui->remove_op, &QPushButton::clicked,
@@ -163,5 +166,10 @@ void AccountViewer::import_ops()
 void AccountViewer::export_ops()
 {
     ui_svc()->ops_export(mod_obj_id());
+}
+
+void AccountViewer::table_edit_op(int, int)
+{
+    edit_op();
 }
 

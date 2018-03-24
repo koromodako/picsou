@@ -84,11 +84,16 @@ bool User::remove_account(QUuid id)
     return success;
 }
 
+bool budget_cmp(const BudgetPtr &a, const BudgetPtr &b)
+{
+    return a->name() < b->name();
+}
+
 QList<BudgetPtr> User::budgets(bool sorted) const
 {
     QList<BudgetPtr> budgets=_budgets.values();
     if(sorted) {
-        std::sort(budgets.begin(), budgets.end());
+        std::sort(budgets.begin(), budgets.end(), budget_cmp);
     }
     return budgets;
 }
@@ -104,11 +109,16 @@ QStringList User::budgets_str(bool sorted) const
     return budgets_str;
 }
 
+bool account_cmp(const AccountPtr &a, const AccountPtr &b)
+{
+    return a->name() < b->name();
+}
+
 QList<AccountPtr> User::accounts(bool sorted) const
 {
     QList<AccountPtr> accounts=_accounts.values();
     if(sorted) {
-        std::sort(accounts.begin(), accounts.end());
+        std::sort(accounts.begin(), accounts.end(), account_cmp);
     }
     return accounts;
 }

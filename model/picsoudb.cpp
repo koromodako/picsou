@@ -54,11 +54,16 @@ bool PicsouDB::remove_user(QUuid id)
     return success;
 }
 
+bool user_cmp(const UserPtr &a, const UserPtr &b)
+{
+    return a->name() < b->name();
+}
+
 QList<UserPtr> PicsouDB::users(bool sorted) const
 {
     QList<UserPtr> users=_users.values();
     if(sorted) {
-        std::sort(users.begin(), users.end());
+        std::sort(users.begin(), users.end(), user_cmp);
     }
     return users;
 }
@@ -73,11 +78,14 @@ UserPtr PicsouDB::find_user(QUuid id) const
     return user;
 }
 
-QList<OperationPtr> PicsouDB::ops(QUuid account_id, int year, int month) const
+QList<OperationPtr> PicsouDB::ops(QUuid account_id,
+                                  int year,
+                                  int month,
+                                  bool sorted) const
 {
     QList<OperationPtr> selected_ops;
     AccountPtr account=find_account(account_id);
-    foreach (OperationPtr op, account->ops(true)) {
+    foreach (OperationPtr op, account->ops(sorted)) {
         if(year!=-1&&op->date().year()!=year) {
             continue;
         }

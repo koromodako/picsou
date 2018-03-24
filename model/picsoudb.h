@@ -26,7 +26,8 @@ public:
     AccountPtr find_account(QUuid id) const;
     QList<OperationPtr> ops(QUuid account_id,
                             int year=-1,
-                            int month=-1) const;
+                            int month=-1,
+                            bool sorted=true) const;
 
     bool read(const QJsonObject &json);
     bool write(QJsonObject &json) const;

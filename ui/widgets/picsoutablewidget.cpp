@@ -79,7 +79,7 @@ void PicsouTableWidget::refresh(QList<OperationPtr> ops)
         items.append(new QTableWidgetItem(op->recipient()));
         items.append(new QTableWidgetItem(op->payment_method()));
         items.append(new QTableWidgetItem(op->budget()));
-        items.append(new QTableWidgetItem(op->amount_str()));
+        items.append(new QTableWidgetItem(op->amount_str(tr("$"), tr(" "))));
 
         c=0;
         foreach (QTableWidgetItem *item, items) {

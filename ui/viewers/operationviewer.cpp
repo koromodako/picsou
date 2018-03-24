@@ -29,7 +29,6 @@ OperationViewer::OperationViewer(PicsouUIService *ui_svc,
             this, &OperationViewer::refresh);
 
     _table = new PicsouTableWidget;
-
     ui->main_layout->insertWidget(0, _table);
 
     /* ops */
@@ -43,6 +42,8 @@ OperationViewer::OperationViewer(PicsouUIService *ui_svc,
             this, &OperationViewer::edit_op);
     connect(ui->action_edit_op, &QAction::triggered,
             this, &OperationViewer::edit_op);
+    connect(_table, &PicsouTableWidget::cellDoubleClicked,
+            this, &OperationViewer::table_edit_op);
     addAction(ui->action_edit_op);
 
     connect(ui->remove_op, &QPushButton::clicked,
@@ -89,4 +90,9 @@ void OperationViewer::remove_op()
     if(!op_id.isNull()) {
         ui_svc()->op_remove(mod_obj_id(), op_id);
     }
+}
+
+void OperationViewer::table_edit_op(int, int)
+{
+    edit_op();
 }

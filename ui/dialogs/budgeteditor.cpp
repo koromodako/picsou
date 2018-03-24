@@ -21,7 +21,10 @@ BudgetEditor::BudgetEditor(double *amount,
 
     setWindowTitle(tr("Budget Editor"));
 
+    ui->amount->setPrefix(tr("$"));
+    ui->amount->setSuffix(tr(" "));
     ui->amount->setValue(*_amount);
+
     if(!_name->isNull()) {
         ui->name->setText(*_name);
     }

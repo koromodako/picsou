@@ -438,7 +438,7 @@ bool PicsouModelService::xml_dump_ops(QFile &f, QList<OperationPtr> ops)
         xml.writeAttribute(XML_ATTR_YEAR, QString::number(op->date().year()));
         xml.writeAttribute(XML_ATTR_MONTH, QString::number(op->date().month()));
         xml.writeAttribute(XML_ATTR_DAY, QString::number(op->date().day()));
-        xml.writeAttribute(XML_ATTR_AMOUNT, op->amount_str());
+        xml.writeAttribute(XML_ATTR_AMOUNT, op->amount_str("", ""));
         xml.writeAttribute(XML_ATTR_BUDGET, op->budget());
         xml.writeAttribute(XML_ATTR_RECIPIENT, op->recipient());
         xml.writeAttribute(XML_ATTR_PAYMENT_METHOD, op->payment_method());
@@ -459,7 +459,7 @@ bool PicsouModelService::csv_dump_ops(QFile &f, QList<OperationPtr> ops)
                     QString::number(op->date().year()),
                     QString::number(op->date().month()),
                     QString::number(op->date().day()),
-                    op->amount_str(),
+                    op->amount_str(tr("$"), tr(" ")),
                     op->budget().replace('"', '\''),
                     op->recipient().replace('"', '\''),
                     op->payment_method().replace('"', '\''),

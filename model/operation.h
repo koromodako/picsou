@@ -35,7 +35,8 @@ public:
                 const QString &payment_method);
 
     inline double amount() const { return _amount; }
-    inline QString amount_str() const { return QString("%0").arg(_amount, 0, 'f', 2); }
+    inline QString amount_str(const QString &prefix, const QString &suffix) const
+    { return QString("%0%1%2").arg(prefix).arg(_amount, 0, 'f', 2).arg(suffix); }
     inline QDate date() const { return _date; }
     inline QString budget() const { return _budget; }
     inline QString recipient() const { return _recipient; }
