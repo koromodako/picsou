@@ -6,12 +6,13 @@
 #define KW_DAY "day"
 #define KW_MONTH "month"
 #define KW_YEAR "year"
+#define KW_BUDGET "budget"
 #define KW_RECIPIENT "recipient"
 #define KW_DESCRIPTION "description"
 #define KW_PAYMENT_METHOD "paymentMethod"
 #define KEYS \
     (QStringList() << KW_AMOUNT << KW_DAY << KW_MONTH << KW_YEAR \
-    << KW_RECIPIENT << KW_DESCRIPTION << KW_PAYMENT_METHOD)
+    << KW_BUDGET << KW_RECIPIENT << KW_DESCRIPTION << KW_PAYMENT_METHOD)
 
 Operation::~Operation()
 {
@@ -68,6 +69,7 @@ bool Operation::read(const QJsonObject &json)
     _date=QDate(json[KW_YEAR].toInt(),
                 json[KW_MONTH].toInt(),
                 json[KW_DAY].toInt());
+    _budget=json[KW_BUDGET].toString();
     _recipient=json[KW_RECIPIENT].toString();
     _description=json[KW_DESCRIPTION].toString();
     _payment_method=json[KW_PAYMENT_METHOD].toString();
@@ -84,6 +86,7 @@ bool Operation::write(QJsonObject &json) const
     json[KW_DAY]=_date.day();
     json[KW_MONTH]=_date.month();
     json[KW_YEAR]=_date.year();
+    json[KW_BUDGET]=_budget;
     json[KW_RECIPIENT]=_recipient;
     json[KW_DESCRIPTION]=_description;
     json[KW_PAYMENT_METHOD]=_payment_method;
