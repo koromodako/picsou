@@ -10,6 +10,7 @@ DECL_PICSOU_MOD_OBJ_PTR(PaymentMethod, PaymentMethodPtr);
 
 class Operation : public PicsouModelObj
 {
+    Q_OBJECT
 public:
     enum Type {
         CREDIT,

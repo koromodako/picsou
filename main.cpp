@@ -1,4 +1,7 @@
+#include <QDebug>
 #include <QApplication>
+#include <QTranslator>
+#include <QLibraryInfo>
 
 #include "app/picsouapplication.h"
 #include "app/picsouuiservice.h"
@@ -23,6 +26,15 @@ end:
 int main(int argc, char *argv[])
 {
     QScopedPointer<QCoreApplication> app(createApplication(argc, argv));
+
+    QTranslator qtTranslator;
+    qtTranslator.load("qt_" + QLocale::system().name(),
+    QLibraryInfo::location(QLibraryInfo::TranslationsPath));
+    app->installTranslator(&qtTranslator);
+
+    QTranslator appTranslator;
+    appTranslator.load("picsou_" + QLocale::system().name(), ":/translation");
+    app->installTranslator(&appTranslator);
 
     PicsouApplication papp(app.data());
 

@@ -7,6 +7,7 @@
 
 class PicsouTableWidget : public QTableWidget
 {
+    Q_OBJECT
 public:
     virtual ~PicsouTableWidget();
     PicsouTableWidget(QWidget *parent=nullptr);

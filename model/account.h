@@ -9,6 +9,7 @@
 
 class Account : public PicsouModelObj
 {
+    Q_OBJECT
 public:
     virtual ~Account();
     Account(PicsouModelObj *parent);

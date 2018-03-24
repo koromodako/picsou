@@ -2120,5 +2120,6 @@
         <file>resources/material-design/svg/youtube-play.svg</file>
         <file>resources/material-design/svg/youtube-tv.svg</file>
         <file>resources/material-design/svg/zip-box.svg</file>
+        <file>translation/picsou_fr_FR.qm</file>
     </qresource>
 </RCC>

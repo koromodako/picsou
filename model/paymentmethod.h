@@ -5,6 +5,7 @@
 
 class PaymentMethod : public PicsouModelObj
 {
+    Q_OBJECT
 public:
     virtual ~PaymentMethod();
     PaymentMethod(PicsouModelObj *parent);

@@ -5,6 +5,7 @@
 
 class PicsouDB : public PicsouModelObj
 {
+    Q_OBJECT
 public:
     virtual ~PicsouDB();
     PicsouDB();

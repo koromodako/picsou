@@ -5,6 +5,7 @@
 
 class Budget : public PicsouModelObj
 {
+    Q_OBJECT
 public:
     virtual ~Budget();
     Budget(PicsouModelObj *parent);

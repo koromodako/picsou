@@ -8,6 +8,7 @@
 
 class User : public PicsouModelObj
 {
+    Q_OBJECT
 public:
     virtual ~User();
     User(PicsouModelObj *parent);

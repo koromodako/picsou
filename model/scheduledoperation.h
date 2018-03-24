@@ -5,6 +5,7 @@
 
 class ScheduledOperation : public Operation
 {
+    Q_OBJECT
 public:
     enum Frequency {
            YEARLY=0,
