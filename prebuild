@@ -3,23 +3,40 @@
 
 from subprocess import getoutput
 
+LOCALES = [
+    'fr_FR'
+]
+
 def sanitize(s):
     return s.split('\n')[0].strip()
 
-status = sanitize(getoutput('git status --porcelain'))
-commit = sanitize(getoutput('git rev-parse HEAD'))
-version = sanitize(getoutput('git tag -l --points-at HEAD'))
-if len(version) == 0:
-    version = 'dev'
-status = 'clean' if len(status) == 0 else 'dirty'
+def create_picsou_h():
+    status = sanitize(getoutput('git status --porcelain'))
+    status = 'clean' if len(status) == 0 else 'dirty'
 
-with open('picsou.h.dist') as f:
-    data = f.read()
+    commit = sanitize(getoutput('git rev-parse HEAD'))
 
-data = data.replace('%{STATUS}%', status)
-data = data.replace('%{COMMIT}%', commit)
-data = data.replace('%{VERSION}%', version)
+    version = sanitize(getoutput('git tag -l --points-at HEAD'))
+    if len(version) == 0:
+        version = 'dev'
 
-with open('picsou.h', 'w') as f:
-    f.write(data)
+    with open('picsou.h.dist') as f:
+        data = f.read()
 
+    data = data.replace('%{STATUS}%', status)
+    data = data.replace('%{COMMIT}%', commit)
+    data = data.replace('%{VERSION}%', version)
+
+    with open('picsou.h', 'w') as f:
+        f.write(data)
+
+def release_translations():
+    for locale in LOCALES:
+        getoutput('lrelease translation/picsou_{0}.ts -qm translation/picsou_{0}.qm'.format(locale))
+
+def main():
+    create_picsou_h()
+    release_translations()
+
+if __name__ == '__main__':
+    main()
