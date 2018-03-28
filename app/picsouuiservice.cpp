@@ -114,7 +114,8 @@ bool PicsouUIService::populate_db_tree(QTreeWidget* const tree)
                                                  calendar_ico,
                                                  QDate(1,month,1).toString("MMMM"),
                                                  account->id(),
-                                                 year, month);
+                                                 year,
+                                                 month);
                 }
             }
         }

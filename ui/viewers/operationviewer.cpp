@@ -62,6 +62,7 @@ void OperationViewer::refresh(const PicsouDBPtr db)
             year=_year;
             break;
         case VS_MONTH:
+            year=_year;
             month=_month;
             break;
     }
