@@ -3,7 +3,7 @@
 
 #include "paymentmethod.h"
 #include "scheduledoperation.h"
-#include "operation.h"
+#include "operationcollection.h"
 
 #include <QHash>
 
@@ -26,13 +26,13 @@ public:
     void add_scheduled_operation(ScheduledOperationPtr sop) { _scheduled_ops.insert(sop->id(), sop); }
     bool remove_scheduled_operation(QUuid id);
 
-    void add_operation(double amount,
+    void add_operation(Amount amount,
                        const QDate &date,
                        const QString &budget,
                        const QString &recipient,
                        const QString &description,
                        const QString &payment_method);
-    void add_operations(QList<OperationPtr> ops);
+    void add_operations(OperationCollection ops);
     bool remove_operation(QUuid id);
 
     PaymentMethodPtr find_payment_method(QUuid id);
@@ -46,7 +46,7 @@ public:
     inline QList<ScheduledOperationPtr> scheduled_ops() const { return _scheduled_ops.values(); }
 
     QList<int> years(bool sorted=false) const;
-    QList<OperationPtr> ops(bool sorted=false) const;
+    OperationCollection ops(bool sorted=false) const;
 
     bool read(const QJsonObject &json);
     bool write(QJsonObject &json) const;

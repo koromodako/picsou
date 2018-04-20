@@ -3,6 +3,7 @@
 
 #include "ui/picsouuiviewer.h"
 #include "ui/widgets/picsoutablewidget.h"
+#include "ui/widgets/operationstatistics.h"
 
 namespace Ui {
 class AccountViewer;
@@ -40,6 +41,7 @@ public slots:
 private:
     QUuid _user_id;
     PicsouTableWidget *_table;
+    OperationStatistics *_ops_stats;
     Ui::AccountViewer *ui;
 };
 

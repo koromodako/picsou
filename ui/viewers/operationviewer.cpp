@@ -6,6 +6,7 @@
 
 OperationViewer::~OperationViewer()
 {
+    delete _ops_stats;
     delete _table;
     delete ui;
 }
@@ -30,6 +31,9 @@ OperationViewer::OperationViewer(PicsouUIService *ui_svc,
 
     _table = new PicsouTableWidget;
     ui->main_layout->insertWidget(0, _table);
+
+    _ops_stats = new OperationStatistics;
+    ui->main_layout->addWidget(_ops_stats);
 
     /* ops */
     connect(ui->add_op, &QPushButton::clicked,
@@ -56,6 +60,7 @@ OperationViewer::OperationViewer(PicsouUIService *ui_svc,
 void OperationViewer::refresh(const PicsouDBPtr db)
 {
     int year=-1, month=-1;
+    OperationCollection ops;
 
     switch (_scale) {
         case VS_YEAR:
@@ -67,7 +72,9 @@ void OperationViewer::refresh(const PicsouDBPtr db)
             break;
     }
 
-    _table->refresh(db->ops(mod_obj_id(), year, month));
+    ops=db->ops(mod_obj_id(), year, month);
+    _table->refresh(ops);
+    _ops_stats->refresh(ops);
 }
 
 void OperationViewer::add_op()

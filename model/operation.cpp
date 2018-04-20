@@ -25,7 +25,7 @@ Operation::Operation(PicsouModelObj *parent) :
 
 }
 
-Operation::Operation(double amount,
+Operation::Operation(Amount amount,
                      const QDate &date,
                      const QString &budget,
                      const QString &recipient,
@@ -43,7 +43,7 @@ Operation::Operation(double amount,
 
 }
 
-void Operation::update(double amount,
+void Operation::update(Amount amount,
                        const QDate &date,
                        const QString &budget,
                        const QString &recipient,
@@ -82,7 +82,7 @@ end:
 bool Operation::write(QJsonObject &json) const
 {
     /**/
-    json[KW_AMOUNT]=_amount;
+    json[KW_AMOUNT]=_amount.value();
     json[KW_DAY]=_date.day();
     json[KW_MONTH]=_date.month();
     json[KW_YEAR]=_date.year();
@@ -92,9 +92,4 @@ bool Operation::write(QJsonObject &json) const
     json[KW_PAYMENT_METHOD]=_payment_method;
     /**/
     return true;
-}
-
-bool Operation::operator <(const Operation &other)
-{
-    return (_date < other._date);
 }

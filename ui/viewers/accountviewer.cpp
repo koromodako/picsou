@@ -7,6 +7,7 @@
 
 AccountViewer::~AccountViewer()
 {
+    delete _ops_stats;
     delete _table;
     delete ui;
 }
@@ -26,6 +27,8 @@ AccountViewer::AccountViewer(PicsouUIService *ui_svc,
     _table = new PicsouTableWidget;
     ui->ops_layout->insertWidget(0, _table);
 
+    _ops_stats = new OperationStatistics;
+    ui->hlayout->addWidget(_ops_stats);
 
     /* payment methods */
     connect(ui->pm_add, &QPushButton::clicked,
@@ -88,7 +91,7 @@ AccountViewer::AccountViewer(PicsouUIService *ui_svc,
 void AccountViewer::refresh(const PicsouDBPtr db)
 {
     bool has_pm, has_ops;
-    QList<OperationPtr> ops;
+    OperationCollection ops;
     AccountPtr account=db->find_account(mod_obj_id());
     /* payment methods */
     ui->payment_methods->clear();
@@ -106,8 +109,10 @@ void AccountViewer::refresh(const PicsouDBPtr db)
     */
     /* ops */
     ops=db->ops(mod_obj_id());
-    has_ops=(ops.length()>0);
     _table->refresh(ops);
+    _ops_stats->refresh(ops);
+
+    has_ops=(ops.length()>0);
     ui->remove_op->setEnabled(has_ops);
     ui->edit_op->setEnabled(has_ops);
 }

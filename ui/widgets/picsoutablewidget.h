@@ -3,7 +3,7 @@
 
 #include <QTableWidget>
 
-#include "model/operation.h"
+#include "model/operationcollection.h"
 
 class PicsouTableWidget : public QTableWidget
 {
@@ -13,7 +13,7 @@ public:
     PicsouTableWidget(QWidget *parent=nullptr);
 
     void clear();
-    void refresh(QList<OperationPtr> ops);
+    void refresh(OperationCollection ops);
     QUuid current_op();
 
 private:

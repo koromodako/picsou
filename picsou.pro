@@ -4,9 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui
-
-greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
+QT += core widgets
 
 TARGET = picsou
 TEMPLATE = app
@@ -86,7 +84,10 @@ SOURCES += \
     ui/picsouui.cpp \
     ui/picsouitem.cpp \
     ui/items/picsoutableitem.cpp \
-    ui/widgets/picsoutablewidget.cpp
+    ui/widgets/picsoutablewidget.cpp \
+    model/operationcollection.cpp \
+    ui/widgets/operationstatistics.cpp \
+    model/amount.cpp
 
 HEADERS += \
     picsou.h \
@@ -135,7 +136,10 @@ HEADERS += \
     ui/picsouui.h \
     ui/picsouitem.h \
     ui/items/picsoutableitem.h \
-    ui/widgets/picsoutablewidget.h
+    ui/widgets/picsoutablewidget.h \
+    model/operationcollection.h \
+    ui/widgets/operationstatistics.h \
+    model/amount.h
 
 FORMS += \
     ui/mainwindow.ui \
@@ -151,7 +155,8 @@ FORMS += \
     ui/viewers/operationviewer.ui \
     ui/viewers/picsoudbviewer.ui \
     ui/viewers/accountviewer.ui \
-    ui/viewers/userviewer.ui
+    ui/viewers/userviewer.ui \
+    ui/widgets/operationstatistics.ui
 
 RESOURCES += \
     picsou.qrc

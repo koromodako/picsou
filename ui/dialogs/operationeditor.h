@@ -2,6 +2,7 @@
 #define OPERATIONEDITOR_H
 
 #include <QDialog>
+#include "model/amount.h"
 
 namespace Ui {
 class OperationEditor;
@@ -12,8 +13,8 @@ class OperationEditor : public QDialog
     Q_OBJECT
 public:
     virtual ~OperationEditor();
-    explicit OperationEditor(double *amount,
-                             QDate *date,
+    explicit OperationEditor(QDate *date,
+                             Amount *amount,
                              QString *payment_method,
                              QString *budget,
                              QString *recipient,
@@ -29,8 +30,8 @@ public slots:
     void accept();
 
 private:
-    double *_amount;
     QDate *_date;
+    Amount *_amount;
     QString *_payment_method;
     QString *_budget;
     QString *_recipient;

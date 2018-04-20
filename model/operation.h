@@ -2,6 +2,7 @@
 #define OPERATION_H
 
 #include "picsoumodelobj.h"
+#include "amount.h"
 
 #include <QDate>
 
@@ -19,7 +20,7 @@ public:
 
     virtual ~Operation();
     Operation(PicsouModelObj *parent);
-    Operation(double amount,
+    Operation(Amount amount,
               const QDate &date,
               const QString &budget,
               const QString &recipient,
@@ -27,16 +28,14 @@ public:
               const QString &payment_method,
               PicsouModelObj *parent);
 
-    void update(double amount,
+    void update(Amount amount,
                 const QDate &date,
                 const QString &budget,
                 const QString &recipient,
                 const QString &description,
                 const QString &payment_method);
 
-    inline double amount() const { return _amount; }
-    inline QString amount_str(const QString &prefix, const QString &suffix) const
-    { return QString("%0%1%2").arg(prefix).arg(_amount, 0, 'f', 2).arg(suffix); }
+    inline Amount amount() const { return _amount; }
     inline QDate date() const { return _date; }
     inline QString budget() const { return _budget; }
     inline QString recipient() const { return _recipient; }
@@ -47,10 +46,10 @@ public:
     bool read(const QJsonObject &json);
     bool write(QJsonObject &json) const;
 
-    bool operator <(const Operation &other);
+    inline bool operator<(const Operation &other) { return _date<other._date; }
 
 private:
-    double _amount;
+    Amount _amount;
     QDate _date;
     QString _budget;
     QString _recipient;

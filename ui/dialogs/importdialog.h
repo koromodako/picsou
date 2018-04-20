@@ -15,7 +15,7 @@ class ImportDialog : public QDialog
 
 public:
     virtual ~ImportDialog();
-    explicit ImportDialog(QList<OperationPtr> ops,
+    explicit ImportDialog(OperationCollection ops,
                           QWidget *parent=nullptr);
 
 private:

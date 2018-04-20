@@ -6,8 +6,8 @@ OperationEditor::~OperationEditor()
     delete ui;
 }
 
-OperationEditor::OperationEditor(double *amount,
-                                 QDate *date,
+OperationEditor::OperationEditor(QDate *date,
+                                 Amount *amount,
                                  QString *payment_method,
                                  QString *budget,
                                  QString *recipient,
@@ -16,8 +16,8 @@ OperationEditor::OperationEditor(double *amount,
                                  int month,
                                  QWidget *parent) :
     QDialog(parent),
-    _amount(amount),
     _date(date),
+    _amount(amount),
     _payment_method(payment_method),
     _budget(budget),
     _recipient(recipient),
@@ -34,7 +34,7 @@ OperationEditor::OperationEditor(double *amount,
 
     ui->amount->setPrefix(tr("$"));
     ui->amount->setSuffix(tr(" "));
-    ui->amount->setValue(*_amount);
+    ui->amount->setValue(_amount->value());
 
     if(!_date->isNull()){
         ui->date->setDate(*_date);

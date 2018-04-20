@@ -2,6 +2,7 @@
 #include <QApplication>
 #include <QTranslator>
 #include <QLibraryInfo>
+#include <QStyleFactory>
 
 #include "app/picsouapplication.h"
 #include "app/picsouuiservice.h"
@@ -17,6 +18,8 @@ QCoreApplication* createApplication(int &argc, char *argv[])
           goto end;
       }
   }
+
+  QApplication::setStyle(QStyleFactory::create("Fusion"));
 
   app=new QApplication(argc, argv);
 end:

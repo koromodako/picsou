@@ -162,11 +162,11 @@ bool PicsouModelService::is_db_opened()
     return (!_db.isNull());
 }
 
-QList<OperationPtr> PicsouModelService::load_ops(ImportExportFormat fmt,
+OperationCollection PicsouModelService::load_ops(ImportExportFormat fmt,
                                                  QString filename)
 {
     QFile f(filename);
-    QList<OperationPtr> ops;
+    OperationCollection ops;
 
     if(!f.open(QIODevice::ReadOnly)) {
         goto end;
@@ -185,7 +185,7 @@ end:
 
 bool PicsouModelService::dump_ops(ImportExportFormat fmt,
                                   QString filename,
-                                  QList<OperationPtr> ops)
+                                  OperationCollection ops)
 {
     bool success=false;
     QFile f(filename);
@@ -222,14 +222,14 @@ void PicsouModelService::notify_ui()
     emit updated(_db);
 }
 
-QList<OperationPtr> PicsouModelService::xml_load_ops(QFile &f)
+OperationCollection PicsouModelService::xml_load_ops(QFile &f)
 {
     bool ok;
     int y,m,d;
     QDate date;
     double amount;
     OperationPtr op;
-    QList<OperationPtr> ops;
+    OperationCollection ops;
     QXmlStreamReader xml(&f);
     QXmlStreamAttributes attrs;
     QXmlStreamReader::TokenType token;
@@ -288,15 +288,12 @@ QList<OperationPtr> PicsouModelService::xml_load_ops(QFile &f)
     }
 
 error:
-    foreach (OperationPtr op, ops) {
-        delete op;
-    }
     ops.clear();
 end:
     return ops;
 }
 
-QList<OperationPtr> PicsouModelService::csv_load_ops(QFile &f)
+OperationCollection PicsouModelService::csv_load_ops(QFile &f)
 {
     QDate date;
     double amount;
@@ -304,7 +301,7 @@ QList<OperationPtr> PicsouModelService::csv_load_ops(QFile &f)
     QByteArray line;
     OperationPtr op;
     int y, m, d, idx;
-    QList<OperationPtr> ops;
+    OperationCollection ops;
     QByteArray::const_iterator c;
     QString buffer, budget, recipient, payment_method;
 
@@ -387,20 +384,17 @@ QList<OperationPtr> PicsouModelService::csv_load_ops(QFile &f)
     goto end;
 
 error:
-    foreach (OperationPtr op, ops) {
-        delete op;
-    }
     ops.clear();
 end:
     return ops;
 }
 
-QList<OperationPtr> PicsouModelService::json_load_ops(QFile &f)
+OperationCollection PicsouModelService::json_load_ops(QFile &f)
 {
     QByteArray line;
     OperationPtr op;
     QJsonDocument doc;
-    QList<OperationPtr> ops;
+    OperationCollection ops;
 
     while(!f.atEnd()) {
         line=f.readLine().trimmed();
@@ -419,26 +413,23 @@ QList<OperationPtr> PicsouModelService::json_load_ops(QFile &f)
     goto end;
 
 error:
-    foreach (OperationPtr op, ops) {
-        delete op;
-    }
     ops.clear();
 end:
     return ops;
 }
 
-bool PicsouModelService::xml_dump_ops(QFile &f, QList<OperationPtr> ops)
+bool PicsouModelService::xml_dump_ops(QFile &f, OperationCollection ops)
 {
     bool success;
     QXmlStreamWriter xml(&f);
     xml.writeStartDocument("1.0", true);
     xml.writeStartElement("operations");
-    foreach (OperationPtr op, ops) {
+    foreach (OperationPtr op, ops.list()) {
         xml.writeEmptyElement(XML_ELEM_OP);
         xml.writeAttribute(XML_ATTR_YEAR, QString::number(op->date().year()));
         xml.writeAttribute(XML_ATTR_MONTH, QString::number(op->date().month()));
         xml.writeAttribute(XML_ATTR_DAY, QString::number(op->date().day()));
-        xml.writeAttribute(XML_ATTR_AMOUNT, op->amount_str("", ""));
+        xml.writeAttribute(XML_ATTR_AMOUNT, op->amount().to_str());
         xml.writeAttribute(XML_ATTR_BUDGET, op->budget());
         xml.writeAttribute(XML_ATTR_RECIPIENT, op->recipient());
         xml.writeAttribute(XML_ATTR_PAYMENT_METHOD, op->payment_method());
@@ -451,15 +442,15 @@ bool PicsouModelService::xml_dump_ops(QFile &f, QList<OperationPtr> ops)
     return success;
 }
 
-bool PicsouModelService::csv_dump_ops(QFile &f, QList<OperationPtr> ops)
+bool PicsouModelService::csv_dump_ops(QFile &f, OperationCollection ops)
 {
     bool success;
-    foreach (OperationPtr op, ops) {
+    foreach (OperationPtr op, ops.list()) {
         f.write(QString("%0,%1,%2,%3,\"%4\",\"%5\",\"%6\",\"%7\"\n").arg(
                     QString::number(op->date().year()),
                     QString::number(op->date().month()),
                     QString::number(op->date().day()),
-                    op->amount_str(tr("$"), tr(" ")),
+                    op->amount().to_str(true),
                     op->budget().replace('"', '\''),
                     op->recipient().replace('"', '\''),
                     op->payment_method().replace('"', '\''),
@@ -471,11 +462,11 @@ bool PicsouModelService::csv_dump_ops(QFile &f, QList<OperationPtr> ops)
     return success;
 }
 
-bool PicsouModelService::json_dump_ops(QFile &f, QList<OperationPtr> ops)
+bool PicsouModelService::json_dump_ops(QFile &f, OperationCollection ops)
 {
     bool success;
     QJsonObject obj;
-    foreach (OperationPtr op, ops) {
+    foreach (OperationPtr op, ops.list()) {
         if(!op->write(obj)) {
             f.write(tr("-- [export error] --").toUtf8());
             success=false; goto end;

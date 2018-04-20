@@ -48,7 +48,7 @@ void PicsouTableWidget::clear()
     horizontalHeader()->setSectionResizeMode(5, QHeaderView::ResizeToContents);
 }
 
-void PicsouTableWidget::refresh(QList<OperationPtr> ops)
+void PicsouTableWidget::refresh(OperationCollection ops)
 {
     int r=0, c, alpha=64;
     QIcon icon;
@@ -58,7 +58,7 @@ void PicsouTableWidget::refresh(QList<OperationPtr> ops)
     clear();
     setRowCount(ops.length());
 
-    foreach (OperationPtr op, ops) {
+    foreach (OperationPtr op, ops.list()) {
         items.clear();
 
         switch (op->type()) {
@@ -79,7 +79,7 @@ void PicsouTableWidget::refresh(QList<OperationPtr> ops)
         items.append(new QTableWidgetItem(op->recipient()));
         items.append(new QTableWidgetItem(op->payment_method()));
         items.append(new QTableWidgetItem(op->budget()));
-        items.append(new QTableWidgetItem(op->amount_str(tr("$"), tr(" "))));
+        items.append(new QTableWidgetItem(op->amount().to_str(true)));
 
         c=0;
         foreach (QTableWidgetItem *item, items) {

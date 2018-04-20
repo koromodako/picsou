@@ -78,14 +78,14 @@ UserPtr PicsouDB::find_user(QUuid id) const
     return user;
 }
 
-QList<OperationPtr> PicsouDB::ops(QUuid account_id,
+OperationCollection PicsouDB::ops(QUuid account_id,
                                   int year,
                                   int month,
                                   bool sorted) const
 {
-    QList<OperationPtr> selected_ops;
+    OperationCollection selected_ops;
     AccountPtr account=find_account(account_id);
-    foreach (OperationPtr op, account->ops(sorted)) {
+    foreach (OperationPtr op, account->ops(sorted).list()) {
         if(year!=-1&&op->date().year()!=year) {
             continue;
         }

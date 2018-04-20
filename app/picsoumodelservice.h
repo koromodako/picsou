@@ -32,11 +32,11 @@ public:
     bool close_db();
     bool is_db_opened();
 
-    QList<OperationPtr> load_ops(ImportExportFormat fmt,
+    OperationCollection load_ops(ImportExportFormat fmt,
                                  QString filename);
     bool dump_ops(ImportExportFormat fmt,
                   QString filename,
-                  QList<OperationPtr> ops);
+                  OperationCollection ops);
 
     inline const PicsouDBPtr db() const { return _db; }
     inline bool is_db_modified() const { return _is_db_modified; }
@@ -51,13 +51,13 @@ public slots:
     void notify_ui();
 
 private:
-    QList<OperationPtr> xml_load_ops(QFile &f);
-    QList<OperationPtr> csv_load_ops(QFile &f);
-    QList<OperationPtr> json_load_ops(QFile &f);
+    OperationCollection xml_load_ops(QFile &f);
+    OperationCollection csv_load_ops(QFile &f);
+    OperationCollection json_load_ops(QFile &f);
 
-    bool xml_dump_ops(QFile &f, QList<OperationPtr> ops);
-    bool csv_dump_ops(QFile &f, QList<OperationPtr> ops);
-    bool json_dump_ops(QFile &f, QList<OperationPtr> ops);
+    bool xml_dump_ops(QFile &f, OperationCollection ops);
+    bool csv_dump_ops(QFile &f, OperationCollection ops);
+    bool json_dump_ops(QFile &f, OperationCollection ops);
 
 private:
     PicsouDBPtr _db;

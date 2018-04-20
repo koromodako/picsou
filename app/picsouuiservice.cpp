@@ -575,20 +575,21 @@ end:
 
 void PicsouUIService::op_add(QUuid user_id, QUuid account_id, int year, int month)
 {
-    double amount;
     QDate date;
+    Amount amount;
     UserPtr user;
     AccountPtr account;
     QStringList budgets, payment_methods;
     QString payment_method, budget, recipient, description;
-    OperationEditor editor(&amount,
-                           &date,
+    OperationEditor editor(&date,
+                           &amount,
                            &payment_method,
                            &budget,
                            &recipient,
                            &description,
                            year,
-                           month);
+                           month,
+                           _mw);
 
     user=papp()->model_svc()->find_user(user_id);
     if(user.isNull()) {
@@ -635,7 +636,7 @@ void PicsouUIService::op_edit(QUuid user_id, QUuid account_id, QUuid op_id, int 
 {
     QDate date;
     UserPtr user;
-    double amount;
+    Amount amount;
     OperationPtr op;
     AccountPtr account;
     QString payment_method, budget, recipient, description;
@@ -665,8 +666,9 @@ void PicsouUIService::op_edit(QUuid user_id, QUuid account_id, QUuid op_id, int 
         return;
     }
 
-    OperationEditor editor(&amount, &date, &payment_method,
-                           &budget, &recipient, &description, year, month);
+    OperationEditor editor(&date, &amount, &payment_method,
+                           &budget, &recipient, &description,
+                           year, month, _mw);
 
     editor.set_budgets(user->budgets_str(true));
     editor.set_payment_methods(account->payment_methods_str(true));
@@ -710,7 +712,7 @@ void PicsouUIService::ops_import(QUuid account_id)
 {
     QString filename;
     AccountPtr account;
-    QList<OperationPtr> ops;
+    OperationCollection ops;
     PicsouModelService::ImportExportFormat fmt;
 
     account=papp()->model_svc()->find_account(account_id);
@@ -753,9 +755,6 @@ void PicsouUIService::ops_import(QUuid account_id)
     goto end;
 
 clean:
-    foreach(OperationPtr op, ops) {
-        delete op;
-    }
     ops.clear();
 end:
     return;

@@ -3,6 +3,7 @@
 
 #include "ui/picsouuiviewer.h"
 #include "ui/widgets/picsoutablewidget.h"
+#include "ui/widgets/operationstatistics.h"
 
 namespace Ui {
 class OperationViewer;
@@ -41,6 +42,7 @@ private:
     int _month;
     ViewerScale _scale;
     PicsouTableWidget *_table;
+    OperationStatistics *_ops_stats;
     Ui::OperationViewer *ui;
 };
 

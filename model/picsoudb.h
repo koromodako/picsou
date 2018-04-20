@@ -2,6 +2,7 @@
 #define PICSOUDB_H
 
 #include "user.h"
+#include "operationcollection.h"
 
 class PicsouDB : public PicsouModelObj
 {
@@ -24,7 +25,7 @@ public:
 
     UserPtr find_user(QUuid id) const;
     AccountPtr find_account(QUuid id) const;
-    QList<OperationPtr> ops(QUuid account_id,
+    OperationCollection ops(QUuid account_id,
                             int year=-1,
                             int month=-1,
                             bool sorted=true) const;

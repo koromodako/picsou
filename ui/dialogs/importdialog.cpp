@@ -7,7 +7,7 @@ ImportDialog::~ImportDialog()
     delete ui;
 }
 
-ImportDialog::ImportDialog(QList<OperationPtr> ops,
+ImportDialog::ImportDialog(OperationCollection ops,
                            QWidget *parent) :
     QDialog(parent),
     ui(new Ui::ImportDialog)

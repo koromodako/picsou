@@ -86,7 +86,7 @@ bool Account::remove_scheduled_operation(QUuid id)
     return success;
 }
 
-void Account::add_operation(double amount,
+void Account::add_operation(Amount amount,
                             const QDate &date,
                             const QString &budget,
                             const QString &recipient,
@@ -104,9 +104,9 @@ void Account::add_operation(double amount,
      emit modified();
 }
 
-void Account::add_operations(QList<OperationPtr> ops)
+void Account::add_operations(OperationCollection ops)
 {
-    foreach (OperationPtr op, ops) {
+    foreach (OperationPtr op, ops.list()) {
         op->set_parent(this);
         _ops.insert(op->id(), op);
     }
@@ -165,10 +165,10 @@ OperationPtr Account::find_operation(QUuid id)
 
 QList<int> Account::years(bool sorted) const
 {
-    QList<OperationPtr> operations=ops();
+    OperationCollection operations=ops();
     QSet<int> years_set;
     QList<int> years_list;
-    foreach (OperationPtr op, operations) {
+    foreach (OperationPtr op, operations.list()) {
         years_set << op->date().year();
     }
     years_list=years_set.toList();
@@ -186,7 +186,7 @@ bool op_cmp(const OperationPtr &a, const OperationPtr &b)
     return a->date() < b->date();
 }
 
-QList<OperationPtr> Account::ops(bool sorted) const
+OperationCollection Account::ops(bool sorted) const
 {
     QList<OperationPtr> ops=_ops.values();
     if(sorted) {
