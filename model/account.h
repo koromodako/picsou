@@ -41,9 +41,9 @@ public:
 
     inline QString name() const { return _name; }
     inline QString description() const { return _description; }
-    QList<PaymentMethodPtr> payment_methods(bool sorted=false) const;
+    PaymentMethodPtrList payment_methods(bool sorted=false) const;
     QStringList payment_methods_str(bool sorted=false) const;
-    inline QList<ScheduledOperationPtr> scheduled_ops() const { return _scheduled_ops.values(); }
+    inline ScheduledOperationPtrList scheduled_ops() const { return _scheduled_ops.values(); }
 
     QList<int> years(bool sorted=false) const;
     OperationCollection ops(bool sorted=false) const;
@@ -61,6 +61,6 @@ private:
     QHash<QUuid, OperationPtr> _ops;
 };
 
-DECL_PICSOU_MOD_OBJ_PTR(Account, AccountPtr);
+DECL_PICSOU_MOD_OBJ_PTR(Account, AccountPtr, AccountPtrList);
 
 #endif // ACCOUNT_H

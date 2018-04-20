@@ -33,6 +33,6 @@ private:
     QString _description;
 };
 
-DECL_PICSOU_MOD_OBJ_PTR(Budget, BudgetPtr);
+DECL_PICSOU_MOD_OBJ_PTR(Budget, BudgetPtr, BudgetPtrList);
 
 #endif // BUDGET_H

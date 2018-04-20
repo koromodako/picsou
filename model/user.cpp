@@ -89,9 +89,9 @@ bool budget_cmp(const BudgetPtr &a, const BudgetPtr &b)
     return a->name() < b->name();
 }
 
-QList<BudgetPtr> User::budgets(bool sorted) const
+BudgetPtrList User::budgets(bool sorted) const
 {
-    QList<BudgetPtr> budgets=_budgets.values();
+    BudgetPtrList budgets=_budgets.values();
     if(sorted) {
         std::sort(budgets.begin(), budgets.end(), budget_cmp);
     }
@@ -101,7 +101,7 @@ QList<BudgetPtr> User::budgets(bool sorted) const
 QStringList User::budgets_str(bool sorted) const
 {
     QStringList budgets_str;
-    QList<BudgetPtr> budget_list=budgets(sorted);
+    BudgetPtrList budget_list=budgets(sorted);
     foreach (BudgetPtr budget, budget_list) {
         budgets_str << budget->name();
     }
@@ -114,9 +114,9 @@ bool account_cmp(const AccountPtr &a, const AccountPtr &b)
     return a->name() < b->name();
 }
 
-QList<AccountPtr> User::accounts(bool sorted) const
+AccountPtrList User::accounts(bool sorted) const
 {
-    QList<AccountPtr> accounts=_accounts.values();
+    AccountPtrList accounts=_accounts.values();
     if(sorted) {
         std::sort(accounts.begin(), accounts.end(), account_cmp);
     }

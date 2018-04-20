@@ -47,6 +47,6 @@ private:
     Frequency _freq;
 };
 
-DECL_PICSOU_MOD_OBJ_PTR(ScheduledOperation, ScheduledOperationPtr);
+DECL_PICSOU_MOD_OBJ_PTR(ScheduledOperation, ScheduledOperationPtr, ScheduledOperationPtrList);
 
 #endif // SCHEDULEDOPERATION_H

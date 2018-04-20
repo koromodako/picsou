@@ -10,7 +10,7 @@ OperationCollection::OperationCollection()
     clear();
 }
 
-OperationCollection::OperationCollection(const QList<OperationPtr> &ops)
+OperationCollection::OperationCollection(const OperationPtrList &ops)
 {
     foreach (OperationPtr op, ops) {
         append(op);

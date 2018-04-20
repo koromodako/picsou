@@ -188,7 +188,7 @@ bool op_cmp(const OperationPtr &a, const OperationPtr &b)
 
 OperationCollection Account::ops(bool sorted) const
 {
-    QList<OperationPtr> ops=_ops.values();
+    OperationPtrList ops=_ops.values();
     if(sorted) {
         std::sort(ops.begin(), ops.end(), op_cmp);
     }
@@ -200,9 +200,9 @@ bool pm_cmp(const PaymentMethodPtr &a, const PaymentMethodPtr &b)
     return a->name() < b->name();
 }
 
-QList<PaymentMethodPtr> Account::payment_methods(bool sorted) const
+PaymentMethodPtrList Account::payment_methods(bool sorted) const
 {
-    QList<PaymentMethodPtr> p_methods=_payment_methods.values();
+    PaymentMethodPtrList p_methods=_payment_methods.values();
     if(sorted) {
         std::sort(p_methods.begin(), p_methods.end(), pm_cmp);
     }
@@ -212,7 +212,7 @@ QList<PaymentMethodPtr> Account::payment_methods(bool sorted) const
 QStringList Account::payment_methods_str(bool sorted) const
 {
     QStringList p_methods_str;
-    QList<PaymentMethodPtr> p_methods=payment_methods(sorted);
+    PaymentMethodPtrList p_methods=payment_methods(sorted);
     foreach (PaymentMethodPtr pm, p_methods) {
         p_methods_str << pm->name();
     }

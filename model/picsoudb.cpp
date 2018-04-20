@@ -59,9 +59,9 @@ bool user_cmp(const UserPtr &a, const UserPtr &b)
     return a->name() < b->name();
 }
 
-QList<UserPtr> PicsouDB::users(bool sorted) const
+UserPtrList PicsouDB::users(bool sorted) const
 {
-    QList<UserPtr> users=_users.values();
+    UserPtrList users=_users.values();
     if(sorted) {
         std::sort(users.begin(), users.end(), user_cmp);
     }

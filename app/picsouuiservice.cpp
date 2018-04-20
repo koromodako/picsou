@@ -1,10 +1,14 @@
 #include "picsouuiservice.h"
 
 #include <QUrl>
+#include <QComboBox>
+#include <QListWidget>
 #include <QFileDialog>
 #include <QMessageBox>
 #include <QInputDialog>
+#include <QProgressDialog>
 #include <QDesktopServices>
+#include <QtConcurrent>
 
 #include "picsou.h"
 
@@ -59,8 +63,8 @@ bool PicsouUIService::populate_db_tree(QTreeWidget* const tree)
     bool success;
     int month, year, month_stop;
     QDate today=QDate::currentDate();
-    QList<UserPtr> users;
-    QList<AccountPtr> accounts;
+    UserPtrList users;
+    AccountPtrList accounts;
     const PicsouDB * db;
     QTreeWidgetItem *root_itm, *user_itm, *account_itm, *year_itm, *month_itm;
     QIcon root_ico=QIcon(":/resources/material-design/svg/database.svg"),
@@ -126,10 +130,149 @@ end:
     return success;
 }
 
+bool PicsouUIService::populate_user_cb(QComboBox * const cb)
+{
+    bool found;
+    UserPtrList users;
+
+    if(!papp()->model_svc()->is_db_opened()) {
+        found=false;
+        goto end;
+    }
+
+    users=papp()->model_svc()->db()->users();
+    foreach (UserPtr user, users) {
+        cb->addItem(user->name());
+    }
+    found=true;
+end:
+    return found;
+}
+
+bool PicsouUIService::populate_account_cb(const QString &username,
+                                          QComboBox * const cb)
+{
+    bool found=false;
+    UserPtrList users=papp()->model_svc()->db()->users(true);
+    foreach (UserPtr user, users) {
+        if(user->name()==username) {
+            found=true;
+            foreach (AccountPtr account, user->accounts(true)) {
+                cb->addItem(account->name());
+            }
+        }
+    }
+    return found;
+}
+
+bool PicsouUIService::populate_budgets_list(const QString &username,
+                                            QListWidget * const list)
+{
+    bool found=false;
+    UserPtrList users=papp()->model_svc()->db()->users(true);
+    foreach (UserPtr user, users) {
+        if(user->name()==username) {
+            found=true;
+            foreach (BudgetPtr budget, user->budgets(true)) {
+                list->addItem(budget->name());
+            }
+        }
+    }
+    return found;
+}
+
+bool PicsouUIService::populate_pms_list(const QString &username,
+                                        const QString &account_name,
+                                        QListWidget * const list)
+{
+    bool found=false;
+    UserPtrList users=papp()->model_svc()->db()->users(true);
+    foreach (UserPtr user, users) {
+        if(user->name()==username) {
+            foreach (AccountPtr account, user->accounts(true)) {
+                if(account->name()==account_name) {
+                    found=true;
+                    foreach (PaymentMethodPtr pm, account->payment_methods(true)) {
+                        list->addItem(pm->name());
+                    }
+                    break;
+                }
+            }
+        }
+    }
+    return found;
+}
+
+#include <QDebug>
+
+OperationCollection PicsouUIService::search_operations(const SearchQuery &query)
+{
+    QFuture<OperationPtr> future;
+    OperationCollection ops;
+    OperationPtrList ops_list;
+    UserPtrList users=papp()->model_svc()->db()->users(true);
+
+    foreach (UserPtr user, users) {
+        if(user->name()==query.username()) {
+            qDebug() << "found username: " << user->name();
+            foreach (AccountPtr account, user->accounts(true)) {
+                if(account->name()==query.account_name()) {
+                    qDebug() << "found account: " << account->name();
+                    ops_list=account->ops(true).list();
+
+                    qDebug() << "searching among " << ops_list.length() << " operations";
+                    future=QtConcurrent::filtered(ops_list.begin(), ops_list.end(), SearchQueryFilter(query));
+
+                    qDebug() << "future min: " << future.progressMinimum();
+                    qDebug() << "future max: " << future.progressMaximum();
+
+                    QProgressDialog progress(tr("Searching among %0 operations...").arg(ops_list.length()),
+                                             tr("Abort search"),
+                                             future.progressMinimum(),
+                                             future.progressMaximum(),
+                                             _mw);
+                    progress.setWindowModality(Qt::WindowModal);
+
+                    while(!future.isFinished()) {
+                        qDebug() << "searching the dataset...";
+                        progress.setValue(future.progressValue());
+                        if (progress.wasCanceled()) {
+                            future.cancel();
+                            goto end;
+                        }
+                        QThread::msleep(100);
+                    }
+                    progress.setValue(future.progressValue());
+
+                    ops=future.results();
+                    qDebug() << "search successful! (results count: "<< ops.length() <<")";
+
+                    break;
+                }
+            }
+        }
+    }
+    if(ops.length()==0) {
+        QMessageBox::information(_mw,
+                                 tr("No result"),
+                                 tr("No operation matched the search query."),
+                                 QMessageBox::Ok);
+    }
+end:
+    return ops;
+}
+
 PicsouUIViewer *PicsouUIService::viewer_from_item(QTreeWidgetItem *item)
 {
     PicsouUIViewer *w=nullptr;
-    PicsouTreeItem *pitem=static_cast<PicsouTreeItem*>(item);
+    PicsouTreeItem *pitem;
+
+    if(item==nullptr) {
+        goto end;
+    }
+
+    pitem=static_cast<PicsouTreeItem*>(item);
+
     switch (pitem->type()) {
     case PicsouTreeItem::T_ROOT:
         w=new PicsouDBViewer(this, pitem->mod_obj_id());
@@ -160,6 +303,7 @@ PicsouUIViewer *PicsouUIService::viewer_from_item(QTreeWidgetItem *item)
     }
     /* trigger viewer content update */
     emit model_updated(papp()->model_svc()->db());
+end:
     return w;
 }
 
@@ -190,7 +334,7 @@ void PicsouUIService::db_new()
     QString filename, name, description;
     PicsouDBEditor db_editor(&name, &description, _mw);
 
-    if(has_opened_db()) {
+    if(close_any_opened_db()) {
         emit svc_op_canceled(); goto end;
     }
 
@@ -220,7 +364,7 @@ void PicsouUIService::db_open()
 {
     QString filename;
 
-    if(has_opened_db()) {
+    if(close_any_opened_db()) {
         emit svc_op_canceled(); goto end;
     }
 
@@ -822,7 +966,7 @@ void PicsouUIService::notify_model_updated(const PicsouDBPtr db)
     emit db_modified();
 }
 
-bool PicsouUIService::has_opened_db()
+bool PicsouUIService::close_any_opened_db()
 {
     bool has_db;
 

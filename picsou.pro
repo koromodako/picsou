@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT += core widgets
+QT += core widgets concurrent
 
 TARGET = picsou
 TEMPLATE = app
@@ -87,7 +87,8 @@ SOURCES += \
     ui/widgets/picsoutablewidget.cpp \
     model/operationcollection.cpp \
     ui/widgets/operationstatistics.cpp \
-    model/amount.cpp
+    model/amount.cpp \
+    model/searchquery.cpp
 
 HEADERS += \
     picsou.h \
@@ -139,7 +140,8 @@ HEADERS += \
     ui/widgets/picsoutablewidget.h \
     model/operationcollection.h \
     ui/widgets/operationstatistics.h \
-    model/amount.h
+    model/amount.h \
+    model/searchquery.h
 
 FORMS += \
     ui/mainwindow.ui \

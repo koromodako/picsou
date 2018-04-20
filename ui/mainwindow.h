@@ -4,6 +4,8 @@
 #include <QMainWindow>
 
 #include "picsouui.h"
+#include "ui/widgets/picsoutablewidget.h"
+#include "ui/widgets/operationstatistics.h"
 
 namespace Ui {
 class MainWindow;
@@ -40,6 +42,13 @@ public slots:
 
     bool close();
 
+    void update_search();
+
+    void refresh_user_cb();
+    void refresh_pms_list(const QString &account_name);
+    void refresh_account_cb(const QString &username);
+    void refresh_budgets_list(const QString &username);
+
 protected:
     void _update_viewer(QTreeWidgetItem *item, int column);
 
@@ -49,6 +58,9 @@ private:
 
 private:
     State _state;
+    QWidget *_details_widget;
+    PicsouTableWidget *_search_table;
+    OperationStatistics *_search_ops_stats;
     Ui::MainWindow *ui;
 };
 

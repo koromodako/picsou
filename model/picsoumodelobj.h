@@ -35,8 +35,9 @@ private:
 };
 
 #include <QPointer>
-#define DECL_PICSOU_MOD_OBJ_PTR(Class, ClassPtr) \
-    typedef QPointer<Class> ClassPtr
+#define DECL_PICSOU_MOD_OBJ_PTR(Class, ClassPtr, ClassPtrList) \
+    typedef QPointer<Class> ClassPtr; \
+    typedef QList<ClassPtr> ClassPtrList
 
 #define DELETE_HASH_CONTENT(Class, hash) \
    do { \

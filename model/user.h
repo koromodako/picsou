@@ -27,9 +27,9 @@ public:
     bool remove_account(QUuid id);
 
     inline QString name() const { return _name; }
-    QList<BudgetPtr> budgets(bool sorted=false) const;
+    BudgetPtrList budgets(bool sorted=false) const;
     QStringList budgets_str(bool sorted=false) const;
-    QList<AccountPtr> accounts(bool sorted=false) const;
+    AccountPtrList accounts(bool sorted=false) const;
 
     BudgetPtr find_budget(QUuid id) const;
     AccountPtr find_account(QUuid id) const;
@@ -45,6 +45,6 @@ private:
     QHash<QUuid, AccountPtr> _accounts;
 };
 
-DECL_PICSOU_MOD_OBJ_PTR(User, UserPtr);
+DECL_PICSOU_MOD_OBJ_PTR(User, UserPtr, UserPtrList);
 
 #endif // USER_H

@@ -21,7 +21,7 @@ public:
     inline QString name() const { return _name; }
     inline QString version() const { return _version; }
     inline QString description() const { return _description; }
-    QList<UserPtr> users(bool sorted=false) const;
+    UserPtrList users(bool sorted=false) const;
 
     UserPtr find_user(QUuid id) const;
     AccountPtr find_account(QUuid id) const;
@@ -40,6 +40,6 @@ private:
     QHash<QUuid, UserPtr> _users;
 };
 
-DECL_PICSOU_MOD_OBJ_PTR(PicsouDB, PicsouDBPtr);
+DECL_PICSOU_MOD_OBJ_PTR(PicsouDB, PicsouDBPtr, PicsouDBPtrList);
 
 #endif // PICSOUDB_H

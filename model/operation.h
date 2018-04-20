@@ -7,7 +7,7 @@
 #include <QDate>
 
 class PaymentMethod;
-DECL_PICSOU_MOD_OBJ_PTR(PaymentMethod, PaymentMethodPtr);
+DECL_PICSOU_MOD_OBJ_PTR(PaymentMethod, PaymentMethodPtr, PaymentMethodPtrList);
 
 class Operation : public PicsouModelObj
 {
@@ -57,6 +57,6 @@ private:
     QString _payment_method;
 };
 
-DECL_PICSOU_MOD_OBJ_PTR(Operation, OperationPtr);
+DECL_PICSOU_MOD_OBJ_PTR(Operation, OperationPtr, OperationPtrList);
 
 #endif // OPERATION_H

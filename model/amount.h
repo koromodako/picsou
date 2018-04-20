@@ -14,6 +14,8 @@ public:
 
     QString to_str(bool add_currency=false) const;
 
+    inline Amount operator-() const { return Amount(-_value); }
+
     inline Amount operator+(const Amount &other) const { return Amount(_value+other._value); }
     inline Amount operator-(const Amount &other) const { return Amount(_value-other._value); }
     inline Amount operator/(const Amount &other) const { return Amount(_value/other._value); }

@@ -3,8 +3,11 @@
 
 #include "picsouabstractservice.h"
 #include "model/picsoudb.h"
+#include "model/searchquery.h"
 
+class QComboBox;
 class MainWindow;
+class QListWidget;
 class QTreeWidget;
 class PicsouUIViewer;
 class QTreeWidgetItem;
@@ -20,6 +23,17 @@ public:
     void terminate();
 
     bool populate_db_tree(QTreeWidget* const tree);
+    bool populate_user_cb(QComboBox * const cb);
+    bool populate_account_cb(const QString &username,
+                             QComboBox* const cb);
+    bool populate_budgets_list(const QString &username,
+                               QListWidget* const list);
+    bool populate_pms_list(const QString &username,
+                           const QString &account_name,
+                           QListWidget* const list);
+
+    OperationCollection search_operations(const SearchQuery &query);
+
     PicsouUIViewer *viewer_from_item(QTreeWidgetItem *item);
 
 signals:
@@ -95,7 +109,7 @@ public slots:
     void notify_model_updated(const PicsouDBPtr db);
 
 private:
-    bool has_opened_db();
+    bool close_any_opened_db();
 
 private:
     MainWindow *_mw;
