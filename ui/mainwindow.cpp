@@ -240,18 +240,20 @@ void MainWindow::refresh_pms_list(const QString &account_name)
 
 void MainWindow::_update_viewer(QTreeWidgetItem *item, int)
 {
-    PicsouUIViewer *w=ui_svc()->viewer_from_item(item);
-    if(w!=nullptr) {
-        if(_details_widget!=nullptr) {
-            foreach (QAction *action, _details_widget->actions()) {
-                ui->toolbar->removeAction(action);
-            }
-            ui->details_tab->layout()->removeWidget(_details_widget);
-            delete _details_widget;
+    PicsouUIViewer *w;
+    if(_details_widget!=nullptr) {
+        foreach (QAction *action, _details_widget->actions()) {
+            ui->toolbar->removeAction(action);
         }
-        _details_widget=w;
-        ui->details_tab->layout()->addWidget(_details_widget);
-        ui->toolbar->addActions(_details_widget->actions());
+        ui->details_tab->layout()->removeWidget(_details_widget);
+        delete _details_widget; _details_widget=nullptr;
+    }
+    if(item!=nullptr) {
+        if((w=ui_svc()->viewer_from_item(item))!=nullptr) {
+            _details_widget=w;
+            ui->details_tab->layout()->addWidget(_details_widget);
+            ui->toolbar->addActions(_details_widget->actions());
+        }
     }
 }
 
@@ -271,6 +273,8 @@ void MainWindow::refresh(MainWindow::State state)
         ui->tree_dock->setVisible(false);
         /* tab widget */
         ui->tab_widget->setVisible(false);
+        /* clear viewer */
+        _update_viewer(nullptr, 0);
         break;
     case DB_OPENED:
         /* update menu actions */
