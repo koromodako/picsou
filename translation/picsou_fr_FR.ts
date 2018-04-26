@@ -195,6 +195,16 @@
         <source>Export operations</source>
         <translation>Exporter les opérations</translation>
     </message>
+    <message>
+        <location filename="../ui/viewers/accountviewer.cpp" line="21"/>
+        <source>Rolling expense (30 days):</source>
+        <translation>Total sur les 30 derniers jours :</translation>
+    </message>
+    <message>
+        <location filename="../ui/viewers/accountviewer.cpp" line="32"/>
+        <source>unknown</source>
+        <translation>inconnu</translation>
+    </message>
 </context>
 <context>
     <name>BudgetEditor</name>
@@ -499,7 +509,7 @@
         <translation>Echec de la mise à jour de la liste des méthodes de paiement.</translation>
     </message>
     <message>
-        <location filename="../ui/mainwindow.cpp" line="308"/>
+        <location filename="../ui/mainwindow.cpp" line="312"/>
         <source>Failed to update database tree.</source>
         <translation>Echec de la mise à jour de l&apos;arborescence de la base de données.</translation>
     </message>
@@ -586,9 +596,13 @@
     </message>
     <message>
         <location filename="../ui/widgets/operationstatistics.ui" line="20"/>
-        <location filename="../ui/widgets/operationstatistics.ui" line="26"/>
         <source>Balance</source>
         <translation>Balance</translation>
+    </message>
+    <message>
+        <location filename="../ui/widgets/operationstatistics.ui" line="26"/>
+        <source>Balance:</source>
+        <translation>Balance :</translation>
     </message>
     <message>
         <location filename="../ui/widgets/operationstatistics.ui" line="33"/>
@@ -597,8 +611,17 @@
     </message>
     <message>
         <location filename="../ui/widgets/operationstatistics.ui" line="40"/>
+        <source>Total credit:</source>
+        <translation>Crédit total :</translation>
+    </message>
+    <message>
+        <location filename="../ui/widgets/operationstatistics.ui" line="54"/>
+        <source>Total debit:</source>
+        <translation>Débit total :</translation>
+    </message>
+    <message>
         <source>Total credit</source>
-        <translation>Crédit total</translation>
+        <translation type="vanished">Crédit total</translation>
     </message>
     <message>
         <location filename="../ui/widgets/operationstatistics.ui" line="47"/>
@@ -606,9 +629,8 @@
         <translation>&lt;credit-total&gt;</translation>
     </message>
     <message>
-        <location filename="../ui/widgets/operationstatistics.ui" line="54"/>
         <source>Total debit</source>
-        <translation>Débit total</translation>
+        <translation type="vanished">Débit total</translation>
     </message>
     <message>
         <location filename="../ui/widgets/operationstatistics.ui" line="61"/>

@@ -168,7 +168,8 @@ DISTFILES += \
     README.md \
     tests/data/input.json \
     tests/data/input.xml \
-    tests/data/input.csv
+    tests/data/input.csv \
+    prebuild
 
 TRANSLATIONS += \
     translation/picsou_fr_FR.ts

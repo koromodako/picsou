@@ -18,6 +18,7 @@ AccountViewer::AccountViewer(PicsouUIService *ui_svc,
                              QWidget *parent) :
     PicsouUIViewer(ui_svc, account_uuid, parent),
    _user_id(user_uuid),
+   _rolling_expense_lab(tr("Rolling expense (30 days):")),
     ui(new Ui::AccountViewer)
 {
     ui->setupUi(this);
@@ -28,6 +29,7 @@ AccountViewer::AccountViewer(PicsouUIService *ui_svc,
     ui->ops_layout->insertWidget(0, _table);
 
     _ops_stats = new OperationStatistics;
+    _ops_stats->append_field(_rolling_expense_lab, tr("unknown"));
     ui->hlayout->addWidget(_ops_stats);
 
     /* payment methods */
@@ -91,6 +93,7 @@ AccountViewer::AccountViewer(PicsouUIService *ui_svc,
 void AccountViewer::refresh(const PicsouDBPtr db)
 {
     bool has_pm, has_ops;
+    QDate today;
     OperationCollection ops;
     AccountPtr account=db->find_account(mod_obj_id());
     /* payment methods */
@@ -111,6 +114,10 @@ void AccountViewer::refresh(const PicsouDBPtr db)
     ops=db->ops(mod_obj_id());
     _table->refresh(ops);
     _ops_stats->refresh(ops);
+    today=QDate::currentDate();
+    _ops_stats->update_field(_rolling_expense_lab,
+                             ops.total_in_range(today.addDays(-30),
+                                                today).to_str(true));
 
     has_ops=(ops.length()>0);
     ui->remove_op->setEnabled(has_ops);

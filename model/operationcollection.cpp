@@ -98,3 +98,14 @@ Amount OperationCollection::expense_per_ym(int year, int month)
     return amount;
 }
 
+Amount OperationCollection::total_in_range(const QDate &from, const QDate &to)
+{
+    Amount total=0;
+    foreach(const OperationPtr &op, _ops) {
+        if(op->date()>=from&&op->date()<=to) {
+            total+=op->amount();
+        }
+    }
+    return total;
+}
+

@@ -25,6 +25,7 @@ public:
     inline QHash<QString, Amount> expense_per_budget() const { return _expense_per_budget; }
 
     Amount expense_per_ym(int year, int month=0);
+    Amount total_in_range(const QDate &from, const QDate &to);
 
 private:
     Amount _total_debit;

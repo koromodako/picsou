@@ -40,6 +40,7 @@ public slots:
 
 private:
     QUuid _user_id;
+    QString _rolling_expense_lab;
     PicsouTableWidget *_table;
     OperationStatistics *_ops_stats;
     Ui::AccountViewer *ui;

@@ -16,7 +16,7 @@ def create_picsou_h():
 
     commit = sanitize(getoutput('git rev-parse HEAD'))
 
-    version = sanitize(getoutput('git tag -l --points-at HEAD'))
+    version = sanitize(getoutput('git describe --tags'))
     if len(version) == 0:
         version = 'dev'
 

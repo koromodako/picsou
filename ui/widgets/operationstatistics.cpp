@@ -1,8 +1,11 @@
 #include "operationstatistics.h"
 #include "ui_operationstatistics.h"
 
+#include <QFormLayout>
+
 OperationStatistics::~OperationStatistics()
 {
+    _extra_fields.clear();
     delete ui;
 }
 
@@ -38,3 +41,62 @@ void OperationStatistics::refresh(const OperationCollection &ops)
     }
 }
 
+bool OperationStatistics::append_field(const QString &name, const QString &value)
+{
+    bool success;
+    QLabel *lab;
+    QFormLayout *flayout;
+
+    if(_extra_fields.contains(name)){
+        success=false;
+        goto end;
+    }
+
+    lab=new QLabel(value, this);
+    _extra_fields.insert(name, lab);
+
+    flayout=static_cast<QFormLayout*>(ui->balance_box->layout());
+    flayout->addRow(name, lab);
+
+    success=true;
+end:
+    return success;
+}
+
+bool OperationStatistics::update_field(const QString &name, const QString &value)
+{
+    bool success;
+    QHash<QString, QLabel*>::iterator it;
+
+    if((it=_extra_fields.find(name))==_extra_fields.end()) {
+        success=false;
+        goto end;
+    }
+
+    it.value()->setText(value);
+
+    success=true;
+end:
+    return success;
+}
+
+bool OperationStatistics::remove_field(const QString &name)
+{
+    bool success;
+    QFormLayout *flayout;
+    QHash<QString, QLabel*>::iterator it;
+
+    if((it=_extra_fields.find(name))==_extra_fields.end()) {
+        success=false;
+        goto end;
+    }
+
+    flayout=static_cast<QFormLayout*>(ui->balance_box->layout());
+    flayout->removeRow(it.value());
+
+    _extra_fields.erase(it);
+
+    success=true;
+end:
+    return success;
+}

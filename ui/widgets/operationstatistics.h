@@ -5,6 +5,8 @@
 
 #include "model/operationcollection.h"
 
+class QLabel; /* predecl */
+
 namespace Ui {
 class OperationStatistics;
 }
@@ -19,7 +21,12 @@ public:
 
     void refresh(const OperationCollection &ops);
 
+    bool append_field(const QString &name, const QString &value);
+    bool update_field(const QString &name, const QString &value);
+    bool remove_field(const QString &name);
+
 private:
+    QHash<QString, QLabel*> _extra_fields;
     Ui::OperationStatistics *ui;
 };
 
