@@ -3,8 +3,8 @@
 
 #include <QDate>
 #include <QRegularExpression>
-#include "amount.h"
-#include "operation.h"
+#include "object/amount.h"
+#include "object/operation.h"
 
 class SearchQuery
 {

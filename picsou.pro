@@ -42,14 +42,17 @@ QMAKE_CXXFLAGS += -Wall \
 SOURCES += \
     main.cpp \
     ui/mainwindow.cpp \
-    model/scheduledoperation.cpp \
+    model/object/scheduledoperation.cpp \
+    model/object/paymentmethod.cpp \
+    model/object/operation.cpp \
+    model/object/account.cpp \
+    model/object/budget.cpp \
+    model/object/amount.cpp \
+    model/object/user.cpp \
+    model/searchquery.cpp \
+    model/operationcollection.cpp \
     model/picsoumodelobj.cpp \
-    model/paymentmethod.cpp \
-    model/operation.cpp \
     model/picsoudb.cpp \
-    model/account.cpp \
-    model/budget.cpp \
-    model/user.cpp \
     utils/crypto/qmessageauthcode.cpp \
     utils/crypto/qcryptowrapper.cpp \
     utils/crypto/qsecurememory.cpp \
@@ -85,21 +88,22 @@ SOURCES += \
     ui/picsouitem.cpp \
     ui/items/picsoutableitem.cpp \
     ui/widgets/picsoutablewidget.cpp \
-    model/operationcollection.cpp \
     ui/widgets/operationstatistics.cpp \
-    model/amount.cpp \
-    model/searchquery.cpp
+    model/converter/converter.cpp \
+    model/converter/semver.cpp
 
 HEADERS += \
     picsou.h \
     picsou.h.dist \
+    model/object/scheduledoperation.h \
+    model/object/paymentmethod.h \
+    model/object/operation.h \
+    model/object/account.h \
+    model/object/budget.h \
+    model/object/amount.h \
+    model/object/user.h \
+    model/searchquery.h \
     model/picsoudb.h \
-    model/user.h \
-    model/budget.h \
-    model/account.h \
-    model/paymentmethod.h \
-    model/operation.h \
-    model/scheduledoperation.h \
     model/picsoumodelobj.h \
     utils/crypto/qmessageauthcode.h \
     utils/crypto/qcryptowrapper.h \
@@ -140,8 +144,8 @@ HEADERS += \
     ui/widgets/picsoutablewidget.h \
     model/operationcollection.h \
     ui/widgets/operationstatistics.h \
-    model/amount.h \
-    model/searchquery.h
+    model/converter/converter.h \
+    model/converter/semver.h
 
 FORMS += \
     ui/mainwindow.ui \

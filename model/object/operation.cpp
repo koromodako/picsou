@@ -2,17 +2,15 @@
 
 #include "paymentmethod.h"
 
-#define KW_AMOUNT "amount"
-#define KW_DAY "day"
-#define KW_MONTH "month"
-#define KW_YEAR "year"
-#define KW_BUDGET "budget"
-#define KW_RECIPIENT "recipient"
-#define KW_DESCRIPTION "description"
-#define KW_PAYMENT_METHOD "paymentMethod"
 #define KEYS \
-    (QStringList() << KW_AMOUNT << KW_DAY << KW_MONTH << KW_YEAR \
-    << KW_BUDGET << KW_RECIPIENT << KW_DESCRIPTION << KW_PAYMENT_METHOD)
+    (QStringList() << KW_OP_AMOUNT \
+                   << KW_OP_DAY \
+                   << KW_OP_MONTH \
+                   << KW_OP_YEAR \
+                   << KW_OP_BUDGET \
+                   << KW_OP_RECIPIENT \
+                   << KW_OP_DESCRIPTION \
+                   << KW_OP_PAYMENT_METHOD)
 
 Operation::~Operation()
 {
@@ -65,14 +63,14 @@ bool Operation::read(const QJsonObject &json)
     /**/
     JSON_CHECK_KEYS(KEYS);
     /**/
-    _amount=json[KW_AMOUNT].toDouble();
-    _date=QDate(json[KW_YEAR].toInt(),
-                json[KW_MONTH].toInt(),
-                json[KW_DAY].toInt());
-    _budget=json[KW_BUDGET].toString();
-    _recipient=json[KW_RECIPIENT].toString();
-    _description=json[KW_DESCRIPTION].toString();
-    _payment_method=json[KW_PAYMENT_METHOD].toString();
+    _amount=json[KW_OP_AMOUNT].toDouble();
+    _date=QDate(json[KW_OP_YEAR].toInt(),
+                json[KW_OP_MONTH].toInt(),
+                json[KW_OP_DAY].toInt());
+    _budget=json[KW_OP_BUDGET].toString();
+    _recipient=json[KW_OP_RECIPIENT].toString();
+    _description=json[KW_OP_DESCRIPTION].toString();
+    _payment_method=json[KW_OP_PAYMENT_METHOD].toString();
     /**/
     set_valid();
 end:
@@ -82,14 +80,14 @@ end:
 bool Operation::write(QJsonObject &json) const
 {
     /**/
-    json[KW_AMOUNT]=_amount.value();
-    json[KW_DAY]=_date.day();
-    json[KW_MONTH]=_date.month();
-    json[KW_YEAR]=_date.year();
-    json[KW_BUDGET]=_budget;
-    json[KW_RECIPIENT]=_recipient;
-    json[KW_DESCRIPTION]=_description;
-    json[KW_PAYMENT_METHOD]=_payment_method;
+    json[KW_OP_AMOUNT]=_amount.value();
+    json[KW_OP_DAY]=_date.day();
+    json[KW_OP_MONTH]=_date.month();
+    json[KW_OP_YEAR]=_date.year();
+    json[KW_OP_BUDGET]=_budget;
+    json[KW_OP_RECIPIENT]=_recipient;
+    json[KW_OP_DESCRIPTION]=_description;
+    json[KW_OP_PAYMENT_METHOD]=_payment_method;
     /**/
     return true;
 }

@@ -43,10 +43,10 @@ PicsouDBViewer::PicsouDBViewer(PicsouUIService *ui_svc,
 
 void PicsouDBViewer::refresh(const PicsouDBPtr db)
 {
-    bool has_users;
+    bool has_users=false;
 
     ui->name->setText(db->name());
-    ui->version->setText(db->version());
+    ui->version->setText(db->version().to_str());
     ui->description->setPlainText(db->description());
 
     ui->users_list->clear();

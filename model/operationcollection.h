@@ -5,7 +5,7 @@
 #include <QHash>
 #include <QString>
 
-#include "operation.h"
+#include "object/operation.h"
 
 class OperationCollection
 {

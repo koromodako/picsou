@@ -40,14 +40,14 @@
    <item>
     <widget class="QLabel" name="description_label">
      <property name="text">
-      <string>Description:</string>
+      <string>Notes:</string>
      </property>
     </widget>
    </item>
    <item>
     <widget class="QPlainTextEdit" name="description">
      <property name="placeholderText">
-      <string>Account's description goes here...</string>
+      <string>Account's notes goes here...</string>
      </property>
     </widget>
    </item>

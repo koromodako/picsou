@@ -1,8 +1,14 @@
 #ifndef PICSOUDB_H
 #define PICSOUDB_H
 
-#include "user.h"
+#include "object/user.h"
+#include "converter/semver.h"
 #include "operationcollection.h"
+
+#define KW_DB_NAME "name"
+#define KW_DB_VERSION "version"
+#define KW_DB_DESCRIPTION "description"
+#define KW_DB_USERS "users"
 
 class PicsouDB : public PicsouModelObj
 {
@@ -10,8 +16,7 @@ class PicsouDB : public PicsouModelObj
 public:
     virtual ~PicsouDB();
     PicsouDB();
-    PicsouDB(uint version_major,
-             uint version_minor,
+    PicsouDB(SemVer version,
              const QString &name,
              const QString &description);
 
@@ -19,7 +24,7 @@ public:
     bool remove_user(QUuid id);
 
     inline QString name() const { return _name; }
-    inline QString version() const { return _version; }
+    inline SemVer version() const { return _version; }
     inline QString description() const { return _description; }
     UserPtrList users(bool sorted=false) const;
 
@@ -35,7 +40,7 @@ public:
 
 private:
     QString _name;
-    QString _version;
+    SemVer _version;
     QString _description;
     QHash<QUuid, UserPtr> _users;
 };

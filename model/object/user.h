@@ -6,6 +6,10 @@
 
 #include <QHash>
 
+#define KW_USR_NAME "name"
+#define KW_USR_BUDGETS "budgets"
+#define KW_USR_ACCOUNTS "accounts"
+
 class User : public PicsouModelObj
 {
     Q_OBJECT

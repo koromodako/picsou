@@ -3,13 +3,12 @@
 #include <QSet>
 #include <QJsonArray>
 
-#define KW_NAME "name"
-#define KW_PAYMENT_METHODS "payment_methods"
-#define KW_SCHEDULED_OPS "scheduled_ops"
-#define KW_OPS "ops"
 #define KEYS \
-        (QStringList() << KW_NAME << KW_PAYMENT_METHODS \
-         << KW_SCHEDULED_OPS << KW_OPS)
+        (QStringList() << KW_ACT_NAME \
+                       << KW_ACT_NOTES \
+                       << KW_ACT_PAYMENT_METHODS \
+                       << KW_ACT_SCHEDULED_OPS \
+                       << KW_ACT_OPS)
 
 Account::~Account()
 {
@@ -21,25 +20,25 @@ Account::~Account()
 Account::Account(PicsouModelObj *parent) :
     PicsouModelObj(false, parent),
     _name(QString()),
-    _description(QString())
+    _notes(QString())
 {
 
 }
 
 Account::Account(const QString &name,
-                 const QString &description,
+                 const QString &notes,
                  PicsouModelObj *parent) :
     PicsouModelObj(true, parent),
     _name(name),
-    _description(description)
+    _notes(notes)
 {
 
 }
 
-void Account::update(const QString &name, const QString &description)
+void Account::update(const QString &name, const QString &notes)
 {
     _name=name;
-    _description=description;
+    _notes=notes;
     emit modified();
 }
 
@@ -223,12 +222,13 @@ bool Account::read(const QJsonObject &json)
 {
     JSON_CHECK_KEYS(KEYS);
     /**/
-    _name=json[KW_NAME].toString();
-    JSON_READ_LIST(json, "payment_methods",
+    _name=json[KW_ACT_NAME].toString();
+    _notes=json[KW_ACT_NOTES].toString();
+    JSON_READ_LIST(json, KW_ACT_PAYMENT_METHODS,
                    _payment_methods, PaymentMethod, this);
-    JSON_READ_LIST(json, "scheduled_ops",
+    JSON_READ_LIST(json, KW_ACT_SCHEDULED_OPS,
                    _scheduled_ops, ScheduledOperation, this);
-    JSON_READ_LIST(json, "ops",
+    JSON_READ_LIST(json, KW_ACT_OPS,
                    _ops, Operation, this);
     /**/
     set_valid();
@@ -240,10 +240,11 @@ bool Account::write(QJsonObject &json) const
 {
     bool ok;
     /**/
-    json[KW_NAME]=_name;
-    JSON_WRITE_LIST(json, "payment_methods", _payment_methods.values());
-    JSON_WRITE_LIST(json, "scheduled_ops", _scheduled_ops.values());
-    JSON_WRITE_LIST(json, "ops", _ops.values());
+    json[KW_ACT_NAME]=_name;
+    json[KW_ACT_NOTES]=_notes;
+    JSON_WRITE_LIST(json, KW_ACT_PAYMENT_METHODS, _payment_methods.values());
+    JSON_WRITE_LIST(json, KW_ACT_SCHEDULED_OPS, _scheduled_ops.values());
+    JSON_WRITE_LIST(json, KW_ACT_OPS, _ops.values());
     /**/
     ok=true;
 end:

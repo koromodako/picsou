@@ -1,4 +1,5 @@
 #include "picsoumodelservice.h"
+#include "utils/macro.h"
 
 #include <QFile>
 #include <QDebug>
@@ -9,6 +10,7 @@
 
 #include "picsou.h"
 #include "model/picsoudb.h"
+#include "model/converter/converter.h"
 
 #define XML_ELEM_OP "operation"
 #define XML_ATTR_YEAR "year"
@@ -54,8 +56,9 @@ bool PicsouModelService::new_db(QString filename,
         success=false; goto end;
     }
 
-    _db=PicsouDBPtr(new PicsouDB(PICSOU_DB_MAJOR,
-                                 PICSOU_DB_MINOR,
+    _db=PicsouDBPtr(new PicsouDB(SemVer(PICSOU_DB_MAJOR,
+                                        PICSOU_DB_MINOR,
+                                        PICSOU_DB_PATCH),
                                  name,
                                  description));
     _filename=filename;
@@ -71,6 +74,7 @@ end:
 bool PicsouModelService::open_db(QString filename)
 {
     bool success;
+    SemVer db_version;
     QJsonDocument doc;
     QJsonParseError err;
     QFile f(filename);
@@ -86,13 +90,25 @@ bool PicsouModelService::open_db(QString filename)
     doc=QJsonDocument::fromJson(f.readAll(), &err);
 
     if(doc.isNull()) {
-        /* LOG err.errorString() */
+        LOG_CRITICAL("JSON document is NULL!");
         success=false; goto end;
     }
 
     _db=PicsouDBPtr(new PicsouDB);
 
-    if(!_db->read(doc.object())) {
+    for(;;) {
+        if(_db->read(doc.object())) {
+            break;
+        }
+        db_version=_db->version();
+        LOG_DEBUG("valid DB version: " << db_version.is_valid());
+        LOG_DEBUG(db_version.to_str() << " < " << PICSOU_DB_VERSION.to_str() << " : " << (db_version<PICSOU_DB_VERSION));
+        if(db_version.is_valid()&&db_version<PICSOU_DB_VERSION) {
+            if(Converter::convert(&doc, db_version)) {
+                continue; /* retry to read document */
+            }
+            /* conversion failed */
+        }
         success=false; goto end;
     }
 
@@ -159,7 +175,7 @@ bool PicsouModelService::close_db()
 
 bool PicsouModelService::is_db_opened()
 {
-    return (!_db.isNull());
+    return (!(_db.isNull()));
 }
 
 OperationCollection PicsouModelService::load_ops(ImportExportFormat fmt,
@@ -198,7 +214,6 @@ bool PicsouModelService::dump_ops(ImportExportFormat fmt,
     case CSV: success=csv_dump_ops(f, ops); break;
     case XML: success=xml_dump_ops(f, ops); break;
     case JSON: success=json_dump_ops(f, ops); break;
-    default: break;
     }
 
     f.close();
@@ -245,27 +260,27 @@ OperationCollection PicsouModelService::xml_load_ops(QFile &f)
 
                 amount=attrs.value(XML_ATTR_AMOUNT).toDouble(&ok);
                 if(!ok) {
-                    qWarning() << "XML import parsing error: invalid amount.";
+                    LOG_WARNING("XML import parsing error: invalid amount.");
                     goto error;
                 }
                 y=attrs.value(XML_ATTR_YEAR).toInt(&ok);
                 if(!ok) {
-                    qWarning() << "XML import parsing error: invalid year.";
+                    LOG_WARNING("XML import parsing error: invalid year.");
                     goto error;
                 }
                 m=attrs.value(XML_ATTR_MONTH).toInt(&ok);
                 if(!ok) {
-                    qWarning() << "XML import parsing error: invalid month.";
+                    LOG_WARNING("XML import parsing error: invalid month.");
                     goto error;
                 }
                 d=attrs.value(XML_ATTR_DAY).toInt(&ok);
                 if(!ok) {
-                    qWarning() << "XML import parsing error: invalid day.";
+                    LOG_WARNING("XML import parsing error: invalid day.");
                     goto error;
                 }
                 date=QDate(y, m, d);
                 if(!date.isValid()) {
-                    qWarning() << "import parsing error: invalid date.";
+                    LOG_WARNING("import parsing error: invalid date.");
                     goto error;
                 }
                 op=OperationPtr(new Operation(amount,
@@ -322,28 +337,28 @@ OperationCollection PicsouModelService::csv_load_ops(QFile &f)
                         case 0: /* year */
                             y=buffer.toInt(&ok);
                             if(!ok) {
-                                qWarning() << "CSV import parsing error: invalid year.";
+                                LOG_WARNING("CSV import parsing error: invalid year.");
                                 goto error;
                             }
                             break;
                         case 1: /* month */
                             m=buffer.toInt(&ok);
                             if(!ok) {
-                                qWarning() << "CSV import parsing error: invalid month.";
+                                LOG_WARNING("CSV import parsing error: invalid month.");
                                 goto error;
                             }
                             break;
                         case 2: /* day */
                             d=buffer.toInt(&ok);
                             if(!ok) {
-                                qWarning() << "CSV import parsing error: invalid day.";
+                                LOG_WARNING("CSV import parsing error: invalid day.");
                                 goto error;
                             }
                             break;
                         case 3: /* amount */
                             amount=buffer.toDouble(&ok);
                             if(!ok) {
-                                qWarning() << "CSV import parsing error: invalid amount.";
+                                LOG_WARNING("CSV import parsing error: invalid amount.");
                                 goto error;
                             }
                             break;
@@ -367,7 +382,7 @@ OperationCollection PicsouModelService::csv_load_ops(QFile &f)
             }
             date=QDate(y, m, d);
             if(!date.isValid()) {
-                qWarning() << "CSV import parsing error: invalid date.";
+                LOG_WARNING("CSV import parsing error: invalid date.");
                 goto error;
             }
             op=OperationPtr(new Operation(amount,
@@ -404,7 +419,7 @@ OperationCollection PicsouModelService::json_load_ops(QFile &f)
                 op=OperationPtr(new Operation(nullptr));
                 ops.append(op);
                 if(!op->read(doc.object())) {
-                    qWarning() << "JSON import parsing error: failed to read operation.";
+                    LOG_WARNING("JSON import parsing error: failed to read operation.");
                     goto error;
                 }
             }

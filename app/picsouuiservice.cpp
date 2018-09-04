@@ -1,6 +1,8 @@
 #include "picsouuiservice.h"
+#include "utils/macro.h"
 
 #include <QUrl>
+#include <QDebug>
 #include <QComboBox>
 #include <QListWidget>
 #include <QFileDialog>
@@ -214,17 +216,17 @@ OperationCollection PicsouUIService::search_operations(const SearchQuery &query)
 
     foreach (UserPtr user, users) {
         if(user->name()==query.username()) {
-            qDebug() << "found username: " << user->name();
+            LOG_DEBUG("found username: " << user->name());
             foreach (AccountPtr account, user->accounts(true)) {
                 if(account->name()==query.account_name()) {
-                    qDebug() << "found account: " << account->name();
+                    LOG_DEBUG("found account: " << account->name());
                     ops_list=account->ops(true).list();
 
-                    qDebug() << "searching among " << ops_list.length() << " operations";
+                    LOG_DEBUG("searching among " << ops_list.length() << " operations");
                     future=QtConcurrent::filtered(ops_list.begin(), ops_list.end(), SearchQueryFilter(query));
 
-                    qDebug() << "future min: " << future.progressMinimum();
-                    qDebug() << "future max: " << future.progressMaximum();
+                    LOG_DEBUG("future min: " << future.progressMinimum());
+                    LOG_DEBUG("future max: " << future.progressMaximum());
 
                     QProgressDialog progress(tr("Searching among %0 operations...").arg(ops_list.length()),
                                              tr("Abort search"),
@@ -234,7 +236,7 @@ OperationCollection PicsouUIService::search_operations(const SearchQuery &query)
                     progress.setWindowModality(Qt::WindowModal);
 
                     while(!future.isFinished()) {
-                        qDebug() << "searching the dataset...";
+                        LOG_DEBUG("searching the dataset...");
                         progress.setValue(future.progressValue());
                         if (progress.wasCanceled()) {
                             future.cancel();
@@ -245,7 +247,7 @@ OperationCollection PicsouUIService::search_operations(const SearchQuery &query)
                     progress.setValue(future.progressValue());
 
                     ops=future.results();
-                    qDebug() << "search successful! (results count: "<< ops.length() <<")";
+                    LOG_DEBUG("search successful! (results count: " << ops.length() << ")");
 
                     break;
                 }
@@ -426,7 +428,7 @@ void PicsouUIService::db_save_as()
 {
     QString filename;
 
-    if(!papp()->model_svc()->is_db_opened()) {
+    if(papp()->model_svc()->is_db_opened()) {
         filename=QFileDialog::getSaveFileName(_mw,
                                               tr("Open file"),
                                               QString(),
@@ -604,7 +606,7 @@ void PicsouUIService::account_edit(QUuid user_id, QUuid account_id)
 {
     UserPtr user;
     AccountPtr account;
-    QString name, description;
+    QString name, notes;
 
     user=papp()->model_svc()->db()->find_user(user_id);
     if(user.isNull()) {
@@ -619,13 +621,13 @@ void PicsouUIService::account_edit(QUuid user_id, QUuid account_id)
     }
 
     name=account->name();
-    description=account->description();
+    notes=account->notes();
 
-    if(AccountEditor(&name, &description, _mw).exec()==QDialog::Rejected) {
+    if(AccountEditor(&name, &notes, _mw).exec()==QDialog::Rejected) {
         emit svc_op_canceled(); goto end;
     }
 
-    account->update(name, description);
+    account->update(name, notes);
 
     emit account_edited();
 end:

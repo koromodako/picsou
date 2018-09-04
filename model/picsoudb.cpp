@@ -1,10 +1,12 @@
+#include "picsou.h"
 #include "picsoudb.h"
+#include "utils/macro.h"
 
-#define KW_NAME "name"
-#define KW_VERSION "version"
-#define KW_DESCRIPTION "description"
-#define KW_USERS "users"
-#define KEYS (QStringList() << KW_NAME << KW_VERSION << KW_DESCRIPTION << KW_USERS)
+#include <QDebug>
+
+#define KEYS (QStringList() << KW_DB_NAME  \
+                            << KW_DB_DESCRIPTION \
+                            << KW_DB_USERS)
 
 PicsouDB::~PicsouDB()
 {
@@ -17,13 +19,12 @@ PicsouDB::PicsouDB() :
 
 }
 
-PicsouDB::PicsouDB(uint version_major,
-                   uint version_minor,
+PicsouDB::PicsouDB(SemVer version,
                    const QString &name,
                    const QString &description) :
     PicsouModelObj(true, nullptr),
     _name(name),
-    _version(QString("%0.%1").arg(version_major).arg(version_minor)),
+    _version(version),
     _description(description)
 {
 
@@ -56,7 +57,7 @@ bool PicsouDB::remove_user(QUuid id)
 
 bool user_cmp(const UserPtr &a, const UserPtr &b)
 {
-    return a->name() < b->name();
+    return a->name()<b->name();
 }
 
 UserPtrList PicsouDB::users(bool sorted) const
@@ -111,13 +112,24 @@ AccountPtr PicsouDB::find_account(QUuid id) const
 
 bool PicsouDB::read(const QJsonObject &json)
 {
+    if(!json.contains(KW_DB_VERSION)) {
+        LOG_CRITICAL("database file does not contain database version.");
+        set_valid(false);
+        goto end;
+    }
+    /**/
+    _version=SemVer(json[KW_DB_VERSION].toString());
+    if(_version<PICSOU_DB_VERSION) {
+        LOG_DEBUG("older version of the DB file format: " << _version.to_str());
+        set_valid(false);
+        goto end;
+    }
     /**/
     JSON_CHECK_KEYS(KEYS);
     /**/
-    _name=json[KW_NAME].toString();
-    _version=json[KW_VERSION].toString();
-    _description=json[KW_DESCRIPTION].toString();
-    JSON_READ_LIST(json, KW_USERS, _users, User, this);
+    _name=json[KW_DB_NAME].toString();
+    _description=json[KW_DB_DESCRIPTION].toString();
+    JSON_READ_LIST(json, KW_DB_USERS, _users, User, this);
     /**/
     set_valid();
 end:
@@ -130,10 +142,10 @@ bool PicsouDB::write(QJsonObject &json) const
     QJsonObject obj;
     QJsonArray array;
     /**/
-    json[KW_NAME]=_name;
-    json[KW_VERSION]=_version;
-    json[KW_DESCRIPTION]=_description;
-    JSON_WRITE_LIST(json, KW_USERS, _users.values());
+    json[KW_DB_NAME]=_name;
+    json[KW_DB_VERSION]=_version.to_str();
+    json[KW_DB_DESCRIPTION]=_description;
+    JSON_WRITE_LIST(json, KW_DB_USERS, _users.values());
     /**/
     ok=true;
 end:

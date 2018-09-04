@@ -1,7 +1,6 @@
 #include "scheduledoperation.h"
 
-#define KW_FREQ "freq"
-#define KEYS (QStringList() << KW_FREQ)
+#define KEYS (QStringList() << KW_SOP_FREQ)
 
 static QStringList gfrequencies=QStringList()
         << "YEARLY"
@@ -78,7 +77,7 @@ bool ScheduledOperation::read(const QJsonObject &json)
     /**/
     JSON_CHECK_KEYS(KEYS);
     /**/
-    _freq=Frequency(qRound(json[KW_FREQ].toDouble()));
+    _freq=Frequency(qRound(json[KW_SOP_FREQ].toDouble()));
     set_valid(Operation::read(json));
 end:
     return valid();
@@ -87,6 +86,6 @@ end:
 bool ScheduledOperation::write(QJsonObject &json) const
 {
     /**/
-    json[KW_FREQ]=_freq;
+    json[KW_SOP_FREQ]=_freq;
     return Operation::write(json);
 }

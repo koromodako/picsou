@@ -1,7 +1,9 @@
 #ifndef PAYMENTMETHOD_H
 #define PAYMENTMETHOD_H
 
-#include "picsoumodelobj.h"
+#include "../picsoumodelobj.h"
+
+#define KW_PM_NAME "name"
 
 class PaymentMethod : public PicsouModelObj
 {

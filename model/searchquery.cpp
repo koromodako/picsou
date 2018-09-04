@@ -1,4 +1,5 @@
 #include "searchquery.h"
+#include "utils/macro.h"
 
 SearchQuery::~SearchQuery()
 {
@@ -41,36 +42,36 @@ bool SearchQuery::accepts(const OperationPtr &op) const
     QString description=op->description();
 
     if(date<_from||date>_to) {
-        qDebug()<<"rejecting "<<op<<" because "<<date<<"<"<<_from<<"||"<<date<<">"<<_to;
+        LOG_DEBUG("rejecting "<<op<<" because "<<date<<"<"<<_from<<"||"<<date<<">"<<_to);
         goto end;
     }
 
     if(amount<_min||amount>_max) {
-        qDebug()<<"rejecting "<<op<<" because "<<amount.value()<<"<"<<_min.value()<<"||"<<amount.value()<<">"<<_max.value();
+        LOG_DEBUG("rejecting "<<op<<" because "<<amount.value()<<"<"<<_min.value()<<"||"<<amount.value()<<">"<<_max.value());
         goto end;
     }
 
     if(!_budgets.contains(op->budget())) {
-        qDebug()<<"rejecting "<<op<<" because "<<op->budget()<<" not in "<<_budgets;
+        LOG_DEBUG("rejecting "<<op<<" because "<<op->budget()<<" not in "<<_budgets);
         goto end;
     }
 
     if(!_pms.contains(op->payment_method())) {
-        qDebug()<<"rejecting "<<op<<" because "<<op->payment_method()<<" not in "<<_pms;
+        LOG_DEBUG("rejecting "<<op<<" because "<<op->payment_method()<<" not in "<<_pms);
         goto end;
     }
 
     if(!recipient.isEmpty()&&!_recipient_re.match(recipient).hasMatch()) {
-        qDebug()<<"rejecting "<<op<<" because \""<<recipient<<"\" is not matched by "<<_recipient_re.pattern();
+        LOG_DEBUG("rejecting "<<op<<" because \""<<recipient<<"\" is not matched by "<<_recipient_re.pattern());
         goto end;
     }
 
     if(!description.isEmpty()&&!_description_re.match(description).hasMatch()) {
-        qDebug()<<"rejecting "<<op<<" because \""<<description<<"\" is not matched by "<<_description_re.pattern();
+        LOG_DEBUG("rejecting "<<op<<" because \""<<description<<"\" is not matched by "<<_description_re.pattern());
         goto end;
     }
 
-    qDebug() << "accepting " << op;
+    LOG_DEBUG("accepting " << op);
     accept=true;
 end:
     return accept;

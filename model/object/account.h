@@ -3,9 +3,15 @@
 
 #include "paymentmethod.h"
 #include "scheduledoperation.h"
-#include "operationcollection.h"
+#include "../operationcollection.h"
 
 #include <QHash>
+
+#define KW_ACT_NAME "name"
+#define KW_ACT_NOTES "notes"
+#define KW_ACT_PAYMENT_METHODS "payment_methods"
+#define KW_ACT_SCHEDULED_OPS "scheduled_ops"
+#define KW_ACT_OPS "ops"
 
 class Account : public PicsouModelObj
 {
@@ -14,11 +20,11 @@ public:
     virtual ~Account();
     Account(PicsouModelObj *parent);
     Account(const QString &name,
-            const QString &description,
+            const QString &notes,
             PicsouModelObj *parent);
 
     void update(const QString &name,
-                const QString &description);
+                const QString &notes);
 
     void add_payment_method(const QString &name);
     bool remove_payment_method(QUuid id);
@@ -40,7 +46,7 @@ public:
     OperationPtr find_operation(QUuid id);
 
     inline QString name() const { return _name; }
-    inline QString description() const { return _description; }
+    inline QString notes() const { return _notes; }
     PaymentMethodPtrList payment_methods(bool sorted=false) const;
     QStringList payment_methods_str(bool sorted=false) const;
     inline ScheduledOperationPtrList scheduled_ops() const { return _scheduled_ops.values(); }
@@ -55,7 +61,7 @@ public:
 
 private:
     QString _name;
-    QString _description;
+    QString _notes;
     QHash<QUuid, PaymentMethodPtr> _payment_methods;
     QHash<QUuid, ScheduledOperationPtr> _scheduled_ops;
     QHash<QUuid, OperationPtr> _ops;

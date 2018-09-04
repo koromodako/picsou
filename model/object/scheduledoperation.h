@@ -3,6 +3,8 @@
 
 #include "operation.h"
 
+#define KW_SOP_FREQ "freq"
+
 class ScheduledOperation : public Operation
 {
     Q_OBJECT

@@ -1,7 +1,11 @@
 #ifndef BUDGET_H
 #define BUDGET_H
 
-#include "picsoumodelobj.h"
+#include "../picsoumodelobj.h"
+
+#define KW_BGT_NAME "name"
+#define KW_BGT_AMOUNT "amount"
+#define KW_BGT_DESCRIPTION "description"
 
 class Budget : public PicsouModelObj
 {

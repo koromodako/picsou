@@ -1,9 +1,8 @@
 #include "user.h"
 
-#define KW_NAME "name"
-#define KW_BUDGETS "budgets"
-#define KW_ACCOUNTS "accounts"
-#define KEYS (QStringList() << KW_NAME << KW_BUDGETS << KW_ACCOUNTS)
+#define KEYS (QStringList() << KW_USR_NAME \
+                            << KW_USR_BUDGETS \
+                            << KW_USR_ACCOUNTS)
 
 User::~User()
 {
@@ -147,9 +146,9 @@ bool User::read(const QJsonObject &json)
 {
     JSON_CHECK_KEYS(KEYS);
     /**/
-    _name=json[KW_NAME].toString();
-    JSON_READ_LIST(json, KW_BUDGETS, _budgets, Budget, this);
-    JSON_READ_LIST(json, KW_ACCOUNTS, _accounts, Account, this);
+    _name=json[KW_USR_NAME].toString();
+    JSON_READ_LIST(json, KW_USR_BUDGETS, _budgets, Budget, this);
+    JSON_READ_LIST(json, KW_USR_ACCOUNTS, _accounts, Account, this);
     /**/
     set_valid();
 end:
@@ -160,9 +159,9 @@ bool User::write(QJsonObject &json) const
 {
     bool ok;
     /**/
-    json[KW_NAME]=_name;
-    JSON_WRITE_LIST(json, KW_BUDGETS, _budgets.values());
-    JSON_WRITE_LIST(json, KW_ACCOUNTS, _accounts.values());
+    json[KW_USR_NAME]=_name;
+    JSON_WRITE_LIST(json, KW_USR_BUDGETS, _budgets.values());
+    JSON_WRITE_LIST(json, KW_USR_ACCOUNTS, _accounts.values());
     /**/
     ok=true;
 end:
@@ -172,5 +171,5 @@ end:
 
 bool User::operator <(const User &other)
 {
-    return (_name < other._name);
+    return (_name<other._name);
 }

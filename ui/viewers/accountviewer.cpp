@@ -104,6 +104,8 @@ void AccountViewer::refresh(const PicsouDBPtr db)
     has_pm=(ui->payment_methods->count());
     ui->pm_edit->setEnabled(has_pm);
     ui->pm_remove->setEnabled(has_pm);
+    /* notes */
+    ui->notes->setPlainText(account->notes());
     /* scheduled ops */
     /*
     foreach (ScheduledOperationPtr sop, account->scheduled_ops()) {

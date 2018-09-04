@@ -1,6 +1,8 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include "utils/macro.h"
 
+#include <QDebug>
 #include <QMessageBox>
 #include <QVBoxLayout>
 
@@ -127,11 +129,13 @@ void MainWindow::db_closed()
 
 void MainWindow::op_canceled()
 {
+    LOG_WARNING("Operation canceled.");
     ui->statusbar->showMessage(tr("Operation canceled."), TIMEOUT);
 }
 
 void MainWindow::op_failed(QString error)
 {
+    LOG_CRITICAL("Operation failed.");
     ui->statusbar->showMessage(tr("Operation failed."), TIMEOUT);
     QMessageBox::critical(this,
                           tr("An error occurred"),
@@ -190,28 +194,37 @@ void MainWindow::refresh_user_cb()
     if(!ui_svc()->populate_user_cb(ui->user_cb)) {
         ui->user_cb->clear();
         ui->search_btn->setEnabled(false);
+        LOG_CRITICAL("Failed to update user combo box.");
         ui->statusbar->showMessage(tr("Failed to update user combo box."), TIMEOUT);
     }
 }
 
 void MainWindow::refresh_account_cb(const QString &username)
 {
+    if(username.isEmpty()) {
+        return;
+    }
     ui->account_cb->clear();
     if(!ui_svc()->populate_account_cb(username,
                                       ui->account_cb)) {
         ui->account_cb->clear();
         ui->search_btn->setEnabled(false);
+        LOG_CRITICAL("Failed to update account combo box.");
         ui->statusbar->showMessage(tr("Failed to update account combo box."), TIMEOUT);
     }
 }
 
 void MainWindow::refresh_budgets_list(const QString &username)
 {
+    if(username.isEmpty()) {
+        return;
+    }
     ui->budgets->clear();
     if(!ui_svc()->populate_budgets_list(username,
                                         ui->budgets)) {
         ui->budgets->clear();
         ui->search_btn->setEnabled(false);
+        LOG_CRITICAL("Failed to update budgets list.");
         ui->statusbar->showMessage(tr("Failed to update budgets list."), TIMEOUT);
     }
     if(ui->budgets->count()==0) {
@@ -222,12 +235,16 @@ void MainWindow::refresh_budgets_list(const QString &username)
 
 void MainWindow::refresh_pms_list(const QString &account_name)
 {
+    if(account_name.isEmpty()) {
+        return;
+    }
     ui->pms->clear();
     if(!ui_svc()->populate_pms_list(ui->user_cb->currentText(),
                                     account_name,
                                     ui->pms)) {
         ui->pms->clear();
         ui->search_btn->setEnabled(false);
+        LOG_CRITICAL("Failed to update payment methods list.");
         ui->statusbar->showMessage(tr("Failed to update payment methods list."), TIMEOUT);
     }
     if(ui->pms->count()==0) {
@@ -309,6 +326,7 @@ void MainWindow::refresh_tree()
     ui->tree->clear();
     if(!ui_svc()->populate_db_tree(ui->tree)) {
         ui->tree->clear();
+        LOG_CRITICAL("Failed to update database tree.");
         ui->statusbar->showMessage(tr("Failed to update database tree."), TIMEOUT);
     }
     ui->tree->expandToDepth(1);

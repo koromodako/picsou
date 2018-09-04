@@ -133,6 +133,22 @@
     </layout>
    </item>
    <item>
+    <widget class="QGroupBox" name="notes_group">
+     <property name="title">
+      <string>Notes</string>
+     </property>
+     <layout class="QVBoxLayout" name="verticalLayout_4">
+      <item>
+       <widget class="QPlainTextEdit" name="notes">
+        <property name="readOnly">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
     <widget class="QGroupBox" name="ops_group">
      <property name="title">
       <string>Operations</string>
