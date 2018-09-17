@@ -1,4 +1,5 @@
 #include "semver.h"
+#include "utils/macro.h"
 
 #include <QRegularExpression>
 
@@ -94,7 +95,16 @@ bool SemVer::operator>=(const SemVer &other) const
     return !operator<(other);
 }
 
+
 bool SemVer::operator<=(const SemVer &other) const
 {
     return !operator>(other);
+}
+
+QDebug operator<<(QDebug debug, const SemVer &semver)
+{
+    debug<<"SemVer("<<semver.major_num()<<","
+                    <<semver.minor_num()<<","
+                    <<semver.patch_num()<<")";
+    return debug;
 }

@@ -3,7 +3,8 @@
 
 SearchQuery::~SearchQuery()
 {
-
+    LOG_IN_VOID();
+    LOG_OUT_VOID();
 }
 
 SearchQuery::SearchQuery(const QString &username,
@@ -27,14 +28,24 @@ SearchQuery::SearchQuery(const QString &username,
     _budgets(budgets),
     _pms(pms)
 {
+    LOG_IN("username="<<username
+           <<",account_name="<<account_name
+           <<",from="<<from
+           <<",to="<<to
+           <<",min="<<min
+           <<",max="<<max
+           <<",description_re="<<description_re
+           <<",recipient_re="<<recipient_re
+           <<",budgets="<<budgets
+           <<",pms="<<pms);
     _description_re.optimize();
     _recipient_re.optimize();
+    LOG_OUT_VOID();
 }
-
-#include <QDebug>
 
 bool SearchQuery::accepts(const OperationPtr &op) const
 {
+    LOG_IN("op="<<op);
     bool accept=false;
     QDate date=op->date();
     Amount amount=qAbs(op->amount());
@@ -74,5 +85,6 @@ bool SearchQuery::accepts(const OperationPtr &op) const
     LOG_DEBUG("accepting " << op);
     accept=true;
 end:
+    LOG_OUT("accept="<<bool2str(accept));
     return accept;
 }

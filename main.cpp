@@ -1,33 +1,37 @@
-#include <QDebug>
+#include "app/picsouapplication.h"
+#include "app/picsouuiservice.h"
+#include "ui/mainwindow.h"
+#include "utils/macro.h"
+
 #include <QApplication>
 #include <QTranslator>
 #include <QLibraryInfo>
 #include <QStyleFactory>
 
-#include "app/picsouapplication.h"
-#include "app/picsouuiservice.h"
-#include "ui/mainwindow.h"
-
 QCoreApplication* createApplication(int &argc, char *argv[])
 {
-  QCoreApplication *app=nullptr;
+    LOG_IN("argc="<<argc<<",argv="<<argv);
+    QCoreApplication *app=nullptr;
 
-  for (int i=1; i < argc; ++i) {
-      if (!qstrcmp(argv[i], "--no-gui")) {
-          app=new QCoreApplication(argc, argv);
-          goto end;
-      }
-  }
+    for(int i=1; i < argc; ++i) {
+        if(!qstrcmp(argv[i], "--no-gui")) {
+            app=new QCoreApplication(argc, argv);
+            goto end;
+        }
+    }
 
-  QApplication::setStyle(QStyleFactory::create("Fusion"));
+    QApplication::setStyle(QStyleFactory::create("Fusion"));
 
-  app=new QApplication(argc, argv);
+    app=new QApplication(argc, argv);
 end:
-  return app;
+    LOG_OUT("app="<<app);
+    return app;
 }
 
 int main(int argc, char *argv[])
 {
+    LOG_IN("argc="<<argc<<",argv="<<argv);
+    int status_code;
     QScopedPointer<QCoreApplication> app(createApplication(argc, argv));
 
     QTranslator qtTranslator;
@@ -45,7 +49,9 @@ int main(int argc, char *argv[])
                      &papp, &PicsouApplication::terminate);
 
     if(!papp.initialize()) {
-        exit(1);
+        LOG_CRITICAL("failed to initialize application.");
+        status_code=1;
+        goto end;
     }
 
     if(qobject_cast<QApplication *>(app.data())) {
@@ -53,8 +59,14 @@ int main(int argc, char *argv[])
         papp.ui_svc()->show_mainwindow();
     } else {
        /* start non-GUI version */
-        exit(1);
+        LOG_INFO("test");
+        LOG_CRITICAL("no CLI implemented yet...");
+        status_code=1;
+        goto end;
     }
 
-    return app->exec();
+    status_code=app->exec();
+end:
+    LOG_OUT("status_code="<<status_code);
+    return status_code;
 }

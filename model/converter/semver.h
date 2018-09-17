@@ -32,10 +32,14 @@ public:
     bool operator<=(const SemVer &other) const;
     bool operator>=(const SemVer &other) const;
 
+
 private:
     int _major;
     int _minor;
     int _patch;
 };
+
+QDebug operator<<(QDebug debug, const SemVer &semver);
+
 
 #endif // SEMVER_H

@@ -2,8 +2,6 @@
 #include "picsoudb.h"
 #include "utils/macro.h"
 
-#include <QDebug>
-
 #define KEYS (QStringList() << KW_DB_NAME  \
                             << KW_DB_DESCRIPTION \
                             << KW_DB_USERS)

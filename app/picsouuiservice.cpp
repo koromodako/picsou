@@ -2,7 +2,6 @@
 #include "utils/macro.h"
 
 #include <QUrl>
-#include <QDebug>
 #include <QComboBox>
 #include <QListWidget>
 #include <QFileDialog>
@@ -38,30 +37,39 @@
 
 PicsouUIService::~PicsouUIService()
 {
+    LOG_IN_VOID();
     delete _mw;
+    LOG_OUT_VOID();
 }
 
 PicsouUIService::PicsouUIService(PicsouApplication *papp) :
     PicsouAbstractService(papp)
 {
+    LOG_IN("papp="<<papp);
     _mw=new MainWindow(this);
+    LOG_OUT_VOID();
 }
 
 bool PicsouUIService::initialize()
 {
+    LOG_IN_VOID();
+    bool success;
     connect(papp()->model_svc(), &PicsouModelService::updated,
             this, &PicsouUIService::notify_model_updated);
-
-    return true;
+    success=true;
+    LOG_OUT("success="<<bool2str(success));
+    return success;
 }
 
 void PicsouUIService::terminate()
 {
-
+    LOG_IN_VOID();
+    LOG_OUT_VOID();
 }
 
 bool PicsouUIService::populate_db_tree(QTreeWidget* const tree)
 {
+    LOG_IN("tree="<<tree);
     bool success;
     int month, year, month_stop;
     QDate today=QDate::currentDate();
@@ -126,17 +134,17 @@ bool PicsouUIService::populate_db_tree(QTreeWidget* const tree)
             }
         }
     }
-
     success=true;
 end:
+    LOG_OUT("success="<<success);
     return success;
 }
 
 bool PicsouUIService::populate_user_cb(QComboBox * const cb)
 {
+    LOG_IN("cb="<<cb);
     bool found;
     UserPtrList users;
-
     if(!papp()->model_svc()->is_db_opened()) {
         found=false;
         goto end;
@@ -148,12 +156,14 @@ bool PicsouUIService::populate_user_cb(QComboBox * const cb)
     }
     found=true;
 end:
+    LOG_OUT("found="<<bool2str(found));
     return found;
 }
 
 bool PicsouUIService::populate_account_cb(const QString &username,
                                           QComboBox * const cb)
 {
+    LOG_IN("username="<<username<<",cb="<<cb);
     bool found=false;
     UserPtrList users=papp()->model_svc()->db()->users(true);
     foreach (UserPtr user, users) {
@@ -164,12 +174,14 @@ bool PicsouUIService::populate_account_cb(const QString &username,
             }
         }
     }
+    LOG_OUT("found="<<bool2str(found));
     return found;
 }
 
 bool PicsouUIService::populate_budgets_list(const QString &username,
                                             QListWidget * const list)
 {
+    LOG_IN("username="<<username<<",list="<<list);
     bool found=false;
     UserPtrList users=papp()->model_svc()->db()->users(true);
     foreach (UserPtr user, users) {
@@ -180,6 +192,7 @@ bool PicsouUIService::populate_budgets_list(const QString &username,
             }
         }
     }
+    LOG_OUT("found="<<bool2str(found));
     return found;
 }
 
@@ -187,6 +200,7 @@ bool PicsouUIService::populate_pms_list(const QString &username,
                                         const QString &account_name,
                                         QListWidget * const list)
 {
+    LOG_IN("username="<<username<<",account_name="<<account_name<<",list="<<list);
     bool found=false;
     UserPtrList users=papp()->model_svc()->db()->users(true);
     foreach (UserPtr user, users) {
@@ -202,13 +216,13 @@ bool PicsouUIService::populate_pms_list(const QString &username,
             }
         }
     }
+    LOG_OUT("found="<<bool2str(found));
     return found;
 }
 
-#include <QDebug>
-
 OperationCollection PicsouUIService::search_operations(const SearchQuery &query)
 {
+    LOG_IN("query="<<&query);
     QFuture<OperationPtr> future;
     OperationCollection ops;
     OperationPtrList ops_list;
@@ -261,11 +275,13 @@ OperationCollection PicsouUIService::search_operations(const SearchQuery &query)
                                  QMessageBox::Ok);
     }
 end:
+    LOG_OUT("ops.length="<<ops.length());
     return ops;
 }
 
 PicsouUIViewer *PicsouUIService::viewer_from_item(QTreeWidgetItem *item)
 {
+    LOG_IN("item="<<item);
     PicsouUIViewer *w=nullptr;
     PicsouTreeItem *pitem;
 
@@ -306,33 +322,42 @@ PicsouUIViewer *PicsouUIService::viewer_from_item(QTreeWidgetItem *item)
     /* trigger viewer content update */
     emit model_updated(papp()->model_svc()->db());
 end:
+    LOG_OUT("w="<<w);
     return w;
 }
 
 void PicsouUIService::show_mainwindow()
 {
+    LOG_IN_VOID();
     _mw->show();
+    LOG_OUT_VOID();
 }
 
 void PicsouUIService::show_about_picsou()
 {
+    LOG_IN_VOID();
     AboutPicsou *about=new AboutPicsou(_mw);
     about->setAttribute(Qt::WA_DeleteOnClose);
     about->show();
+    LOG_OUT_VOID();
 }
 
 void PicsouUIService::show_github_repo()
 {
+    LOG_IN_VOID();
     QDesktopServices::openUrl(QUrl(PICSOU_URL, QUrl::StrictMode));
+    LOG_OUT_VOID();
 }
 
 void PicsouUIService::show_statistics()
 {
-
+    LOG_IN_VOID();
+    LOG_OUT_VOID();
 }
 
 void PicsouUIService::db_new()
 {
+    LOG_IN_VOID();
     QString filename, name, description;
     PicsouDBEditor db_editor(&name, &description, _mw);
 
@@ -359,11 +384,13 @@ void PicsouUIService::db_new()
 
     emit svc_op_failed(tr("Failed to create a new database."));
 end:
+    LOG_OUT_VOID();
     return;
 }
 
 void PicsouUIService::db_open()
 {
+    LOG_IN_VOID();
     QString filename;
 
     if(close_any_opened_db()) {
@@ -385,11 +412,13 @@ void PicsouUIService::db_open()
 
     emit svc_op_failed(tr("Failed to open an existing database."));
 end:
+    LOG_OUT_VOID();
     return;
 }
 
 void PicsouUIService::db_close()
 {
+    LOG_IN_VOID();
     if(!papp()->model_svc()->is_db_opened()) {
         goto end;
     }
@@ -410,22 +439,26 @@ void PicsouUIService::db_close()
 
     emit svc_op_failed(tr("Failed to close the database properly."));
 end:
+    LOG_OUT_VOID();
     return;
 }
 
 void PicsouUIService::db_save()
 {
+    LOG_IN_VOID();
     if(papp()->model_svc()->save_db()) {
         emit db_saved(); goto end;
     }
 
     emit svc_op_failed(tr("Failed to save the database properly."));
 end:
+    LOG_OUT_VOID();
     return;
 }
 
 void PicsouUIService::db_save_as()
 {
+    LOG_IN_VOID();
     QString filename;
 
     if(papp()->model_svc()->is_db_opened()) {
@@ -445,11 +478,13 @@ void PicsouUIService::db_save_as()
 
     emit svc_op_failed(tr("Failed to save database in specified file."));
 end:
+    LOG_OUT_VOID();
     return;
 }
 
 void PicsouUIService::user_add()
 {
+    LOG_IN_VOID();
     QString username;
     QSecureMemory old_pwd, new_pwd;
     UserEditor editor(&username, &old_pwd, &new_pwd, _mw);
@@ -462,11 +497,13 @@ void PicsouUIService::user_add()
 
     emit user_added();
 end:
+    LOG_OUT_VOID();
     return;
 }
 
 void PicsouUIService::user_edit(QUuid id)
 {
+    LOG_IN("id="<<id);
     UserPtr user;
     QString username;
     QSecureMemory old_pwd, new_pwd;
@@ -487,27 +524,30 @@ void PicsouUIService::user_edit(QUuid id)
 
     emit user_edited();
 end:
+    LOG_OUT_VOID();
     return;
 }
 
 void PicsouUIService::user_remove(QUuid id)
 {
+    LOG_IN("id="<<id);
     if(papp()->model_svc()->db()->remove_user(id)) {
         emit user_removed(); goto end;
     }
 
     emit svc_op_failed(tr("Failed to remove user from database."));
 end:
+    LOG_OUT_VOID();
     return;
 }
 
 void PicsouUIService::budget_add(QUuid user_id)
 {
+    LOG_IN("user_id="<<user_id);
     UserPtr user;
     double amount=0.;
     QString name, description;
     BudgetEditor editor(&amount, &name, &description, _mw);
-
 
     user=papp()->model_svc()->db()->find_user(user_id);
     if(user.isNull()) {
@@ -523,11 +563,13 @@ void PicsouUIService::budget_add(QUuid user_id)
 
     emit budget_added();
 end:
+    LOG_OUT_VOID();
     return;
 }
 
 void PicsouUIService::budget_edit(QUuid user_id, QUuid budget_id)
 {
+    LOG_IN("user_id="<<user_id<<",budget_id="<<budget_id);
     UserPtr user;
     double amount;
     BudgetPtr budget;
@@ -557,11 +599,13 @@ void PicsouUIService::budget_edit(QUuid user_id, QUuid budget_id)
 
     emit budget_edited();
 end:
+    LOG_OUT_VOID();
     return;
 }
 
 void PicsouUIService::budget_remove(QUuid user_id, QUuid budget_id)
 {
+    LOG_IN("user_id="<<user_id<<",budget_id="<<budget_id);
     UserPtr user;
 
     user=papp()->model_svc()->db()->find_user(user_id);
@@ -576,11 +620,13 @@ void PicsouUIService::budget_remove(QUuid user_id, QUuid budget_id)
 
     emit svc_op_failed(tr("Failed to remove budget from database."));
 end:
+    LOG_OUT_VOID();
     return;
 }
 
 void PicsouUIService::account_add(QUuid user_id)
 {
+    LOG_IN("user_id="<<user_id);
     UserPtr user;
     QString name, description;
     AccountEditor editor(&name, &description, _mw);
@@ -599,11 +645,13 @@ void PicsouUIService::account_add(QUuid user_id)
 
     emit account_added();
 end:
+    LOG_OUT_VOID();
     return;
 }
 
 void PicsouUIService::account_edit(QUuid user_id, QUuid account_id)
 {
+    LOG_IN("user_id="<<user_id<<",account_id="<<account_id);
     UserPtr user;
     AccountPtr account;
     QString name, notes;
@@ -631,11 +679,13 @@ void PicsouUIService::account_edit(QUuid user_id, QUuid account_id)
 
     emit account_edited();
 end:
+    LOG_OUT_VOID();
     return;
 }
 
 void PicsouUIService::account_remove(QUuid user_id, QUuid account_id)
 {
+    LOG_IN("user_id="<<user_id<<",account_id="<<account_id);
     UserPtr user;
 
     user=papp()->model_svc()->db()->find_user(user_id);
@@ -650,11 +700,13 @@ void PicsouUIService::account_remove(QUuid user_id, QUuid account_id)
 
     emit svc_op_failed(tr("Failed to remove account from database."));
 end:
+    LOG_OUT_VOID();
     return;
 }
 
 void PicsouUIService::pm_add(QUuid account_id)
 {
+    LOG_IN("account_id="<<account_id);
     QString name;
     PaymentMethodEditor editor(&name, _mw);
     AccountPtr account;
@@ -673,11 +725,13 @@ void PicsouUIService::pm_add(QUuid account_id)
 
     emit pm_added();
 end:
+    LOG_OUT_VOID();
     return;
 }
 
 void PicsouUIService::pm_edit(QUuid account_id, QUuid pm_id)
 {
+    LOG_IN("account_id="<<account_id<<",pm_id="<<pm_id);
     QString name;
     AccountPtr account;
     PaymentMethodPtr pm;
@@ -699,11 +753,13 @@ void PicsouUIService::pm_edit(QUuid account_id, QUuid pm_id)
 
     emit pm_edited();
 end:
+    LOG_OUT_VOID();
     return;
 }
 
 void PicsouUIService::pm_remove(QUuid account_id, QUuid pm_id)
 {
+    LOG_IN("account_id="<<account_id<<",pm_id="<<pm_id);
     AccountPtr account=papp()->model_svc()->db()->find_account(account_id);
     if(account.isNull()) {
         emit svc_op_failed(tr("Internal error: invalid account pointer."));
@@ -716,11 +772,13 @@ void PicsouUIService::pm_remove(QUuid account_id, QUuid pm_id)
 
     emit svc_op_failed(tr("Failed to remove payment method from database."));
 end:
+    LOG_OUT_VOID();
     return;
 }
 
 void PicsouUIService::op_add(QUuid user_id, QUuid account_id, int year, int month)
 {
+    LOG_IN("user_id="<<user_id<<",account_id="<<account_id<<",year="<<year<<",month="<<month);
     QDate date;
     Amount amount;
     UserPtr user;
@@ -775,11 +833,13 @@ void PicsouUIService::op_add(QUuid user_id, QUuid account_id, int year, int mont
 
     emit op_added();
 end:
+    LOG_OUT_VOID();
     return;
 }
 
 void PicsouUIService::op_edit(QUuid user_id, QUuid account_id, QUuid op_id, int year, int month)
 {
+    LOG_IN("user_id="<<user_id<<",account_id="<<account_id<<",op_id="<<op_id<<",year="<<year<<",month="<<month);
     QDate date;
     UserPtr user;
     Amount amount;
@@ -832,11 +892,13 @@ void PicsouUIService::op_edit(QUuid user_id, QUuid account_id, QUuid op_id, int 
 
     emit op_edited();
 end:
+    LOG_OUT_VOID();
     return;
 }
 
 void PicsouUIService::op_remove(QUuid account_id, QUuid op_id)
 {
+    LOG_IN("account_id="<<account_id<<",op_id="<<op_id);
     AccountPtr account;
 
     account=papp()->model_svc()->db()->find_account(account_id);
@@ -851,11 +913,13 @@ void PicsouUIService::op_remove(QUuid account_id, QUuid op_id)
 
     emit svc_op_failed(tr("Failed to remove operation from database."));
 end:
+    LOG_OUT_VOID();
     return;
 }
 
 void PicsouUIService::ops_import(QUuid account_id)
 {
+    LOG_IN("account_id="<<account_id);
     QString filename;
     AccountPtr account;
     OperationCollection ops;
@@ -903,11 +967,13 @@ void PicsouUIService::ops_import(QUuid account_id)
 clean:
     ops.clear();
 end:
+    LOG_OUT_VOID();
     return;
 }
 
 void PicsouUIService::ops_export(QUuid account_id)
 {
+    LOG_IN("account_id="<<account_id);
     bool ok;
     QString filename, fmt_str;
     AccountPtr account;
@@ -959,17 +1025,21 @@ void PicsouUIService::ops_export(QUuid account_id)
     QMessageBox::information(_mw, tr("Export successful"), tr("Operation successfully exported to %0").arg(filename));
     emit ops_exported();
 end:
+    LOG_OUT_VOID();
     return;
 }
 
 void PicsouUIService::notify_model_updated(const PicsouDBPtr db)
 {
+    LOG_IN_VOID();
     emit model_updated(db);
     emit db_modified();
+    LOG_OUT_VOID();
 }
 
 bool PicsouUIService::close_any_opened_db()
 {
+    LOG_IN_VOID();
     bool has_db;
 
     if(papp()->model_svc()->is_db_modified() &&
@@ -986,5 +1056,6 @@ bool PicsouUIService::close_any_opened_db()
     db_close();
     has_db=false;
 end:
+    LOG_OUT("has_db="<<bool2str(has_db));
     return has_db;
 }

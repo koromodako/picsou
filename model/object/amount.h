@@ -9,6 +9,7 @@ public:
     virtual ~Amount();
     Amount(int value);
     Amount(double value=0);
+    Amount(const Amount &other);
 
     inline double value() const { return _value; }
 
@@ -31,11 +32,13 @@ public:
     inline bool operator<=(const Amount &other) const { return _value<=other._value; }
     inline bool operator>=(const Amount &other) const { return _value>=other._value; }
 
-    inline bool operator==(const Amount &other) const { return _value==other._value; }
-    inline bool operator!=(const Amount &other) const { return _value!=other._value; }
+    inline bool operator==(const Amount &other) const { return qFuzzyCompare(_value, other._value); }
+    inline bool operator!=(const Amount &other) const { return !qFuzzyCompare(_value, other._value); }
 
 private:
     double _value;
 };
+
+QDebug operator<<(QDebug debug, const Amount &amount);
 
 #endif // AMOUNT_H

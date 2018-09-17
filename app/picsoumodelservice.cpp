@@ -2,7 +2,6 @@
 #include "utils/macro.h"
 
 #include <QFile>
-#include <QDebug>
 #include <QJsonObject>
 #include <QJsonDocument>
 #include <QXmlStreamReader>
@@ -24,7 +23,9 @@
 
 PicsouModelService::~PicsouModelService()
 {
+    LOG_IN_VOID();
     close_db();
+    LOG_OUT_VOID();
 }
 
 PicsouModelService::PicsouModelService(PicsouApplication *papp) :
@@ -33,23 +34,30 @@ PicsouModelService::PicsouModelService(PicsouApplication *papp) :
     _filename(QString()),
     _is_db_modified(false)
 {
-
+    LOG_IN("papp="<<papp);
+    LOG_OUT_VOID();
 }
 
 bool PicsouModelService::initialize()
 {
-    return true;
+    LOG_IN_VOID();
+    bool success=true;
+    LOG_OUT("success="<<bool2str(success));
+    return success;
 }
 
 void PicsouModelService::terminate()
 {
+    LOG_IN_VOID();
     close_db();
+    LOG_OUT_VOID();
 }
 
 bool PicsouModelService::new_db(QString filename,
                                 QString name,
                                 QString description)
 {
+    LOG_IN("filename="<<filename<<",name="<<name<<",description="<<description);
     bool success;
 
     if(is_db_opened()) {
@@ -68,11 +76,13 @@ bool PicsouModelService::new_db(QString filename,
 
     success=true;
 end:
+    LOG_OUT("success="<<success);
     return success;
 }
 
 bool PicsouModelService::open_db(QString filename)
 {
+    LOG_IN("filename="<<filename);
     bool success;
     SemVer db_version;
     QJsonDocument doc;
@@ -118,16 +128,21 @@ bool PicsouModelService::open_db(QString filename)
 
     success=true;
 end:
+    LOG_OUT("success="<<success);
     return success;
 }
 
 bool PicsouModelService::save_db()
 {
-    return save_db_as(_filename);
+    LOG_IN_VOID();
+    bool success=save_db_as(_filename);
+    LOG_OUT("success="<<bool2str(success));
+    return success;
 }
 
 bool PicsouModelService::save_db_as(QString filename)
 {
+    LOG_IN("filename="<<filename);
     bool success;
     QJsonObject json;
     QByteArray json_data;
@@ -156,11 +171,13 @@ bool PicsouModelService::save_db_as(QString filename)
     _is_db_modified=false;
     success=true;
 end:
+    LOG_OUT("success="<<success);
     return success;
 }
 
 bool PicsouModelService::close_db()
 {
+    LOG_IN_VOID();
     bool success=false;
 
     if(is_db_opened()) {
@@ -169,18 +186,22 @@ bool PicsouModelService::close_db()
         delete _db;
         success=true;
     }
-
+    LOG_OUT("success="<<success);
     return success;
 }
 
 bool PicsouModelService::is_db_opened()
 {
-    return (!(_db.isNull()));
+    LOG_IN_VOID();
+    bool is_opened=(!(_db.isNull()));
+    LOG_OUT("is_opened="<<is_opened);
+    return is_opened;
 }
 
 OperationCollection PicsouModelService::load_ops(ImportExportFormat fmt,
                                                  QString filename)
 {
+    LOG_IN("fmt="<<fmt<<",filename="<<filename);
     QFile f(filename);
     OperationCollection ops;
 
@@ -196,6 +217,7 @@ OperationCollection PicsouModelService::load_ops(ImportExportFormat fmt,
 
     f.close();
 end:
+    LOG_OUT("ops.length="<<ops.length());
     return ops;
 }
 
@@ -203,6 +225,7 @@ bool PicsouModelService::dump_ops(ImportExportFormat fmt,
                                   QString filename,
                                   OperationCollection ops)
 {
+    LOG_IN("fmt="<<fmt<<",filename="<<filename<<"ops.length="<<ops.length());
     bool success=false;
     QFile f(filename);
 
@@ -218,27 +241,37 @@ bool PicsouModelService::dump_ops(ImportExportFormat fmt,
 
     f.close();
 end:
+    LOG_OUT("success="<<bool2str(success));
     return success;
 }
 
 UserPtr PicsouModelService::find_user(QUuid id) const
 {
-    return _db->find_user(id);
+    LOG_IN("id="<<id);
+    UserPtr user=_db->find_user(id);
+    LOG_OUT("user="<<user);
+    return user;
 }
 
 AccountPtr PicsouModelService::find_account(QUuid id) const
 {
-    return _db->find_account(id);
+    LOG_IN("id="<<id);
+    AccountPtr account=_db->find_account(id);
+    LOG_OUT("account="<<account);
+    return account;
 }
 
 void PicsouModelService::notify_ui()
 {
+    LOG_IN_VOID();
     _is_db_modified=true;
     emit updated(_db);
+    LOG_OUT_VOID();
 }
 
 OperationCollection PicsouModelService::xml_load_ops(QFile &f)
 {
+    LOG_IN("&f="<<&f);
     bool ok;
     int y,m,d;
     QDate date;
@@ -305,17 +338,19 @@ OperationCollection PicsouModelService::xml_load_ops(QFile &f)
 error:
     ops.clear();
 end:
+    LOG_OUT("ops.length="<<ops.length());
     return ops;
 }
 
 OperationCollection PicsouModelService::csv_load_ops(QFile &f)
 {
+    LOG_IN("&f="<<&f);
     QDate date;
-    double amount;
+    double amount=0.0;
     bool ok, instr;
     QByteArray line;
     OperationPtr op;
-    int y, m, d, idx;
+    int y=0, m=0, d=0, idx;
     OperationCollection ops;
     QByteArray::const_iterator c;
     QString buffer, budget, recipient, payment_method;
@@ -380,32 +415,35 @@ OperationCollection PicsouModelService::csv_load_ops(QFile &f)
                     buffer.append(*c);
                 }
             }
-            date=QDate(y, m, d);
-            if(!date.isValid()) {
-                LOG_WARNING("CSV import parsing error: invalid date.");
-                goto error;
+            if(!payment_method.isNull()) {
+                date=QDate(y, m, d);
+                if(!date.isValid()) {
+                    LOG_WARNING("CSV import parsing error: invalid date.");
+                    goto error;
+                }
+                op=OperationPtr(new Operation(amount,
+                                              QDate(y, m, d),
+                                              budget,
+                                              recipient,
+                                              buffer.replace(';', '\n'),
+                                              payment_method,
+                                              nullptr));
+                ops.append(op);
+                buffer.clear();
             }
-            op=OperationPtr(new Operation(amount,
-                                          QDate(y, m, d),
-                                          budget,
-                                          recipient,
-                                          buffer.replace(';', '\n'),
-                                          payment_method,
-                                          nullptr));
-            ops.append(op);
-            buffer.clear();
         }
     }
     goto end;
-
 error:
     ops.clear();
 end:
+    LOG_OUT("ops.length="<<ops.length());
     return ops;
 }
 
 OperationCollection PicsouModelService::json_load_ops(QFile &f)
 {
+    LOG_IN("&f="<<&f);
     QByteArray line;
     OperationPtr op;
     QJsonDocument doc;
@@ -426,15 +464,16 @@ OperationCollection PicsouModelService::json_load_ops(QFile &f)
         }
     }
     goto end;
-
 error:
     ops.clear();
 end:
+    LOG_OUT("ops.length="<<ops.length());
     return ops;
 }
 
 bool PicsouModelService::xml_dump_ops(QFile &f, OperationCollection ops)
 {
+    LOG_IN("&f="<<&f<<",ops.length="<<ops.length());
     bool success;
     QXmlStreamWriter xml(&f);
     xml.writeStartDocument("1.0", true);
@@ -454,11 +493,13 @@ bool PicsouModelService::xml_dump_ops(QFile &f, OperationCollection ops)
     xml.writeEndDocument();
     success=true;
 //end:
+    LOG_OUT("success="<<bool2str(success));
     return success;
 }
 
 bool PicsouModelService::csv_dump_ops(QFile &f, OperationCollection ops)
 {
+    LOG_IN("&f="<<&f<<",ops.length="<<ops.length());
     bool success;
     foreach (OperationPtr op, ops.list()) {
         f.write(QString("%0,%1,%2,%3,\"%4\",\"%5\",\"%6\",\"%7\"\n").arg(
@@ -474,11 +515,13 @@ bool PicsouModelService::csv_dump_ops(QFile &f, OperationCollection ops)
     }
     success=true;
 //end:
+    LOG_OUT("success="<<success);
     return success;
 }
 
 bool PicsouModelService::json_dump_ops(QFile &f, OperationCollection ops)
 {
+    LOG_IN("&f="<<&f<<",ops.length="<<ops.length());
     bool success;
     QJsonObject obj;
     foreach (OperationPtr op, ops.list()) {
@@ -491,5 +534,6 @@ bool PicsouModelService::json_dump_ops(QFile &f, OperationCollection ops)
     }
     success=true;
 end:
+    LOG_OUT("success="<<success);
     return success;
 }
