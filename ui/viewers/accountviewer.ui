@@ -23,7 +23,11 @@
        </property>
        <layout class="QVBoxLayout" name="verticalLayout">
         <item>
-         <widget class="QListWidget" name="payment_methods"/>
+         <widget class="QListWidget" name="payment_methods">
+          <property name="editTriggers">
+           <set>QAbstractItemView::NoEditTriggers</set>
+          </property>
+         </widget>
         </item>
         <item>
          <layout class="QHBoxLayout" name="pm_buttons">
@@ -66,34 +70,22 @@
       </widget>
      </item>
      <item>
-      <widget class="QGroupBox" name="scheduled_ops_group">
+      <widget class="QGroupBox" name="sop_group">
        <property name="title">
         <string>Scheduled Operations</string>
        </property>
        <layout class="QVBoxLayout" name="verticalLayout_2">
         <item>
-         <widget class="QTableWidget" name="sops_table">
-          <property name="rowCount">
-           <number>0</number>
+         <widget class="QListWidget" name="sops">
+          <property name="editTriggers">
+           <set>QAbstractItemView::NoEditTriggers</set>
           </property>
-          <property name="columnCount">
-           <number>0</number>
-          </property>
-          <attribute name="horizontalHeaderVisible">
-           <bool>true</bool>
-          </attribute>
-          <attribute name="verticalHeaderVisible">
-           <bool>true</bool>
-          </attribute>
-          <attribute name="verticalHeaderHighlightSections">
-           <bool>true</bool>
-          </attribute>
          </widget>
         </item>
         <item>
-         <layout class="QHBoxLayout" name="sops_buttons">
+         <layout class="QHBoxLayout" name="sop_buttons">
           <item>
-           <widget class="QPushButton" name="sops_add">
+           <widget class="QPushButton" name="sop_add">
             <property name="text">
              <string>Add</string>
             </property>
@@ -104,7 +96,7 @@
            </widget>
           </item>
           <item>
-           <widget class="QPushButton" name="sops_edit">
+           <widget class="QPushButton" name="sop_edit">
             <property name="text">
              <string>Edit</string>
             </property>
@@ -115,7 +107,7 @@
            </widget>
           </item>
           <item>
-           <widget class="QPushButton" name="sops_remove">
+           <widget class="QPushButton" name="sop_remove">
             <property name="text">
              <string>Remove</string>
             </property>
@@ -335,10 +327,9 @@
   <tabstop>pm_add</tabstop>
   <tabstop>pm_edit</tabstop>
   <tabstop>pm_remove</tabstop>
-  <tabstop>sops_table</tabstop>
-  <tabstop>sops_add</tabstop>
-  <tabstop>sops_edit</tabstop>
-  <tabstop>sops_remove</tabstop>
+  <tabstop>sop_add</tabstop>
+  <tabstop>sop_edit</tabstop>
+  <tabstop>sop_remove</tabstop>
  </tabstops>
  <resources>
   <include location="../../picsou.qrc"/>

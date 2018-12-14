@@ -90,7 +90,8 @@ SOURCES += \
     ui/widgets/picsoutablewidget.cpp \
     ui/widgets/operationstatistics.cpp \
     model/converter/converter.cpp \
-    model/converter/semver.cpp
+    model/converter/semver.cpp \
+    model/object/schedule.cpp
 
 HEADERS += \
     picsou.h \
@@ -145,7 +146,8 @@ HEADERS += \
     model/operationcollection.h \
     ui/widgets/operationstatistics.h \
     model/converter/converter.h \
-    model/converter/semver.h
+    model/converter/semver.h \
+    model/object/schedule.h
 
 FORMS += \
     ui/mainwindow.ui \

@@ -28,7 +28,9 @@ public slots:
     void edit_pm();
     void remove_pm();
     /* scheduled ops */
-    // TODO
+    void add_sop();
+    void edit_sop();
+    void remove_sop();
     /* ops */
     void add_op();
     void edit_op();

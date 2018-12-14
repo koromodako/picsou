@@ -1,52 +1,45 @@
 #ifndef SCHEDULEDOPERATION_H
 #define SCHEDULEDOPERATION_H
 
+#include "schedule.h"
 #include "operation.h"
 
-#define KW_SOP_FREQ "freq"
+#define KW_SO_NAME "name"
 
 class ScheduledOperation : public Operation
 {
     Q_OBJECT
 public:
-    enum Frequency {
-           YEARLY=0,
-        QUARTERLY=1,
-          MONTHLY=2,
-           WEEKLY=3,
-            DAILY=4
-    };
-
-    static QString freq2str(Frequency freq);
-    static Frequency str2freq(const QString &freq);
-    static QStringList frequencies();
-
     virtual ~ScheduledOperation();
     ScheduledOperation(PicsouModelObj *parent);
-    ScheduledOperation(Frequency freq,
-                       double amount,
+    ScheduledOperation(double amount,
                        const QDate &date,
                        const QString &budget,
                        const QString &recipient,
                        const QString &description,
                        const QString &payment_method,
+                       const QString &name,
+                       const Schedule &schedule,
                        PicsouModelObj *parent);
 
-    void update(Frequency freq,
-                double amount,
+    inline QString name() const { return _name; }
+    inline Schedule schedule() const { return _schedule; }
+
+    void update(double amount,
                 const QDate &date,
                 const QString &budget,
                 const QString &recipient,
                 const QString &description,
-                const QString &payment_method);
-
-    inline Frequency frequency() const { return _freq; }
+                const QString &payment_method,
+                const QString &name,
+                const Schedule &schedule);
 
     bool read(const QJsonObject &json);
     bool write(QJsonObject &json) const;
 
 private:
-    Frequency _freq;
+    QString _name;
+    Schedule _schedule;
 };
 
 DECL_PICSOU_MOD_OBJ_PTR(ScheduledOperation, ScheduledOperationPtr, ScheduledOperationPtrList);

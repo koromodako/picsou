@@ -1,6 +1,8 @@
 #include "accountviewer.h"
 #include "ui_accountviewer.h"
 
+#include "utils/macro.h"
+
 #include "app/picsouuiservice.h"
 #include "ui/items/picsoulistitem.h"
 #include "ui/viewers/operationviewer.h"
@@ -51,11 +53,23 @@ AccountViewer::AccountViewer(PicsouUIService *ui_svc,
             this, &AccountViewer::remove_pm);
     addAction(ui->action_remove_pm);
     /* scheduled ops */
-    ui->sops_table->setEnabled(false);
-    ui->sops_add->setEnabled(false);
-    ui->sops_edit->setEnabled(false);
-    ui->sops_remove->setEnabled(false);
-    ui->scheduled_ops_group->setVisible(false);
+    connect(ui->sop_add, &QPushButton::clicked,
+            this, &AccountViewer::add_sop);
+    connect(ui->action_add_sop, &QAction::triggered,
+            this, &AccountViewer::add_sop);
+    addAction(ui->action_add_sop);
+
+    connect(ui->sop_edit, &QPushButton::clicked,
+            this, &AccountViewer::edit_sop);
+    connect(ui->action_edit_sop, &QAction::triggered,
+            this, &AccountViewer::edit_sop);
+    addAction(ui->action_edit_sop);
+
+    connect(ui->sop_remove, &QPushButton::clicked,
+            this, &AccountViewer::remove_sop);
+    connect(ui->action_remove_sop, &QAction::triggered,
+            this, &AccountViewer::remove_sop);
+    addAction(ui->action_remove_sop);
     /* ops */
     connect(ui->add_op, &QPushButton::clicked,
             this, &AccountViewer::add_op);
@@ -92,8 +106,6 @@ AccountViewer::AccountViewer(PicsouUIService *ui_svc,
 
 void AccountViewer::refresh(const PicsouDBPtr db)
 {
-    bool has_pm, has_ops;
-    QDate today;
     OperationCollection ops;
     AccountPtr account=db->find_account(mod_obj_id());
     /* payment methods */
@@ -101,27 +113,32 @@ void AccountViewer::refresh(const PicsouDBPtr db)
     foreach (PaymentMethodPtr pm, account->payment_methods(true)) {
         new PicsouListItem(pm->name(), ui->payment_methods, pm->id());
     }
-    has_pm=(ui->payment_methods->count());
+    bool has_pm=(ui->payment_methods->count());
     ui->pm_edit->setEnabled(has_pm);
     ui->pm_remove->setEnabled(has_pm);
     /* notes */
     ui->notes->setPlainText(account->notes());
     /* scheduled ops */
-    /*
+    ui->sops->clear();
     foreach (ScheduledOperationPtr sop, account->scheduled_ops()) {
-        TODO
+        new PicsouListItem(QString("%0 (%1 -> %2)").arg(sop->name(),
+                                                        sop->schedule().start().toString(),
+                                                        sop->schedule().stop().toString()),
+                           ui->sops,
+                           sop->id());
     }
-    */
+    bool has_sops=(ui->sops->count());
+    ui->sop_edit->setEnabled(has_sops);
+    ui->sop_remove->setEnabled(has_sops);
     /* ops */
     ops=db->ops(mod_obj_id());
     _table->refresh(ops);
     _ops_stats->refresh(ops);
-    today=QDate::currentDate();
+    QDate today=QDate::currentDate();
     _ops_stats->update_field(_rolling_expense_lab,
                              ops.total_in_range(today.addDays(-30),
                                                 today).to_str(true));
-
-    has_ops=(ops.length()>0);
+    bool has_ops=(ops.length()>0);
     ui->remove_op->setEnabled(has_ops);
     ui->edit_op->setEnabled(has_ops);
 }
@@ -147,6 +164,21 @@ void AccountViewer::remove_pm()
     if(item!=nullptr) {
         ui_svc()->pm_remove(mod_obj_id(), item->mod_obj_id());
     }
+}
+
+void AccountViewer::add_sop()
+{
+    LOG_WARNING("not implemented: AccountViewer::add_sop()");
+}
+
+void AccountViewer::edit_sop()
+{
+    LOG_WARNING("not implemented: AccountViewer::edit_sop()");
+}
+
+void AccountViewer::remove_sop()
+{
+    LOG_WARNING("not implemented: AccountViewer::remove_sop()");
 }
 
 void AccountViewer::add_op()
