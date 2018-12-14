@@ -25,7 +25,7 @@ PicsouModelService::~PicsouModelService()
 {
     LOG_IN_VOID();
     close_db();
-    LOG_OUT_VOID();
+    LOG_VOID_RETURN();
 }
 
 PicsouModelService::PicsouModelService(PicsouApplication *papp) :
@@ -35,22 +35,20 @@ PicsouModelService::PicsouModelService(PicsouApplication *papp) :
     _is_db_modified(false)
 {
     LOG_IN("papp="<<papp);
-    LOG_OUT_VOID();
+    LOG_VOID_RETURN();
 }
 
 bool PicsouModelService::initialize()
 {
     LOG_IN_VOID();
-    bool success=true;
-    LOG_OUT("success="<<bool2str(success));
-    return success;
+    LOG_BOOL_RETURN(true);
 }
 
 void PicsouModelService::terminate()
 {
     LOG_IN_VOID();
     close_db();
-    LOG_OUT_VOID();
+    LOG_VOID_RETURN();
 }
 
 bool PicsouModelService::new_db(QString filename,
@@ -58,12 +56,9 @@ bool PicsouModelService::new_db(QString filename,
                                 QString description)
 {
     LOG_IN("filename="<<filename<<",name="<<name<<",description="<<description);
-    bool success;
-
     if(is_db_opened()) {
-        success=false; goto end;
+        LOG_BOOL_RETURN(false);
     }
-
     _db=PicsouDBPtr(new PicsouDB(SemVer(PICSOU_DB_MAJOR,
                                         PICSOU_DB_MINOR,
                                         PICSOU_DB_PATCH),
@@ -71,41 +66,28 @@ bool PicsouModelService::new_db(QString filename,
                                  description));
     _filename=filename;
     _is_db_modified=true;
-
     connect(_db, &PicsouDB::modified, this, &PicsouModelService::notify_ui);
-
-    success=true;
-end:
-    LOG_OUT("success="<<success);
-    return success;
+    LOG_BOOL_RETURN(true);
 }
 
 bool PicsouModelService::open_db(QString filename)
 {
     LOG_IN("filename="<<filename);
-    bool success;
-    SemVer db_version;
-    QJsonDocument doc;
-    QJsonParseError err;
-    QFile f(filename);
-
     if(is_db_opened()) {
-        success=false; goto end;
+        LOG_BOOL_RETURN(false);
     }
-
+    QFile f(filename);
     if(!f.open(QIODevice::ReadOnly)) {
-        success=false; goto end;
+        LOG_BOOL_RETURN(false);
     }
-
-    doc=QJsonDocument::fromJson(f.readAll(), &err);
-
+    QJsonParseError err;
+    QJsonDocument doc=QJsonDocument::fromJson(f.readAll(), &err);
     if(doc.isNull()) {
         LOG_CRITICAL("JSON document is NULL!");
-        success=false; goto end;
+        LOG_BOOL_RETURN(false);
     }
-
+    SemVer db_version;
     _db=PicsouDBPtr(new PicsouDB);
-
     for(;;) {
         if(_db->read(doc.object())) {
             break;
@@ -119,83 +101,59 @@ bool PicsouModelService::open_db(QString filename)
             }
             /* conversion failed */
         }
-        success=false; goto end;
+        LOG_BOOL_RETURN(false);
     }
-
     _filename=filename;
-
     connect(_db, &PicsouDB::modified, this, &PicsouModelService::notify_ui);
-
-    success=true;
-end:
-    LOG_OUT("success="<<success);
-    return success;
+    LOG_BOOL_RETURN(true);
 }
 
 bool PicsouModelService::save_db()
 {
     LOG_IN_VOID();
-    bool success=save_db_as(_filename);
-    LOG_OUT("success="<<bool2str(success));
-    return success;
+    LOG_BOOL_RETURN(save_db_as(_filename));
 }
 
 bool PicsouModelService::save_db_as(QString filename)
 {
     LOG_IN("filename="<<filename);
-    bool success;
-    QJsonObject json;
-    QByteArray json_data;
-    QFile f(filename);
-
     if(!is_db_opened()) {
-        success=false; goto end;
+        LOG_BOOL_RETURN(false);
     }
-
+    QJsonObject json;
     if(!_db->write(json)) {
-        success=false; goto end;
+        LOG_BOOL_RETURN(false);
     }
-
+    QFile f(filename);
     if(!f.open(QIODevice::WriteOnly)) {
-        success=false; goto end;
+        LOG_BOOL_RETURN(false);
     }
-
-    json_data=QJsonDocument(json).toJson();
-
+    QByteArray json_data=QJsonDocument(json).toJson();
     if(f.write(json_data)!=json_data.size()) {
-        success=false; goto end;
+        LOG_BOOL_RETURN(false);
     }
-
     f.close();
     _filename=filename;
     _is_db_modified=false;
-    success=true;
-end:
-    LOG_OUT("success="<<success);
-    return success;
+    LOG_BOOL_RETURN(true);
 }
 
 bool PicsouModelService::close_db()
 {
     LOG_IN_VOID();
-    bool success=false;
-
     if(is_db_opened()) {
         _filename.clear();
         _is_db_modified=false;
         delete _db;
-        success=true;
+        LOG_BOOL_RETURN(true);
     }
-    LOG_OUT("success="<<success);
-    return success;
+    LOG_BOOL_RETURN(false);
 }
 
 bool PicsouModelService::is_db_opened()
 {
     LOG_IN_VOID();
-    bool is_opened=(!(_db.isNull()));
-    LOG_OUT("is_opened="<<is_opened);
-    return is_opened;
+    LOG_BOOL_RETURN(!(_db.isNull()));
 }
 
 OperationCollection PicsouModelService::load_ops(ImportExportFormat fmt,
@@ -204,20 +162,17 @@ OperationCollection PicsouModelService::load_ops(ImportExportFormat fmt,
     LOG_IN("fmt="<<fmt<<",filename="<<filename);
     QFile f(filename);
     OperationCollection ops;
-
     if(!f.open(QIODevice::ReadOnly)) {
-        goto end;
+        LOG_WARNING("-> failed to open file "<<f);
+        return ops;
     }
-
     switch (fmt) {
         case CSV: ops=csv_load_ops(f); break;
         case XML: ops=xml_load_ops(f); break;
         case JSON: ops=json_load_ops(f); break;
     }
-
     f.close();
-end:
-    LOG_OUT("ops.length="<<ops.length());
+    LOG_INFO("-> ops.length="<<ops.length());
     return ops;
 }
 
@@ -226,30 +181,25 @@ bool PicsouModelService::dump_ops(ImportExportFormat fmt,
                                   OperationCollection ops)
 {
     LOG_IN("fmt="<<fmt<<",filename="<<filename<<"ops.length="<<ops.length());
-    bool success=false;
     QFile f(filename);
-
     if(!f.open(QIODevice::WriteOnly)) {
-        success=false; goto end;
+        LOG_BOOL_RETURN(false);
     }
-
+    bool success=false;
     switch (fmt) {
     case CSV: success=csv_dump_ops(f, ops); break;
     case XML: success=xml_dump_ops(f, ops); break;
     case JSON: success=json_dump_ops(f, ops); break;
     }
-
     f.close();
-end:
-    LOG_OUT("success="<<bool2str(success));
-    return success;
+    LOG_BOOL_RETURN(success);
 }
 
 UserPtr PicsouModelService::find_user(QUuid id) const
 {
     LOG_IN("id="<<id);
     UserPtr user=_db->find_user(id);
-    LOG_OUT("user="<<user);
+    LOG_INFO("-> user="<<user);
     return user;
 }
 
@@ -257,7 +207,7 @@ AccountPtr PicsouModelService::find_account(QUuid id) const
 {
     LOG_IN("id="<<id);
     AccountPtr account=_db->find_account(id);
-    LOG_OUT("account="<<account);
+    LOG_INFO("-> account="<<account);
     return account;
 }
 
@@ -266,7 +216,7 @@ void PicsouModelService::notify_ui()
     LOG_IN_VOID();
     _is_db_modified=true;
     emit updated(_db);
-    LOG_OUT_VOID();
+    LOG_VOID_RETURN();
 }
 
 OperationCollection PicsouModelService::xml_load_ops(QFile &f)
@@ -281,40 +231,44 @@ OperationCollection PicsouModelService::xml_load_ops(QFile &f)
     QXmlStreamReader xml(&f);
     QXmlStreamAttributes attrs;
     QXmlStreamReader::TokenType token;
-
     while (!xml.atEnd()) {
-
         switch (token=xml.readNext()) {
         case QXmlStreamReader::Invalid:
-            goto error;
+            LOG_WARNING("-> XML parser failed to parse input (token="<<token<<").");
+            ops.clear();
+            return ops;
         case QXmlStreamReader::StartElement:
             if(xml.name()=="operation") {
                 attrs=xml.attributes();
-
                 amount=attrs.value(XML_ATTR_AMOUNT).toDouble(&ok);
                 if(!ok) {
-                    LOG_WARNING("XML import parsing error: invalid amount.");
-                    goto error;
+                    LOG_WARNING("-> XML import parsing error: invalid amount.");
+                    ops.clear();
+                    return ops;
                 }
                 y=attrs.value(XML_ATTR_YEAR).toInt(&ok);
                 if(!ok) {
-                    LOG_WARNING("XML import parsing error: invalid year.");
-                    goto error;
+                    LOG_WARNING("-> XML import parsing error: invalid year.");
+                    ops.clear();
+                    return ops;
                 }
                 m=attrs.value(XML_ATTR_MONTH).toInt(&ok);
                 if(!ok) {
-                    LOG_WARNING("XML import parsing error: invalid month.");
-                    goto error;
+                    LOG_WARNING("-> XML import parsing error: invalid month.");
+                    ops.clear();
+                    return ops;
                 }
                 d=attrs.value(XML_ATTR_DAY).toInt(&ok);
                 if(!ok) {
-                    LOG_WARNING("XML import parsing error: invalid day.");
-                    goto error;
+                    LOG_WARNING("-> XML import parsing error: invalid day.");
+                    ops.clear();
+                    return ops;
                 }
                 date=QDate(y, m, d);
                 if(!date.isValid()) {
-                    LOG_WARNING("import parsing error: invalid date.");
-                    goto error;
+                    LOG_WARNING("-> import parsing error: invalid date.");
+                    ops.clear();
+                    return ops;
                 }
                 op=OperationPtr(new Operation(amount,
                                               QDate(y, m, d),
@@ -326,19 +280,17 @@ OperationCollection PicsouModelService::xml_load_ops(QFile &f)
                 ops.append(op);
             }
             break;
-        default: break;
+        default:
+            break;
         };
 
     }
-
-    if(!xml.hasError()) {
-        goto end;
+    if(xml.hasError()) {
+        LOG_WARNING("-> XML parser failed to parse input.");
+        ops.clear();
+        return ops;
     }
-
-error:
-    ops.clear();
-end:
-    LOG_OUT("ops.length="<<ops.length());
+    LOG_INFO("-> ops.length="<<ops.length());
     return ops;
 }
 
@@ -352,17 +304,14 @@ OperationCollection PicsouModelService::csv_load_ops(QFile &f)
     OperationPtr op;
     int y=0, m=0, d=0, idx;
     OperationCollection ops;
-    QByteArray::const_iterator c;
     QString buffer, budget, recipient, payment_method;
-
     while(!f.atEnd()) {
         line=f.readLine().trimmed();
         if(line.length()>0) {
             idx=0;
             instr=false;
-
-            for(c=line.constBegin(); c!=line.constEnd(); c++) {
-                switch (*c) {
+            for(auto c : line) {
+                switch (c) {
                 case '"':
                     instr=!instr;
                     break;
@@ -372,29 +321,33 @@ OperationCollection PicsouModelService::csv_load_ops(QFile &f)
                         case 0: /* year */
                             y=buffer.toInt(&ok);
                             if(!ok) {
-                                LOG_WARNING("CSV import parsing error: invalid year.");
-                                goto error;
+                                LOG_WARNING("-> CSV import parsing error: invalid year.");
+                                ops.clear();
+                                return ops;
                             }
                             break;
                         case 1: /* month */
                             m=buffer.toInt(&ok);
                             if(!ok) {
-                                LOG_WARNING("CSV import parsing error: invalid month.");
-                                goto error;
+                                LOG_WARNING("-> CSV import parsing error: invalid month.");
+                                ops.clear();
+                                return ops;
                             }
                             break;
                         case 2: /* day */
                             d=buffer.toInt(&ok);
                             if(!ok) {
-                                LOG_WARNING("CSV import parsing error: invalid day.");
-                                goto error;
+                                LOG_WARNING("-> CSV import parsing error: invalid day.");
+                                ops.clear();
+                                return ops;
                             }
                             break;
                         case 3: /* amount */
                             amount=buffer.toDouble(&ok);
                             if(!ok) {
-                                LOG_WARNING("CSV import parsing error: invalid amount.");
-                                goto error;
+                                LOG_WARNING("-> CSV import parsing error: invalid amount.");
+                                ops.clear();
+                                return ops;
                             }
                             break;
                         case 4: /* budget */
@@ -412,14 +365,15 @@ OperationCollection PicsouModelService::csv_load_ops(QFile &f)
                     }
                     break;
                 default:
-                    buffer.append(*c);
+                    buffer.append(c);
                 }
             }
             if(!payment_method.isNull()) {
                 date=QDate(y, m, d);
                 if(!date.isValid()) {
-                    LOG_WARNING("CSV import parsing error: invalid date.");
-                    goto error;
+                    LOG_WARNING("-> CSV import parsing error: invalid date.");
+                    ops.clear();
+                    return ops;
                 }
                 op=OperationPtr(new Operation(amount,
                                               QDate(y, m, d),
@@ -433,11 +387,7 @@ OperationCollection PicsouModelService::csv_load_ops(QFile &f)
             }
         }
     }
-    goto end;
-error:
-    ops.clear();
-end:
-    LOG_OUT("ops.length="<<ops.length());
+    LOG_INFO("-> ops.length="<<ops.length());
     return ops;
 }
 
@@ -448,7 +398,6 @@ OperationCollection PicsouModelService::json_load_ops(QFile &f)
     OperationPtr op;
     QJsonDocument doc;
     OperationCollection ops;
-
     while(!f.atEnd()) {
         line=f.readLine().trimmed();
         if(line.length()>0) {
@@ -458,23 +407,19 @@ OperationCollection PicsouModelService::json_load_ops(QFile &f)
                 ops.append(op);
                 if(!op->read(doc.object())) {
                     LOG_WARNING("JSON import parsing error: failed to read operation.");
-                    goto error;
+                    ops.clear();
+                    return ops;
                 }
             }
         }
     }
-    goto end;
-error:
-    ops.clear();
-end:
-    LOG_OUT("ops.length="<<ops.length());
+    LOG_INFO("-> ops.length="<<ops.length());
     return ops;
 }
 
 bool PicsouModelService::xml_dump_ops(QFile &f, OperationCollection ops)
 {
     LOG_IN("&f="<<&f<<",ops.length="<<ops.length());
-    bool success;
     QXmlStreamWriter xml(&f);
     xml.writeStartDocument("1.0", true);
     xml.writeStartElement("operations");
@@ -491,16 +436,12 @@ bool PicsouModelService::xml_dump_ops(QFile &f, OperationCollection ops)
     }
     xml.writeEndElement();
     xml.writeEndDocument();
-    success=true;
-//end:
-    LOG_OUT("success="<<bool2str(success));
-    return success;
+    LOG_BOOL_RETURN(true);
 }
 
 bool PicsouModelService::csv_dump_ops(QFile &f, OperationCollection ops)
 {
     LOG_IN("&f="<<&f<<",ops.length="<<ops.length());
-    bool success;
     foreach (OperationPtr op, ops.list()) {
         f.write(QString("%0,%1,%2,%3,\"%4\",\"%5\",\"%6\",\"%7\"\n").arg(
                     QString::number(op->date().year()),
@@ -513,27 +454,20 @@ bool PicsouModelService::csv_dump_ops(QFile &f, OperationCollection ops)
                     op->description().replace('"', '\'').replace('\n', ';'))
                 .toUtf8());
     }
-    success=true;
-//end:
-    LOG_OUT("success="<<success);
-    return success;
+    LOG_BOOL_RETURN(true);
 }
 
 bool PicsouModelService::json_dump_ops(QFile &f, OperationCollection ops)
 {
     LOG_IN("&f="<<&f<<",ops.length="<<ops.length());
-    bool success;
     QJsonObject obj;
     foreach (OperationPtr op, ops.list()) {
         if(!op->write(obj)) {
             f.write(tr("-- [export error] --").toUtf8());
-            success=false; goto end;
+            LOG_BOOL_RETURN(false);
         }
         f.write(QJsonDocument(obj).toJson(QJsonDocument::Compact));
         f.write("\n");
     }
-    success=true;
-end:
-    LOG_OUT("success="<<success);
-    return success;
+    LOG_BOOL_RETURN(true);
 }

@@ -1,12 +1,6 @@
 #include "qcryptomodule.h"
-
-#ifndef USE_WIN_CRYPTO_API
-#   include <gcrypt.h>
-#else
-#   error   not implemented !
-#endif
-
 #include "utils/macro.h"
+#include <gcrypt.h>
 
 QCryptoModule::~QCryptoModule()
 {
@@ -21,27 +15,23 @@ QCryptoModule::QCryptoModule() :
 
 bool QCryptoModule::initialize(size_t sec_mem_pool_size)
 {
-    bool success=false;
-
+    LOG_IN("sec_mem_pool_size");
     if(gcry_check_version(GCRYPT_VERSION)==nullptr) {
-        goto end;
+        LOG_BOOL_RETURN(false);
     }
     if(!wrap(gcry_control(GCRYCTL_SUSPEND_SECMEM_WARN))) {
-        goto end;
+        LOG_BOOL_RETURN(false);
     }
     if(!wrap(gcry_control(GCRYCTL_INIT_SECMEM, sec_mem_pool_size, 0))) {
-        goto end;
+        LOG_BOOL_RETURN(false);
     }
     if(!wrap(gcry_control(GCRYCTL_RESUME_SECMEM_WARN))) {
-        goto end;
+        LOG_BOOL_RETURN(false);
     }
     if(!wrap(gcry_control(GCRYCTL_INITIALIZATION_FINISHED, 0))) {
-        goto end;
+        LOG_BOOL_RETURN(false);
     }
-
-    success=true;
-end:
-    return success;
+    LOG_BOOL_RETURN(true);
 }
 
 void QCryptoModule::terminate()

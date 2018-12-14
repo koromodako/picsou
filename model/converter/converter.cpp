@@ -12,15 +12,14 @@ void convert_100_110(QJsonDocument *doc)
 {
     LOG_IN("doc="<<doc);
     QJsonArray user_ary, account_ary, new_user_ary, new_accout_ary;
-    QJsonObject db, user, account;
-    QJsonArray::iterator user_it, account_it;
+    QJsonObject db;
     db=doc->object();
     user_ary=db[KW_DB_USERS].toArray();
-    for(user_it=user_ary.begin();user_it!=user_ary.end();user_it++) {
-        user=user_it->toObject();
+    for(auto const user_ref : user_ary) {
+        QJsonObject user=user_ref.toObject();
         account_ary=user[KW_USR_ACCOUNTS].toArray();
-        for(account_it=account_ary.begin();account_it!=account_ary.end();account_it++) {
-            account=account_it->toObject();
+        for(auto const account_ref : account_ary) {
+            QJsonObject account=account_ref.toObject();
             account[KW_ACT_NOTES]="";
             new_accout_ary.append(account);
         }
@@ -30,32 +29,28 @@ void convert_100_110(QJsonDocument *doc)
     db[KW_DB_VERSION]=SemVer(1,1,0).to_str();
     db[KW_DB_USERS]=new_user_ary;
     doc->setObject(db);
-    LOG_OUT("");
+    LOG_VOID_RETURN();
 }
 
 bool Converter::convert(QJsonDocument *doc, SemVer from)
 {
     LOG_IN("doc="<<doc<<",from="<<from);
     /* initialize convesion list */
-    bool success;
-    QList<QPair<SemVer, db_converter_t>>::iterator it;
+    bool convert;
     QList<QPair<SemVer, db_converter_t>> converter_list;
     converter_list.append(QPair<SemVer, db_converter_t>(SemVer(1, 0, 0), convert_100_110));
     /* apply conversions */
     LOG_DEBUG("attempting conversion.");
-    for(it=converter_list.begin();it!=converter_list.end();it++) {
-        LOG_DEBUG(it->first.to_str() << " == " << from.to_str() << " : " << (it->first==from));
-        if(it->first==from) {
-            while(it!=converter_list.end()) {
-                LOG_DEBUG("applying converter for version: " << it->first.to_str());
-                it->second(doc);
-                it++;
-            }
-            success=true; goto end;
+    convert = false;
+    for(auto it : converter_list) {
+        LOG_DEBUG(it.first.to_str() << " == " << from.to_str() << " : " << (it.first==from));
+        if(it.first==from) {
+            convert = true;
+        }
+        if(convert) {
+            LOG_DEBUG("applying converter for version: " << it.first.to_str());
+            it.second(doc);
         }
     }
-    success=false;
-end:
-    LOG_OUT("success="<<bool2str(success));
-    return success;
+    LOG_BOOL_RETURN(convert);
 }

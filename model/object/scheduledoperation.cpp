@@ -1,4 +1,5 @@
 #include "scheduledoperation.h"
+#include "utils/macro.h"
 
 #define KEYS (QStringList() << KW_SOP_FREQ)
 
@@ -74,18 +75,16 @@ ScheduledOperation::~ScheduledOperation()
 
 bool ScheduledOperation::read(const QJsonObject &json)
 {
-    /**/
+    LOG_IN("<QJsonObject>")
     JSON_CHECK_KEYS(KEYS);
-    /**/
     _freq=Frequency(qRound(json[KW_SOP_FREQ].toDouble()));
     set_valid(Operation::read(json));
-end:
-    return valid();
+    LOG_BOOL_RETURN(valid());
 }
 
 bool ScheduledOperation::write(QJsonObject &json) const
 {
-    /**/
+    LOG_IN("<QJsonObject>")
     json[KW_SOP_FREQ]=_freq;
-    return Operation::write(json);
+    LOG_BOOL_RETURN(Operation::write(json));
 }

@@ -1,6 +1,8 @@
 #include "usereditor.h"
 #include "ui_usereditor.h"
 
+#include "utils/macro.h"
+
 UserEditor::~UserEditor()
 {
     delete ui;
@@ -44,22 +46,24 @@ UserEditor::UserEditor(QString *username,
 
 #define ERASE_LINE_EDIT(le) \
     (le)->selectAll(); (le)->del()
-#define SECMEMCPY(dst, src) \
-    do{ \
-        QByteArray ba; \
-        ba=(src)->text().toUtf8(); \
-        if(ba.length()>0) { \
-            ERASE_LINE_EDIT(src); \
-            if(!(dst)->resize(ba.length())) { \
-                goto exception; \
-            } \
-            memcpy((dst)->data(), ba.constData(), ba.length()); \
-            for(int i=0; i<ba.length(); i++) { \
-                ba[i]=0; \
-            } \
-            ba.clear(); \
-        } \
-    } while(0)
+
+bool secmemcpy(QSecureMemory *dst, QLineEdit *src) {
+    QByteArray ba;
+    ba=src->text().toUtf8();
+    size_t bal = static_cast<size_t>(ba.length());
+    if(bal>0) {
+        ERASE_LINE_EDIT(src);
+        if(!dst->resize(bal)) {
+            LOG_BOOL_RETURN(false);
+        }
+        memcpy(dst->data(), ba.constData(), bal);
+        for(int i=0; i<ba.length(); i++) {
+            ba[i]=0;
+        }
+        ba.clear();
+    }
+    LOG_BOOL_RETURN(true);
+}
 
 void UserEditor::accept()
 {
@@ -69,19 +73,17 @@ void UserEditor::accept()
         ui->error->setVisible(true);
         return;
     }
-
     ERASE_LINE_EDIT(ui->repeat_new_pwd);
-    SECMEMCPY(_old_pwd, ui->old_pwd);
-    SECMEMCPY(_new_pwd, ui->new_pwd);
+    if(!secmemcpy(_old_pwd, ui->old_pwd)) {
+        QDialog::reject();
+        return;
+    }
+    if(!secmemcpy(_new_pwd, ui->new_pwd)) {
+        QDialog::reject();
+        return;
+    }
     (*_username)=ui->username->text();
     QDialog::accept();
-    goto end;
-
-exception:
-    QDialog::reject();
-end:
-    return;
 }
 
-#undef SECMEMCPY
 #undef ERASE_LINE_EDIT

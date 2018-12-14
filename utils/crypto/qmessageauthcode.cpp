@@ -1,12 +1,6 @@
 #include "qmessageauthcode.h"
-
-#ifndef USE_WIN_CRYPTO_API
-#   include <gcrypt.h>
-#else
-#   error   not implemented !
-#endif
-
 #include "utils/macro.h"
+#include <gcrypt.h>
 
 QMessageAuthCode::~QMessageAuthCode()
 {
@@ -22,8 +16,6 @@ QMessageAuthCode::QMessageAuthCode(MACAlgorithm algo,
     QCryptoWrapper()
 {
     int mac_algo;
-    uint mac_flags;
-
     switch (algo) {
         case HMAC_SHA256: mac_algo=GCRY_MAC_HMAC_SHA256; break;
         case HMAC_SHA224: mac_algo=GCRY_MAC_HMAC_SHA224; break;
@@ -64,30 +56,21 @@ QMessageAuthCode::QMessageAuthCode(MACAlgorithm algo,
         case POLY1305_SERPENT: mac_algo=GCRY_MAC_POLY1305_SERPENT; break;
         case POLY1305_SEED: mac_algo=GCRY_MAC_POLY1305_SEED; break;
     }
-
-    mac_flags=0;
+    uint mac_flags=0;
     mac_flags|=(IS_FLAG_SET(flags, SECURE)? GCRY_MAC_FLAG_SECURE: 0);
-
     if(!wrap(gcry_mac_open(&_hd, mac_algo, mac_flags, nullptr))) {
-        goto end;
+        gcry_mac_close(_hd); _hd=nullptr;
+        LOG_VOID_RETURN();
     }
-
     if(!wrap(gcry_mac_setkey(_hd, key.const_data(), key.length()))){
-        goto failed;
+        gcry_mac_close(_hd); _hd=nullptr;
+        LOG_VOID_RETURN();
     }
-
     if(!wrap(gcry_mac_setiv(_hd, iv.const_data(), iv.length()))) {
-        goto failed;
+        gcry_mac_close(_hd); _hd=nullptr;
+        LOG_VOID_RETURN();
     }
-
-    goto end;
-
-failed:
-    gcry_mac_close(_hd);
-    _hd=nullptr;
-
-end:
-    return;
+    LOG_VOID_RETURN();
 }
 
 bool QMessageAuthCode::valid()
@@ -97,18 +80,13 @@ bool QMessageAuthCode::valid()
 
 bool QMessageAuthCode::reset(const QSecureMemory iv)
 {
-    bool success=false;
-
     if(!wrap(gcry_mac_reset(_hd))) {
-        goto end;
+        LOG_BOOL_RETURN(false);
     }
     if(!wrap(gcry_mac_setiv(_hd, iv.const_data(), iv.length()))) {
-        goto end;
+        LOG_BOOL_RETURN(false);
     }
-
-    success=true;
-end:
-    return success;
+    LOG_BOOL_RETURN(true);
 }
 
 bool QMessageAuthCode::update(const QSecureMemory data)
@@ -126,14 +104,11 @@ bool QMessageAuthCode::digest(QSecureMemory mac)
     size_t buflen = mac.length();
 
     if(!wrap(gcry_mac_read(_hd, mac.data(), &buflen))) {
-        goto failed;
+        LOG_BOOL_RETURN(false);
     }
 
     if(buflen<mac.length()) {
         mac.resize(buflen);
     }
-
-    return true;
-failed:
-    return false;
+    LOG_BOOL_RETURN(true);
 }

@@ -12,26 +12,22 @@ QCoreApplication* createApplication(int &argc, char *argv[])
 {
     LOG_IN("argc="<<argc<<",argv="<<argv);
     QCoreApplication *app=nullptr;
-
     for(int i=1; i < argc; ++i) {
         if(!qstrcmp(argv[i], "--no-gui")) {
             app=new QCoreApplication(argc, argv);
-            goto end;
+            LOG_INFO("-> app[console]="<<app);
+            return app;
         }
     }
-
     QApplication::setStyle(QStyleFactory::create("Fusion"));
-
     app=new QApplication(argc, argv);
-end:
-    LOG_OUT("app="<<app);
+    LOG_INFO("-> app[gui]="<<app);
     return app;
 }
 
 int main(int argc, char *argv[])
 {
     LOG_IN("argc="<<argc<<",argv="<<argv);
-    int status_code;
     QScopedPointer<QCoreApplication> app(createApplication(argc, argv));
 
     QTranslator qtTranslator;
@@ -50,10 +46,8 @@ int main(int argc, char *argv[])
 
     if(!papp.initialize()) {
         LOG_CRITICAL("failed to initialize application.");
-        status_code=1;
-        goto end;
+        return 1;
     }
-
     if(qobject_cast<QApplication *>(app.data())) {
         /* start GUI version */
         papp.ui_svc()->show_mainwindow();
@@ -61,12 +55,9 @@ int main(int argc, char *argv[])
        /* start non-GUI version */
         LOG_INFO("test");
         LOG_CRITICAL("no CLI implemented yet...");
-        status_code=1;
-        goto end;
+        return 1;
     }
-
-    status_code=app->exec();
-end:
-    LOG_OUT("status_code="<<status_code);
-    return status_code;
+    int rcode=app->exec();
+    LOG_INFO("-> rcode="<<rcode);
+    return rcode;
 }

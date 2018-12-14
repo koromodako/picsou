@@ -4,7 +4,7 @@
 PicsouCryptoService::~PicsouCryptoService()
 {
     LOG_IN_VOID();
-    LOG_OUT_VOID();
+    LOG_VOID_RETURN();
 }
 
 PicsouCryptoService::PicsouCryptoService(PicsouApplication *papp) :
@@ -12,20 +12,18 @@ PicsouCryptoService::PicsouCryptoService(PicsouApplication *papp) :
     _crypto_mod()
 {
     LOG_IN_VOID();
-    LOG_OUT_VOID();
+    LOG_VOID_RETURN();
 }
 
 bool PicsouCryptoService::initialize()
 {
     LOG_IN_VOID();
-    bool success=_crypto_mod.initialize();
-    LOG_OUT("success="<<bool2str(success));
-    return success;
+    LOG_BOOL_RETURN(_crypto_mod.initialize());
 }
 
 void PicsouCryptoService::terminate()
 {
     LOG_IN_VOID();
     _crypto_mod.terminate();
-    LOG_OUT_VOID();
+    LOG_VOID_RETURN();
 }

@@ -1,4 +1,5 @@
 #include "account.h"
+#include "utils/macro.h"
 
 #include <QSet>
 #include <QJsonArray>
@@ -220,6 +221,7 @@ QStringList Account::payment_methods_str(bool sorted) const
 
 bool Account::read(const QJsonObject &json)
 {
+    LOG_IN("<QJsonObject>")
     JSON_CHECK_KEYS(KEYS);
     /**/
     _name=json[KW_ACT_NAME].toString();
@@ -232,23 +234,19 @@ bool Account::read(const QJsonObject &json)
                    _ops, Operation, this);
     /**/
     set_valid();
-end:
-    return valid();
+    LOG_BOOL_RETURN(valid());
 }
 
 bool Account::write(QJsonObject &json) const
 {
-    bool ok;
-    /**/
+    LOG_IN("<QJsonObject>")
     json[KW_ACT_NAME]=_name;
     json[KW_ACT_NOTES]=_notes;
     JSON_WRITE_LIST(json, KW_ACT_PAYMENT_METHODS, _payment_methods.values());
     JSON_WRITE_LIST(json, KW_ACT_SCHEDULED_OPS, _scheduled_ops.values());
     JSON_WRITE_LIST(json, KW_ACT_OPS, _ops.values());
     /**/
-    ok=true;
-end:
-    return ok;
+    LOG_BOOL_RETURN(true);
 }
 
 bool Account::operator <(const Account &other)

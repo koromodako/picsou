@@ -1,10 +1,6 @@
 #include "qsecurememory.h"
-
-#ifndef USE_WIN_CRYPTO_API
-#   include <gcrypt.h>
-#else
-#   error   not implemented !
-#endif
+#include "utils/macro.h"
+#include <gcrypt.h>
 
 #define FREE(buf) gcry_free((buf)); (buf)=nullptr
 
@@ -12,7 +8,7 @@ QSecureMemory::~QSecureMemory()
 {
     erase();
     FREE(_sbuf);
-    _length=-1;
+    _length=0;
 }
 
 QSecureMemory::QSecureMemory(size_t length) :
@@ -22,24 +18,23 @@ QSecureMemory::QSecureMemory(size_t length) :
     if(_length>0) {
         _sbuf=static_cast<uchar*>(gcry_malloc_secure(_length));
         if(_sbuf==nullptr) {
-            _length=-1; // malloc failed
+            _length=0; // malloc failed
         }
     }
 }
 
 QSecureMemory::QSecureMemory(const QByteArray ba) :
     _sbuf(nullptr),
-    _length(ba.length())
+    _length(static_cast<size_t>(ba.length()))
 {
     if(_length>0) {
         _sbuf=static_cast<uchar*>(gcry_malloc_secure(_length));
         if(_sbuf==nullptr) {
-            _length=-1; // malloc failed
-            goto end;
+            _length=0; // malloc failed
+            return;
         }
         memcpy(_sbuf, ba.constData(), _length);
     }
-end:
     return;
 }
 

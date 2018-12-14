@@ -5,12 +5,12 @@ PicsouAbstractService::~PicsouAbstractService()
 {
     LOG_IN_VOID();
     /* do not delete papp here, this class does not have the ownership */
-    LOG_OUT_VOID();
+    LOG_VOID_RETURN();
 }
 
 PicsouAbstractService::PicsouAbstractService(PicsouApplication *papp) :
     _papp(papp)
 {
     LOG_IN("papp="<<papp);
-    LOG_OUT_VOID();
+    LOG_VOID_RETURN();
 }

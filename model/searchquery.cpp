@@ -4,7 +4,7 @@
 SearchQuery::~SearchQuery()
 {
     LOG_IN_VOID();
-    LOG_OUT_VOID();
+    LOG_VOID_RETURN();
 }
 
 SearchQuery::SearchQuery(const QString &username,
@@ -40,51 +40,40 @@ SearchQuery::SearchQuery(const QString &username,
            <<",pms="<<pms);
     _description_re.optimize();
     _recipient_re.optimize();
-    LOG_OUT_VOID();
+    LOG_VOID_RETURN();
 }
 
 bool SearchQuery::accepts(const OperationPtr &op) const
 {
     LOG_IN("op="<<op);
-    bool accept=false;
     QDate date=op->date();
     Amount amount=qAbs(op->amount());
     QString recipient=op->recipient();
     QString description=op->description();
-
     if(date<_from||date>_to) {
         LOG_DEBUG("rejecting "<<op<<" because "<<date<<"<"<<_from<<"||"<<date<<">"<<_to);
-        goto end;
+        LOG_BOOL_RETURN(false);
     }
-
     if(amount<_min||amount>_max) {
         LOG_DEBUG("rejecting "<<op<<" because "<<amount.value()<<"<"<<_min.value()<<"||"<<amount.value()<<">"<<_max.value());
-        goto end;
+        LOG_BOOL_RETURN(false);
     }
-
     if(!_budgets.contains(op->budget())) {
         LOG_DEBUG("rejecting "<<op<<" because "<<op->budget()<<" not in "<<_budgets);
-        goto end;
+        LOG_BOOL_RETURN(false);
     }
-
     if(!_pms.contains(op->payment_method())) {
         LOG_DEBUG("rejecting "<<op<<" because "<<op->payment_method()<<" not in "<<_pms);
-        goto end;
+        LOG_BOOL_RETURN(false);
     }
-
     if(!recipient.isEmpty()&&!_recipient_re.match(recipient).hasMatch()) {
         LOG_DEBUG("rejecting "<<op<<" because \""<<recipient<<"\" is not matched by "<<_recipient_re.pattern());
-        goto end;
+        LOG_BOOL_RETURN(false);
     }
-
     if(!description.isEmpty()&&!_description_re.match(description).hasMatch()) {
         LOG_DEBUG("rejecting "<<op<<" because \""<<description<<"\" is not matched by "<<_description_re.pattern());
-        goto end;
+        LOG_BOOL_RETURN(false);
     }
-
     LOG_DEBUG("accepting " << op);
-    accept=true;
-end:
-    LOG_OUT("accept="<<bool2str(accept));
-    return accept;
+    LOG_BOOL_RETURN(true);
 }

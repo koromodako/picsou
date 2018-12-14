@@ -1,4 +1,5 @@
 #include "paymentmethod.h"
+#include "utils/macro.h"
 
 #define KEYS (QStringList() << KW_PM_NAME)
 
@@ -28,22 +29,18 @@ void PaymentMethod::update(const QString &name)
 
 bool PaymentMethod::read(const QJsonObject &json)
 {
-    /**/
+    LOG_IN("<QJsonObject>")
     JSON_CHECK_KEYS(KEYS);
-    /**/
     _name=json[KW_PM_NAME].toString();
-    /**/
     set_valid();
-end:
-    return valid();
+    LOG_BOOL_RETURN(valid());
 }
 
 bool PaymentMethod::write(QJsonObject &json) const
 {
-    /**/
+    LOG_IN("<QJsonObject>")
     json[KW_PM_NAME]=_name;
-    /**/
-    return true;
+    LOG_BOOL_RETURN(true);
 }
 
 bool PaymentMethod::operator <(const PaymentMethod &other)

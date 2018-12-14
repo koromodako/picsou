@@ -1,4 +1,5 @@
 #include "budget.h"
+#include "utils/macro.h"
 
 #define KEYS (QStringList() << KW_BGT_NAME \
                             << KW_BGT_AMOUNT \
@@ -39,7 +40,7 @@ Budget::~Budget()
 
 bool Budget::read(const QJsonObject &json)
 {
-    /**/
+    LOG_IN("<QJsonObject>")
     JSON_CHECK_KEYS(KEYS);
     /**/
     _name=json[KW_BGT_NAME].toString();
@@ -47,18 +48,17 @@ bool Budget::read(const QJsonObject &json)
     _description=json[KW_BGT_DESCRIPTION].toString();
     /**/
     set_valid();
-end:
-    return valid();
+    LOG_BOOL_RETURN(valid());
 }
 
 bool Budget::write(QJsonObject &json) const
 {
-    /**/
+    LOG_IN("<QJsonObject>")
     json[KW_BGT_NAME]=_name;
     json[KW_BGT_AMOUNT]=_amount;
     json[KW_BGT_DESCRIPTION]=_description;
     /**/
-    return true;
+    LOG_BOOL_RETURN(true);
 }
 
 bool Budget::operator <(const Budget &other)

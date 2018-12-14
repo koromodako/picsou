@@ -1,17 +1,12 @@
 #include "qsecurehash.h"
-
-#ifndef USE_WIN_CRYPTO_API
-#include <gcrypt.h>
-#else
-#   error   not implemented !
-#endif
-
 #include "utils/macro.h"
+#include <gcrypt.h>
 
 QSecureHash::~QSecureHash()
 {
-    gcry_md_close(_hd);
-    _hd=nullptr;
+    if(valid()) {
+        gcry_md_close(_hd);
+    }
 }
 
 QSecureHash::QSecureHash(HashAlgorithm algo,
@@ -19,8 +14,6 @@ QSecureHash::QSecureHash(HashAlgorithm algo,
                          const QSecureMemory key) :
     QCryptoWrapper()
 {
-    uint hash_flags;
-
     switch(algo) {
         case SHA1: _algo=GCRY_MD_SHA1; break;
         case RMD160: _algo=GCRY_MD_RMD160; break;
@@ -49,28 +42,20 @@ QSecureHash::QSecureHash(HashAlgorithm algo,
         case STRIBOG256: _algo=GCRY_MD_STRIBOG256; break;
         case STRIBOG512: _algo=GCRY_MD_STRIBOG512; break;
     }
-
-    hash_flags=0;
+    uint hash_flags=0;
     hash_flags|=(IS_FLAG_SET(flags, SECURE)? GCRY_MD_FLAG_SECURE: 0);
     hash_flags|=(IS_FLAG_SET(flags, HMAC)? GCRY_MD_FLAG_HMAC: 0);
     hash_flags|=(IS_FLAG_SET(flags, BUGEMU1)? GCRY_MD_FLAG_BUGEMU1: 0);
-
     if(!wrap(gcry_md_open(&_hd, _algo, hash_flags))) {
-        goto end;
+        LOG_VOID_RETURN();
     }
-
     if(IS_FLAG_SET(flags, HMAC)) {
         if(!wrap(gcry_md_setkey(_hd, key.const_data(), key.length()))) {
-            goto failed;
+            gcry_md_close(_hd);
+            LOG_VOID_RETURN();
         }
     }
-    goto end;
-
-failed:
-    gcry_md_close(_hd);
-    _hd=nullptr;
-end:
-    return;
+    LOG_VOID_RETURN();
 }
 
 bool QSecureHash::valid() const

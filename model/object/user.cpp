@@ -1,4 +1,5 @@
 #include "user.h"
+#include "utils/macro.h"
 
 #define KEYS (QStringList() << KW_USR_NAME \
                             << KW_USR_BUDGETS \
@@ -144,28 +145,22 @@ AccountPtr User::find_account(QUuid id) const
 
 bool User::read(const QJsonObject &json)
 {
+    LOG_IN("<QJsonObject>");
     JSON_CHECK_KEYS(KEYS);
-    /**/
     _name=json[KW_USR_NAME].toString();
     JSON_READ_LIST(json, KW_USR_BUDGETS, _budgets, Budget, this);
     JSON_READ_LIST(json, KW_USR_ACCOUNTS, _accounts, Account, this);
-    /**/
     set_valid();
-end:
-    return valid();
+    LOG_BOOL_RETURN(valid());
 }
 
 bool User::write(QJsonObject &json) const
 {
-    bool ok;
-    /**/
+    LOG_IN("<QJsonObject>");
     json[KW_USR_NAME]=_name;
     JSON_WRITE_LIST(json, KW_USR_BUDGETS, _budgets.values());
     JSON_WRITE_LIST(json, KW_USR_ACCOUNTS, _accounts.values());
-    /**/
-    ok=true;
-end:
-    return ok;
+    LOG_BOOL_RETURN(true);
 }
 
 

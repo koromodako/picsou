@@ -36,38 +36,30 @@ void OperationCollection::append(const OperationPtr &op)
     QHash<int, Amount>::iterator mit;
     QHash<QString, Amount>::iterator it;
     QHash<int, QHash<int, Amount>>::iterator yit;
-
     _ops.append(op);
-
     amount=op->amount();
-
     if(op->type()==Operation::DEBIT) {
         _total_debit+=amount;
     } else {
         _total_credit+=amount;
     }
-
     _balance+=amount;
-
     it=_expense_per_budget.find(op->budget());
     if(it!=_expense_per_budget.end()) {
         it.value()+=amount;
     } else {
         _expense_per_budget.insert(op->budget(), amount);
     }
-
     year=op->date().year();
     month=op->date().month();
     yit=_expense_per_ym.find(year);
     if(yit!=_expense_per_ym.end()) {
-
         mit=yit.value().find(month);
         if(mit!=yit.value().end()) {
             mit.value()+=amount;
         } else {
             yit.value().insert(month, amount);
         }
-
     } else {
         yit=_expense_per_ym.insert(year, QHash<int, Amount>());
         yit.value().insert(month, amount);
@@ -79,7 +71,6 @@ Amount OperationCollection::expense_per_ym(int year, int month)
     Amount amount=-1;
     QHash<int, Amount>::iterator mit;
     QHash<int, QHash<int, Amount>>::iterator yit;
-
     yit=_expense_per_ym.find(year);
     if(yit!=_expense_per_ym.end()) {
         if(month<1||month>12) {
@@ -94,7 +85,6 @@ Amount OperationCollection::expense_per_ym(int year, int month)
             }
         }
     }
-
     return amount;
 }
 

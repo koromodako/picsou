@@ -1,6 +1,6 @@
 #include "operation.h"
-
 #include "paymentmethod.h"
+#include "utils/macro.h"
 
 #define KEYS \
     (QStringList() << KW_OP_AMOUNT \
@@ -60,7 +60,7 @@ void Operation::update(Amount amount,
 
 bool Operation::read(const QJsonObject &json)
 {
-    /**/
+    LOG_IN("<QJsonObject>")
     JSON_CHECK_KEYS(KEYS);
     /**/
     _amount=json[KW_OP_AMOUNT].toDouble();
@@ -73,13 +73,12 @@ bool Operation::read(const QJsonObject &json)
     _payment_method=json[KW_OP_PAYMENT_METHOD].toString();
     /**/
     set_valid();
-end:
-    return valid();
+    LOG_BOOL_RETURN(valid());
 }
 
 bool Operation::write(QJsonObject &json) const
 {
-    /**/
+    LOG_IN("<QJsonObject>")
     json[KW_OP_AMOUNT]=_amount.value();
     json[KW_OP_DAY]=_date.day();
     json[KW_OP_MONTH]=_date.month();
@@ -89,5 +88,5 @@ bool Operation::write(QJsonObject &json) const
     json[KW_OP_DESCRIPTION]=_description;
     json[KW_OP_PAYMENT_METHOD]=_payment_method;
     /**/
-    return true;
+    LOG_BOOL_RETURN(true);
 }

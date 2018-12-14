@@ -19,7 +19,7 @@ MainWindow::~MainWindow()
     delete _search_ops_stats;
     delete _search_table;
     delete ui;
-    LOG_OUT_VOID();
+    LOG_VOID_RETURN();
 }
 
 MainWindow::MainWindow(PicsouUIService *ui_svc, QWidget *parent) :
@@ -106,35 +106,35 @@ MainWindow::MainWindow(PicsouUIService *ui_svc, QWidget *parent) :
 
 
     refresh(DB_CLOSED);
-    LOG_OUT_VOID();
+    LOG_VOID_RETURN();
 }
 
 void MainWindow::db_opened()
 {
     LOG_IN_VOID();
     refresh(DB_OPENED);
-    LOG_OUT_VOID();
+    LOG_VOID_RETURN();
 }
 
 void MainWindow::db_modified()
 {
     LOG_IN_VOID();
     refresh(DB_MODIFIED);
-    LOG_OUT_VOID();
+    LOG_VOID_RETURN();
 }
 
 void MainWindow::db_saved()
 {
     LOG_IN_VOID();
     refresh(DB_SAVED);
-    LOG_OUT_VOID();
+    LOG_VOID_RETURN();
 }
 
 void MainWindow::db_closed()
 {
     LOG_IN_VOID();
     refresh(DB_CLOSED);
-    LOG_OUT_VOID();
+    LOG_VOID_RETURN();
 }
 
 void MainWindow::op_canceled()
@@ -142,7 +142,7 @@ void MainWindow::op_canceled()
     LOG_IN_VOID();
     LOG_WARNING("Operation canceled.");
     ui->statusbar->showMessage(tr("Operation canceled."), TIMEOUT);
-    LOG_OUT_VOID();
+    LOG_VOID_RETURN();
 }
 
 void MainWindow::op_failed(QString error)
@@ -155,7 +155,7 @@ void MainWindow::op_failed(QString error)
                           error,
                           QMessageBox::Ok,
                           QMessageBox::Ok);
-    LOG_OUT_VOID();
+    LOG_VOID_RETURN();
 }
 
 void MainWindow::update_viewer()
@@ -166,17 +166,14 @@ void MainWindow::update_viewer()
     if(items.length()>0) {
         _update_viewer(items.first(), 0);
     }
-    LOG_OUT_VOID();
+    LOG_VOID_RETURN();
 }
 
 bool MainWindow::close()
 {
     LOG_IN_VOID();
-    bool success;
     ui_svc()->db_close();
-    success=QWidget::close();
-    LOG_OUT("success="<<bool2str(success));
-    return success;
+    LOG_BOOL_RETURN(QWidget::close());
 }
 
 void MainWindow::update_search()
@@ -184,14 +181,12 @@ void MainWindow::update_search()
     LOG_IN_VOID();
     OperationCollection ops;
     QStringList selected_budgets, selected_pms;
-
     foreach (QListWidgetItem *item, ui->budgets->selectedItems()) {
         selected_budgets << item->text();
     }
     foreach (QListWidgetItem *item, ui->pms->selectedItems()) {
         selected_pms << item->text();
     }
-
     _search_table->clear();
     ops=ui_svc()->search_operations(SearchQuery(ui->user_cb->currentText(),
                                                 ui->account_cb->currentText(),
@@ -207,7 +202,7 @@ void MainWindow::update_search()
         _search_table->refresh(ops);
         _search_ops_stats->refresh(ops);
     }
-    LOG_OUT_VOID();
+    LOG_VOID_RETURN();
 }
 
 void MainWindow::refresh_user_cb()
@@ -220,14 +215,14 @@ void MainWindow::refresh_user_cb()
         LOG_CRITICAL("Failed to update user combo box.");
         ui->statusbar->showMessage(tr("Failed to update user combo box."), TIMEOUT);
     }
-    LOG_OUT_VOID();
+    LOG_VOID_RETURN();
 }
 
 void MainWindow::refresh_account_cb(const QString &username)
 {
     LOG_IN("username="<<username);
     if(username.isEmpty()) {
-        return;
+        LOG_VOID_RETURN();
     }
     ui->account_cb->clear();
     if(!ui_svc()->populate_account_cb(username,
@@ -237,14 +232,14 @@ void MainWindow::refresh_account_cb(const QString &username)
         LOG_CRITICAL("Failed to update account combo box.");
         ui->statusbar->showMessage(tr("Failed to update account combo box."), TIMEOUT);
     }
-    LOG_OUT_VOID();
+    LOG_VOID_RETURN();
 }
 
 void MainWindow::refresh_budgets_list(const QString &username)
 {
     LOG_IN("username="<<username);
     if(username.isEmpty()) {
-        return;
+        LOG_VOID_RETURN();
     }
     ui->budgets->clear();
     if(!ui_svc()->populate_budgets_list(username,
@@ -258,14 +253,14 @@ void MainWindow::refresh_budgets_list(const QString &username)
         ui->search_btn->setEnabled(false);
     }
     ui->budgets->selectAll();
-    LOG_OUT_VOID();
+    LOG_VOID_RETURN();
 }
 
 void MainWindow::refresh_pms_list(const QString &account_name)
 {
     LOG_IN("account_name="<<account_name);
     if(account_name.isEmpty()) {
-        return;
+        LOG_VOID_RETURN();
     }
     ui->pms->clear();
     if(!ui_svc()->populate_pms_list(ui->user_cb->currentText(),
@@ -282,7 +277,7 @@ void MainWindow::refresh_pms_list(const QString &account_name)
         ui->search_btn->setEnabled(true);
     }
     ui->pms->selectAll();
-    LOG_OUT_VOID();
+    LOG_VOID_RETURN();
 }
 
 void MainWindow::_update_viewer(QTreeWidgetItem *item, int)
@@ -303,7 +298,7 @@ void MainWindow::_update_viewer(QTreeWidgetItem *item, int)
             ui->toolbar->addActions(_details_widget->actions());
         }
     }
-    LOG_OUT_VOID();
+    LOG_VOID_RETURN();
 }
 
 void MainWindow::refresh(MainWindow::State state)
@@ -352,7 +347,7 @@ void MainWindow::refresh(MainWindow::State state)
         ui->action_save->setEnabled(false);
         break;
     }
-    LOG_OUT_VOID();
+    LOG_VOID_RETURN();
 }
 
 void MainWindow::refresh_tree()
@@ -365,7 +360,7 @@ void MainWindow::refresh_tree()
         ui->statusbar->showMessage(tr("Failed to update database tree."), TIMEOUT);
     }
     ui->tree->expandToDepth(1);
-    LOG_OUT_VOID();
+    LOG_VOID_RETURN();
 }
 
 

@@ -1,10 +1,6 @@
 #include "qcryptowrapper.h"
-
-#ifndef USE_WIN_CRYPTO_API
-#   include <gcrypt.h>
-#else
-#   error   not implemented !
-#endif
+#include "utils/macro.h"
+#include <gcrypt.h>
 
 QCryptoWrapper::~QCryptoWrapper()
 {
@@ -20,11 +16,10 @@ QCryptoWrapper::QCryptoWrapper() :
 
 bool QCryptoWrapper::wrap(gcry_error_t err)
 {
-    bool success=true;
     if(err!=GPG_ERR_NO_ERROR) {
         _latest_error_source=QString(gcry_strsource(err));
         _latest_error_description=QString(gcry_strerror(err));
-        success=false;
+        return false;
     }
-    return success;
+    return true;
 }

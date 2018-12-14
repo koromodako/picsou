@@ -230,6 +230,7 @@ public:
             const QSecureMemory iv,
             const QSecureMemory ctr=QSecureMemory());
 
+    bool valid() const;
     bool reset(const QSecureMemory iv,
                const QSecureMemory ctr=QSecureMemory());
     bool add_auth_data(const QSecureMemory aad);

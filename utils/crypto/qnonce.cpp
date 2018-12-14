@@ -1,10 +1,6 @@
 #include "qnonce.h"
-
-#ifndef USE_WIN_CRYPTO_API
-#   include <gcrypt.h>
-#else
-#   error   not implemented !
-#endif
+#include "utils/macro.h"
+#include <gcrypt.h>
 
 QNonce::~QNonce()
 {

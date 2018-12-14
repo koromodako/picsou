@@ -1,17 +1,12 @@
 #include "qcipher.h"
-
-#ifndef USE_WIN_CRYPTO_API
-#   include <gcrypt.h>
-#else
-#   error   not implemented !
-#endif
-
 #include "utils/macro.h"
+#include <gcrypt.h>
 
 QCipher::~QCipher()
 {
-    gcry_cipher_close(_hd);
-    _hd=nullptr;
+    if(valid()) {
+        gcry_cipher_close(_hd);
+    }
 }
 
 QCipher::QCipher(CipherAlgorithm algo,
@@ -22,105 +17,93 @@ QCipher::QCipher(CipherAlgorithm algo,
                  const QSecureMemory ctr) :
     QCryptoWrapper()
 {
-    int cipher_algo;
-    int cipher_mode;
-    uint cipher_flags;
-
+    int calgo;
     switch (algo) {
-        case IDEA: cipher_algo=GCRY_CIPHER_IDEA; break;
-        case _3DES: cipher_algo=GCRY_CIPHER_3DES; break;
-        case CAST5: cipher_algo=GCRY_CIPHER_CAST5; break;
-        case BLOWFISH: cipher_algo=GCRY_CIPHER_BLOWFISH; break;
-        case SAFER_SK128: cipher_algo=GCRY_CIPHER_SAFER_SK128; break;
-        case DES_SK: cipher_algo=GCRY_CIPHER_DES_SK; break;
-        case AES: cipher_algo=GCRY_CIPHER_AES; break;
-        case AES192: cipher_algo=GCRY_CIPHER_AES192; break;
-        case AES256: cipher_algo=GCRY_CIPHER_AES256; break;
-        case TWOFISH: cipher_algo=GCRY_CIPHER_TWOFISH; break;
-        case TWOFISH128: cipher_algo=GCRY_CIPHER_TWOFISH128; break;
-        case ARCFOUR: cipher_algo=GCRY_CIPHER_ARCFOUR; break;
-        case DES: cipher_algo=GCRY_CIPHER_DES; break;
-        case SERPENT128: cipher_algo=GCRY_CIPHER_SERPENT128; break;
-        case SERPENT192: cipher_algo=GCRY_CIPHER_SERPENT192; break;
-        case SERPENT256: cipher_algo=GCRY_CIPHER_SERPENT256; break;
-        case RFC2268_40: cipher_algo=GCRY_CIPHER_RFC2268_40; break;
-        case RFC2268_128: cipher_algo=GCRY_CIPHER_RFC2268_128; break;
-        case SEED: cipher_algo=GCRY_CIPHER_SEED; break;
-        case CAMELLIA128: cipher_algo=GCRY_CIPHER_CAMELLIA128; break;
-        case CAMELLIA192: cipher_algo=GCRY_CIPHER_CAMELLIA192; break;
-        case CAMELLIA256: cipher_algo=GCRY_CIPHER_CAMELLIA256; break;
-        case SALSA20: cipher_algo=GCRY_CIPHER_SALSA20; break;
-        case SALSA20R12: cipher_algo=GCRY_CIPHER_SALSA20R12; break;
-        case GOST28147: cipher_algo=GCRY_CIPHER_GOST28147; break;
-        case CHACHA20: cipher_algo=GCRY_CIPHER_CHACHA20; break;
+        case IDEA: calgo=GCRY_CIPHER_IDEA; break;
+        case _3DES: calgo=GCRY_CIPHER_3DES; break;
+        case CAST5: calgo=GCRY_CIPHER_CAST5; break;
+        case BLOWFISH: calgo=GCRY_CIPHER_BLOWFISH; break;
+        case SAFER_SK128: calgo=GCRY_CIPHER_SAFER_SK128; break;
+        case DES_SK: calgo=GCRY_CIPHER_DES_SK; break;
+        case AES: calgo=GCRY_CIPHER_AES; break;
+        case AES192: calgo=GCRY_CIPHER_AES192; break;
+        case AES256: calgo=GCRY_CIPHER_AES256; break;
+        case TWOFISH: calgo=GCRY_CIPHER_TWOFISH; break;
+        case TWOFISH128: calgo=GCRY_CIPHER_TWOFISH128; break;
+        case ARCFOUR: calgo=GCRY_CIPHER_ARCFOUR; break;
+        case DES: calgo=GCRY_CIPHER_DES; break;
+        case SERPENT128: calgo=GCRY_CIPHER_SERPENT128; break;
+        case SERPENT192: calgo=GCRY_CIPHER_SERPENT192; break;
+        case SERPENT256: calgo=GCRY_CIPHER_SERPENT256; break;
+        case RFC2268_40: calgo=GCRY_CIPHER_RFC2268_40; break;
+        case RFC2268_128: calgo=GCRY_CIPHER_RFC2268_128; break;
+        case SEED: calgo=GCRY_CIPHER_SEED; break;
+        case CAMELLIA128: calgo=GCRY_CIPHER_CAMELLIA128; break;
+        case CAMELLIA192: calgo=GCRY_CIPHER_CAMELLIA192; break;
+        case CAMELLIA256: calgo=GCRY_CIPHER_CAMELLIA256; break;
+        case SALSA20: calgo=GCRY_CIPHER_SALSA20; break;
+        case SALSA20R12: calgo=GCRY_CIPHER_SALSA20R12; break;
+        case GOST28147: calgo=GCRY_CIPHER_GOST28147; break;
+        case CHACHA20: calgo=GCRY_CIPHER_CHACHA20; break;
     }
-
+    int cmode;
     switch (mode) {
-        case ECB: cipher_mode=GCRY_CIPHER_MODE_ECB; break;
-        case CFB: cipher_mode=GCRY_CIPHER_MODE_CFB; break;
-        case CFB8: cipher_mode=GCRY_CIPHER_MODE_CFB8; break;
-        case CBC: cipher_mode=GCRY_CIPHER_MODE_CBC; break;
-        case STREAM: cipher_mode=GCRY_CIPHER_MODE_STREAM; break;
-        case OFB: cipher_mode=GCRY_CIPHER_MODE_OFB; break;
-        case CTR: cipher_mode=GCRY_CIPHER_MODE_CTR; break;
-        case AESWRAP: cipher_mode=GCRY_CIPHER_MODE_AESWRAP; break;
-        case CCM: cipher_mode=GCRY_CIPHER_MODE_CCM; break;
-        case GCM: cipher_mode=GCRY_CIPHER_MODE_GCM; break;
-        case POLY1305: cipher_mode=GCRY_CIPHER_MODE_POLY1305; break;
-        case OCB: cipher_mode=GCRY_CIPHER_MODE_OCB; break;
-        //case XTS: cipher_mode=GCRY_CIPHER_MODE_XTS; break;
+        case ECB: cmode=GCRY_CIPHER_MODE_ECB; break;
+        case CFB: cmode=GCRY_CIPHER_MODE_CFB; break;
+        case CFB8: cmode=GCRY_CIPHER_MODE_CFB8; break;
+        case CBC: cmode=GCRY_CIPHER_MODE_CBC; break;
+        case STREAM: cmode=GCRY_CIPHER_MODE_STREAM; break;
+        case OFB: cmode=GCRY_CIPHER_MODE_OFB; break;
+        case CTR: cmode=GCRY_CIPHER_MODE_CTR; break;
+        case AESWRAP: cmode=GCRY_CIPHER_MODE_AESWRAP; break;
+        case CCM: cmode=GCRY_CIPHER_MODE_CCM; break;
+        case GCM: cmode=GCRY_CIPHER_MODE_GCM; break;
+        case POLY1305: cmode=GCRY_CIPHER_MODE_POLY1305; break;
+        case OCB: cmode=GCRY_CIPHER_MODE_OCB; break;
+        //case XTS: cmode=GCRY_CIPHER_MODE_XTS; break;
     }
-
-    cipher_flags=0;
+    uint cipher_flags=0;
     cipher_flags|=(IS_FLAG_SET(flags, SECURE)? GCRY_CIPHER_SECURE: 0);
     cipher_flags|=(IS_FLAG_SET(flags, ENABLE_SYNC)? GCRY_CIPHER_ENABLE_SYNC: 0);
     cipher_flags|=(IS_FLAG_SET(flags, CBC_CTS)? GCRY_CIPHER_CBC_CTS: 0);
     cipher_flags|=(IS_FLAG_SET(flags, CBC_MAC)? GCRY_CIPHER_CBC_MAC: 0);
-
-    if(!wrap(gcry_cipher_open(&_hd, cipher_algo, cipher_mode, cipher_flags))) {
-        goto end;
+    if(!wrap(gcry_cipher_open(&_hd, calgo, cmode, cipher_flags))) {
+        LOG_VOID_RETURN();
     }
-
     if(!wrap(gcry_cipher_setkey(_hd, key.const_data(), key.length()))) {
-        goto failed;
+        gcry_cipher_close(_hd); _hd=nullptr;
+        LOG_VOID_RETURN();
     }
-
     if(!wrap(gcry_cipher_setiv(_hd, iv.const_data(), iv.length()))) {
-        goto failed;
+        gcry_cipher_close(_hd); _hd=nullptr;
+        LOG_VOID_RETURN();
     }
-
     if(wrap(gcry_cipher_setctr(_hd, ctr.const_data(), ctr.length()))) {
-        goto failed;
+        gcry_cipher_close(_hd); _hd=nullptr;
+        LOG_VOID_RETURN();
     }
+    LOG_VOID_RETURN();
+}
 
-    goto end;
-
-failed:
-    gcry_cipher_close(_hd);
-    _hd=nullptr;
-end:
-    return;
+bool QCipher::valid() const
+{
+    return (_hd!=nullptr);
 }
 
 bool QCipher::reset(const QSecureMemory iv,
                     const QSecureMemory ctr)
 {
-    bool success=false;
-
+    LOG_IN("iv=*****,ctr=*****");
     if(!wrap(gcry_cipher_reset(_hd))) {
-        goto end;
+        LOG_BOOL_RETURN(false);
     }
-
     if(!wrap(gcry_cipher_setiv(_hd, iv.const_data(), iv.length()))) {
-        goto end;
+        LOG_BOOL_RETURN(false);
     }
-
     if(!wrap(gcry_cipher_setctr(_hd, ctr.const_data(), ctr.length()))) {
-        goto end;
+        LOG_BOOL_RETURN(false);
     }
-    success=true;
-end:
-    return success;
+    LOG_BOOL_RETURN(true);
 }
 
 bool QCipher::add_auth_data(const QSecureMemory aad)
@@ -142,37 +125,29 @@ bool QCipher::encrypt(QSecureMemory out,
                       const QSecureMemory in,
                       bool final)
 {
-    bool success=false;
-
+    LOG_IN("out,in,final");
     if(final) {
         if(!wrap(gcry_cipher_final(_hd))) {
-            goto end;
+            LOG_BOOL_RETURN(false);
         }
     }
-
-    success=wrap(gcry_cipher_encrypt(_hd,
-                                     out.data(), out.length(),
-                                     in.const_data(), in.length()));
-end:
-    return success;
+    LOG_BOOL_RETURN(wrap(gcry_cipher_encrypt(_hd,
+                                             out.data(), out.length(),
+                                             in.const_data(), in.length())));
 }
 
 bool QCipher::decrypt(QSecureMemory out,
                       const QSecureMemory in,
                       bool final)
 {
-    bool success=false;
-
+    LOG_IN("out,in,final");
     if(final) {
         if(!wrap(gcry_cipher_final(_hd))) {
-            goto end;
+            LOG_BOOL_RETURN(false);
         }
     }
 
-    success=wrap(gcry_cipher_decrypt(_hd,
-                                     out.data(), out.length(),
-                                     in.const_data(), in.length()));
-end:
-    return success;
+    LOG_BOOL_RETURN(wrap(gcry_cipher_decrypt(_hd,
+                                             out.data(), out.length(),
+                                             in.const_data(), in.length())));
 }
-

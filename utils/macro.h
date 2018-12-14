@@ -60,9 +60,17 @@
 #define LOG_CRITICAL(...)   LOG(qCritical, LOG_LVL_ERR, LOG_CLR_ERR, __VA_ARGS__)
 
 #define LOG_IN(...)         LOG_DEBUG("<- (" << __VA_ARGS__ << ")")
-#define LOG_OUT(...)        LOG_DEBUG("-> (" << __VA_ARGS__ << ")")
 #define LOG_IN_VOID(...)    LOG_DEBUG("<- (void)")
-#define LOG_OUT_VOID(...)   LOG_DEBUG("-> (void)")
+
+#define LOG_BOOL_RETURN(bool_expr) \
+    { \
+        bool result=(bool_expr); \
+        LOG_DEBUG("-> "<<bool2str(result)) \
+        return result; \
+    }
+#define LOG_VOID_RETURN(...) \
+    LOG_DEBUG("-> (void)") \
+    return
 
 #endif // MACRO_H
 

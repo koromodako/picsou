@@ -12,7 +12,7 @@ PicsouApplication::~PicsouApplication()
     delete _ui_svc;
     delete _model_svc;
     delete _crypto_svc;
-    LOG_OUT_VOID();
+    LOG_VOID_RETURN();
 }
 
 PicsouApplication::PicsouApplication(QObject *parent) :
@@ -23,29 +23,25 @@ PicsouApplication::PicsouApplication(QObject *parent) :
     _model_svc=new PicsouModelService(this);
     _crypto_svc=new PicsouCryptoService(this);
     _console_svc=new PicsouConsoleService(this);
-    LOG_OUT_VOID();
+    LOG_VOID_RETURN();
 }
 
 bool PicsouApplication::initialize()
 {
     LOG_IN_VOID();
-    bool success=false;
     if(!_crypto_svc->initialize()) {
-        goto end;
+        LOG_BOOL_RETURN(false);
     }
     if(!_model_svc->initialize()) {
-        goto end;
+        LOG_BOOL_RETURN(false);
     }
     if(!_console_svc->initialize()) {
-        goto end;
+        LOG_BOOL_RETURN(false);
     }
     if(!_ui_svc->initialize()) {
-        goto end;
+        LOG_BOOL_RETURN(false);
     }
-    success=true;
-end:
-    LOG_OUT("success="<<success);
-    return success;
+    LOG_BOOL_RETURN(true);
 }
 
 void PicsouApplication::terminate()
@@ -55,5 +51,5 @@ void PicsouApplication::terminate()
     _console_svc->terminate();
     _model_svc->terminate();
     _crypto_svc->terminate();
-    LOG_OUT_VOID();
+    LOG_VOID_RETURN();
 }

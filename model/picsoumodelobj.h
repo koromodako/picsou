@@ -52,12 +52,10 @@ private:
 #define JSON_CHECK_KEYS(list) \
     do { \
         QStringList keys=(list); \
-        for(QStringList::const_iterator i=keys.constBegin(); \
-            i!=keys.constEnd(); \
-            i++) { \
-            if(!json.contains(*i)) { \
+        for(auto i : keys) { \
+            if(!json.contains(i)) { \
                 set_valid(false); \
-                goto end; \
+                LOG_BOOL_RETURN(false); \
             } \
         } \
     } while(0)
@@ -71,7 +69,7 @@ private:
             if(!obj->read(array[i].toObject())) { \
                 /* TRACE */ \
                 set_valid(false); \
-                goto end; \
+                LOG_BOOL_RETURN(false); \
             } \
             (member).insert(obj->id(), QPointer<Class>(obj)); \
         } \
@@ -85,8 +83,7 @@ private:
             obj=QJsonObject(); \
             if(!(list)[i]->write(obj)) { \
                 /* TRACE */ \
-                ok=false; \
-                goto end; \
+                LOG_BOOL_RETURN(false); \
             } \
             array.append(obj); \
         } \

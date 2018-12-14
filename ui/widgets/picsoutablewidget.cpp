@@ -1,10 +1,12 @@
 #include "picsoutablewidget.h"
-
 #include "ui/items/picsoutableitem.h"
-
 #include <QHeaderView>
 
-
+static const int galpha=32;
+static const QIcon gdebit_icon=QIcon(":/resources/material-design/svg/trending-down.svg");
+static const QColor gdebit_color=QColor(5,5,5,galpha);
+static const QIcon gcredit_icon=QIcon(":/resources/material-design/svg/trending-up.svg");
+static const QColor gcredit_color=QColor(0,255,0,galpha);
 
 PicsouTableWidget::~PicsouTableWidget()
 {
@@ -50,7 +52,7 @@ void PicsouTableWidget::clear()
 
 void PicsouTableWidget::refresh(OperationCollection ops)
 {
-    int r=0, c, alpha=64;
+    int r=0, c;
     QIcon icon;
     QColor bgcolor;
     QList<QTableWidgetItem *> items;
@@ -63,12 +65,12 @@ void PicsouTableWidget::refresh(OperationCollection ops)
 
         switch (op->type()) {
         case Operation::DEBIT:
-            icon=QIcon(":/resources/material-design/svg/trending-down.svg");
-            bgcolor=QColor(255, 0, 0, alpha);
+            icon=gdebit_icon;
+            bgcolor=gdebit_color;
             break;
         case Operation::CREDIT:
-            icon=QIcon(":/resources/material-design/svg/trending-up.svg");
-            bgcolor=QColor(0, 255, 0, alpha);
+            icon=gcredit_icon;
+            bgcolor=gcredit_color;
             break;
         }
 

@@ -1,10 +1,6 @@
 #include "qpassphrase.h"
-
-#ifndef USE_WIN_CRYPTO_API
-#   include <gcrypt.h>
-#else
-#   error   not implemented !
-#endif
+#include "utils/macro.h"
+#include <gcrypt.h>
 
 QPassphrase::~QPassphrase()
 {
@@ -24,13 +20,10 @@ bool QPassphrase::derived(KDFAlgorithm algo,
                           QSecureMemory key,
                           ulong iterations)
 {
-    bool success=false;
     int kdf_algo;
-
     if(!valid()) {
-        goto end;
+        LOG_BOOL_RETURN(false);
     }
-
     switch (algo) {
         /*case SIMPLE_S2K: gcry_algo=GCRY_KDF_SIMPLE_S2K; break;*/
         case SALTED_S2K:
@@ -47,11 +40,9 @@ bool QPassphrase::derived(KDFAlgorithm algo,
             break;
     }
 
-    success=wrap(gcry_kdf_derive(const_data(), length(),
+    LOG_BOOL_RETURN(wrap(gcry_kdf_derive(const_data(), length(),
                                  kdf_algo, subalgo,
                                  salt.const_data(), salt.length(),
                                  iterations,
-                                 key.length(), key.data()));
-end:
-    return success;
+                                 key.length(), key.data())));
 }
