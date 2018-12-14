@@ -5,7 +5,7 @@ Keep track of your income and expenses.
 **Note: as long as you are not using a release (tagged commit), 
         it might not build or the app might be unstable.**
         
-Releases can be found [here](https://github.com/pdautry/picsou/releases).
+Releases can be found [here](https://github.com/koromodako/picsou/releases).
 
 ## Build
 
