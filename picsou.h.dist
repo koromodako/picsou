@@ -1,7 +1,7 @@
 #ifndef PICSOU_H
 #define PICSOU_H
 
-#define PICSOU_URL "https://github.com/pdautry/picsou"
+#define PICSOU_URL "https://github.com/koromodako/picsou"
 #define PICSOU_VERSION "%{VERSION}%"
 #define PICSOU_COMMIT "%{COMMIT}%"
 #define PICSOU_STATUS "%{STATUS}%"
