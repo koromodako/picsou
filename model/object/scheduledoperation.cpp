@@ -3,17 +3,6 @@
 
 const QString ScheduledOperation::KW_NAME="name";
 
-static const QStringList KEYS=(QStringList() << ScheduledOperation::KW_NAME
-                                             << Schedule::KW_START_YEAR
-                                             << Schedule::KW_START_MONTH
-                                             << Schedule::KW_START_DAY
-                                             << Schedule::KW_STOP_YEAR
-                                             << Schedule::KW_STOP_MONTH
-                                             << Schedule::KW_STOP_DAY
-                                             << Schedule::KW_ENDLESS
-                                             << Schedule::KW_FREQ_VALUE
-                                             << Schedule::KW_FREQ_UNIT);
-
 ScheduledOperation::ScheduledOperation(PicsouModelObj *parent) :
     Operation(parent)
 {
@@ -60,8 +49,18 @@ void ScheduledOperation::update(double amount,
 
 bool ScheduledOperation::read(const QJsonObject &json)
 {
-    LOG_IN("<QJsonObject>")
-    JSON_CHECK_KEYS(KEYS);
+    LOG_IN("<QJsonObject>");
+    static const QStringList keys=(QStringList()<<ScheduledOperation::KW_NAME
+                                                <<Schedule::KW_START_YEAR
+                                                <<Schedule::KW_START_MONTH
+                                                <<Schedule::KW_START_DAY
+                                                <<Schedule::KW_STOP_YEAR
+                                                <<Schedule::KW_STOP_MONTH
+                                                <<Schedule::KW_STOP_DAY
+                                                <<Schedule::KW_ENDLESS
+                                                <<Schedule::KW_FREQ_VALUE
+                                                <<Schedule::KW_FREQ_UNIT);
+    JSON_CHECK_KEYS(keys);
     _name=json[KW_NAME].toString();
     int start_y=json[Schedule::KW_START_YEAR].toInt();
     int start_m=json[Schedule::KW_START_MONTH].toInt();

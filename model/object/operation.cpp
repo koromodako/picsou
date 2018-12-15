@@ -11,15 +11,6 @@ const QString Operation::KW_RECIPIENT="recipient";
 const QString Operation::KW_DESCRIPTION="description";
 const QString Operation::KW_PAYMENT_METHOD="paymentMethod";
 
-static const QStringList KEYS=(QStringList() << Operation::KW_AMOUNT
-                                             << Operation::KW_DAY
-                                             << Operation::KW_MONTH
-                                             << Operation::KW_YEAR
-                                             << Operation::KW_BUDGET
-                                             << Operation::KW_RECIPIENT
-                                             << Operation::KW_DESCRIPTION
-                                             << Operation::KW_PAYMENT_METHOD);
-
 Operation::Operation(PicsouModelObj *parent) :
     PicsouModelObj(false, parent)
 {
@@ -63,8 +54,16 @@ void Operation::update(Amount amount,
 
 bool Operation::read(const QJsonObject &json)
 {
-    LOG_IN("<QJsonObject>")
-    JSON_CHECK_KEYS(KEYS);
+    LOG_IN("<QJsonObject>");
+    static const QStringList keys=(QStringList()<<Operation::KW_AMOUNT
+                                   <<Operation::KW_DAY
+                                   <<Operation::KW_MONTH
+                                   <<Operation::KW_YEAR
+                                   <<Operation::KW_BUDGET
+                                   <<Operation::KW_RECIPIENT
+                                   <<Operation::KW_DESCRIPTION
+                                   <<Operation::KW_PAYMENT_METHOD);
+    JSON_CHECK_KEYS(keys);
     /**/
     _amount=json[KW_AMOUNT].toDouble();
     _date=QDate(json[KW_YEAR].toInt(),

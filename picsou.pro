@@ -11,6 +11,8 @@ TEMPLATE = app
 
 CONFIG += console c++14
 
+DEFINES += COLORIZE
+
 # Run prebuild script
 system(./prebuild)
 # Force qmake to run

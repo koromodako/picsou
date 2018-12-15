@@ -3,8 +3,6 @@
 
 const QString PaymentMethod::KW_NAME="name";
 
-static const QStringList KEYS=(QStringList() << PaymentMethod::KW_NAME);
-
 PaymentMethod::PaymentMethod(PicsouModelObj *parent) :
     PicsouModelObj(false, parent)
 {
@@ -27,7 +25,8 @@ void PaymentMethod::update(const QString &name)
 bool PaymentMethod::read(const QJsonObject &json)
 {
     LOG_IN("<QJsonObject>")
-    JSON_CHECK_KEYS(KEYS);
+    static const QStringList keys=(QStringList() << PaymentMethod::KW_NAME);
+    JSON_CHECK_KEYS(keys);
     _name=json[KW_NAME].toString();
     set_valid();
     LOG_BOOL_RETURN(valid());

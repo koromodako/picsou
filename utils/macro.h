@@ -31,7 +31,7 @@ static const QString LOG_CLR_ERR="31";
               << (__func__)<<") - "; \
         debug.quote(); \
         debug << __VA_ARGS__ \
-              << "\x1b[0m";
+              << "\x1b[0m"; \
     }
 #else /* COLORIZE */
 #    define LOG(log_func, lvl, color, ...) \

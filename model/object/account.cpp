@@ -10,12 +10,6 @@ const QString Account::KW_NOTES="notes";
 const QString Account::KW_PAYMENT_METHODS="payment_methods";
 const QString Account::KW_SCHEDULED_OPS="scheduled_ops";
 
-static const QStringList KEYS=(QStringList() << Account::KW_NAME
-                                             << Account::KW_NOTES
-                                             << Account::KW_PAYMENT_METHODS
-                                             << Account::KW_SCHEDULED_OPS
-                                             << Account::KW_OPS);
-
 Account::~Account()
 {
     DELETE_HASH_CONTENT(ScheduledOperationPtr, _scheduled_ops);
@@ -227,7 +221,12 @@ QStringList Account::payment_methods_str(bool sorted) const
 bool Account::read(const QJsonObject &json)
 {
     LOG_IN("<QJsonObject>")
-    JSON_CHECK_KEYS(KEYS);
+    static const QStringList keys=(QStringList() << Account::KW_NAME
+                                                 << Account::KW_NOTES
+                                                 << Account::KW_PAYMENT_METHODS
+                                                 << Account::KW_SCHEDULED_OPS
+                                                 << Account::KW_OPS);
+    JSON_CHECK_KEYS(keys);
     /**/
     _name=json[KW_NAME].toString();
     _notes=json[KW_NOTES].toString();

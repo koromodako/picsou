@@ -8,11 +8,6 @@ const QString PicsouDB::KW_VERSION="version";
 const QString PicsouDB::KW_TIMESTAMP="timestamp";
 const QString PicsouDB::KW_DESCRIPTION="description";
 
-static const QStringList KEYS=(QStringList() << PicsouDB::KW_NAME
-                                             << PicsouDB::KW_USERS
-                                             << PicsouDB::KW_VERSION
-                                             << PicsouDB::KW_DESCRIPTION);
-
 PicsouDB::~PicsouDB()
 {
     DELETE_HASH_CONTENT(UserPtr, _users);
@@ -141,7 +136,11 @@ bool PicsouDB::read(const QJsonObject &json)
         LOG_BOOL_RETURN(false);
     }
     /**/
-    JSON_CHECK_KEYS(KEYS);
+    static const QStringList keys=(QStringList()<<PicsouDB::KW_NAME
+                                                <<PicsouDB::KW_USERS
+                                                <<PicsouDB::KW_VERSION
+                                                <<PicsouDB::KW_DESCRIPTION);
+    JSON_CHECK_KEYS(keys);
     /**/
     _name=json[KW_NAME].toString();
     _description=json[KW_DESCRIPTION].toString();

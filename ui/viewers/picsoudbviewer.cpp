@@ -47,6 +47,7 @@ void PicsouDBViewer::refresh(const PicsouDBPtr db)
 
     ui->name->setText(db->name());
     ui->version->setText(db->version().to_str());
+    ui->timestamp->setText(db->timestamp().toString(Qt::ISODate));
     ui->description->setPlainText(db->description());
 
     ui->users_list->clear();

@@ -71,10 +71,10 @@ bool PicsouUIService::populate_db_tree(QTreeWidget* const tree)
         LOG_BOOL_RETURN(true);
     }
 
-    QIcon root_ico=QIcon(":/resources/material-design/svg/database.svg"),
-          user_ico=QIcon(":/resources/material-design/svg/account-circle.svg"),
-          account_ico=QIcon(":/resources/material-design/svg/account-card-details.svg"),
-          calendar_ico=QIcon(":/resources/material-design/svg/calendar-blank.svg");
+    static const QIcon root_ico=QIcon(":/resources/material-design/svg/database.svg"),
+                       user_ico=QIcon(":/resources/material-design/svg/account-circle.svg"),
+                       account_ico=QIcon(":/resources/material-design/svg/account-card-details.svg"),
+                       calendar_ico=QIcon(":/resources/material-design/svg/calendar-blank.svg");
 
     int month_stop;
     QDate today=QDate::currentDate();

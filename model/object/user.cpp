@@ -6,10 +6,6 @@ const QString User::KW_NAME="name";
 const QString User::KW_BUDGETS="budgets";
 const QString User::KW_ACCOUNTS="accounts";
 
-static const QStringList KEYS=(QStringList() << User::KW_NAME
-                                             << User::KW_BUDGETS
-                                             << User::KW_ACCOUNTS);
-
 User::~User()
 {
     DELETE_HASH_CONTENT(BudgetPtr, _budgets);
@@ -151,7 +147,10 @@ AccountPtr User::find_account(QUuid id) const
 bool User::read(const QJsonObject &json)
 {
     LOG_IN("<QJsonObject>");
-    JSON_CHECK_KEYS(KEYS);
+    static const QStringList keys=(QStringList()<<User::KW_NAME
+                                   <<User::KW_BUDGETS
+                                   <<User::KW_ACCOUNTS);
+    JSON_CHECK_KEYS(keys);
     _name=json[KW_NAME].toString();
     JSON_READ_LIST(json, KW_BUDGETS, _budgets, Budget, this);
     JSON_READ_LIST(json, KW_ACCOUNTS, _accounts, Account, this);

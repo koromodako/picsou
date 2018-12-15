@@ -2,12 +2,6 @@
 #include "ui/items/picsoutableitem.h"
 #include <QHeaderView>
 
-static const int ALPHA=32;
-static const QIcon DEBIT_ICON=QIcon(":/resources/material-design/svg/trending-down.svg");
-static const QColor DEBIT_COLOR=QColor(5, 5, 5, ALPHA);
-static const QIcon CREDIT_ICON=QIcon(":/resources/material-design/svg/trending-up.svg");
-static const QColor CREDIT_COLOR=QColor(0, 255, 0, ALPHA);
-
 PicsouTableWidget::~PicsouTableWidget()
 {
 
@@ -52,6 +46,12 @@ void PicsouTableWidget::clear()
 
 void PicsouTableWidget::refresh(OperationCollection ops)
 {
+    static const int alpha=32;
+    static const QIcon debit_icon=QIcon(":/resources/material-design/svg/trending-down.svg"),
+                       credit_icon=QIcon(":/resources/material-design/svg/trending-up.svg");
+    static const QColor debit_color=QColor(5, 5, 5, alpha),
+                        credit_color=QColor(0, 255, 0, alpha);
+
     int r=0, c;
     QIcon icon;
     QColor bgcolor;
@@ -62,18 +62,16 @@ void PicsouTableWidget::refresh(OperationCollection ops)
 
     foreach(OperationPtr op, ops.list()) {
         items.clear();
-
         switch (op->type()) {
         case Operation::DEBIT:
-            icon=DEBIT_ICON;
-            bgcolor=DEBIT_COLOR;
+            icon=debit_icon;
+            bgcolor=debit_color;
             break;
         case Operation::CREDIT:
-            icon=CREDIT_ICON;
-            bgcolor=CREDIT_COLOR;
+            icon=credit_icon;
+            bgcolor=credit_color;
             break;
         }
-
         items.append(new PicsouTableItem(icon,
                                          op->date().toString(Qt::DefaultLocaleShortDate),
                                          op->id()));
@@ -82,7 +80,6 @@ void PicsouTableWidget::refresh(OperationCollection ops)
         items.append(new QTableWidgetItem(op->payment_method()));
         items.append(new QTableWidgetItem(op->budget()));
         items.append(new QTableWidgetItem(op->amount().to_str(true)));
-
         c=0;
         foreach(QTableWidgetItem *item, items) {
             item->setBackgroundColor(bgcolor);

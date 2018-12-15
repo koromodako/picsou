@@ -5,10 +5,6 @@ const QString Budget::KW_NAME="name";
 const QString Budget::KW_AMOUNT="amount";
 const QString Budget::KW_DESCRIPTION="description";
 
-#define KEYS (QStringList() << Budget::KW_NAME \
-                            << Budget::KW_AMOUNT \
-                            << Budget::KW_DESCRIPTION)
-
 Budget::Budget(PicsouModelObj *parent) :
     PicsouModelObj(false, parent)
 {
@@ -40,7 +36,10 @@ void Budget::update(double amount,
 bool Budget::read(const QJsonObject &json)
 {
     LOG_IN("<QJsonObject>")
-    JSON_CHECK_KEYS(KEYS);
+    static const QStringList keys=(QStringList()<<Budget::KW_NAME
+                                                <<Budget::KW_AMOUNT
+                                                <<Budget::KW_DESCRIPTION);
+    JSON_CHECK_KEYS(keys);
     /**/
     _name=json[KW_NAME].toString();
     _amount=json[KW_AMOUNT].toDouble();

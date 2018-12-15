@@ -40,54 +40,54 @@ private:
     typedef QList<ClassPtr> ClassPtrList
 
 #define DELETE_HASH_CONTENT(Class, hash) \
-   do { \
+    { \
         QHash<QUuid, Class>::iterator it=(hash).begin(); \
         while(it!=(hash).end()) { \
             delete it.value(); \
             it++; \
         } \
         (hash).clear(); \
-    } while(0)
+    }
 
 #define JSON_CHECK_KEYS(list) \
-    do { \
-        QStringList keys=(list); \
-        for(auto i : keys) { \
-            if(!json.contains(i)) { \
+    { \
+        QStringList __keys=(list); \
+        for(auto __i : __keys) { \
+            if(!json.contains(__i)) { \
                 set_valid(false); \
                 LOG_BOOL_RETURN(false); \
             } \
         } \
-    } while(0)
+    }
 
 #define JSON_READ_LIST(json, name, member, Class, parent) \
-    do { \
-        Class *obj; \
-        QJsonArray array=(json)[(name)].toArray(); \
-        for(int i=0; i < array.size(); ++i) { \
-            obj=new Class(parent); \
-            if(!obj->read(array[i].toObject())) { \
+    { \
+        Class *__obj; \
+        QJsonArray __array=(json)[(name)].toArray(); \
+        for(int __i=0; __i<__array.size(); ++__i) { \
+            __obj=new Class(parent); \
+            if(!__obj->read(__array[__i].toObject())) { \
                 /* TRACE */ \
                 set_valid(false); \
                 LOG_BOOL_RETURN(false); \
             } \
-            (member).insert(obj->id(), QPointer<Class>(obj)); \
+            (member).insert(__obj->id(), QPointer<Class>(__obj)); \
         } \
-    } while (0)
+    }
 
 #define JSON_WRITE_LIST(json, name, list) \
-    do { \
-        QJsonObject obj; \
-        QJsonArray array; \
-        for(int i=0; i<(list).size(); ++i) { \
-            obj=QJsonObject(); \
-            if(!(list)[i]->write(obj)) { \
+    { \
+        QJsonObject __obj; \
+        QJsonArray __array; \
+        for(int __i=0; __i<(list).size(); ++__i) { \
+            __obj=QJsonObject(); \
+            if(!(list)[__i]->write(__obj)) { \
                 /* TRACE */ \
                 LOG_BOOL_RETURN(false); \
             } \
-            array.append(obj); \
+            __array.append(__obj); \
         } \
-        (json)[(name)]=array; \
-    } while(0)
+        (json)[(name)]=__array; \
+    }
 
 #endif // PICSOUMODELOBJ_H
