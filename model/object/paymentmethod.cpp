@@ -1,12 +1,9 @@
 #include "paymentmethod.h"
 #include "utils/macro.h"
 
-#define KEYS (QStringList() << KW_PM_NAME)
+const QString PaymentMethod::KW_NAME="name";
 
-PaymentMethod::~PaymentMethod()
-{
-
-}
+static const QStringList KEYS=(QStringList() << PaymentMethod::KW_NAME);
 
 PaymentMethod::PaymentMethod(PicsouModelObj *parent) :
     PicsouModelObj(false, parent)
@@ -31,7 +28,7 @@ bool PaymentMethod::read(const QJsonObject &json)
 {
     LOG_IN("<QJsonObject>")
     JSON_CHECK_KEYS(KEYS);
-    _name=json[KW_PM_NAME].toString();
+    _name=json[KW_NAME].toString();
     set_valid();
     LOG_BOOL_RETURN(valid());
 }
@@ -39,7 +36,7 @@ bool PaymentMethod::read(const QJsonObject &json)
 bool PaymentMethod::write(QJsonObject &json) const
 {
     LOG_IN("<QJsonObject>")
-    json[KW_PM_NAME]=_name;
+    json[KW_NAME]=_name;
     LOG_BOOL_RETURN(true);
 }
 

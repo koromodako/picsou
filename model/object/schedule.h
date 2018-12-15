@@ -4,16 +4,6 @@
 #include <QDate>
 #include <QStringList>
 
-#define KW_SD_START_YEAR "starty"
-#define KW_SD_START_MONTH "startm"
-#define KW_SD_START_DAY "startd"
-#define KW_SD_STOP_YEAR "stopy"
-#define KW_SD_STOP_MONTH "stopm"
-#define KW_SD_STOP_DAY "stopd"
-#define KW_SD_ENDLESS "endless"
-#define KW_SD_FREQ_VALUE "freq_value"
-#define KW_SD_FREQ_UNIT "freq_unit"
-
 class Schedule
 {
 public:
@@ -23,6 +13,16 @@ public:
         WEEK  = 2,
         DAY   = 3
     };
+
+    static const QString KW_START_YEAR;
+    static const QString KW_START_MONTH;
+    static const QString KW_START_DAY;
+    static const QString KW_STOP_YEAR;
+    static const QString KW_STOP_MONTH;
+    static const QString KW_STOP_DAY;
+    static const QString KW_ENDLESS;
+    static const QString KW_FREQ_VALUE;
+    static const QString KW_FREQ_UNIT;
 
     Schedule(const QDate &start = QDate(),
              const QDate &stop = QDate(),

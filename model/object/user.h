@@ -6,14 +6,14 @@
 
 #include <QHash>
 
-#define KW_USR_NAME "name"
-#define KW_USR_BUDGETS "budgets"
-#define KW_USR_ACCOUNTS "accounts"
-
 class User : public PicsouModelObj
 {
     Q_OBJECT
 public:
+    static const QString KW_NAME;
+    static const QString KW_BUDGETS;
+    static const QString KW_ACCOUNTS;
+
     virtual ~User();
     User(PicsouModelObj *parent);
     User(const QString &name,

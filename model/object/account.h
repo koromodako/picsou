@@ -7,16 +7,17 @@
 
 #include <QHash>
 
-#define KW_ACT_NAME "name"
-#define KW_ACT_NOTES "notes"
-#define KW_ACT_PAYMENT_METHODS "payment_methods"
-#define KW_ACT_SCHEDULED_OPS "scheduled_ops"
-#define KW_ACT_OPS "ops"
 
 class Account : public PicsouModelObj
 {
     Q_OBJECT
 public:
+    static const QString KW_OPS;
+    static const QString KW_NAME;
+    static const QString KW_NOTES;
+    static const QString KW_PAYMENT_METHODS;
+    static const QString KW_SCHEDULED_OPS;
+
     virtual ~Account();
     Account(PicsouModelObj *parent);
     Account(const QString &name,

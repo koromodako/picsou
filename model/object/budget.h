@@ -3,15 +3,14 @@
 
 #include "../picsoumodelobj.h"
 
-#define KW_BGT_NAME "name"
-#define KW_BGT_AMOUNT "amount"
-#define KW_BGT_DESCRIPTION "description"
-
 class Budget : public PicsouModelObj
 {
     Q_OBJECT
 public:
-    virtual ~Budget();
+    static const QString KW_NAME;
+    static const QString KW_AMOUNT;
+    static const QString KW_DESCRIPTION;
+
     Budget(PicsouModelObj *parent);
     Budget(double amount,
            const QString &name,

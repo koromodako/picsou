@@ -4,12 +4,17 @@
 #include <QSet>
 #include <QJsonArray>
 
-#define KEYS \
-        (QStringList() << KW_ACT_NAME \
-                       << KW_ACT_NOTES \
-                       << KW_ACT_PAYMENT_METHODS \
-                       << KW_ACT_SCHEDULED_OPS \
-                       << KW_ACT_OPS)
+const QString Account::KW_OPS="ops";
+const QString Account::KW_NAME="name";
+const QString Account::KW_NOTES="notes";
+const QString Account::KW_PAYMENT_METHODS="payment_methods";
+const QString Account::KW_SCHEDULED_OPS="scheduled_ops";
+
+static const QStringList KEYS=(QStringList() << Account::KW_NAME
+                                             << Account::KW_NOTES
+                                             << Account::KW_PAYMENT_METHODS
+                                             << Account::KW_SCHEDULED_OPS
+                                             << Account::KW_OPS);
 
 Account::~Account()
 {
@@ -106,7 +111,7 @@ void Account::add_operation(Amount amount,
 
 void Account::add_operations(OperationCollection ops)
 {
-    foreach (OperationPtr op, ops.list()) {
+    foreach(OperationPtr op, ops.list()) {
         op->set_parent(this);
         _ops.insert(op->id(), op);
     }
@@ -168,7 +173,7 @@ QList<int> Account::years(bool sorted) const
     OperationCollection operations=ops();
     QSet<int> years_set;
     QList<int> years_list;
-    foreach (OperationPtr op, operations.list()) {
+    foreach(OperationPtr op, operations.list()) {
         years_set << op->date().year();
     }
     years_list=years_set.toList();
@@ -213,7 +218,7 @@ QStringList Account::payment_methods_str(bool sorted) const
 {
     QStringList p_methods_str;
     PaymentMethodPtrList p_methods=payment_methods(sorted);
-    foreach (PaymentMethodPtr pm, p_methods) {
+    foreach(PaymentMethodPtr pm, p_methods) {
         p_methods_str << pm->name();
     }
     return p_methods_str;
@@ -224,13 +229,13 @@ bool Account::read(const QJsonObject &json)
     LOG_IN("<QJsonObject>")
     JSON_CHECK_KEYS(KEYS);
     /**/
-    _name=json[KW_ACT_NAME].toString();
-    _notes=json[KW_ACT_NOTES].toString();
-    JSON_READ_LIST(json, KW_ACT_PAYMENT_METHODS,
+    _name=json[KW_NAME].toString();
+    _notes=json[KW_NOTES].toString();
+    JSON_READ_LIST(json, KW_PAYMENT_METHODS,
                    _payment_methods, PaymentMethod, this);
-    JSON_READ_LIST(json, KW_ACT_SCHEDULED_OPS,
+    JSON_READ_LIST(json, KW_SCHEDULED_OPS,
                    _scheduled_ops, ScheduledOperation, this);
-    JSON_READ_LIST(json, KW_ACT_OPS,
+    JSON_READ_LIST(json, KW_OPS,
                    _ops, Operation, this);
     /**/
     set_valid();
@@ -240,11 +245,11 @@ bool Account::read(const QJsonObject &json)
 bool Account::write(QJsonObject &json) const
 {
     LOG_IN("<QJsonObject>")
-    json[KW_ACT_NAME]=_name;
-    json[KW_ACT_NOTES]=_notes;
-    JSON_WRITE_LIST(json, KW_ACT_PAYMENT_METHODS, _payment_methods.values());
-    JSON_WRITE_LIST(json, KW_ACT_SCHEDULED_OPS, _scheduled_ops.values());
-    JSON_WRITE_LIST(json, KW_ACT_OPS, _ops.values());
+    json[KW_NAME]=_name;
+    json[KW_NOTES]=_notes;
+    JSON_WRITE_LIST(json, KW_PAYMENT_METHODS, _payment_methods.values());
+    JSON_WRITE_LIST(json, KW_SCHEDULED_OPS, _scheduled_ops.values());
+    JSON_WRITE_LIST(json, KW_OPS, _ops.values());
     /**/
     LOG_BOOL_RETURN(true);
 }

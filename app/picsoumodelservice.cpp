@@ -423,7 +423,7 @@ bool PicsouModelService::xml_dump_ops(QFile &f, OperationCollection ops)
     QXmlStreamWriter xml(&f);
     xml.writeStartDocument("1.0", true);
     xml.writeStartElement("operations");
-    foreach (OperationPtr op, ops.list()) {
+    foreach(OperationPtr op, ops.list()) {
         xml.writeEmptyElement(XML_ELEM_OP);
         xml.writeAttribute(XML_ATTR_YEAR, QString::number(op->date().year()));
         xml.writeAttribute(XML_ATTR_MONTH, QString::number(op->date().month()));
@@ -442,7 +442,7 @@ bool PicsouModelService::xml_dump_ops(QFile &f, OperationCollection ops)
 bool PicsouModelService::csv_dump_ops(QFile &f, OperationCollection ops)
 {
     LOG_IN("&f="<<&f<<",ops.length="<<ops.length());
-    foreach (OperationPtr op, ops.list()) {
+    foreach(OperationPtr op, ops.list()) {
         f.write(QString("%0,%1,%2,%3,\"%4\",\"%5\",\"%6\",\"%7\"\n").arg(
                     QString::number(op->date().year()),
                     QString::number(op->date().month()),
@@ -461,7 +461,7 @@ bool PicsouModelService::json_dump_ops(QFile &f, OperationCollection ops)
 {
     LOG_IN("&f="<<&f<<",ops.length="<<ops.length());
     QJsonObject obj;
-    foreach (OperationPtr op, ops.list()) {
+    foreach(OperationPtr op, ops.list()) {
         if(!op->write(obj)) {
             f.write(tr("-- [export error] --").toUtf8());
             LOG_BOOL_RETURN(false);

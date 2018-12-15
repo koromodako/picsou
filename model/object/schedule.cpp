@@ -1,10 +1,19 @@
 #include "schedule.h"
 
-static QStringList gfrequency_units=QStringList()
-        << "YEAR"
-        << "MONTH"
-        << "WEEK"
-        << "DAY";
+const QString Schedule::KW_START_YEAR="starty";
+const QString Schedule::KW_START_MONTH="startm";
+const QString Schedule::KW_START_DAY="startd";
+const QString Schedule::KW_STOP_YEAR="stopy";
+const QString Schedule::KW_STOP_MONTH="stopm";
+const QString Schedule::KW_STOP_DAY="stopd";
+const QString Schedule::KW_ENDLESS="endless";
+const QString Schedule::KW_FREQ_VALUE="freq_value";
+const QString Schedule::KW_FREQ_UNIT="freq_unit";
+
+static const QStringList FREQUENCY_UNITS=(QStringList() << "YEAR"
+                                                        << "MONTH"
+                                                        << "WEEK"
+                                                        << "DAY");
 
 Schedule::Schedule(const QDate &start,
                    const QDate &stop,
@@ -22,17 +31,17 @@ Schedule::Schedule(const QDate &start,
 
 QString Schedule::freq_unit2str(FrequencyUnit freq_unit)
 {
-    return gfrequency_units.at(freq_unit);
+    return FREQUENCY_UNITS.at(freq_unit);
 }
 
 Schedule::FrequencyUnit Schedule::str2freq_unit(const QString &freq_unit)
 {
-    return FrequencyUnit(gfrequency_units.indexOf(freq_unit));
+    return FrequencyUnit(FREQUENCY_UNITS.indexOf(freq_unit));
 }
 
 QStringList Schedule::frequency_units()
 {
-    return gfrequency_units;
+    return FREQUENCY_UNITS;
 }
 
 bool Schedule::valid() const

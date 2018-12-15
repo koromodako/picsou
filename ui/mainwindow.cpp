@@ -181,10 +181,10 @@ void MainWindow::update_search()
     LOG_IN_VOID();
     OperationCollection ops;
     QStringList selected_budgets, selected_pms;
-    foreach (QListWidgetItem *item, ui->budgets->selectedItems()) {
+    foreach(QListWidgetItem *item, ui->budgets->selectedItems()) {
         selected_budgets << item->text();
     }
-    foreach (QListWidgetItem *item, ui->pms->selectedItems()) {
+    foreach(QListWidgetItem *item, ui->pms->selectedItems()) {
         selected_pms << item->text();
     }
     _search_table->clear();
@@ -285,7 +285,7 @@ void MainWindow::_update_viewer(QTreeWidgetItem *item, int)
     LOG_IN("item="<<item);
     PicsouUIViewer *w;
     if(_details_widget!=nullptr) {
-        foreach (QAction *action, _details_widget->actions()) {
+        foreach(QAction *action, _details_widget->actions()) {
             ui->toolbar->removeAction(action);
         }
         ui->details_tab->layout()->removeWidget(_details_widget);

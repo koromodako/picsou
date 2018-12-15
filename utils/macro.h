@@ -4,20 +4,19 @@
 #include <QDir>
 #include <QDebug>
 
+static const QString LOG_LVL_DBG="DBG";
+static const QString LOG_LVL_INF="INF";
+static const QString LOG_LVL_WRN="WRN";
+static const QString LOG_LVL_ERR="ERR";
+
+static const QString LOG_CLR_DBG="32";
+static const QString LOG_CLR_INF="34";
+static const QString LOG_CLR_WRN="33";
+static const QString LOG_CLR_ERR="31";
+
+#define BOOL2STR(b)     ((b)?"true":"false")
+#define BASENAME(str)   (QDir(str).dirName())
 #define IS_FLAG_SET(field, flag) (((field)&(flag))==(flag))
-
-#define LOG_LVL_DBG "DBG"
-#define LOG_LVL_INF "INF"
-#define LOG_LVL_WRN "WRN"
-#define LOG_LVL_ERR "ERR"
-
-#define LOG_CLR_DBG "32"
-#define LOG_CLR_INF "34"
-#define LOG_CLR_WRN "33"
-#define LOG_CLR_ERR "31"
-
-#define bool2str(b)     ((b)?"true":"false")
-#define basename(str)   (QDir(str).dirName())
 
 #ifdef COLORIZE
 #    define LOG(log_func, lvl, color, ...) \
@@ -28,7 +27,7 @@
         debug << "\x1b["<<(color)<<";1m" \
               << "["<<(lvl)<<"](" \
               << (__LINE__)<<"|" \
-              << basename(__FILE__)<<"|" \
+              << BASENAME(__FILE__)<<"|" \
               << (__func__)<<") - "; \
         debug.quote(); \
         debug << __VA_ARGS__ \
@@ -42,7 +41,7 @@
         debug.noquote(); \
         debug << "["<<(lvl)<<"](" \
               << (__LINE__)<<"|" \
-              << basename(__FILE__)<<"|" \
+              << BASENAME(__FILE__)<<"|" \
               << (__func__)<<") - "; \
         debug.quote(); \
         debug << __VA_ARGS__; \
@@ -65,7 +64,7 @@
 #define LOG_BOOL_RETURN(bool_expr) \
     { \
         bool result=(bool_expr); \
-        LOG_DEBUG("-> "<<bool2str(result)) \
+        LOG_DEBUG("-> "<<BOOL2STR(result)) \
         return result; \
     }
 #define LOG_VOID_RETURN(...) \

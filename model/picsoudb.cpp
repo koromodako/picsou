@@ -2,9 +2,16 @@
 #include "picsoudb.h"
 #include "utils/macro.h"
 
-#define KEYS (QStringList() << KW_DB_NAME \
-                            << KW_DB_DESCRIPTION \
-                            << KW_DB_USERS)
+const QString PicsouDB::KW_NAME="name";
+const QString PicsouDB::KW_USERS="users";
+const QString PicsouDB::KW_VERSION="version";
+const QString PicsouDB::KW_TIMESTAMP="timestamp";
+const QString PicsouDB::KW_DESCRIPTION="description";
+
+static const QStringList KEYS=(QStringList() << PicsouDB::KW_NAME
+                                             << PicsouDB::KW_USERS
+                                             << PicsouDB::KW_VERSION
+                                             << PicsouDB::KW_DESCRIPTION);
 
 PicsouDB::~PicsouDB()
 {
@@ -21,8 +28,9 @@ PicsouDB::PicsouDB(SemVer version,
                    const QString &name,
                    const QString &description) :
     PicsouModelObj(true, nullptr),
-    _name(name),
+    _timestamp(),
     _version(version),
+    _name(name),
     _description(description)
 {
 
@@ -84,7 +92,7 @@ OperationCollection PicsouDB::ops(QUuid account_id,
 {
     OperationCollection selected_ops;
     AccountPtr account=find_account(account_id);
-    foreach (OperationPtr op, account->ops(sorted).list()) {
+    foreach(OperationPtr op, account->ops(sorted).list()) {
         if(year!=-1&&op->date().year()!=year) {
             continue;
         }
@@ -99,7 +107,7 @@ OperationCollection PicsouDB::ops(QUuid account_id,
 AccountPtr PicsouDB::find_account(QUuid id) const
 {
     AccountPtr account;
-    foreach (UserPtr user, _users.values()) {
+    foreach(UserPtr user, _users.values()) {
         account=user->find_account(id);
         if(account->valid()) {
             break;
@@ -111,13 +119,22 @@ AccountPtr PicsouDB::find_account(QUuid id) const
 bool PicsouDB::read(const QJsonObject &json)
 {
     LOG_IN("<QJsonObject>");
-    if(!json.contains(KW_DB_VERSION)) {
+    if(!json.contains(KW_VERSION)) {
         LOG_CRITICAL("database file does not contain database version.");
         set_valid(false);
         LOG_BOOL_RETURN(false);
     }
     /**/
-    _version=SemVer(json[KW_DB_VERSION].toString());
+    if(json.contains(KW_TIMESTAMP)) {
+        _timestamp=QDate::fromString(json[KW_TIMESTAMP].toString(), Qt::ISODate);
+        if(_timestamp>QDate::currentDate()) {
+            LOG_CRITICAL("database file seems to have been saved in the future.");
+            set_valid(false);
+            LOG_BOOL_RETURN(false);
+        }
+    }
+    /**/
+    _version=SemVer(json[KW_VERSION].toString());
     if(_version<PICSOU_DB_VERSION) {
         LOG_DEBUG("older version of the DB file format: " << _version.to_str());
         set_valid(false);
@@ -126,9 +143,9 @@ bool PicsouDB::read(const QJsonObject &json)
     /**/
     JSON_CHECK_KEYS(KEYS);
     /**/
-    _name=json[KW_DB_NAME].toString();
-    _description=json[KW_DB_DESCRIPTION].toString();
-    JSON_READ_LIST(json, KW_DB_USERS, _users, User, this);
+    _name=json[KW_NAME].toString();
+    _description=json[KW_DESCRIPTION].toString();
+    JSON_READ_LIST(json, KW_USERS, _users, User, this);
     /**/
     set_valid();
     LOG_BOOL_RETURN(valid());
@@ -139,10 +156,11 @@ bool PicsouDB::write(QJsonObject &json) const
     QJsonObject obj;
     QJsonArray array;
     /**/
-    json[KW_DB_NAME]=_name;
-    json[KW_DB_VERSION]=_version.to_str();
-    json[KW_DB_DESCRIPTION]=_description;
-    JSON_WRITE_LIST(json, KW_DB_USERS, _users.values());
+    json[KW_NAME]=_name;
+    json[KW_VERSION]=_version.to_str();
+    json[KW_DESCRIPTION]=_description;
+    json[KW_TIMESTAMP]=QDate::currentDate().toString(Qt::ISODate);
+    JSON_WRITE_LIST(json, KW_USERS, _users.values());
     /**/
     LOG_BOOL_RETURN(true);
 }

@@ -6,15 +6,6 @@
 
 #include <QDate>
 
-#define KW_OP_AMOUNT "amount"
-#define KW_OP_DAY "day"
-#define KW_OP_MONTH "month"
-#define KW_OP_YEAR "year"
-#define KW_OP_BUDGET "budget"
-#define KW_OP_RECIPIENT "recipient"
-#define KW_OP_DESCRIPTION "description"
-#define KW_OP_PAYMENT_METHOD "paymentMethod"
-
 class PaymentMethod;
 DECL_PICSOU_MOD_OBJ_PTR(PaymentMethod, PaymentMethodPtr, PaymentMethodPtrList);
 
@@ -27,7 +18,15 @@ public:
         DEBIT
     };
 
-    virtual ~Operation();
+    static const QString KW_AMOUNT;
+    static const QString KW_DAY;
+    static const QString KW_MONTH;
+    static const QString KW_YEAR;
+    static const QString KW_BUDGET;
+    static const QString KW_RECIPIENT;
+    static const QString KW_DESCRIPTION;
+    static const QString KW_PAYMENT_METHOD;
+
     Operation(PicsouModelObj *parent);
     Operation(Amount amount,
               const QDate &date,

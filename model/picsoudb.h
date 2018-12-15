@@ -5,15 +5,16 @@
 #include "converter/semver.h"
 #include "operationcollection.h"
 
-#define KW_DB_NAME "name"
-#define KW_DB_VERSION "version"
-#define KW_DB_DESCRIPTION "description"
-#define KW_DB_USERS "users"
-
 class PicsouDB : public PicsouModelObj
 {
     Q_OBJECT
 public:
+    static const QString KW_NAME;
+    static const QString KW_USERS;
+    static const QString KW_VERSION;
+    static const QString KW_TIMESTAMP;
+    static const QString KW_DESCRIPTION;
+
     virtual ~PicsouDB();
     PicsouDB();
     PicsouDB(SemVer version,
@@ -23,13 +24,16 @@ public:
     void add_user(const QString &username);
     bool remove_user(QUuid id);
 
-    inline QString name() const { return _name; }
+    inline QDate timestamp() const { return _timestamp; }
     inline SemVer version() const { return _version; }
+    inline QString name() const { return _name; }
     inline QString description() const { return _description; }
-    UserPtrList users(bool sorted=false) const;
 
     UserPtr find_user(QUuid id) const;
+    UserPtrList users(bool sorted=false) const;
+
     AccountPtr find_account(QUuid id) const;
+
     OperationCollection ops(QUuid account_id,
                             int year=-1,
                             int month=-1,
@@ -39,8 +43,9 @@ public:
     bool write(QJsonObject &json) const;
 
 private:
-    QString _name;
+    QDate _timestamp;
     SemVer _version;
+    QString _name;
     QString _description;
     QHash<QUuid, UserPtr> _users;
 };

@@ -6,7 +6,6 @@
 class Amount
 {
 public:
-    virtual ~Amount();
     Amount(int value);
     Amount(double value=0);
     Amount(const Amount &other);

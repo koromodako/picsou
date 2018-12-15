@@ -1,9 +1,13 @@
 #include "budget.h"
 #include "utils/macro.h"
 
-#define KEYS (QStringList() << KW_BGT_NAME \
-                            << KW_BGT_AMOUNT \
-                            << KW_BGT_DESCRIPTION)
+const QString Budget::KW_NAME="name";
+const QString Budget::KW_AMOUNT="amount";
+const QString Budget::KW_DESCRIPTION="description";
+
+#define KEYS (QStringList() << Budget::KW_NAME \
+                            << Budget::KW_AMOUNT \
+                            << Budget::KW_DESCRIPTION)
 
 Budget::Budget(PicsouModelObj *parent) :
     PicsouModelObj(false, parent)
@@ -33,19 +37,14 @@ void Budget::update(double amount,
     emit modified();
 }
 
-Budget::~Budget()
-{
-
-}
-
 bool Budget::read(const QJsonObject &json)
 {
     LOG_IN("<QJsonObject>")
     JSON_CHECK_KEYS(KEYS);
     /**/
-    _name=json[KW_BGT_NAME].toString();
-    _amount=json[KW_BGT_AMOUNT].toDouble();
-    _description=json[KW_BGT_DESCRIPTION].toString();
+    _name=json[KW_NAME].toString();
+    _amount=json[KW_AMOUNT].toDouble();
+    _description=json[KW_DESCRIPTION].toString();
     /**/
     set_valid();
     LOG_BOOL_RETURN(valid());
@@ -54,9 +53,9 @@ bool Budget::read(const QJsonObject &json)
 bool Budget::write(QJsonObject &json) const
 {
     LOG_IN("<QJsonObject>")
-    json[KW_BGT_NAME]=_name;
-    json[KW_BGT_AMOUNT]=_amount;
-    json[KW_BGT_DESCRIPTION]=_description;
+    json[KW_NAME]=_name;
+    json[KW_AMOUNT]=_amount;
+    json[KW_DESCRIPTION]=_description;
     /**/
     LOG_BOOL_RETURN(true);
 }

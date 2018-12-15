@@ -110,7 +110,7 @@ void AccountViewer::refresh(const PicsouDBPtr db)
     AccountPtr account=db->find_account(mod_obj_id());
     /* payment methods */
     ui->payment_methods->clear();
-    foreach (PaymentMethodPtr pm, account->payment_methods(true)) {
+    foreach(PaymentMethodPtr pm, account->payment_methods(true)) {
         new PicsouListItem(pm->name(), ui->payment_methods, pm->id());
     }
     bool has_pm=(ui->payment_methods->count());
@@ -120,7 +120,7 @@ void AccountViewer::refresh(const PicsouDBPtr db)
     ui->notes->setPlainText(account->notes());
     /* scheduled ops */
     ui->sops->clear();
-    foreach (ScheduledOperationPtr sop, account->scheduled_ops()) {
+    foreach(ScheduledOperationPtr sop, account->scheduled_ops()) {
         new PicsouListItem(QString("%0 (%1 -> %2)").arg(sop->name(),
                                                         sop->schedule().start().toString(),
                                                         sop->schedule().stop().toString()),

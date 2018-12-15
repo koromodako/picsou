@@ -1,9 +1,14 @@
 #include "user.h"
 #include "utils/macro.h"
 
-#define KEYS (QStringList() << KW_USR_NAME \
-                            << KW_USR_BUDGETS \
-                            << KW_USR_ACCOUNTS)
+
+const QString User::KW_NAME="name";
+const QString User::KW_BUDGETS="budgets";
+const QString User::KW_ACCOUNTS="accounts";
+
+static const QStringList KEYS=(QStringList() << User::KW_NAME
+                                             << User::KW_BUDGETS
+                                             << User::KW_ACCOUNTS);
 
 User::~User()
 {
@@ -102,7 +107,7 @@ QStringList User::budgets_str(bool sorted) const
 {
     QStringList budgets_str;
     BudgetPtrList budget_list=budgets(sorted);
-    foreach (BudgetPtr budget, budget_list) {
+    foreach(BudgetPtr budget, budget_list) {
         budgets_str << budget->name();
     }
     budgets_str.insert(0, tr("OTHER"));
@@ -147,9 +152,9 @@ bool User::read(const QJsonObject &json)
 {
     LOG_IN("<QJsonObject>");
     JSON_CHECK_KEYS(KEYS);
-    _name=json[KW_USR_NAME].toString();
-    JSON_READ_LIST(json, KW_USR_BUDGETS, _budgets, Budget, this);
-    JSON_READ_LIST(json, KW_USR_ACCOUNTS, _accounts, Account, this);
+    _name=json[KW_NAME].toString();
+    JSON_READ_LIST(json, KW_BUDGETS, _budgets, Budget, this);
+    JSON_READ_LIST(json, KW_ACCOUNTS, _accounts, Account, this);
     set_valid();
     LOG_BOOL_RETURN(valid());
 }
@@ -157,12 +162,11 @@ bool User::read(const QJsonObject &json)
 bool User::write(QJsonObject &json) const
 {
     LOG_IN("<QJsonObject>");
-    json[KW_USR_NAME]=_name;
-    JSON_WRITE_LIST(json, KW_USR_BUDGETS, _budgets.values());
-    JSON_WRITE_LIST(json, KW_USR_ACCOUNTS, _accounts.values());
+    json[KW_NAME]=_name;
+    JSON_WRITE_LIST(json, KW_BUDGETS, _budgets.values());
+    JSON_WRITE_LIST(json, KW_ACCOUNTS, _accounts.values());
     LOG_BOOL_RETURN(true);
 }
-
 
 bool User::operator <(const User &other)
 {

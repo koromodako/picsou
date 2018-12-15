@@ -63,12 +63,12 @@ void UserViewer::refresh(const PicsouDBPtr db)
     UserPtr user=db->find_user(mod_obj_id());
 
     ui->accounts_list->clear();
-    foreach (AccountPtr account, user->accounts(true)) {
+    foreach(AccountPtr account, user->accounts(true)) {
         new PicsouListItem(account->name(), ui->accounts_list, account->id());
     }
 
     ui->budgets_list->clear();
-    foreach (BudgetPtr budget, user->budgets(true)) {
+    foreach(BudgetPtr budget, user->budgets(true)) {
         new PicsouListItem(budget->name(), ui->budgets_list, budget->id());
     }
 

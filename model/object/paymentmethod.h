@@ -3,13 +3,13 @@
 
 #include "../picsoumodelobj.h"
 
-#define KW_PM_NAME "name"
 
 class PaymentMethod : public PicsouModelObj
 {
     Q_OBJECT
 public:
-    virtual ~PaymentMethod();
+    static const QString KW_NAME;
+
     PaymentMethod(PicsouModelObj *parent);
     PaymentMethod(const QString &name,
                   PicsouModelObj *parent);

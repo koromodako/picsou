@@ -3,11 +3,6 @@
 
 #include <QObject>
 
-Amount::~Amount()
-{
-
-}
-
 Amount::Amount(int value) :
     _value(value)
 {

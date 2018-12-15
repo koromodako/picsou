@@ -101,7 +101,7 @@ bool PicsouUIService::populate_db_tree(QTreeWidget* const tree)
                                            account->name(),
                                            account->id());
 
-            foreach (int year, account->years()) {
+            foreach(int year, account->years()) {
                 year_itm=new PicsouTreeItem(account_itm,
                                             PicsouTreeItem::T_YEAR,
                                             calendar_ico,
@@ -135,7 +135,7 @@ bool PicsouUIService::populate_user_cb(QComboBox * const cb)
         LOG_BOOL_RETURN(false);
     }
     UserPtrList users=papp()->model_svc()->db()->users();
-    foreach (UserPtr user, users) {
+    foreach(UserPtr user, users) {
         cb->addItem(user->name());
     }
     LOG_BOOL_RETURN(true);
@@ -147,10 +147,10 @@ bool PicsouUIService::populate_account_cb(const QString &username,
     LOG_IN("username="<<username<<",cb="<<cb);
     bool found=false;
     UserPtrList users=papp()->model_svc()->db()->users(true);
-    foreach (UserPtr user, users) {
+    foreach(UserPtr user, users) {
         if(user->name()==username) {
             found=true;
-            foreach (AccountPtr account, user->accounts(true)) {
+            foreach(AccountPtr account, user->accounts(true)) {
                 cb->addItem(account->name());
             }
         }
@@ -164,10 +164,10 @@ bool PicsouUIService::populate_budgets_list(const QString &username,
     LOG_IN("username="<<username<<",list="<<list);
     bool found=false;
     UserPtrList users=papp()->model_svc()->db()->users(true);
-    foreach (UserPtr user, users) {
+    foreach(UserPtr user, users) {
         if(user->name()==username) {
             found=true;
-            foreach (BudgetPtr budget, user->budgets(true)) {
+            foreach(BudgetPtr budget, user->budgets(true)) {
                 list->addItem(budget->name());
             }
         }
@@ -182,12 +182,12 @@ bool PicsouUIService::populate_pms_list(const QString &username,
     LOG_IN("username="<<username<<",account_name="<<account_name<<",list="<<list);
     bool found=false;
     UserPtrList users=papp()->model_svc()->db()->users(true);
-    foreach (UserPtr user, users) {
+    foreach(UserPtr user, users) {
         if(user->name()==username) {
-            foreach (AccountPtr account, user->accounts(true)) {
+            foreach(AccountPtr account, user->accounts(true)) {
                 if(account->name()==account_name) {
                     found=true;
-                    foreach (PaymentMethodPtr pm, account->payment_methods(true)) {
+                    foreach(PaymentMethodPtr pm, account->payment_methods(true)) {
                         list->addItem(pm->name());
                     }
                     break;
@@ -204,10 +204,10 @@ OperationCollection PicsouUIService::search_operations(const SearchQuery &query)
     OperationCollection ops;
     QFuture<OperationPtr> future;
     UserPtrList users=papp()->model_svc()->db()->users(true);
-    foreach (UserPtr user, users) {
+    foreach(UserPtr user, users) {
         if(user->name()==query.username()) {
             LOG_DEBUG("found username: " << user->name());
-            foreach (AccountPtr account, user->accounts(true)) {
+            foreach(AccountPtr account, user->accounts(true)) {
                 if(account->name()==query.account_name()) {
                     LOG_DEBUG("found account: " << account->name());
                     OperationPtrList ops_list=account->ops(true).list();

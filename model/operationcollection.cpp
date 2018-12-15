@@ -12,14 +12,14 @@ OperationCollection::OperationCollection()
 
 OperationCollection::OperationCollection(const OperationPtrList &ops)
 {
-    foreach (OperationPtr op, ops) {
+    foreach(OperationPtr op, ops) {
         append(op);
     }
 }
 
 void OperationCollection::clear()
 {
-    foreach (OperationPtr op, _ops) {
+    foreach(OperationPtr op, _ops) {
         delete op;
     }
     _ops.clear();

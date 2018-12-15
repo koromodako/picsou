@@ -2,11 +2,11 @@
 #include "ui/items/picsoutableitem.h"
 #include <QHeaderView>
 
-static const int galpha=32;
-static const QIcon gdebit_icon=QIcon(":/resources/material-design/svg/trending-down.svg");
-static const QColor gdebit_color=QColor(5,5,5,galpha);
-static const QIcon gcredit_icon=QIcon(":/resources/material-design/svg/trending-up.svg");
-static const QColor gcredit_color=QColor(0,255,0,galpha);
+static const int ALPHA=32;
+static const QIcon DEBIT_ICON=QIcon(":/resources/material-design/svg/trending-down.svg");
+static const QColor DEBIT_COLOR=QColor(5, 5, 5, ALPHA);
+static const QIcon CREDIT_ICON=QIcon(":/resources/material-design/svg/trending-up.svg");
+static const QColor CREDIT_COLOR=QColor(0, 255, 0, ALPHA);
 
 PicsouTableWidget::~PicsouTableWidget()
 {
@@ -60,17 +60,17 @@ void PicsouTableWidget::refresh(OperationCollection ops)
     clear();
     setRowCount(ops.length());
 
-    foreach (OperationPtr op, ops.list()) {
+    foreach(OperationPtr op, ops.list()) {
         items.clear();
 
         switch (op->type()) {
         case Operation::DEBIT:
-            icon=gdebit_icon;
-            bgcolor=gdebit_color;
+            icon=DEBIT_ICON;
+            bgcolor=DEBIT_COLOR;
             break;
         case Operation::CREDIT:
-            icon=gcredit_icon;
-            bgcolor=gcredit_color;
+            icon=CREDIT_ICON;
+            bgcolor=CREDIT_COLOR;
             break;
         }
 
@@ -84,7 +84,7 @@ void PicsouTableWidget::refresh(OperationCollection ops)
         items.append(new QTableWidgetItem(op->amount().to_str(true)));
 
         c=0;
-        foreach (QTableWidgetItem *item, items) {
+        foreach(QTableWidgetItem *item, items) {
             item->setBackgroundColor(bgcolor);
             setItem(r, c++, item);
         }

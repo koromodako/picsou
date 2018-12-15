@@ -4,16 +4,15 @@
 #include "schedule.h"
 #include "operation.h"
 
-#define KW_SO_NAME "name"
 
 class ScheduledOperation : public Operation
 {
     Q_OBJECT
 public:
-    virtual ~ScheduledOperation();
+    static const QString KW_NAME;
+
     ScheduledOperation(PicsouModelObj *parent);
     ScheduledOperation(double amount,
-                       const QDate &date,
                        const QString &budget,
                        const QString &recipient,
                        const QString &description,
@@ -26,7 +25,6 @@ public:
     inline Schedule schedule() const { return _schedule; }
 
     void update(double amount,
-                const QDate &date,
                 const QString &budget,
                 const QString &recipient,
                 const QString &description,
