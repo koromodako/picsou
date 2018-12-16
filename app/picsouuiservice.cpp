@@ -465,8 +465,7 @@ void PicsouUIService::db_save_as()
 void PicsouUIService::user_add()
 {
     LOG_IN_VOID();
-    QString username;
-    QSecureMemory old_pwd, new_pwd;
+    QString username, old_pwd, new_pwd;
     if(UserEditor(&username,
                   &old_pwd,
                   &new_pwd,
@@ -482,13 +481,12 @@ void PicsouUIService::user_add()
 void PicsouUIService::user_edit(QUuid id)
 {
     LOG_IN("id="<<id);
-    QSecureMemory old_pwd, new_pwd;
     UserPtr user=papp()->model_svc()->db()->find_user(id);
     if(user.isNull()) {
         emit svc_op_failed(tr("Internal error: invalid user pointer."));
         LOG_VOID_RETURN();
     }
-    QString username=user->name();
+    QString username=user->name(), old_pwd, new_pwd;
     if(UserEditor(&username,
                   &old_pwd,
                   &new_pwd,

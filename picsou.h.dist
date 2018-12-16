@@ -19,7 +19,7 @@
 #define PICSOU_H
 
 #include <QString>
-#include "model/converter/semver.h"
+#include "utils/semver.h"
 
 static const QString PICSOU_URL="https://github.com/koromodako/picsou";
 static const QString PICSOU_VERSION="%{VERSION}%";

@@ -27,8 +27,8 @@ UserEditor::~UserEditor()
 }
 
 UserEditor::UserEditor(QString *username,
-                       QSecureMemory *old_pwd,
-                       QSecureMemory *new_pwd,
+                       QString *old_pwd,
+                       QString *new_pwd,
                        QWidget *parent) :
     QDialog(parent),
     _username(username),
@@ -64,28 +64,6 @@ UserEditor::UserEditor(QString *username,
             this, &UserEditor::reject);
 }
 
-
-#define ERASE_LINE_EDIT(le) \
-    (le)->selectAll(); (le)->del()
-
-bool secmemcpy(QSecureMemory *dst, QLineEdit *src) {
-    QByteArray ba;
-    ba=src->text().toUtf8();
-    size_t bal=static_cast<size_t>(ba.length());
-    if(bal>0) {
-        ERASE_LINE_EDIT(src);
-        if(!dst->resize(bal)) {
-            LOG_BOOL_RETURN(false);
-        }
-        memcpy(dst->data(), ba.constData(), bal);
-        for(int i=0; i<ba.length(); i++) {
-            ba[i]=0;
-        }
-        ba.clear();
-    }
-    LOG_BOOL_RETURN(true);
-}
-
 void UserEditor::accept()
 {
     ui->error->setVisible(false);
@@ -94,17 +72,9 @@ void UserEditor::accept()
         ui->error->setVisible(true);
         return;
     }
-    ERASE_LINE_EDIT(ui->repeat_new_pwd);
-    if(!secmemcpy(_old_pwd, ui->old_pwd)) {
-        QDialog::reject();
-        return;
-    }
-    if(!secmemcpy(_new_pwd, ui->new_pwd)) {
-        QDialog::reject();
-        return;
-    }
+
+    (*_old_pwd)=ui->old_pwd->text();
+    (*_new_pwd)=ui->new_pwd->text();
     (*_username)=ui->username->text();
     QDialog::accept();
 }
-
-#undef ERASE_LINE_EDIT

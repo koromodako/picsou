@@ -20,8 +20,6 @@
 
 #include <QDialog>
 
-#include "utils/crypto/qsecurememory.h"
-
 namespace Ui {
 class UserEditor;
 }
@@ -32,8 +30,8 @@ class UserEditor : public QDialog
 public:
     virtual ~UserEditor();
     explicit UserEditor(QString *username,
-                        QSecureMemory *old_pwd,
-                        QSecureMemory *new_pwd,
+                        QString *old_pwd,
+                        QString *new_pwd,
                         QWidget *parent=nullptr);
 
 public slots:
@@ -41,8 +39,8 @@ public slots:
 
 private:
     QString *_username;
-    QSecureMemory *_old_pwd;
-    QSecureMemory *_new_pwd;
+    QString *_old_pwd;
+    QString *_new_pwd;
     Ui::UserEditor *ui;
 };
 

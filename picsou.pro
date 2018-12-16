@@ -9,7 +9,7 @@ QT += core widgets concurrent
 TARGET=picsou
 TEMPLATE=app
 
-CONFIG += console c++14
+CONFIG += static console c++14
 
 DEFINES += COLORIZE
 
@@ -43,10 +43,11 @@ QMAKE_CXXFLAGS += -Wall \
 
 SOURCES += \
     main.cpp \
-    ui/mainwindow.cpp \
+    utils/semver.cpp \
     model/object/scheduledoperation.cpp \
     model/object/paymentmethod.cpp \
     model/object/operation.cpp \
+    model/object/schedule.cpp \
     model/object/account.cpp \
     model/object/budget.cpp \
     model/object/amount.cpp \
@@ -55,21 +56,13 @@ SOURCES += \
     model/operationcollection.cpp \
     model/picsoumodelobj.cpp \
     model/picsoudb.cpp \
-    utils/crypto/qmessageauthcode.cpp \
-    utils/crypto/qcryptowrapper.cpp \
-    utils/crypto/qsecurememory.cpp \
-    utils/crypto/qcryptomodule.cpp \
-    utils/crypto/qrandombytes.cpp \
-    utils/crypto/qpassphrase.cpp \
-    utils/crypto/qsecurehash.cpp \
-    utils/crypto/qcipher.cpp \
-    utils/crypto/qnonce.cpp \
+    model/converter/converter.cpp \
     app/picsouapplication.cpp \
-    app/picsoucryptoservice.cpp \
     app/picsoumodelservice.cpp \
     app/picsouuiservice.cpp \
     app/picsouconsoleservice.cpp \
     app/picsouabstractservice.cpp \
+    ui/mainwindow.cpp \
     ui/dialogs/paymentmethodeditor.cpp \
     ui/dialogs/scheduledoperationeditor.cpp \
     ui/dialogs/operationeditor.cpp \
@@ -90,10 +83,7 @@ SOURCES += \
     ui/picsouitem.cpp \
     ui/items/picsoutableitem.cpp \
     ui/widgets/picsoutablewidget.cpp \
-    ui/widgets/operationstatistics.cpp \
-    model/converter/converter.cpp \
-    model/converter/semver.cpp \
-    model/object/schedule.cpp
+    ui/widgets/operationstatistics.cpp
 
 HEADERS += \
     picsou.h \
@@ -108,18 +98,9 @@ HEADERS += \
     model/searchquery.h \
     model/picsoudb.h \
     model/picsoumodelobj.h \
-    utils/crypto/qmessageauthcode.h \
-    utils/crypto/qcryptowrapper.h \
-    utils/crypto/qrandombytes.h \
-    utils/crypto/qsecurememory.h \
-    utils/crypto/qcryptomodule.h \
-    utils/crypto/qpassphrase.h \
-    utils/crypto/qsecurehash.h \
-    utils/crypto/qcipher.h \
-    utils/crypto/qnonce.h \
     utils/macro.h \
+    utils/semver.h \
     app/picsouapplication.h \
-    app/picsoucryptoservice.h \
     app/picsoumodelservice.h \
     app/picsouuiservice.h \
     app/picsouconsoleservice.h \
@@ -148,7 +129,6 @@ HEADERS += \
     model/operationcollection.h \
     ui/widgets/operationstatistics.h \
     model/converter/converter.h \
-    model/converter/semver.h \
     model/object/schedule.h
 
 FORMS += \

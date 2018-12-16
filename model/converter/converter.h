@@ -18,7 +18,7 @@
 #ifndef CONVERTER_H
 #define CONVERTER_H
 
-#include "semver.h"
+#include "utils/semver.h"
 #include <QJsonDocument>
 
 class Converter
