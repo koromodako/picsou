@@ -1,3 +1,20 @@
+/*
+ *  Picsou | Keep track of your expenses !
+ *  Copyright (C) 2018  koromodako
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
 #ifndef MACRO_H
 #define MACRO_H
 
@@ -21,7 +38,7 @@ static const QString LOG_CLR_ERR="31";
 #ifdef COLORIZE
 #    define LOG(log_func, lvl, color, ...) \
     { \
-        QDebug debug = log_func(); \
+        QDebug debug=log_func(); \
         debug.nospace(); \
         debug.noquote(); \
         debug<<"\x1b["<<(color)<<";1m" \
@@ -36,7 +53,7 @@ static const QString LOG_CLR_ERR="31";
 #else /* COLORIZE */
 #    define LOG(log_func, lvl, color, ...) \
     { \
-        QDebug debug = log_func(); \
+        QDebug debug=log_func(); \
         debug.nospace(); \
         debug.noquote(); \
         debug<<"["<<(lvl)<<"](" \

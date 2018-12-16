@@ -1,3 +1,20 @@
+/*
+ *  Picsou | Keep track of your expenses !
+ *  Copyright (C) 2018  koromodako
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
 #include "converter.h"
 #include "utils/macro.h"
 
@@ -15,10 +32,10 @@ void convert_100_110(QJsonDocument *doc)
     QJsonObject db;
     db=doc->object();
     user_ary=db[PicsouDB::KW_USERS].toArray();
-    for(auto const user_ref : user_ary) {
+    for(const auto user_ref : user_ary) {
         QJsonObject user=user_ref.toObject();
         account_ary=user[User::KW_ACCOUNTS].toArray();
-        for(auto const account_ref : account_ary) {
+        for(const auto account_ref : account_ary) {
             QJsonObject account=account_ref.toObject();
             account[Account::KW_NOTES]="";
             new_accout_ary.append(account);
@@ -41,15 +58,15 @@ bool Converter::convert(QJsonDocument *doc, SemVer from)
     converter_list.append(QPair<SemVer, db_converter_t>(SemVer(1, 0, 0), convert_100_110));
     /* apply conversions */
     LOG_DEBUG("attempting conversion.");
-    convert = false;
-    for(auto it : converter_list) {
-        LOG_DEBUG(it.first.to_str()<<" == "<<from.to_str()<<" : "<<(it.first==from));
-        if(it.first==from) {
+    convert=false;
+    for(const auto &converter : converter_list) {
+        LOG_DEBUG(converter.first.to_str()<<" == "<<from.to_str()<<" : "<<(converter.first==from));
+        if(converter.first==from) {
             convert=true;
         }
         if(convert) {
-            LOG_DEBUG("applying converter for version: "<<it.first.to_str());
-            it.second(doc);
+            LOG_DEBUG("applying converter for version: "<<converter.first.to_str());
+            converter.second(doc);
         }
     }
     LOG_BOOL_RETURN(convert);

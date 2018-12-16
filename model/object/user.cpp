@@ -1,3 +1,20 @@
+/*
+ *  Picsou | Keep track of your expenses !
+ *  Copyright (C) 2018  koromodako
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
 #include "user.h"
 #include "utils/macro.h"
 
@@ -87,7 +104,7 @@ bool User::remove_account(QUuid id)
 
 bool budget_cmp(const BudgetPtr &a, const BudgetPtr &b)
 {
-    return a->name() < b->name();
+    return a->name()<b->name();
 }
 
 BudgetPtrList User::budgets(bool sorted) const
@@ -103,7 +120,7 @@ QStringList User::budgets_str(bool sorted) const
 {
     QStringList budgets_str;
     BudgetPtrList budget_list=budgets(sorted);
-    foreach(BudgetPtr budget, budget_list) {
+    for(auto &budget : budget_list) {
         budgets_str<<budget->name();
     }
     budgets_str.insert(0, tr("OTHER"));
@@ -112,7 +129,7 @@ QStringList User::budgets_str(bool sorted) const
 
 bool account_cmp(const AccountPtr &a, const AccountPtr &b)
 {
-    return a->name() < b->name();
+    return a->name()<b->name();
 }
 
 AccountPtrList User::accounts(bool sorted) const

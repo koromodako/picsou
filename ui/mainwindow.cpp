@@ -1,3 +1,20 @@
+/*
+ *  Picsou | Keep track of your expenses !
+ *  Copyright (C) 2018  koromodako
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "utils/macro.h"
@@ -75,6 +92,8 @@ MainWindow::MainWindow(PicsouUIService *ui_svc, QWidget *parent) :
             ui_svc, &PicsouUIService::show_about_picsou);
     connect(ui->action_star_me_on_github, &QAction::triggered,
             ui_svc, &PicsouUIService::show_github_repo);
+    connect(ui->action_license, &QAction::triggered,
+            ui_svc, &PicsouUIService::show_license);
 
     /* database tree */
     connect(ui->tree, &QTreeWidget::itemSelectionChanged,
@@ -181,10 +200,10 @@ void MainWindow::update_search()
     LOG_IN_VOID();
     OperationCollection ops;
     QStringList selected_budgets, selected_pms;
-    foreach(QListWidgetItem *item, ui->budgets->selectedItems()) {
+    for(auto *item : ui->budgets->selectedItems()) {
         selected_budgets<<item->text();
     }
-    foreach(QListWidgetItem *item, ui->pms->selectedItems()) {
+    for(auto *item : ui->pms->selectedItems()) {
         selected_pms<<item->text();
     }
     _search_table->clear();
@@ -285,7 +304,7 @@ void MainWindow::_update_viewer(QTreeWidgetItem *item, int)
     LOG_IN("item="<<item);
     PicsouUIViewer *w;
     if(_details_widget!=nullptr) {
-        foreach(QAction *action, _details_widget->actions()) {
+        for(auto *action : _details_widget->actions()) {
             ui->toolbar->removeAction(action);
         }
         ui->details_tab->layout()->removeWidget(_details_widget);

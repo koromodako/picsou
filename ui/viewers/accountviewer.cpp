@@ -1,3 +1,20 @@
+/*
+ *  Picsou | Keep track of your expenses !
+ *  Copyright (C) 2018  koromodako
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
 #include "accountviewer.h"
 #include "ui_accountviewer.h"
 
@@ -27,10 +44,10 @@ AccountViewer::AccountViewer(PicsouUIService *ui_svc,
     connect(ui_svc, &PicsouUIService::model_updated,
             this, &AccountViewer::refresh);
 
-    _table = new PicsouTableWidget;
+    _table=new PicsouTableWidget;
     ui->ops_layout->insertWidget(0, _table);
 
-    _ops_stats = new OperationStatistics;
+    _ops_stats=new OperationStatistics;
     _ops_stats->append_field(_rolling_expense_lab, tr("unknown"));
     ui->hlayout->addWidget(_ops_stats);
 
@@ -110,7 +127,7 @@ void AccountViewer::refresh(const PicsouDBPtr db)
     AccountPtr account=db->find_account(mod_obj_id());
     /* payment methods */
     ui->payment_methods->clear();
-    foreach(PaymentMethodPtr pm, account->payment_methods(true)) {
+    for(const auto &pm : account->payment_methods(true)) {
         new PicsouListItem(pm->name(), ui->payment_methods, pm->id());
     }
     bool has_pm=(ui->payment_methods->count());
@@ -121,7 +138,7 @@ void AccountViewer::refresh(const PicsouDBPtr db)
     /* scheduled ops */
     ui->sops->clear();
     QString end;
-    foreach(ScheduledOperationPtr sop, account->scheduled_ops()) {
+    for(const auto &sop : account->scheduled_ops()) {
         end=(sop->schedule().endless()?tr("[endless]"):sop->schedule().until().toString(Qt::ISODate));
         new PicsouListItem(tr("[%0] %1 from %2 to %3 each %4 %5").arg(sop->name(),
                                                                       sop->amount().to_str(true),

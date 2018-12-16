@@ -1,9 +1,26 @@
 #!/usr/bin/env python3
 # -!- encoding:utf8 -!-
+#
+# Picsou | Keep track of your expenses !
+# Copyright (C) 2018  koromodako
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
+#
 
 from subprocess import getoutput
 
-LOCALES = [
+LOCALES=[
     'fr_FR'
 ]
 
@@ -11,21 +28,21 @@ def sanitize(s):
     return s.split('\n')[0].strip()
 
 def create_picsou_h():
-    status = sanitize(getoutput('git status --porcelain'))
-    status = 'clean' if len(status) == 0 else 'dirty'
+    status=sanitize(getoutput('git status --porcelain'))
+    status='clean' if len(status) == 0 else 'dirty'
 
-    commit = sanitize(getoutput('git rev-parse HEAD'))
+    commit=sanitize(getoutput('git rev-parse HEAD'))
 
-    version = sanitize(getoutput('git describe --tags'))
+    version=sanitize(getoutput('git describe --tags'))
     if len(version) == 0:
-        version = 'dev'
+        version='dev'
 
     with open('picsou.h.dist') as f:
-        data = f.read()
+        data=f.read()
 
-    data = data.replace('%{STATUS}%', status)
-    data = data.replace('%{COMMIT}%', commit)
-    data = data.replace('%{VERSION}%', version)
+    data=data.replace('%{STATUS}%', status)
+    data=data.replace('%{COMMIT}%', commit)
+    data=data.replace('%{VERSION}%', version)
 
     with open('picsou.h', 'w') as f:
         f.write(data)

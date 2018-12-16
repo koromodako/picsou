@@ -1,3 +1,20 @@
+/*
+ *  Picsou | Keep track of your expenses !
+ *  Copyright (C) 2018  koromodako
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
 #ifndef PICSOUMODELOBJ_H
 #define PICSOUMODELOBJ_H
 
@@ -19,8 +36,8 @@ public:
 
     inline void set_parent(PicsouModelObj *parent) { _parent=parent; }
 
-    virtual bool read(const QJsonObject &json) = 0;
-    virtual bool write(QJsonObject &json) const = 0;
+    virtual bool read(const QJsonObject &json)=0;
+    virtual bool write(QJsonObject &json) const=0;
 
 signals:
     void modified();
@@ -35,9 +52,11 @@ private:
 };
 
 #include <QPointer>
-#define DECL_PICSOU_MOD_OBJ_PTR(Class, ClassPtr, ClassPtrList) \
+#define DECL_PICSOU_MOD_OBJ_PTR(Class, ClassPtr, ClassShPtr, ClassPtrList, ClassShPtrList) \
     typedef QPointer<Class> ClassPtr; \
-    typedef QList<ClassPtr> ClassPtrList
+    typedef QSharedPointer<Class> ClassShPtr; \
+    typedef QList<ClassPtr> ClassPtrList; \
+    typedef QList<ClassShPtr> ClassShPtrList
 
 #define DELETE_HASH_CONTENT(Class, hash) \
     { \

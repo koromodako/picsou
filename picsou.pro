@@ -6,8 +6,8 @@
 
 QT += core widgets concurrent
 
-TARGET = picsou
-TEMPLATE = app
+TARGET=picsou
+TEMPLATE=app
 
 CONFIG += console c++14
 
@@ -16,9 +16,9 @@ DEFINES += COLORIZE
 # Run prebuild script
 system(./prebuild)
 # Force qmake to run
-qmakeforce.target = dummy
-qmakeforce.commands = rm -f Makefile ##to force rerun of qmake
-qmakeforce.depends = FORCE
+qmakeforce.target=dummy
+qmakeforce.commands=rm -f Makefile ##to force rerun of qmake
+qmakeforce.depends=FORCE
 PRE_TARGETDEPS += $$qmakeforce.target
 QMAKE_EXTRA_TARGETS += qmakeforce
 

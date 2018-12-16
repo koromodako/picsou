@@ -1,3 +1,20 @@
+/*
+ *  Picsou | Keep track of your expenses !
+ *  Copyright (C) 2018  koromodako
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
 #include "schedule.h"
 #include <QObject>
 
@@ -77,6 +94,39 @@ bool Schedule::valid() const
 bool Schedule::contains(const QDate &date) const
 {
     return date>=_from&&date<=_until;
+}
+
+QList<QDate> Schedule::dates(int year, int month) const
+{
+    QDate cdate=_from,
+          until=(_endless?QDate::currentDate():_until);
+
+    QList<QDate> dates;
+    do {
+        /* check if date validates month & year constraints */
+        if(year==-1||cdate.year()==year) {
+            if(month==-1||cdate.month()==month) {
+                /* append a valid date */
+                dates.append(cdate);
+            }
+        }
+        /* compute next date */
+        switch (_freq_unit) {
+            case DAY:
+                cdate=cdate.addDays(_freq_value);
+                break;
+            case WEEK:
+                cdate=cdate.addDays(_freq_value*7);
+                break;
+            case MONTH:
+                cdate=cdate.addMonths(_freq_value);
+                break;
+            case YEAR:
+                cdate=cdate.addYears(_freq_value);
+                break;
+        }
+    } while(cdate<=until);
+    return dates;
 }
 
 void Schedule::update(const QDate &from,

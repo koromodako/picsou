@@ -1,3 +1,20 @@
+/*
+ *  Picsou | Keep track of your expenses !
+ *  Copyright (C) 2018  koromodako
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
 #include "usereditor.h"
 #include "ui_usereditor.h"
 
@@ -54,7 +71,7 @@ UserEditor::UserEditor(QString *username,
 bool secmemcpy(QSecureMemory *dst, QLineEdit *src) {
     QByteArray ba;
     ba=src->text().toUtf8();
-    size_t bal = static_cast<size_t>(ba.length());
+    size_t bal=static_cast<size_t>(ba.length());
     if(bal>0) {
         ERASE_LINE_EDIT(src);
         if(!dst->resize(bal)) {

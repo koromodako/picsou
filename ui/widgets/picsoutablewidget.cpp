@@ -1,3 +1,20 @@
+/*
+ *  Picsou | Keep track of your expenses !
+ *  Copyright (C) 2018  koromodako
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
 #include "picsoutablewidget.h"
 #include "ui/items/picsoutableitem.h"
 #include <QHeaderView>
@@ -25,7 +42,7 @@ PicsouTableWidget::PicsouTableWidget(QWidget *parent) :
 
 void PicsouTableWidget::clear()
 {
-    static QStringList labels = QStringList()<<tr("Date")
+    static QStringList labels=QStringList()<<tr("Date")
                                              <<tr("Description")
                                              <<tr("Recipient")
                                              <<tr("Payment Method")
@@ -60,7 +77,7 @@ void PicsouTableWidget::refresh(OperationCollection ops)
     clear();
     setRowCount(ops.length());
 
-    foreach(OperationPtr op, ops.list()) {
+    for(const auto &op : ops.list()) {
         items.clear();
         switch (op->type()) {
         case Operation::DEBIT:
@@ -81,8 +98,8 @@ void PicsouTableWidget::refresh(OperationCollection ops)
         items.append(new QTableWidgetItem(op->budget()));
         items.append(new QTableWidgetItem(op->amount().to_str(true)));
         c=0;
-        foreach(QTableWidgetItem *item, items) {
-            item->setBackgroundColor(bgcolor);
+        for(auto *item : items) {
+            item->setBackground(QBrush(bgcolor, op->scheduled()?Qt::DiagCrossPattern:Qt::SolidPattern));
             setItem(r, c++, item);
         }
         r++;

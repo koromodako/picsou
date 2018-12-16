@@ -1,3 +1,20 @@
+/*
+ *  Picsou | Keep track of your expenses !
+ *  Copyright (C) 2018  koromodako
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
 #include "account.h"
 #include "utils/macro.h"
 
@@ -123,9 +140,9 @@ void Account::add_operation(const Amount &amount,
      emit modified();
 }
 
-void Account::add_operations(OperationCollection ops)
+void Account::add_operations(const OperationPtrList &ops)
 {
-    foreach(OperationPtr op, ops.list()) {
+    for(const auto &op : ops) {
         op->set_parent(this);
         _ops.insert(op->id(), op);
     }
@@ -182,41 +199,26 @@ OperationPtr Account::find_operation(QUuid id)
     return op;
 }
 
-QList<int> Account::years(bool sorted) const
+#define min(a, b) (((a)<(b))?(a):(b))
+
+int Account::min_year() const
 {
-    OperationCollection operations=ops();
-    QSet<int> years_set;
-    QList<int> years_list;
-    foreach(OperationPtr op, operations.list()) {
-        years_set<<op->date().year();
+    int min_y=INT_MAX;
+    for(const auto &op : _ops) {
+        min_y=min(min_y, op->date().year());
     }
-    years_list=years_set.toList();
-    if(sorted) {
-        std::sort(years_list.begin(), years_list.end());
+    for(const auto &sop : _scheduled_ops) {
+        min_y=min(min_y, sop->schedule().from().year());
     }
-    if(years_list.empty()) {
-        years_list<<QDate::currentDate().year();
-    }
-    return years_list;
+    return min_y;
+
 }
 
-bool op_cmp(const OperationPtr &a, const OperationPtr &b)
-{
-    return a->date() < b->date();
-}
-
-OperationCollection Account::ops(bool sorted) const
-{
-    OperationPtrList ops=_ops.values();
-    if(sorted) {
-        std::sort(ops.begin(), ops.end(), op_cmp);
-    }
-    return ops;
-}
+#undef min
 
 bool pm_cmp(const PaymentMethodPtr &a, const PaymentMethodPtr &b)
 {
-    return a->name() < b->name();
+    return a->name()<b->name();
 }
 
 PaymentMethodPtrList Account::payment_methods(bool sorted) const
@@ -232,7 +234,7 @@ QStringList Account::payment_methods_str(bool sorted) const
 {
     QStringList p_methods_str;
     PaymentMethodPtrList p_methods=payment_methods(sorted);
-    foreach(PaymentMethodPtr pm, p_methods) {
+    for(auto &pm : p_methods) {
         p_methods_str<<pm->name();
     }
     return p_methods_str;
@@ -275,5 +277,5 @@ bool Account::write(QJsonObject &json) const
 
 bool Account::operator <(const Account &other)
 {
-    return (_name < other._name);
+    return (_name<other._name);
 }

@@ -1,3 +1,20 @@
+/*
+ *  Picsou | Keep track of your expenses !
+ *  Copyright (C) 2018  koromodako
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
 #include "picsou.h"
 #include "picsoudb.h"
 #include "utils/macro.h"
@@ -82,12 +99,24 @@ UserPtr PicsouDB::find_user(QUuid id) const
 
 OperationCollection PicsouDB::ops(QUuid account_id,
                                   int year,
-                                  int month,
-                                  bool sorted) const
+                                  int month) const
 {
     OperationCollection selected_ops;
     AccountPtr account=find_account(account_id);
-    foreach(OperationPtr op, account->ops(sorted).list()) {
+    for(const auto &sop : account->scheduled_ops()) {
+        for(const auto &date : sop->schedule().dates(year, month)) {
+            Operation *op=new Operation(sop->amount(),
+                                        date,
+                                        sop->budget(),
+                                        sop->recipient(),
+                                        sop->description(),
+                                        sop->payment_method(),
+                                        account.data());
+            op->mark_scheduled();
+            selected_ops.append(OperationShPtr(op));
+        }
+    }
+    for(const auto &op : account->ops()) {
         if(year!=-1&&op->date().year()!=year) {
             continue;
         }
@@ -102,7 +131,7 @@ OperationCollection PicsouDB::ops(QUuid account_id,
 AccountPtr PicsouDB::find_account(QUuid id) const
 {
     AccountPtr account;
-    foreach(UserPtr user, _users.values()) {
+    for(const auto &user : _users.values()) {
         account=user->find_account(id);
         if(account->valid()) {
             break;

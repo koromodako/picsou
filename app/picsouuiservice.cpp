@@ -1,3 +1,20 @@
+/*
+ *  Picsou | Keep track of your expenses !
+ *  Copyright (C) 2018  koromodako
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
 #include "picsouuiservice.h"
 #include "utils/macro.h"
 
@@ -76,8 +93,8 @@ bool PicsouUIService::populate_db_tree(QTreeWidget* const tree)
                        account_ico=QIcon(":/resources/material-design/svg/account-card-details.svg"),
                        calendar_ico=QIcon(":/resources/material-design/svg/calendar-blank.svg");
 
-    int month_stop;
     QDate today=QDate::currentDate();
+    int month_stop, today_y=today.year();
     const PicsouDB *db=papp()->model_svc()->db();
     QTreeWidgetItem *root_itm, *user_itm, *account_itm, *year_itm, *month_itm;
     root_itm=new PicsouTreeItem(tree,
@@ -86,7 +103,7 @@ bool PicsouUIService::populate_db_tree(QTreeWidget* const tree)
                                 db->name(),
                                 db->id());
 
-    foreach(UserPtr user, db->users(true)) {
+    for(const auto &user : db->users(true)) {
         user_itm=new PicsouTreeItem(root_itm,
                                     PicsouTreeItem::T_USER,
                                     user_ico,
@@ -94,21 +111,21 @@ bool PicsouUIService::populate_db_tree(QTreeWidget* const tree)
                                     user->id());
 
         AccountPtrList accounts=user->accounts(true);
-        foreach(AccountPtr account, accounts) {
+        for(const auto &account : accounts) {
             account_itm=new PicsouTreeItem(user_itm,
                                            PicsouTreeItem::T_ACCOUNT,
                                            account_ico,
                                            account->name(),
                                            account->id());
 
-            foreach(int year, account->years()) {
+            for(int year=account->min_year(); year<=today_y; ++year) {
                 year_itm=new PicsouTreeItem(account_itm,
                                             PicsouTreeItem::T_YEAR,
                                             calendar_ico,
                                             QString("%0").arg(year),
                                             account->id(),
                                             year);
-                if(year==today.year()) {
+                if(year==today_y) {
                     month_stop=today.month();
                 } else {
                     month_stop=12;
@@ -135,7 +152,7 @@ bool PicsouUIService::populate_user_cb(QComboBox * const cb)
         LOG_BOOL_RETURN(false);
     }
     UserPtrList users=papp()->model_svc()->db()->users();
-    foreach(UserPtr user, users) {
+    for(const auto &user : users) {
         cb->addItem(user->name());
     }
     LOG_BOOL_RETURN(true);
@@ -147,10 +164,10 @@ bool PicsouUIService::populate_account_cb(const QString &username,
     LOG_IN("username="<<username<<",cb="<<cb);
     bool found=false;
     UserPtrList users=papp()->model_svc()->db()->users(true);
-    foreach(UserPtr user, users) {
+    for(const auto &user : users) {
         if(user->name()==username) {
             found=true;
-            foreach(AccountPtr account, user->accounts(true)) {
+            for(const auto &account : user->accounts(true)) {
                 cb->addItem(account->name());
             }
         }
@@ -164,10 +181,10 @@ bool PicsouUIService::populate_budgets_list(const QString &username,
     LOG_IN("username="<<username<<",list="<<list);
     bool found=false;
     UserPtrList users=papp()->model_svc()->db()->users(true);
-    foreach(UserPtr user, users) {
+    for(const auto &user : users) {
         if(user->name()==username) {
             found=true;
-            foreach(BudgetPtr budget, user->budgets(true)) {
+            for(const auto &budget : user->budgets(true)) {
                 list->addItem(budget->name());
             }
         }
@@ -182,12 +199,12 @@ bool PicsouUIService::populate_pms_list(const QString &username,
     LOG_IN("username="<<username<<",account_name="<<account_name<<",list="<<list);
     bool found=false;
     UserPtrList users=papp()->model_svc()->db()->users(true);
-    foreach(UserPtr user, users) {
+    for(const auto &user : users) {
         if(user->name()==username) {
-            foreach(AccountPtr account, user->accounts(true)) {
+            for(const auto &account : user->accounts(true)) {
                 if(account->name()==account_name) {
                     found=true;
-                    foreach(PaymentMethodPtr pm, account->payment_methods(true)) {
+                    for(const auto &pm : account->payment_methods(true)) {
                         list->addItem(pm->name());
                     }
                     break;
@@ -204,13 +221,14 @@ OperationCollection PicsouUIService::search_operations(const SearchQuery &query)
     OperationCollection ops;
     QFuture<OperationPtr> future;
     UserPtrList users=papp()->model_svc()->db()->users(true);
-    foreach(UserPtr user, users) {
+    for(const auto &user : users) {
         if(user->name()==query.username()) {
             LOG_DEBUG("found username: "<<user->name());
-            foreach(AccountPtr account, user->accounts(true)) {
+            for(const auto &account : user->accounts(true)) {
                 if(account->name()==query.account_name()) {
                     LOG_DEBUG("found account: "<<account->name());
-                    OperationPtrList ops_list=account->ops(true).list();
+                    OperationCollection ops_col=papp()->model_svc()->db()->ops(account->id());
+                    OperationPtrList ops_list=ops_col.list(true);
 
                     LOG_DEBUG("searching among "<<ops_list.length()<<" operations");
                     future=QtConcurrent::filtered(ops_list.begin(),
@@ -321,6 +339,13 @@ void PicsouUIService::show_github_repo()
 {
     LOG_IN_VOID();
     QDesktopServices::openUrl(QUrl(PICSOU_URL, QUrl::StrictMode));
+    LOG_VOID_RETURN();
+}
+
+void PicsouUIService::show_license()
+{
+    LOG_IN_VOID();
+    QDesktopServices::openUrl(QUrl(PICSOU_LICENSE_URL, QUrl::StrictMode));
     LOG_VOID_RETURN();
 }
 
@@ -941,7 +966,7 @@ void PicsouUIService::ops_import(QUuid account_id)
         ops.clear();
         LOG_VOID_RETURN();
     }
-    account->add_operations(ops);
+    account->add_operations(ops.list(false));
     emit ops_imported();
     LOG_VOID_RETURN();
 }
@@ -982,8 +1007,9 @@ void PicsouUIService::ops_export(QUuid account_id)
         emit svc_op_canceled();
         LOG_VOID_RETURN();
     }
+    OperationCollection ops=papp()->model_svc()->db()->ops(account_id);
     PicsouModelService::ImportExportFormat eformat=eformats.at(formats.indexOf(fmt_str));
-    if(!papp()->model_svc()->dump_ops(eformat, filename, account->ops(true))) {
+    if(!papp()->model_svc()->dump_ops(eformat, filename, ops.list(true))) {
         emit svc_op_failed(tr("Internal error: failed to export operations."));
         LOG_VOID_RETURN();
     }

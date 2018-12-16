@@ -1,3 +1,20 @@
+/*
+ *  Picsou | Keep track of your expenses !
+ *  Copyright (C) 2018  koromodako
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
 #ifndef OPERATION_H
 #define OPERATION_H
 
@@ -7,7 +24,11 @@
 #include <QDate>
 
 class PaymentMethod;
-DECL_PICSOU_MOD_OBJ_PTR(PaymentMethod, PaymentMethodPtr, PaymentMethodPtrList);
+DECL_PICSOU_MOD_OBJ_PTR(PaymentMethod,
+                        PaymentMethodPtr,
+                        PaymentMethodShPtr,
+                        PaymentMethodPtrList,
+                        PaymentMethodShPtrList);
 
 class Operation : public PicsouModelObj
 {
@@ -43,13 +64,16 @@ public:
                 const QString &description,
                 const QString &payment_method);
 
+    void mark_scheduled() { _scheduled=true; }
+
     inline Amount amount() const { return _amount; }
     inline QDate date() const { return _date; }
     inline QString budget() const { return _budget; }
     inline QString recipient() const { return _recipient; }
     inline QString description() const { return _description; }
     inline QString payment_method() const { return _payment_method; }
-    inline Type type() const { return (_amount < 0. ? DEBIT : CREDIT); }
+    inline Type type() const { return (_amount<0.?DEBIT:CREDIT); }
+    inline bool scheduled() const { return _scheduled; }
 
     bool read(const QJsonObject &json);
     bool write(QJsonObject &json) const;
@@ -63,8 +87,13 @@ private:
     QString _recipient;
     QString _description;
     QString _payment_method;
+    bool _scheduled=false;
 };
 
-DECL_PICSOU_MOD_OBJ_PTR(Operation, OperationPtr, OperationPtrList);
+DECL_PICSOU_MOD_OBJ_PTR(Operation,
+                        OperationPtr,
+                        OperationShPtr,
+                        OperationPtrList,
+                        OperationShPtrList);
 
 #endif // OPERATION_H

@@ -1,3 +1,20 @@
+/*
+ *  Picsou | Keep track of your expenses !
+ *  Copyright (C) 2018  koromodako
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
 #include "picsoumodelservice.h"
 #include "utils/macro.h"
 
@@ -94,7 +111,7 @@ bool PicsouModelService::open_db(QString filename)
         }
         db_version=_db->version();
         LOG_DEBUG("valid DB version: "<<db_version.is_valid());
-        LOG_DEBUG(db_version.to_str()<<" < "<<PICSOU_DB_VERSION.to_str()<<" : "<<(db_version<PICSOU_DB_VERSION));
+        LOG_DEBUG(db_version.to_str()<<"<"<<PICSOU_DB_VERSION.to_str()<<" : "<<(db_version<PICSOU_DB_VERSION));
         if(db_version.is_valid()&&db_version<PICSOU_DB_VERSION) {
             if(Converter::convert(&doc, db_version)) {
                 continue; /* retry to read document */
@@ -423,7 +440,7 @@ bool PicsouModelService::xml_dump_ops(QFile &f, OperationCollection ops)
     QXmlStreamWriter xml(&f);
     xml.writeStartDocument("1.0", true);
     xml.writeStartElement("operations");
-    foreach(OperationPtr op, ops.list()) {
+    for(const auto &op : ops.list()) {
         xml.writeEmptyElement(XML_ELEM_OP);
         xml.writeAttribute(XML_ATTR_YEAR, QString::number(op->date().year()));
         xml.writeAttribute(XML_ATTR_MONTH, QString::number(op->date().month()));
@@ -442,7 +459,7 @@ bool PicsouModelService::xml_dump_ops(QFile &f, OperationCollection ops)
 bool PicsouModelService::csv_dump_ops(QFile &f, OperationCollection ops)
 {
     LOG_IN("&f="<<&f<<",ops.length="<<ops.length());
-    foreach(OperationPtr op, ops.list()) {
+    for(const auto &op : ops.list()) {
         f.write(QString("%0,%1,%2,%3,\"%4\",\"%5\",\"%6\",\"%7\"\n").arg(
                     QString::number(op->date().year()),
                     QString::number(op->date().month()),
@@ -461,7 +478,7 @@ bool PicsouModelService::json_dump_ops(QFile &f, OperationCollection ops)
 {
     LOG_IN("&f="<<&f<<",ops.length="<<ops.length());
     QJsonObject obj;
-    foreach(OperationPtr op, ops.list()) {
+    for(const auto &op : ops.list()) {
         if(!op->write(obj)) {
             f.write(tr("-- [export error] --").toUtf8());
             LOG_BOOL_RETURN(false);

@@ -13,6 +13,10 @@
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
+  <property name="windowIcon">
+   <iconset resource="../picsou.qrc">
+    <normaloff>:/resources/material-design/svg/currency-eur.svg</normaloff>:/resources/material-design/svg/currency-eur.svg</iconset>
+  </property>
   <widget class="QWidget" name="centralWidget">
    <layout class="QGridLayout" name="gridLayout">
     <item row="0" column="0">
@@ -281,14 +285,9 @@
     <addaction name="action_about_qt"/>
     <addaction name="separator"/>
     <addaction name="action_star_me_on_github"/>
-   </widget>
-   <widget class="QMenu" name="edit_menu">
-    <property name="title">
-     <string>Edit</string>
-    </property>
+    <addaction name="action_license"/>
    </widget>
    <addaction name="file_menu"/>
-   <addaction name="edit_menu"/>
    <addaction name="help_menu"/>
   </widget>
   <widget class="QToolBar" name="toolbar">
@@ -380,6 +379,10 @@
    </property>
   </action>
   <action name="action_about_picsou">
+   <property name="icon">
+    <iconset resource="../picsou.qrc">
+     <normaloff>:/resources/material-design/svg/currency-eur.svg</normaloff>:/resources/material-design/svg/currency-eur.svg</iconset>
+   </property>
    <property name="text">
     <string>About Picsou...</string>
    </property>
@@ -399,7 +402,7 @@
      <normaloff>:/resources/material-design/svg/github-box.svg</normaloff>:/resources/material-design/svg/github-box.svg</iconset>
    </property>
    <property name="text">
-    <string>Star me on Github !</string>
+    <string>Star me on Github...</string>
    </property>
   </action>
   <action name="action_save">
@@ -432,6 +435,15 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+N</string>
+   </property>
+  </action>
+  <action name="action_license">
+   <property name="icon">
+    <iconset resource="../picsou.qrc">
+     <normaloff>:/resources/material-design/svg/book-open.svg</normaloff>:/resources/material-design/svg/book-open.svg</iconset>
+   </property>
+   <property name="text">
+    <string>License information...</string>
    </property>
   </action>
  </widget>
