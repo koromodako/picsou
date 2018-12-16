@@ -189,7 +189,7 @@ OperationCollection PicsouModelService::load_ops(ImportExportFormat fmt,
         case JSON: ops=json_load_ops(f); break;
     }
     f.close();
-    LOG_INFO("-> ops.length="<<ops.length());
+    LOG_DEBUG("-> ops.length="<<ops.length());
     return ops;
 }
 
@@ -216,7 +216,7 @@ UserPtr PicsouModelService::find_user(QUuid id) const
 {
     LOG_IN("id="<<id);
     UserPtr user=_db->find_user(id);
-    LOG_INFO("-> user="<<user);
+    LOG_DEBUG("-> user="<<user);
     return user;
 }
 
@@ -224,7 +224,7 @@ AccountPtr PicsouModelService::find_account(QUuid id) const
 {
     LOG_IN("id="<<id);
     AccountPtr account=_db->find_account(id);
-    LOG_INFO("-> account="<<account);
+    LOG_DEBUG("-> account="<<account);
     return account;
 }
 
@@ -307,7 +307,7 @@ OperationCollection PicsouModelService::xml_load_ops(QFile &f)
         ops.clear();
         return ops;
     }
-    LOG_INFO("-> ops.length="<<ops.length());
+    LOG_DEBUG("-> ops.length="<<ops.length());
     return ops;
 }
 
@@ -404,7 +404,7 @@ OperationCollection PicsouModelService::csv_load_ops(QFile &f)
             }
         }
     }
-    LOG_INFO("-> ops.length="<<ops.length());
+    LOG_DEBUG("-> ops.length="<<ops.length());
     return ops;
 }
 
@@ -430,7 +430,7 @@ OperationCollection PicsouModelService::json_load_ops(QFile &f)
             }
         }
     }
-    LOG_INFO("-> ops.length="<<ops.length());
+    LOG_DEBUG("-> ops.length="<<ops.length());
     return ops;
 }
 
@@ -464,7 +464,7 @@ bool PicsouModelService::csv_dump_ops(QFile &f, OperationCollection ops)
                     QString::number(op->date().year()),
                     QString::number(op->date().month()),
                     QString::number(op->date().day()),
-                    op->amount().to_str(true),
+                    op->amount().to_str(),
                     op->budget().replace('"', '\''),
                     op->recipient().replace('"', '\''),
                     op->payment_method().replace('"', '\''),

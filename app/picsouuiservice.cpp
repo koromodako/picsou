@@ -272,7 +272,7 @@ OperationCollection PicsouUIService::search_operations(const SearchQuery &query)
                                  tr("No operation matched the search query."),
                                  QMessageBox::Ok);
     }
-    LOG_INFO("-> ops.length="<<ops.length());
+    LOG_DEBUG("-> ops.length="<<ops.length());
     return ops;
 }
 
@@ -315,7 +315,7 @@ PicsouUIViewer *PicsouUIService::viewer_from_item(QTreeWidgetItem *item)
     }
     /* trigger viewer content update */
     emit model_updated(papp()->model_svc()->db());
-    LOG_INFO("w="<<w);
+    LOG_DEBUG("-> w="<<w);
     return w;
 }
 
@@ -717,10 +717,10 @@ void PicsouUIService::sop_add(QUuid user_id, QUuid account_id)
         LOG_VOID_RETURN();
     }
     ScheduledOperationEditor editor(&amount,
-                                    &payment_method,
                                     &budget,
                                     &recipient,
                                     &description,
+                                    &payment_method,
                                     &name,
                                     &schedule,
                                     _mw);
@@ -764,10 +764,10 @@ void PicsouUIService::sop_edit(QUuid user_id, QUuid account_id, QUuid sop_id)
             name=sop->name();
     Schedule schedule=sop->schedule();
     ScheduledOperationEditor editor(&amount,
-                                    &payment_method,
                                     &budget,
                                     &recipient,
                                     &description,
+                                    &payment_method,
                                     &name,
                                     &schedule,
                                     _mw);

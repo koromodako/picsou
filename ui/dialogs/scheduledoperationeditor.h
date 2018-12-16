@@ -33,10 +33,10 @@ class ScheduledOperationEditor : public QDialog
 public:
     virtual ~ScheduledOperationEditor();
     explicit ScheduledOperationEditor(Amount *amount,
-                                      QString *payment_method,
                                       QString *budget,
                                       QString *recipient,
                                       QString *description,
+                                      QString *payment_method,
                                       QString *name,
                                       Schedule *schedule,
                                       QWidget *parent=nullptr);

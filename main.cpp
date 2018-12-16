@@ -32,13 +32,13 @@ QCoreApplication* createApplication(int &argc, char *argv[])
     for(int i=1; i<argc; ++i) {
         if(!qstrcmp(argv[i], "--no-gui")) {
             app=new QCoreApplication(argc, argv);
-            LOG_INFO("-> app[console]="<<app);
+            LOG_DEBUG("-> app[console]="<<app);
             return app;
         }
     }
     QApplication::setStyle(QStyleFactory::create("Fusion"));
     app=new QApplication(argc, argv);
-    LOG_INFO("-> app[gui]="<<app);
+    LOG_DEBUG("-> app[gui]="<<app);
     return app;
 }
 
@@ -70,11 +70,10 @@ int main(int argc, char *argv[])
         papp.ui_svc()->show_mainwindow();
     } else {
        /* start non-GUI version */
-        LOG_INFO("test");
         LOG_CRITICAL("no CLI implemented yet...");
         return 1;
     }
     int rcode=app->exec();
-    LOG_INFO("-> rcode="<<rcode);
+    LOG_DEBUG("-> rcode="<<rcode);
     return rcode;
 }

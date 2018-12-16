@@ -26,12 +26,17 @@ class PicsouTableWidget : public QTableWidget
 {
     Q_OBJECT
 public:
-    virtual ~PicsouTableWidget();
+    enum OpType {
+        NORMAL,
+        SCHEDULED
+    };
+
     PicsouTableWidget(QWidget *parent=nullptr);
 
     void clear();
     void refresh(OperationCollection ops);
-    QUuid current_op();
+    bool is_current_op_scheduled() const;
+    QUuid current_op() const;
 
 private:
     Q_DISABLE_COPY(PicsouTableWidget)

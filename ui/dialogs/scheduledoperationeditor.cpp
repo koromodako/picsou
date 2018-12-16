@@ -26,10 +26,10 @@ ScheduledOperationEditor::~ScheduledOperationEditor()
 }
 
 ScheduledOperationEditor::ScheduledOperationEditor(Amount *amount,
-                                                   QString *payment_method,
                                                    QString *budget,
                                                    QString *recipient,
                                                    QString *description,
+                                                   QString *payment_method,
                                                    QString *name,
                                                    Schedule *schedule,
                                                    QWidget *parent) :

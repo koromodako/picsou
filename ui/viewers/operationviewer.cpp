@@ -102,6 +102,10 @@ void OperationViewer::add_op()
 void OperationViewer::edit_op()
 {
     QUuid op_id;
+    if(_table->is_current_op_scheduled()) {
+        ui_svc()->svc_op_failed(tr("Logical error: you can't edit a scheduled operation from this view."));
+        return;
+    }
     op_id=_table->current_op();
     if(!op_id.isNull()) {
         ui_svc()->op_edit(_user_id, mod_obj_id(), op_id, _year, _month);
@@ -111,6 +115,10 @@ void OperationViewer::edit_op()
 void OperationViewer::remove_op()
 {
     QUuid op_id;
+    if(_table->is_current_op_scheduled()) {
+        ui_svc()->svc_op_failed(tr("Logical error: you can't remove a scheduled operation from this view."));
+        return;
+    }
     op_id=_table->current_op();
     if(!op_id.isNull()) {
         ui_svc()->op_remove(mod_obj_id(), op_id);

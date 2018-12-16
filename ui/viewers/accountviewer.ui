@@ -125,20 +125,24 @@
     </layout>
    </item>
    <item>
-    <widget class="QGroupBox" name="notes_group">
-     <property name="title">
-      <string>Notes</string>
-     </property>
-     <layout class="QVBoxLayout" name="verticalLayout_4">
-      <item>
-       <widget class="QPlainTextEdit" name="notes">
-        <property name="readOnly">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-     </layout>
-    </widget>
+    <layout class="QHBoxLayout" name="notes_layout">
+     <item>
+      <widget class="QGroupBox" name="notes_group">
+       <property name="title">
+        <string>Notes</string>
+       </property>
+       <layout class="QVBoxLayout" name="verticalLayout_4">
+        <item>
+         <widget class="QPlainTextEdit" name="notes">
+          <property name="readOnly">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </item>
+    </layout>
    </item>
    <item>
     <widget class="QGroupBox" name="ops_group">

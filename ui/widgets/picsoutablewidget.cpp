@@ -19,11 +19,6 @@
 #include "ui/items/picsoutableitem.h"
 #include <QHeaderView>
 
-PicsouTableWidget::~PicsouTableWidget()
-{
-
-}
-
 PicsouTableWidget::PicsouTableWidget(QWidget *parent) :
     QTableWidget(parent)
 {
@@ -65,7 +60,8 @@ void PicsouTableWidget::refresh(OperationCollection ops)
 {
     static const int alpha=32;
     static const QIcon debit_icon=QIcon(":/resources/material-design/svg/trending-down.svg"),
-                       credit_icon=QIcon(":/resources/material-design/svg/trending-up.svg");
+                       credit_icon=QIcon(":/resources/material-design/svg/trending-up.svg"),
+                       scheduled_icon=QIcon(":/resources/material-design/svg/calendar.svg");
     static const QColor debit_color=QColor(5, 5, 5, alpha),
                         credit_color=QColor(0, 255, 0, alpha);
 
@@ -92,21 +88,30 @@ void PicsouTableWidget::refresh(OperationCollection ops)
         items.append(new PicsouTableItem(icon,
                                          op->date().toString(Qt::DefaultLocaleShortDate),
                                          op->id()));
-        items.append(new QTableWidgetItem(op->description()));
+        if(op->scheduled()) {
+            items.append(new QTableWidgetItem(scheduled_icon, op->description(), SCHEDULED));
+        } else {
+            items.append(new QTableWidgetItem(op->description(), NORMAL));
+        }
         items.append(new QTableWidgetItem(op->recipient()));
         items.append(new QTableWidgetItem(op->payment_method()));
         items.append(new QTableWidgetItem(op->budget()));
         items.append(new QTableWidgetItem(op->amount().to_str(true)));
         c=0;
         for(auto *item : items) {
-            item->setBackground(QBrush(bgcolor, op->scheduled()?Qt::DiagCrossPattern:Qt::SolidPattern));
+            item->setBackground(QBrush(bgcolor, op->scheduled()?Qt::Dense5Pattern:Qt::SolidPattern));
             setItem(r, c++, item);
         }
         r++;
     }
 }
 
-QUuid PicsouTableWidget::current_op()
+bool PicsouTableWidget::is_current_op_scheduled() const
+{
+    return item(currentRow(), 1)->type()==SCHEDULED;
+}
+
+QUuid PicsouTableWidget::current_op() const
 {
     QUuid uuid;
     PicsouTableItem *it=static_cast<PicsouTableItem*>(item(currentRow(), 0));
