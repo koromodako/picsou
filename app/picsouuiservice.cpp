@@ -665,9 +665,14 @@ void PicsouUIService::pm_remove(QUuid account_id, QUuid pm_id)
     LOG_VOID_RETURN();
 }
 
-void PicsouUIService::sop_add(QUuid account_id)
+void PicsouUIService::sop_add(QUuid user_id, QUuid account_id)
 {
-    LOG_IN("account_id="<<account_id);
+    LOG_IN("user_id="<<user_id<<"account_id="<<account_id);
+    UserPtr user=papp()->model_svc()->find_user(user_id);
+    if(user.isNull()) {
+        emit svc_op_failed(tr("Internal error: invalid user pointer."));
+        LOG_VOID_RETURN();
+    }
     AccountPtr account=papp()->model_svc()->find_account(account_id);
     if(account.isNull()) {
         emit svc_op_failed(tr("Internal error: invalid account pointer."));
@@ -676,14 +681,28 @@ void PicsouUIService::sop_add(QUuid account_id)
     Amount amount;
     QString payment_method, budget, recipient, description, name;
     Schedule schedule;
-    if(ScheduledOperationEditor(&amount,
-                                &payment_method,
-                                &budget,
-                                &recipient,
-                                &description,
-                                &name,
-                                &schedule,
-                                _mw).exec()==QDialog::Rejected) {
+    QStringList budgets=user->budgets_str(true);
+    if(budgets.empty()) {
+        emit svc_op_failed(tr("Logical error: make sure you have defined at least one budget before adding operations."));
+        LOG_VOID_RETURN();
+    }
+    QStringList payment_methods=account->payment_methods_str(true);
+    if(payment_methods.empty()) {
+        emit svc_op_failed(tr("Logical error: make sure you have defined at least one payment method before adding operations."));
+        LOG_VOID_RETURN();
+    }
+    ScheduledOperationEditor editor(&amount,
+                                    &payment_method,
+                                    &budget,
+                                    &recipient,
+                                    &description,
+                                    &name,
+                                    &schedule,
+                                    _mw);
+    editor.set_budgets(budgets);
+    editor.set_frequency_units(Schedule::frequency_units());
+    editor.set_payment_methods(payment_methods);
+    if(editor.exec()==QDialog::Rejected) {
         emit svc_op_canceled();
         LOG_VOID_RETURN();
     }
@@ -698,9 +717,14 @@ void PicsouUIService::sop_add(QUuid account_id)
     LOG_VOID_RETURN();
 }
 
-void PicsouUIService::sop_edit(QUuid account_id, QUuid sop_id)
+void PicsouUIService::sop_edit(QUuid user_id, QUuid account_id, QUuid sop_id)
 {
-    LOG_IN("account_id="<<account_id<<",sop_id="<<sop_id);
+    LOG_IN("user_id="<<user_id<<"account_id="<<account_id<<",sop_id="<<sop_id);
+    UserPtr user=papp()->model_svc()->find_user(user_id);
+    if(user.isNull()) {
+        emit svc_op_failed(tr("Internal error: invalid user pointer."));
+        LOG_VOID_RETURN();
+    }
     AccountPtr account=papp()->model_svc()->find_account(account_id);
     if(account.isNull()) {
         emit svc_op_failed(tr("Internal error: invalid account pointer."));
@@ -714,14 +738,28 @@ void PicsouUIService::sop_edit(QUuid account_id, QUuid sop_id)
             description=sop->description(),
             name=sop->name();
     Schedule schedule=sop->schedule();
-    if(ScheduledOperationEditor(&amount,
-                                &payment_method,
-                                &budget,
-                                &recipient,
-                                &description,
-                                &name,
-                                &schedule,
-                                _mw).exec()==QDialog::Rejected) {
+    ScheduledOperationEditor editor(&amount,
+                                    &payment_method,
+                                    &budget,
+                                    &recipient,
+                                    &description,
+                                    &name,
+                                    &schedule,
+                                    _mw);
+    QStringList budgets=user->budgets_str(true);
+    if(budgets.empty()) {
+        emit svc_op_failed(tr("Logical error: make sure you have defined at least one budget before adding operations."));
+        LOG_VOID_RETURN();
+    }
+    QStringList payment_methods=account->payment_methods_str(true);
+    if(payment_methods.empty()) {
+        emit svc_op_failed(tr("Logical error: make sure you have defined at least one payment method before adding operations."));
+        LOG_VOID_RETURN();
+    }
+    editor.set_budgets(budgets);
+    editor.set_frequency_units(Schedule::frequency_units());
+    editor.set_payment_methods(payment_methods);
+    if(editor.exec()==QDialog::Rejected) {
         emit svc_op_canceled();
         LOG_VOID_RETURN();
     }
@@ -754,11 +792,7 @@ void PicsouUIService::sop_remove(QUuid account_id, QUuid sop_id)
 
 void PicsouUIService::op_add(QUuid user_id, QUuid account_id, int year, int month)
 {
-    LOG_IN("user_id="<<user_id
-                     <<",account_id="<<account_id
-                     <<",year="<<year
-                     <<",month="<<month);
-
+    LOG_IN("user_id="<<user_id<<",account_id="<<account_id<<",year="<<year<<",month="<<month);
     UserPtr user=papp()->model_svc()->find_user(user_id);
     if(user.isNull()) {
         emit svc_op_failed(tr("Internal error: invalid user pointer."));
@@ -770,11 +804,13 @@ void PicsouUIService::op_add(QUuid user_id, QUuid account_id, int year, int mont
         LOG_VOID_RETURN();
     }
     QStringList budgets=user->budgets_str(true);
+    if(budgets.empty()) {
+        emit svc_op_failed(tr("Logical error: make sure you have defined at least one budget before adding operations."));
+        LOG_VOID_RETURN();
+    }
     QStringList payment_methods=account->payment_methods_str(true);
     if(payment_methods.empty()) {
-        emit svc_op_failed(tr("Logical error: make sure you have defined at "
-                              "least one payment method before "
-                              "adding operations."));
+        emit svc_op_failed(tr("Logical error: make sure you have defined at least one payment method before adding operations."));
         LOG_VOID_RETURN();
     }
     QDate date;

@@ -102,8 +102,8 @@ public slots:
     void pm_edit(QUuid account_id, QUuid pm_id);
     void pm_remove(QUuid account_id, QUuid pm_id);
     /* Scheduled Operation ops */
-    void sop_add(QUuid account_id);
-    void sop_edit(QUuid account_id, QUuid pm_id);
+    void sop_add(QUuid user_id, QUuid account_id);
+    void sop_edit(QUuid user_id, QUuid account_id, QUuid pm_id);
     void sop_remove(QUuid account_id, QUuid pm_id);
     /* Operation ops */
     void op_add(QUuid user_id, QUuid account_id, int year, int month);

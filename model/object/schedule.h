@@ -8,10 +8,10 @@ class Schedule
 {
 public:
     enum FrequencyUnit {
-        YEAR  = 0,
-        MONTH = 1,
-        WEEK  = 2,
-        DAY   = 3
+        YEAR,
+        MONTH,
+        WEEK,
+        DAY
     };
 
     static const QString KW_FROM_YEAR;
@@ -26,11 +26,12 @@ public:
 
     Schedule(const QDate &from = QDate(),
              const QDate &until = QDate(),
-             bool endless = false,
+             bool endless = true,
              int freq_value = 0,
              FrequencyUnit freq_unit = YEAR);
 
     static QString freq_unit2str(FrequencyUnit freq_unit);
+    static QString freq_unit2trstr(FrequencyUnit freq_unit);
     static FrequencyUnit str2freq_unit(const QString &freq_unit);
     static QStringList frequency_units();
 

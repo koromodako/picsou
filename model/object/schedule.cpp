@@ -1,4 +1,5 @@
 #include "schedule.h"
+#include <QObject>
 
 const QString Schedule::KW_FROM_YEAR="starty";
 const QString Schedule::KW_FROM_MONTH="startm";
@@ -32,6 +33,21 @@ Schedule::Schedule(const QDate &from,
 QString Schedule::freq_unit2str(FrequencyUnit freq_unit)
 {
     return FREQUENCY_UNITS.at(freq_unit);
+}
+
+QString Schedule::freq_unit2trstr(FrequencyUnit freq_unit)
+{
+    switch (freq_unit) {
+        case YEAR:
+            return QObject::tr("year");
+        case MONTH:
+            return QObject::tr("month");
+        case WEEK:
+            return QObject::tr("week");
+        case DAY:
+            return QObject::tr("day");
+    }
+    return QObject::tr("undefined");
 }
 
 Schedule::FrequencyUnit Schedule::str2freq_unit(const QString &freq_unit)

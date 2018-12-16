@@ -120,11 +120,15 @@ void AccountViewer::refresh(const PicsouDBPtr db)
     ui->notes->setPlainText(account->notes());
     /* scheduled ops */
     ui->sops->clear();
+    QString end;
     foreach(ScheduledOperationPtr sop, account->scheduled_ops()) {
-        new PicsouListItem(QString("%0 (%1 -> %2) %3").arg(sop->name(),
-                                                        sop->schedule().from().toString(Qt::ISODate),
-                                                        sop->schedule().until().toString(Qt::ISODate),
-                                                        sop->amount().to_str(true)),
+        end=(sop->schedule().endless()?tr("[endless]"):sop->schedule().until().toString(Qt::ISODate));
+        new PicsouListItem(tr("[%0] %1 from %2 to %3 each %4 %5").arg(sop->name(),
+                                                                      sop->amount().to_str(true),
+                                                                      sop->schedule().from().toString(Qt::ISODate),
+                                                                      end,
+                                                                      QString::number(sop->schedule().freq_value()),
+                                                                      Schedule::freq_unit2trstr(sop->schedule().freq_unit())),
                            ui->sops,
                            sop->id());
     }
@@ -169,7 +173,7 @@ void AccountViewer::remove_pm()
 
 void AccountViewer::add_sop()
 {
-    ui_svc()->sop_add(mod_obj_id());
+    ui_svc()->sop_add(_user_id, mod_obj_id());
 }
 
 void AccountViewer::edit_sop()
@@ -177,7 +181,7 @@ void AccountViewer::edit_sop()
     PicsouListItem *item;
     item=static_cast<PicsouListItem*>(ui->sops->currentItem());
     if(item!=nullptr) {
-        ui_svc()->sop_edit(mod_obj_id(), item->mod_obj_id());
+        ui_svc()->sop_edit(_user_id, mod_obj_id(), item->mod_obj_id());
     }
 }
 
