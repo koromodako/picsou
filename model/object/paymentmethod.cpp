@@ -25,7 +25,7 @@ void PaymentMethod::update(const QString &name)
 bool PaymentMethod::read(const QJsonObject &json)
 {
     LOG_IN("<QJsonObject>")
-    static const QStringList keys=(QStringList() << PaymentMethod::KW_NAME);
+    static const QStringList keys=(QStringList()<<PaymentMethod::KW_NAME);
     JSON_CHECK_KEYS(keys);
     _name=json[KW_NAME].toString();
     set_valid();

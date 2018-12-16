@@ -30,10 +30,16 @@ public:
     void add_payment_method(const QString &name);
     bool remove_payment_method(QUuid id);
 
-    void add_scheduled_operation(ScheduledOperationPtr sop) { _scheduled_ops.insert(sop->id(), sop); }
+    void add_scheduled_operation(const Amount &amount,
+                                 const QString &budget,
+                                 const QString &recipient,
+                                 const QString &description,
+                                 const QString &payment_method,
+                                 const QString &name,
+                                 const Schedule &schedule);
     bool remove_scheduled_operation(QUuid id);
 
-    void add_operation(Amount amount,
+    void add_operation(const Amount &amount,
                        const QDate &date,
                        const QString &budget,
                        const QString &recipient,

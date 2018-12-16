@@ -43,12 +43,12 @@ bool Converter::convert(QJsonDocument *doc, SemVer from)
     LOG_DEBUG("attempting conversion.");
     convert = false;
     for(auto it : converter_list) {
-        LOG_DEBUG(it.first.to_str() << " == " << from.to_str() << " : " << (it.first==from));
+        LOG_DEBUG(it.first.to_str()<<" == "<<from.to_str()<<" : "<<(it.first==from));
         if(it.first==from) {
             convert=true;
         }
         if(convert) {
-            LOG_DEBUG("applying converter for version: " << it.first.to_str());
+            LOG_DEBUG("applying converter for version: "<<it.first.to_str());
             it.second(doc);
         }
     }

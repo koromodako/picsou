@@ -30,6 +30,10 @@ UserEditor::UserEditor(QString *username,
     ui->new_pwd->setEchoMode(QLineEdit::Password);
     ui->repeat_new_pwd->setEchoMode(QLineEdit::Password);
 
+    ui->old_pwd->setInputMethodHints(Qt::ImhSensitiveData);
+    ui->new_pwd->setInputMethodHints(Qt::ImhSensitiveData);
+    ui->repeat_new_pwd->setInputMethodHints(Qt::ImhSensitiveData);
+
     if((user_edit=!_username->isNull())) {
         ui->username->setText(*_username);
     }

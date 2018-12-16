@@ -74,6 +74,6 @@ bool SearchQuery::accepts(const OperationPtr &op) const
         LOG_DEBUG("rejecting "<<op<<" because \""<<description<<"\" is not matched by "<<_description_re.pattern());
         LOG_BOOL_RETURN(false);
     }
-    LOG_DEBUG("accepting " << op);
+    LOG_DEBUG("accepting "<<op);
     LOG_BOOL_RETURN(true);
 }

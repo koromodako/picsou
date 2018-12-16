@@ -131,7 +131,7 @@ bool PicsouDB::read(const QJsonObject &json)
     /**/
     _version=SemVer(json[KW_VERSION].toString());
     if(_version<PICSOU_DB_VERSION) {
-        LOG_DEBUG("older version of the DB file format: " << _version.to_str());
+        LOG_DEBUG("older version of the DB file format: "<<_version.to_str());
         set_valid(false);
         LOG_BOOL_RETURN(false);
     }

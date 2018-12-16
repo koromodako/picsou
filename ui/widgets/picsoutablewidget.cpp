@@ -25,12 +25,12 @@ PicsouTableWidget::PicsouTableWidget(QWidget *parent) :
 
 void PicsouTableWidget::clear()
 {
-    static QStringList labels = QStringList() << tr("Date")
-                                              << tr("Description")
-                                              << tr("Recipient")
-                                              << tr("Payment Method")
-                                              << tr("Budget")
-                                              << tr("Amount");
+    static QStringList labels = QStringList()<<tr("Date")
+                                             <<tr("Description")
+                                             <<tr("Recipient")
+                                             <<tr("Payment Method")
+                                             <<tr("Budget")
+                                             <<tr("Amount");
 
     QTableWidget::clear();
     verticalHeader()->hide();

@@ -182,10 +182,10 @@ void MainWindow::update_search()
     OperationCollection ops;
     QStringList selected_budgets, selected_pms;
     foreach(QListWidgetItem *item, ui->budgets->selectedItems()) {
-        selected_budgets << item->text();
+        selected_budgets<<item->text();
     }
     foreach(QListWidgetItem *item, ui->pms->selectedItems()) {
-        selected_pms << item->text();
+        selected_pms<<item->text();
     }
     _search_table->clear();
     ops=ui_svc()->search_operations(SearchQuery(ui->user_cb->currentText(),

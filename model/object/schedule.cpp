@@ -1,27 +1,27 @@
 #include "schedule.h"
 
-const QString Schedule::KW_START_YEAR="starty";
-const QString Schedule::KW_START_MONTH="startm";
-const QString Schedule::KW_START_DAY="startd";
-const QString Schedule::KW_STOP_YEAR="stopy";
-const QString Schedule::KW_STOP_MONTH="stopm";
-const QString Schedule::KW_STOP_DAY="stopd";
+const QString Schedule::KW_FROM_YEAR="starty";
+const QString Schedule::KW_FROM_MONTH="startm";
+const QString Schedule::KW_FROM_DAY="startd";
+const QString Schedule::KW_UNTIL_YEAR="stopy";
+const QString Schedule::KW_UNTIL_MONTH="stopm";
+const QString Schedule::KW_UNTIL_DAY="stopd";
 const QString Schedule::KW_ENDLESS="endless";
 const QString Schedule::KW_FREQ_VALUE="freq_value";
 const QString Schedule::KW_FREQ_UNIT="freq_unit";
 
-static const QStringList FREQUENCY_UNITS=(QStringList() << "YEAR"
-                                                        << "MONTH"
-                                                        << "WEEK"
-                                                        << "DAY");
+static const QStringList FREQUENCY_UNITS=(QStringList()<<"YEAR"
+                                                       <<"MONTH"
+                                                       <<"WEEK"
+                                                       <<"DAY");
 
-Schedule::Schedule(const QDate &start,
-                   const QDate &stop,
+Schedule::Schedule(const QDate &from,
+                   const QDate &until,
                    bool endless,
                    int freq_value,
                    Schedule::FrequencyUnit freq_unit) :
-    _start(start),
-    _stop(stop),
+    _from(from),
+    _until(until),
     _endless(endless),
     _freq_value(freq_value),
     _freq_unit(freq_unit)
@@ -46,10 +46,10 @@ QStringList Schedule::frequency_units()
 
 bool Schedule::valid() const
 {
-    if(!_start.isValid()) {
+    if(!_from.isValid()) {
         return false;
     }
-    if((!_endless)&&(!_stop.isValid())) {
+    if((!_endless)&&(!_until.isValid())) {
         return false;
     }
     if(_freq_value<=0) {
@@ -60,5 +60,18 @@ bool Schedule::valid() const
 
 bool Schedule::contains(const QDate &date) const
 {
-    return date >= _start && date <= _stop;
+    return date>=_from&&date<=_until;
+}
+
+void Schedule::update(const QDate &from,
+                      const QDate &until,
+                      bool endless,
+                      int freq_value,
+                      Schedule::FrequencyUnit freq_unit)
+{
+    _from=from;
+    _until=until;
+    _endless=endless;
+    _freq_value=freq_value;
+    _freq_unit=freq_unit;
 }

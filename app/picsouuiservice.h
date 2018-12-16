@@ -63,6 +63,9 @@ signals:
     void pm_edited();
     void pm_removed();
     /* Scheduled Operation ops */
+    void sop_added();
+    void sop_edited();
+    void sop_removed();
     /* Operation ops */
     void op_added();
     void op_edited();
@@ -99,6 +102,9 @@ public slots:
     void pm_edit(QUuid account_id, QUuid pm_id);
     void pm_remove(QUuid account_id, QUuid pm_id);
     /* Scheduled Operation ops */
+    void sop_add(QUuid account_id);
+    void sop_edit(QUuid account_id, QUuid pm_id);
+    void sop_remove(QUuid account_id, QUuid pm_id);
     /* Operation ops */
     void op_add(QUuid user_id, QUuid account_id, int year, int month);
     void op_edit(QUuid user_id, QUuid account_id, QUuid op_id, int year, int month);

@@ -67,6 +67,26 @@ bool Account::remove_payment_method(QUuid id)
     return success;
 }
 
+void Account::add_scheduled_operation(const Amount &amount,
+                                      const QString &budget,
+                                      const QString &recipient,
+                                      const QString &description,
+                                      const QString &payment_method,
+                                      const QString &name,
+                                      const Schedule &schedule)
+{
+    ScheduledOperationPtr sop=ScheduledOperationPtr(new ScheduledOperation(amount,
+                                                                           budget,
+                                                                           recipient,
+                                                                           description,
+                                                                           payment_method,
+                                                                           name,
+                                                                           schedule,
+                                                                           this));
+    _scheduled_ops.insert(sop->id(), sop);
+    emit modified();
+}
+
 bool Account::remove_scheduled_operation(QUuid id)
 {
     bool success=false;
@@ -85,7 +105,7 @@ bool Account::remove_scheduled_operation(QUuid id)
     return success;
 }
 
-void Account::add_operation(Amount amount,
+void Account::add_operation(const Amount &amount,
                             const QDate &date,
                             const QString &budget,
                             const QString &recipient,
@@ -168,14 +188,14 @@ QList<int> Account::years(bool sorted) const
     QSet<int> years_set;
     QList<int> years_list;
     foreach(OperationPtr op, operations.list()) {
-        years_set << op->date().year();
+        years_set<<op->date().year();
     }
     years_list=years_set.toList();
     if(sorted) {
         std::sort(years_list.begin(), years_list.end());
     }
     if(years_list.empty()) {
-        years_list << QDate::currentDate().year();
+        years_list<<QDate::currentDate().year();
     }
     return years_list;
 }
@@ -213,7 +233,7 @@ QStringList Account::payment_methods_str(bool sorted) const
     QStringList p_methods_str;
     PaymentMethodPtrList p_methods=payment_methods(sorted);
     foreach(PaymentMethodPtr pm, p_methods) {
-        p_methods_str << pm->name();
+        p_methods_str<<pm->name();
     }
     return p_methods_str;
 }
@@ -221,11 +241,11 @@ QStringList Account::payment_methods_str(bool sorted) const
 bool Account::read(const QJsonObject &json)
 {
     LOG_IN("<QJsonObject>")
-    static const QStringList keys=(QStringList() << Account::KW_NAME
-                                                 << Account::KW_NOTES
-                                                 << Account::KW_PAYMENT_METHODS
-                                                 << Account::KW_SCHEDULED_OPS
-                                                 << Account::KW_OPS);
+    static const QStringList keys=(QStringList()<<Account::KW_NAME
+                                                <<Account::KW_NOTES
+                                                <<Account::KW_PAYMENT_METHODS
+                                                <<Account::KW_SCHEDULED_OPS
+                                                <<Account::KW_OPS);
     JSON_CHECK_KEYS(keys);
     /**/
     _name=json[KW_NAME].toString();

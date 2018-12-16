@@ -17,7 +17,7 @@ Operation::Operation(PicsouModelObj *parent) :
 
 }
 
-Operation::Operation(Amount amount,
+Operation::Operation(const Amount &amount,
                      const QDate &date,
                      const QString &budget,
                      const QString &recipient,

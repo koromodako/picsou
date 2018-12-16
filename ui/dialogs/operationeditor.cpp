@@ -26,7 +26,6 @@ OperationEditor::OperationEditor(QDate *date,
     _month(month),
     ui(new Ui::OperationEditor)
 {
-    QDate min, max;
 
     ui->setupUi(this);
 
@@ -42,6 +41,7 @@ OperationEditor::OperationEditor(QDate *date,
         ui->date->setDate(QDate::currentDate());
     }
 
+    QDate min, max;
     if(_year>0) {
         min.setDate(_year, 1, 1);
         max.setDate(_year, 12, 31);

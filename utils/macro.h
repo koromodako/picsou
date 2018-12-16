@@ -24,14 +24,14 @@ static const QString LOG_CLR_ERR="31";
         QDebug debug = log_func(); \
         debug.nospace(); \
         debug.noquote(); \
-        debug << "\x1b["<<(color)<<";1m" \
-              << "["<<(lvl)<<"](" \
-              << (__LINE__)<<"|" \
-              << BASENAME(__FILE__)<<"|" \
-              << (__func__)<<") - "; \
+        debug<<"\x1b["<<(color)<<";1m" \
+             <<"["<<(lvl)<<"](" \
+             <<(__LINE__)<<"|" \
+             <<BASENAME(__FILE__)<<"|" \
+             <<(__func__)<<") - "; \
         debug.quote(); \
-        debug << __VA_ARGS__ \
-              << "\x1b[0m"; \
+        debug<<__VA_ARGS__ \
+             <<"\x1b[0m"; \
     }
 #else /* COLORIZE */
 #    define LOG(log_func, lvl, color, ...) \
@@ -39,12 +39,12 @@ static const QString LOG_CLR_ERR="31";
         QDebug debug = log_func(); \
         debug.nospace(); \
         debug.noquote(); \
-        debug << "["<<(lvl)<<"](" \
-              << (__LINE__)<<"|" \
-              << BASENAME(__FILE__)<<"|" \
-              << (__func__)<<") - "; \
+        debug<<"["<<(lvl)<<"](" \
+             <<(__LINE__)<<"|" \
+             <<BASENAME(__FILE__)<<"|" \
+             <<(__func__)<<") - "; \
         debug.quote(); \
-        debug << __VA_ARGS__; \
+        debug<<__VA_ARGS__; \
     }
 #endif /* COLORIZE */
 
@@ -58,7 +58,7 @@ static const QString LOG_CLR_ERR="31";
 #define LOG_WARNING(...)    LOG(qWarning, LOG_LVL_WRN, LOG_CLR_WRN, __VA_ARGS__)
 #define LOG_CRITICAL(...)   LOG(qCritical, LOG_LVL_ERR, LOG_CLR_ERR, __VA_ARGS__)
 
-#define LOG_IN(...)         LOG_DEBUG("<- (" << __VA_ARGS__ << ")")
+#define LOG_IN(...)         LOG_DEBUG("<- ("<<__VA_ARGS__<<")")
 #define LOG_IN_VOID(...)    LOG_DEBUG("<- (void)")
 
 #define LOG_BOOL_RETURN(bool_expr) \

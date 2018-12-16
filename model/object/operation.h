@@ -28,7 +28,7 @@ public:
     static const QString KW_PAYMENT_METHOD;
 
     Operation(PicsouModelObj *parent);
-    Operation(Amount amount,
+    Operation(const Amount &amount,
               const QDate &date,
               const QString &budget,
               const QString &recipient,

@@ -93,8 +93,8 @@ bool PicsouModelService::open_db(QString filename)
             break;
         }
         db_version=_db->version();
-        LOG_DEBUG("valid DB version: " << db_version.is_valid());
-        LOG_DEBUG(db_version.to_str() << " < " << PICSOU_DB_VERSION.to_str() << " : " << (db_version<PICSOU_DB_VERSION));
+        LOG_DEBUG("valid DB version: "<<db_version.is_valid());
+        LOG_DEBUG(db_version.to_str()<<" < "<<PICSOU_DB_VERSION.to_str()<<" : "<<(db_version<PICSOU_DB_VERSION));
         if(db_version.is_valid()&&db_version<PICSOU_DB_VERSION) {
             if(Converter::convert(&doc, db_version)) {
                 continue; /* retry to read document */

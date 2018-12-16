@@ -12,7 +12,7 @@ public:
     static const QString KW_NAME;
 
     ScheduledOperation(PicsouModelObj *parent);
-    ScheduledOperation(double amount,
+    ScheduledOperation(const Amount &amount,
                        const QString &budget,
                        const QString &recipient,
                        const QString &description,
@@ -24,7 +24,7 @@ public:
     inline QString name() const { return _name; }
     inline Schedule schedule() const { return _schedule; }
 
-    void update(double amount,
+    void update(const Amount &amount,
                 const QString &budget,
                 const QString &recipient,
                 const QString &description,

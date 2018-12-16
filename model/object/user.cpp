@@ -104,7 +104,7 @@ QStringList User::budgets_str(bool sorted) const
     QStringList budgets_str;
     BudgetPtrList budget_list=budgets(sorted);
     foreach(BudgetPtr budget, budget_list) {
-        budgets_str << budget->name();
+        budgets_str<<budget->name();
     }
     budgets_str.insert(0, tr("OTHER"));
     return budgets_str;

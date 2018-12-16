@@ -121,9 +121,10 @@ void AccountViewer::refresh(const PicsouDBPtr db)
     /* scheduled ops */
     ui->sops->clear();
     foreach(ScheduledOperationPtr sop, account->scheduled_ops()) {
-        new PicsouListItem(QString("%0 (%1 -> %2)").arg(sop->name(),
-                                                        sop->schedule().start().toString(),
-                                                        sop->schedule().stop().toString()),
+        new PicsouListItem(QString("%0 (%1 -> %2) %3").arg(sop->name(),
+                                                        sop->schedule().from().toString(Qt::ISODate),
+                                                        sop->schedule().until().toString(Qt::ISODate),
+                                                        sop->amount().to_str(true)),
                            ui->sops,
                            sop->id());
     }
@@ -168,17 +169,25 @@ void AccountViewer::remove_pm()
 
 void AccountViewer::add_sop()
 {
-    LOG_WARNING("not implemented: AccountViewer::add_sop()");
+    ui_svc()->sop_add(mod_obj_id());
 }
 
 void AccountViewer::edit_sop()
 {
-    LOG_WARNING("not implemented: AccountViewer::edit_sop()");
+    PicsouListItem *item;
+    item=static_cast<PicsouListItem*>(ui->sops->currentItem());
+    if(item!=nullptr) {
+        ui_svc()->sop_edit(mod_obj_id(), item->mod_obj_id());
+    }
 }
 
 void AccountViewer::remove_sop()
 {
-    LOG_WARNING("not implemented: AccountViewer::remove_sop()");
+    PicsouListItem *item;
+    item=static_cast<PicsouListItem*>(ui->sops->currentItem());
+    if(item!=nullptr) {
+        ui_svc()->sop_remove(mod_obj_id(), item->mod_obj_id());
+    }
 }
 
 void AccountViewer::add_op()
