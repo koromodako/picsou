@@ -25,7 +25,7 @@
 #include <QXmlStreamWriter>
 
 #include "picsou.h"
-#include "model/picsoudb.h"
+#include "model/object/picsoudb.h"
 #include "model/converter/converter.h"
 
 #define XML_ELEM_OP "operation"

@@ -21,7 +21,7 @@
 #include <QList>
 #include <QPair>
 #include <QJsonObject>
-#include "../picsoudb.h"
+#include "model/object/picsoudb.h"
 
 typedef void (*db_converter_t)(QJsonDocument *doc);
 

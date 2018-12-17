@@ -18,8 +18,8 @@
 #ifndef SCHEDULEDOPERATION_H
 #define SCHEDULEDOPERATION_H
 
-#include "schedule.h"
 #include "operation.h"
+#include "utils/schedule.h"
 
 
 class ScheduledOperation : public Operation

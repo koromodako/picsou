@@ -19,7 +19,7 @@
 #define SCHEDULEDOPERATIONEDITOR_H
 
 #include <QDialog>
-#include "model/object/amount.h"
+#include "utils/amount.h"
 
 class Schedule;
 

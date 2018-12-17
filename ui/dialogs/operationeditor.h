@@ -19,7 +19,7 @@
 #define OPERATIONEDITOR_H
 
 #include <QDialog>
-#include "model/object/amount.h"
+#include "utils/amount.h"
 
 namespace Ui {
 class OperationEditor;
