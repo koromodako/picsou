@@ -18,22 +18,22 @@
 #ifndef PAYMENTMETHOD_H
 #define PAYMENTMETHOD_H
 
-#include "../picsoumodelobj.h"
+#include "../picsoudbo.h"
 
 
-class PaymentMethod : public PicsouModelObj
+class PaymentMethod : public PicsouDBO
 {
     Q_OBJECT
 public:
     static const QString KW_NAME;
 
-    PaymentMethod(PicsouModelObj *parent);
+    PaymentMethod(PicsouDBO *parent);
     PaymentMethod(const QString &name,
-                  PicsouModelObj *parent);
+                  PicsouDBO *parent);
 
     void update(const QString &name);
 
-    inline QString name() const { return _name; }
+    inline QString name() const { return m_name; }
 
     bool read(const QJsonObject &json);
     bool write(QJsonObject &json) const;
@@ -41,7 +41,7 @@ public:
     bool operator <(const PaymentMethod &other);
 
 private:
-    QString _name;
+    QString m_name;
 };
 
 DECL_PICSOU_MOD_OBJ_PTR(PaymentMethod,

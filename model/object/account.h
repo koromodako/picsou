@@ -24,7 +24,7 @@
 #include <QHash>
 
 
-class Account : public PicsouModelObj
+class Account : public PicsouDBO
 {
     Q_OBJECT
 public:
@@ -35,10 +35,10 @@ public:
     static const QString KW_SCHEDULED_OPS;
 
     virtual ~Account();
-    Account(PicsouModelObj *parent);
+    Account(PicsouDBO *parent);
     Account(const QString &name,
             const QString &notes,
-            PicsouModelObj *parent);
+            PicsouDBO *parent);
 
     void update(const QString &name,
                 const QString &notes);
@@ -68,10 +68,10 @@ public:
     ScheduledOperationPtr find_scheduled_operation(QUuid id);
     OperationPtr find_operation(QUuid id);
 
-    inline QString name() const { return _name; }
-    inline QString notes() const { return _notes; }
-    inline ScheduledOperationPtrList scheduled_ops() const { return _scheduled_ops.values(); }
-    inline OperationPtrList ops() const { return _ops.values(); }
+    inline QString name() const { return m_name; }
+    inline QString notes() const { return m_notes; }
+    inline ScheduledOperationPtrList scheduled_ops() const { return m_scheduled_ops.values(); }
+    inline OperationPtrList ops() const { return m_ops.values(); }
 
     int min_year() const;
     QStringList payment_methods_str(bool sorted=false) const;
@@ -83,11 +83,11 @@ public:
     bool operator <(const Account &other);
 
 private:
-    QString _name;
-    QString _notes;
-    QHash<QUuid, PaymentMethodPtr> _payment_methods;
-    QHash<QUuid, ScheduledOperationPtr> _scheduled_ops;
-    QHash<QUuid, OperationPtr> _ops;
+    QString m_name;
+    QString m_notes;
+    QHash<QUuid, PaymentMethodPtr> m_payment_methods;
+    QHash<QUuid, ScheduledOperationPtr> m_scheduled_ops;
+    QHash<QUuid, OperationPtr> m_ops;
 };
 
 DECL_PICSOU_MOD_OBJ_PTR(Account,

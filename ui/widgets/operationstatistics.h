@@ -34,7 +34,7 @@ class OperationStatistics : public QWidget
 
 public:
     virtual ~OperationStatistics();
-    explicit OperationStatistics(QWidget *parent=0);
+    explicit OperationStatistics(QWidget *parent=nullptr);
 
     void refresh(const OperationCollection &ops);
 
@@ -43,7 +43,7 @@ public:
     bool remove_field(const QString &name);
 
 private:
-    QHash<QString, QLabel*> _extra_fields;
+    QHash<QString, QLabel*> m_extra_fields;
     Ui::OperationStatistics *ui;
 };
 

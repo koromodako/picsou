@@ -24,9 +24,9 @@
 PicsouApplication::~PicsouApplication()
 {
     LOG_IN_VOID();
-    delete _console_svc;
-    delete _ui_svc;
-    delete _model_svc;
+    delete m_console_svc;
+    delete m_ui_svc;
+    delete m_model_svc;
     LOG_VOID_RETURN();
 }
 
@@ -34,22 +34,22 @@ PicsouApplication::PicsouApplication(QObject *parent) :
     QObject(parent)
 {
     LOG_IN("parent="<<parent);
-    _ui_svc=new PicsouUIService(this);
-    _model_svc=new PicsouModelService(this);
-    _console_svc=new PicsouConsoleService(this);
+    m_ui_svc=new PicsouUIService(this);
+    m_model_svc=new PicsouModelService(this);
+    m_console_svc=new PicsouConsoleService(this);
     LOG_VOID_RETURN();
 }
 
 bool PicsouApplication::initialize()
 {
     LOG_IN_VOID();
-    if(!_model_svc->initialize()) {
+    if(!m_model_svc->initialize()) {
         LOG_BOOL_RETURN(false);
     }
-    if(!_console_svc->initialize()) {
+    if(!m_console_svc->initialize()) {
         LOG_BOOL_RETURN(false);
     }
-    if(!_ui_svc->initialize()) {
+    if(!m_ui_svc->initialize()) {
         LOG_BOOL_RETURN(false);
     }
     LOG_BOOL_RETURN(true);
@@ -58,8 +58,8 @@ bool PicsouApplication::initialize()
 void PicsouApplication::terminate()
 {
     LOG_IN_VOID();
-    _ui_svc->terminate();
-    _console_svc->terminate();
-    _model_svc->terminate();
+    m_ui_svc->terminate();
+    m_console_svc->terminate();
+    m_model_svc->terminate();
     LOG_VOID_RETURN();
 }

@@ -31,9 +31,9 @@ UserEditor::UserEditor(QString *username,
                        QString *new_pwd,
                        QWidget *parent) :
     QDialog(parent),
-    _username(username),
-    _old_pwd(old_pwd),
-    _new_pwd(new_pwd),
+    m_username(username),
+    m_old_pwd(old_pwd),
+    m_new_pwd(new_pwd),
     ui(new Ui::UserEditor)
 {
     bool user_edit=false;
@@ -51,17 +51,15 @@ UserEditor::UserEditor(QString *username,
     ui->new_pwd->setInputMethodHints(Qt::ImhSensitiveData);
     ui->repeat_new_pwd->setInputMethodHints(Qt::ImhSensitiveData);
 
-    if((user_edit=!_username->isNull())) {
-        ui->username->setText(*_username);
+    if((user_edit=!m_username->isNull())) {
+        ui->username->setText(*m_username);
     }
 
     ui->old_pwd->setVisible(user_edit);
     ui->old_pwd_label->setVisible(user_edit);
 
-    connect(ui->save, &QPushButton::clicked,
-            this, &UserEditor::accept);
-    connect(ui->cancel, &QPushButton::clicked,
-            this, &UserEditor::reject);
+    connect(ui->save, &QPushButton::clicked, this, &UserEditor::accept);
+    connect(ui->cancel, &QPushButton::clicked, this, &UserEditor::reject);
 }
 
 void UserEditor::accept()
@@ -73,8 +71,8 @@ void UserEditor::accept()
         return;
     }
 
-    (*_old_pwd)=ui->old_pwd->text();
-    (*_new_pwd)=ui->new_pwd->text();
-    (*_username)=ui->username->text();
+    (*m_old_pwd)=ui->old_pwd->text();
+    (*m_new_pwd)=ui->new_pwd->text();
+    (*m_username)=ui->username->text();
     QDialog::accept();
 }

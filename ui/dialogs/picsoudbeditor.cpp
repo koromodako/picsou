@@ -28,23 +28,21 @@ PicsouDBEditor::PicsouDBEditor(QString *name,
                                QString *description,
                                QWidget *parent) :
     QDialog(parent),
-    _name(name),
-    _description(description),
+    m_name(name),
+    m_description(description),
     ui(new Ui::PicsouDBEditor)
 {
     ui->setupUi(this);
 
     setWindowTitle(tr("PicsouDB Editor"));
 
-    connect(ui->save, &QPushButton::clicked,
-            this, &PicsouDBEditor::accept);
-    connect(ui->cancel, &QPushButton::clicked,
-            this, &PicsouDBEditor::reject);
+    connect(ui->save, &QPushButton::clicked, this, &PicsouDBEditor::accept);
+    connect(ui->cancel, &QPushButton::clicked, this, &PicsouDBEditor::reject);
 }
 
 void PicsouDBEditor::accept()
 {
-    (*_name)=ui->name->text();
-    (*_description)=ui->description->toPlainText();
+    (*m_name)=ui->name->text();
+    (*m_description)=ui->description->toPlainText();
     QDialog::accept();
 }

@@ -51,12 +51,12 @@ public:
 
     PicsouTreeItem *parent() const;
 
-    inline int year() const { return _year; }
-    inline int month() const { return _month; }
+    inline int year() const { return m_year; }
+    inline int month() const { return m_month; }
 
 private:
-    int _year;
-    int _month;
+    int m_year;
+    int m_month;
 };
 
 #endif // PICSOUTREEWIDGETITEM_H

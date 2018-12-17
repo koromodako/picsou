@@ -38,9 +38,9 @@ public slots:
     void accept();
 
 private:
-    QString *_username;
-    QString *_old_pwd;
-    QString *_new_pwd;
+    QString *m_username;
+    QString *m_old_pwd;
+    QString *m_new_pwd;
     Ui::UserEditor *ui;
 };
 

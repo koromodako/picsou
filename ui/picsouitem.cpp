@@ -23,7 +23,7 @@ PicsouItem::~PicsouItem()
 }
 
 PicsouItem::PicsouItem(QUuid id) :
-    _id(id)
+    m_id(id)
 {
 
 }

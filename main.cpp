@@ -58,8 +58,7 @@ int main(int argc, char *argv[])
 
     PicsouApplication papp(app.data());
 
-    QObject::connect(app.data(), &QCoreApplication::aboutToQuit,
-                     &papp, &PicsouApplication::terminate);
+    QObject::connect(app.data(), &QCoreApplication::aboutToQuit, &papp, &PicsouApplication::terminate);
 
     if(!papp.initialize()) {
         LOG_CRITICAL("failed to initialize application.");

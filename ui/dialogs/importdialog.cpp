@@ -20,7 +20,7 @@
 
 ImportDialog::~ImportDialog()
 {
-    delete _table;
+    delete m_table;
     delete ui;
 }
 
@@ -31,14 +31,12 @@ ImportDialog::ImportDialog(OperationCollection ops,
 {
     ui->setupUi(this);
 
-    _table=new PicsouTableWidget;
-    ui->main_layout->insertWidget(0, _table);
+    m_table=new PicsouTableWidget;
+    ui->main_layout->insertWidget(0, m_table);
 
-    _table->refresh(ops);
+    m_table->refresh(ops);
 
-    connect(ui->save, &QPushButton::clicked,
-            this, &ImportDialog::accept);
-    connect(ui->cancel, &QPushButton::clicked,
-            this, &ImportDialog::reject);
+    connect(ui->save, &QPushButton::clicked, this, &ImportDialog::accept);
+    connect(ui->cancel, &QPushButton::clicked, this, &ImportDialog::reject);
 }
 

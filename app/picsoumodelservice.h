@@ -55,8 +55,8 @@ public:
                   QString filename,
                   OperationCollection ops);
 
-    inline const PicsouDBPtr db() const { return _db; }
-    inline bool is_db_modified() const { return _is_db_modified; }
+    inline const PicsouDBPtr db() const { return m_db; }
+    inline bool is_db_modified() const { return m_is_db_modified; }
 
     UserPtr find_user(QUuid id) const;
     AccountPtr find_account(QUuid id) const;
@@ -77,9 +77,9 @@ private:
     bool json_dump_ops(QFile &f, OperationCollection ops);
 
 private:
-    PicsouDBPtr _db;
-    QString _filename;
-    bool _is_db_modified;
+    PicsouDBPtr m_db;
+    QString m_filename;
+    bool m_is_db_modified;
 
 };
 

@@ -34,10 +34,10 @@ public:
 protected:
     explicit PicsouAbstractService(PicsouApplication *papp);
 
-    inline PicsouApplication *papp() { return _papp; }
+    inline PicsouApplication *papp() { return m_papp; }
 
 private:
-    PicsouApplication *_papp;
+    PicsouApplication *m_papp;
 };
 
 #endif // PICSOUABSTRACTSERVICE_H

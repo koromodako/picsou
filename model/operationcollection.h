@@ -35,11 +35,11 @@ public:
     void append(const OperationPtr &op);
     void append(const OperationShPtr &sh_op);
 
-    inline int length() const { return _ops.length(); }
-    inline Amount balance() const { return _balance; }
-    inline Amount total_debit() const { return _total_debit; }
-    inline Amount total_credit() const { return _total_credit; }
-    inline QHash<QString, Amount> expense_per_budget() const { return _expense_per_budget; }
+    inline int length() const { return m_ops.length(); }
+    inline Amount balance() const { return m_balance; }
+    inline Amount total_debit() const { return m_total_debit; }
+    inline Amount total_credit() const { return m_total_credit; }
+    inline QHash<QString, Amount> expense_per_budget() const { return m_expense_per_budget; }
 
     Amount expense_per_ym(int year, int month=0);
     Amount total_in_range(const QDate &from, const QDate &to);
@@ -50,14 +50,14 @@ protected:
 
 private:
     /* aggregation members */
-    Amount _total_debit;
-    Amount _total_credit;
-    Amount _balance;
-    QHash<QString, Amount> _expense_per_budget;
-    QHash<int, QHash<int, Amount>> _expense_per_ym;
+    Amount m_total_debit;
+    Amount m_total_credit;
+    Amount m_balance;
+    QHash<QString, Amount> m_expense_per_budget;
+    QHash<int, QHash<int, Amount>> m_expense_per_ym;
     /* pointer storage members */
-    OperationPtrList _ops;
-    OperationShPtrList _sh_ops;
+    OperationPtrList m_ops;
+    OperationShPtrList m_sh_ops;
 
 };
 

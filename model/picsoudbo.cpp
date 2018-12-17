@@ -15,20 +15,29 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-#include "picsoumodelobj.h"
+#include "picsoudbo.h"
+#include "utils/macro.h"
 
-PicsouModelObj::~PicsouModelObj()
-{
-
-}
-
-PicsouModelObj::PicsouModelObj(bool valid, PicsouModelObj *parent) :
-    _id(QUuid::createUuid()),
-    _valid(valid),
-    _parent(parent)
+PicsouDBO::PicsouDBO(PicsouDBO *parent, bool valid, bool wrapped=false) :
+    m_id(QUuid::createUuid()),
+    m_valid(valid),
+    m_parent(parent)
 {
     if(parent!=nullptr) {
-        connect(this, &PicsouModelObj::modified, parent, &PicsouModelObj::modified);
+        connect(this, &PicsouDBO::modified, parent, &PicsouDBO::modified);
     }
 }
 
+bool PicsouDBO::unwrap(const QString &pswd)
+{
+    LOG_IN_VOID();
+    m_pswd=pswd;
+    m_wrapped=false;
+    LOG_BOOL_RETURN(true);
+}
+
+bool PicsouDBO::wrap()
+{
+    LOG_IN_VOID();
+    LOG_BOOL_RETURN(false);
+}

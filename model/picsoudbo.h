@@ -24,17 +24,16 @@
 #include <QJsonObject>
 #include <QStringList>
 
-class PicsouModelObj : public QObject
+class PicsouDBO : public QObject
 {
     Q_OBJECT
 public:
-    PicsouModelObj(bool valid, PicsouModelObj *parent);
-    virtual ~PicsouModelObj();
+    PicsouDBO(bool valid, PicsouDBO *parent);
 
-    inline QUuid id() const { return _id; }
-    inline bool valid() const { return _valid; }
+    inline QUuid id() const { return m_id; }
+    inline bool valid() const { return m_valid; }
 
-    inline void set_parent(PicsouModelObj *parent) { _parent=parent; }
+    inline void set_parent(PicsouDBO *parent) { m_parent=parent; }
 
     virtual bool read(const QJsonObject &json)=0;
     virtual bool write(QJsonObject &json) const=0;
@@ -43,12 +42,12 @@ signals:
     void modified();
 
 protected:
-    void set_valid(bool valid=true) { _valid=valid; }
+    void set_valid(bool valid=true) { m_valid=valid; }
 
 private:
-    QUuid _id;
-    bool _valid;
-    PicsouModelObj *_parent;
+    QUuid m_id;
+    bool m_valid;
+    PicsouDBO *m_parent;
 };
 
 #include <QPointer>
@@ -60,19 +59,19 @@ private:
 
 #define DELETE_HASH_CONTENT(Class, hash) \
     { \
-        QHash<QUuid, Class>::iterator it=(hash).begin(); \
-        while(it!=(hash).end()) { \
-            delete it.value(); \
-            it++; \
+        QHash<QUuid, Class>::iterator it__=(hash).begin(); \
+        while(it__!=(hash).end()) { \
+            delete it__.value(); \
+            it__++; \
         } \
         (hash).clear(); \
     }
 
 #define JSON_CHECK_KEYS(list) \
     { \
-        QStringList __keys=(list); \
-        for(auto __i : __keys) { \
-            if(!json.contains(__i)) { \
+        QStringList keys__=(list); \
+        for(auto i__ : keys__) { \
+            if(!json.contains(i__)) { \
                 set_valid(false); \
                 LOG_BOOL_RETURN(false); \
             } \
@@ -81,32 +80,32 @@ private:
 
 #define JSON_READ_LIST(json, name, member, Class, parent) \
     { \
-        Class *__obj; \
-        QJsonArray __array=(json)[(name)].toArray(); \
-        for(int __i=0; __i<__array.size(); ++__i) { \
-            __obj=new Class(parent); \
-            if(!__obj->read(__array[__i].toObject())) { \
+        Class *obj__; \
+        QJsonArray array__=(json)[(name)].toArray(); \
+        for(int i__=0; i__<array__.size(); ++i__) { \
+            obj__=new Class(parent); \
+            if(!obj__->read(array__[i__].toObject())) { \
                 /* TRACE */ \
                 set_valid(false); \
                 LOG_BOOL_RETURN(false); \
             } \
-            (member).insert(__obj->id(), QPointer<Class>(__obj)); \
+            (member).insert(obj__->id(), QPointer<Class>(obj__)); \
         } \
     }
 
 #define JSON_WRITE_LIST(json, name, list) \
     { \
-        QJsonObject __obj; \
-        QJsonArray __array; \
-        for(int __i=0; __i<(list).size(); ++__i) { \
-            __obj=QJsonObject(); \
-            if(!(list)[__i]->write(__obj)) { \
+        QJsonObject obj__; \
+        QJsonArray array__; \
+        for(int i__=0; i__<(list).size(); ++i__) { \
+            obj__=QJsonObject(); \
+            if(!(list)[i__]->write(obj__)) { \
                 /* TRACE */ \
                 LOG_BOOL_RETURN(false); \
             } \
-            __array.append(__obj); \
+            array__.append(obj__); \
         } \
-        (json)[(name)]=__array; \
+        (json)[(name)]=array__; \
     }
 
 #endif // PICSOUMODELOBJ_H

@@ -26,7 +26,7 @@ PicsouAbstractService::~PicsouAbstractService()
 }
 
 PicsouAbstractService::PicsouAbstractService(PicsouApplication *papp) :
-    _papp(papp)
+    m_papp(papp)
 {
     LOG_IN("papp="<<papp);
     LOG_VOID_RETURN();

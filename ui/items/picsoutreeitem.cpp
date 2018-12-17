@@ -31,8 +31,8 @@ PicsouTreeItem::PicsouTreeItem(QTreeWidget *view,
                                int month) :
     QTreeWidgetItem(view, type),
     PicsouItem(id),
-    _year(year),
-    _month(month)
+    m_year(year),
+    m_month(month)
 {
     setIcon(0, icon);
     setText(0, text);
@@ -47,8 +47,8 @@ PicsouTreeItem::PicsouTreeItem(QTreeWidgetItem *parent,
                                int month) :
     QTreeWidgetItem(parent, type),
     PicsouItem(id),
-    _year(year),
-    _month(month)
+    m_year(year),
+    m_month(month)
 {
     setIcon(0, icon);
     setText(0, text);

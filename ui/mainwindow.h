@@ -67,17 +67,17 @@ public slots:
     void refresh_budgets_list(const QString &username);
 
 protected:
-    void _update_viewer(QTreeWidgetItem *item, int column);
+    void p_update_viewer(QTreeWidgetItem *item, int column);
 
 private:
     void refresh(State state);
     void refresh_tree();
 
 private:
-    State _state;
-    QWidget *_details_widget;
-    PicsouTableWidget *_search_table;
-    OperationStatistics *_search_ops_stats;
+    State m_state;
+    QWidget *m_details_widget;
+    PicsouTableWidget *m_search_table;
+    OperationStatistics *m_search_ops_stats;
     Ui::MainWindow *ui;
 };
 

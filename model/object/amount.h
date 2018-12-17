@@ -27,32 +27,32 @@ public:
     Amount(double value=0);
     Amount(const Amount &other);
 
-    inline double value() const { return _value; }
+    inline double value() const { return m_value; }
 
     QString to_str(bool add_currency=false) const;
 
-    inline Amount operator-() const { return Amount(-_value); }
+    inline Amount operator-() const { return Amount(-m_value); }
 
-    inline Amount operator+(const Amount &other) const { return Amount(_value+other._value); }
-    inline Amount operator-(const Amount &other) const { return Amount(_value-other._value); }
-    inline Amount operator/(const Amount &other) const { return Amount(_value/other._value); }
-    inline Amount operator*(const Amount &other) const { return Amount(_value*other._value); }
+    inline Amount operator+(const Amount &other) const { return Amount(m_value+other.m_value); }
+    inline Amount operator-(const Amount &other) const { return Amount(m_value-other.m_value); }
+    inline Amount operator/(const Amount &other) const { return Amount(m_value/other.m_value); }
+    inline Amount operator*(const Amount &other) const { return Amount(m_value*other.m_value); }
 
-    inline const Amount &operator+=(const Amount &other) { _value+=other._value; return *this; }
-    inline const Amount &operator-=(const Amount &other) { _value-=other._value; return *this; }
-    inline const Amount &operator/=(const Amount &other) { _value/=other._value; return *this; }
-    inline const Amount &operator*=(const Amount &other) { _value*=other._value; return *this; }
+    inline const Amount &operator+=(const Amount &other) { m_value+=other.m_value; return *this; }
+    inline const Amount &operator-=(const Amount &other) { m_value-=other.m_value; return *this; }
+    inline const Amount &operator/=(const Amount &other) { m_value/=other.m_value; return *this; }
+    inline const Amount &operator*=(const Amount &other) { m_value*=other.m_value; return *this; }
 
-    inline bool operator<(const Amount &other) const { return _value<other._value; }
-    inline bool operator>(const Amount &other) const { return _value>other._value; }
-    inline bool operator<=(const Amount &other) const { return _value<=other._value; }
-    inline bool operator>=(const Amount &other) const { return _value>=other._value; }
+    inline bool operator<(const Amount &other) const { return m_value<other.m_value; }
+    inline bool operator>(const Amount &other) const { return m_value>other.m_value; }
+    inline bool operator<=(const Amount &other) const { return m_value<=other.m_value; }
+    inline bool operator>=(const Amount &other) const { return m_value>=other.m_value; }
 
-    inline bool operator==(const Amount &other) const { return qFuzzyCompare(_value, other._value); }
-    inline bool operator!=(const Amount &other) const { return !qFuzzyCompare(_value, other._value); }
+    inline bool operator==(const Amount &other) const { return qFuzzyCompare(m_value, other.m_value); }
+    inline bool operator!=(const Amount &other) const { return !qFuzzyCompare(m_value, other.m_value); }
 
 private:
-    double _value;
+    double m_value;
 };
 
 QDebug operator<<(QDebug debug, const Amount &amount);

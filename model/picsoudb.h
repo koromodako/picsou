@@ -22,7 +22,7 @@
 #include "utils/semver.h"
 #include "operationcollection.h"
 
-class PicsouDB : public PicsouModelObj
+class PicsouDB : public PicsouDBO
 {
     Q_OBJECT
 public:
@@ -41,10 +41,10 @@ public:
     void add_user(const QString &username);
     bool remove_user(QUuid id);
 
-    inline QDate timestamp() const { return _timestamp; }
-    inline SemVer version() const { return _version; }
-    inline QString name() const { return _name; }
-    inline QString description() const { return _description; }
+    inline QDate timestamp() const { return m_timestamp; }
+    inline SemVer version() const { return m_version; }
+    inline QString name() const { return m_name; }
+    inline QString description() const { return m_description; }
 
     UserPtr find_user(QUuid id) const;
     UserPtrList users(bool sorted=false) const;
@@ -59,11 +59,11 @@ public:
     bool write(QJsonObject &json) const;
 
 private:
-    QDate _timestamp;
-    SemVer _version;
-    QString _name;
-    QString _description;
-    QHash<QUuid, UserPtr> _users;
+    QDate m_timestamp;
+    SemVer m_version;
+    QString m_name;
+    QString m_description;
+    QHash<QUuid, UserPtr> m_users;
 };
 
 DECL_PICSOU_MOD_OBJ_PTR(PicsouDB,

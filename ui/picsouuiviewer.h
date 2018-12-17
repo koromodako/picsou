@@ -39,10 +39,10 @@ protected:
     PicsouUIViewer(PicsouUIService *ui_svc,
                    QUuid uuid, QWidget *parent=nullptr);
 
-    inline QUuid mod_obj_id() const { return _uuid; }
+    inline QUuid mod_obj_id() const { return m_uuid; }
 
 private:
-    QUuid _uuid;
+    QUuid m_uuid;
 };
 
 #endif // PICSOUUIVIEWER_H

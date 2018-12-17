@@ -38,11 +38,11 @@ Schedule::Schedule(const QDate &from,
                    bool endless,
                    int freq_value,
                    Schedule::FrequencyUnit freq_unit) :
-    _from(from),
-    _until(until),
-    _endless(endless),
-    _freq_value(freq_value),
-    _freq_unit(freq_unit)
+    m_from(from),
+    m_until(until),
+    m_endless(endless),
+    m_freq_value(freq_value),
+    m_freq_unit(freq_unit)
 {
 
 }
@@ -79,13 +79,13 @@ QStringList Schedule::frequency_units()
 
 bool Schedule::valid() const
 {
-    if(!_from.isValid()) {
+    if(!m_from.isValid()) {
         return false;
     }
-    if((!_endless)&&(!_until.isValid())) {
+    if((!m_endless)&&(!m_until.isValid())) {
         return false;
     }
-    if(_freq_value<=0) {
+    if(m_freq_value<=0) {
         return false;
     }
     return true;
@@ -93,13 +93,13 @@ bool Schedule::valid() const
 
 bool Schedule::contains(const QDate &date) const
 {
-    return date>=_from&&date<=_until;
+    return date>=m_from&&date<=m_until;
 }
 
 QList<QDate> Schedule::dates(int year, int month) const
 {
-    QDate cdate=_from,
-          until=(_endless?QDate::currentDate():_until);
+    QDate cdate=m_from,
+          until=(m_endless?QDate::currentDate():m_until);
 
     QList<QDate> dates;
     do {
@@ -111,18 +111,18 @@ QList<QDate> Schedule::dates(int year, int month) const
             }
         }
         /* compute next date */
-        switch (_freq_unit) {
+        switch (m_freq_unit) {
             case DAY:
-                cdate=cdate.addDays(_freq_value);
+                cdate=cdate.addDays(m_freq_value);
                 break;
             case WEEK:
-                cdate=cdate.addDays(_freq_value*7);
+                cdate=cdate.addDays(m_freq_value*7);
                 break;
             case MONTH:
-                cdate=cdate.addMonths(_freq_value);
+                cdate=cdate.addMonths(m_freq_value);
                 break;
             case YEAR:
-                cdate=cdate.addYears(_freq_value);
+                cdate=cdate.addYears(m_freq_value);
                 break;
         }
     } while(cdate<=until);
@@ -135,9 +135,9 @@ void Schedule::update(const QDate &from,
                       int freq_value,
                       Schedule::FrequencyUnit freq_unit)
 {
-    _from=from;
-    _until=until;
-    _endless=endless;
-    _freq_value=freq_value;
-    _freq_unit=freq_unit;
+    m_from=from;
+    m_until=until;
+    m_endless=endless;
+    m_freq_value=freq_value;
+    m_freq_unit=freq_unit;
 }
