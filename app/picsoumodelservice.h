@@ -21,7 +21,7 @@
 #include <QFile>
 #include <QUuid>
 
-#include "model/picsoudb.h"
+#include "model/object/picsoudb.h"
 #include "picsouabstractservice.h"
 
 class PicsouModelService : public PicsouAbstractService

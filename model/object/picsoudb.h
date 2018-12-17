@@ -18,9 +18,9 @@
 #ifndef PICSOUDB_H
 #define PICSOUDB_H
 
-#include "object/user.h"
 #include "utils/semver.h"
-#include "operationcollection.h"
+#include "model/object/user.h"
+#include "model/operationcollection.h"
 
 class PicsouDB : public PicsouDBO
 {

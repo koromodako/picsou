@@ -20,7 +20,7 @@
 
 #include <QDate>
 #include <QRegularExpression>
-#include "object/amount.h"
+#include "utils/amount.h"
 #include "object/operation.h"
 
 class SearchQuery

@@ -18,7 +18,7 @@
 #include "scheduledoperationeditor.h"
 #include "ui_scheduledoperationeditor.h"
 
-#include "model/object/schedule.h"
+#include "utils/schedule.h"
 
 ScheduledOperationEditor::~ScheduledOperationEditor()
 {

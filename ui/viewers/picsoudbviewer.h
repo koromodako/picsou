@@ -20,10 +20,8 @@
 
 #include <QUuid>
 #include <QWidget>
-
-#include "model/picsoudb.h"
-
 #include "ui/picsouuiviewer.h"
+#include "model/object/picsoudb.h"
 
 namespace Ui {
 class PicsouDBViewer;

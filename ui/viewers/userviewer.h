@@ -19,8 +19,7 @@
 #define USERVIEWER_H
 
 #include "ui/picsouuiviewer.h"
-
-#include "model/picsoudb.h"
+#include "model/object/picsoudb.h"
 
 namespace Ui {
 class UserViewer;

@@ -20,10 +20,8 @@
 
 #include <QUuid>
 #include <QWidget>
-
 #include "picsouui.h"
-
-#include "model/picsoudb.h"
+#include "model/object/picsoudb.h"
 
 class PicsouModelService;
 

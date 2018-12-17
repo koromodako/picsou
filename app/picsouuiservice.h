@@ -19,7 +19,7 @@
 #define PICSOUUISERVICE_H
 
 #include "picsouabstractservice.h"
-#include "model/picsoudb.h"
+#include "model/object/picsoudb.h"
 #include "model/searchquery.h"
 
 class QComboBox;

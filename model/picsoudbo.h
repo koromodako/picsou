@@ -15,8 +15,8 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-#ifndef PICSOUMODELOBJ_H
-#define PICSOUMODELOBJ_H
+#ifndef PICSOUDBO_H
+#define PICSOUDBO_H
 
 #include <QUuid>
 #include <QObject>
@@ -108,4 +108,4 @@ private:
         (json)[(name)]=array__; \
     }
 
-#endif // PICSOUMODELOBJ_H
+#endif // PICSOUDBO_H

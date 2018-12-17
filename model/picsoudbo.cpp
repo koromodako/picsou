@@ -18,7 +18,7 @@
 #include "picsoudbo.h"
 #include "utils/macro.h"
 
-PicsouDBO::PicsouDBO(PicsouDBO *parent, bool valid, bool wrapped=false) :
+PicsouDBO::PicsouDBO(bool valid, PicsouDBO *parent) :
     m_id(QUuid::createUuid()),
     m_valid(valid),
     m_parent(parent)
@@ -26,18 +26,4 @@ PicsouDBO::PicsouDBO(PicsouDBO *parent, bool valid, bool wrapped=false) :
     if(parent!=nullptr) {
         connect(this, &PicsouDBO::modified, parent, &PicsouDBO::modified);
     }
-}
-
-bool PicsouDBO::unwrap(const QString &pswd)
-{
-    LOG_IN_VOID();
-    m_pswd=pswd;
-    m_wrapped=false;
-    LOG_BOOL_RETURN(true);
-}
-
-bool PicsouDBO::wrap()
-{
-    LOG_IN_VOID();
-    LOG_BOOL_RETURN(false);
 }

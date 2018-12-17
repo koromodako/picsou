@@ -43,18 +43,18 @@ QMAKE_CXXFLAGS += -Wall \
 
 SOURCES += \
     main.cpp \
+    utils/amount.cpp \
+    utils/schedule.cpp \
     utils/semver.cpp \
     model/object/scheduledoperation.cpp \
     model/object/paymentmethod.cpp \
     model/object/operation.cpp \
-    model/object/schedule.cpp \
     model/object/account.cpp \
     model/object/budget.cpp \
-    model/object/amount.cpp \
+    model/object/picsoudb.cpp \
     model/object/user.cpp \
     model/searchquery.cpp \
     model/operationcollection.cpp \
-    model/picsoudb.cpp \
     model/converter/converter.cpp \
     app/picsouapplication.cpp \
     app/picsoumodelservice.cpp \
@@ -89,16 +89,20 @@ SOURCES += \
 HEADERS += \
     picsou.h \
     picsou.h.dist \
-    model/object/scheduledoperation.h \
-    model/object/paymentmethod.h \
-    model/object/operation.h \
+    model/converter/converter.h \
     model/object/account.h \
     model/object/budget.h \
-    model/object/amount.h \
+    model/object/operation.h \
+    model/object/paymentmethod.h \
+    model/object/picsoudb.h \
+    model/object/scheduledoperation.h \
     model/object/user.h \
+    model/operationcollection.h \
+    model/picsoudbo.h \
     model/searchquery.h \
-    model/picsoudb.h \
+    utils/amount.h \
     utils/macro.h \
+    utils/schedule.h \
     utils/semver.h \
     app/picsouapplication.h \
     app/picsoumodelservice.h \
@@ -126,11 +130,7 @@ HEADERS += \
     ui/picsouitem.h \
     ui/items/picsoutableitem.h \
     ui/widgets/picsoutablewidget.h \
-    model/operationcollection.h \
     ui/widgets/operationstatistics.h \
-    model/converter/converter.h \
-    model/object/schedule.h \
-    model/picsoudbo.h \
     utils/crypto.h
 
 FORMS += \

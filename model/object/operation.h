@@ -18,8 +18,8 @@
 #ifndef OPERATION_H
 #define OPERATION_H
 
-#include "../picsoudbo.h"
-#include "amount.h"
+#include "utils/amount.h"
+#include "model/picsoudbo.h"
 
 #include <QDate>
 
