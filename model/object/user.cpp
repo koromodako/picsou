@@ -36,11 +36,12 @@ User::User(PicsouDBO *parent) :
 }
 
 User::User(const QString &name,
+           const QString &pswd,
            PicsouDBO *parent) :
     PicsouDBO(true, parent),
     m_name(name)
 {
-
+    PicsouDBO::init_wkey(pswd);
 }
 
 void User::update(const QString &name)
@@ -164,14 +165,10 @@ AccountPtr User::find_account(QUuid id) const
 bool User::read(const QJsonObject &json)
 {
     LOG_IN("<QJsonObject>");
-    static const QStringList keys=(QStringList()<<User::KW_NAME
-                                   <<User::KW_BUDGETS
-                                   <<User::KW_ACCOUNTS);
+    static const QStringList keys=(QStringList()<<KW_NAME);
     JSON_CHECK_KEYS(keys);
     m_name=json[KW_NAME].toString();
-    JSON_READ_LIST(json, KW_BUDGETS, m_budgets, Budget, this);
-    JSON_READ_LIST(json, KW_ACCOUNTS, m_accounts, Account, this);
-    set_valid();
+    set_valid(PicsouDBO::read_wrapped(json));
     LOG_BOOL_RETURN(valid());
 }
 
@@ -179,6 +176,24 @@ bool User::write(QJsonObject &json) const
 {
     LOG_IN("<QJsonObject>");
     json[KW_NAME]=m_name;
+    LOG_BOOL_RETURN(PicsouDBO::write_wrapped(json));
+}
+
+bool User::read_unwrapped(const QJsonObject &json)
+{
+    LOG_IN("<QJsonObject>");
+    static const QStringList keys=(QStringList()<<KW_BUDGETS
+                                                <<KW_ACCOUNTS);
+    JSON_CHECK_KEYS(keys);
+    JSON_READ_LIST(json, KW_BUDGETS, m_budgets, Budget, this);
+    JSON_READ_LIST(json, KW_ACCOUNTS, m_accounts, Account, this);
+    set_valid(true);
+    LOG_BOOL_RETURN(valid());
+}
+
+bool User::write_unwrapped(QJsonObject &json) const
+{
+    LOG_IN("<QJsonObject>");
     JSON_WRITE_LIST(json, KW_BUDGETS, m_budgets.values());
     JSON_WRITE_LIST(json, KW_ACCOUNTS, m_accounts.values());
     LOG_BOOL_RETURN(true);

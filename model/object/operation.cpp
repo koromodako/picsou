@@ -72,14 +72,14 @@ void Operation::update(Amount amount,
 bool Operation::read(const QJsonObject &json)
 {
     LOG_IN("<QJsonObject>");
-    static const QStringList keys=(QStringList()<<Operation::KW_AMOUNT
-                                   <<Operation::KW_DAY
-                                   <<Operation::KW_MONTH
-                                   <<Operation::KW_YEAR
-                                   <<Operation::KW_BUDGET
-                                   <<Operation::KW_RECIPIENT
-                                   <<Operation::KW_DESCRIPTION
-                                   <<Operation::KW_PAYMENT_METHOD);
+    static const QStringList keys=(QStringList()<<KW_AMOUNT
+                                                <<KW_DAY
+                                                <<KW_MONTH
+                                                <<KW_YEAR
+                                                <<KW_BUDGET
+                                                <<KW_RECIPIENT
+                                                <<KW_DESCRIPTION
+                                                <<KW_PAYMENT_METHOD);
     JSON_CHECK_KEYS(keys);
     /**/
     m_amount=json[KW_AMOUNT].toDouble();

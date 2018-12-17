@@ -165,10 +165,10 @@ bool PicsouDB::read(const QJsonObject &json)
         LOG_BOOL_RETURN(false);
     }
     /**/
-    static const QStringList keys=(QStringList()<<PicsouDB::KW_NAME
-                                                <<PicsouDB::KW_USERS
-                                                <<PicsouDB::KW_VERSION
-                                                <<PicsouDB::KW_DESCRIPTION);
+    static const QStringList keys=(QStringList()<<KW_NAME
+                                                <<KW_USERS
+                                                <<KW_VERSION
+                                                <<KW_DESCRIPTION);
     JSON_CHECK_KEYS(keys);
     /**/
     m_name=json[KW_NAME].toString();

@@ -21,11 +21,12 @@
 #include "utils/semver.h"
 #include <QJsonDocument>
 
+class PicsouUIService;
+
 class Converter
 {
 public:
-    virtual ~Converter();
-    static bool convert(QJsonDocument *doc, SemVer db_version);
+    static bool convert(QJsonDocument *doc, SemVer db_version, PicsouUIService *ui_svc);
 
 private:
     Converter();

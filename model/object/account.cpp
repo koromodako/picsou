@@ -243,11 +243,11 @@ QStringList Account::payment_methods_str(bool sorted) const
 bool Account::read(const QJsonObject &json)
 {
     LOG_IN("<QJsonObject>")
-    static const QStringList keys=(QStringList()<<Account::KW_NAME
-                                                <<Account::KW_NOTES
-                                                <<Account::KW_PAYMENT_METHODS
-                                                <<Account::KW_SCHEDULED_OPS
-                                                <<Account::KW_OPS);
+    static const QStringList keys=(QStringList()<<KW_NAME
+                                                <<KW_NOTES
+                                                <<KW_PAYMENT_METHODS
+                                                <<KW_SCHEDULED_OPS
+                                                <<KW_OPS);
     JSON_CHECK_KEYS(keys);
     /**/
     m_name=json[KW_NAME].toString();

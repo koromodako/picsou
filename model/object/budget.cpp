@@ -53,9 +53,9 @@ void Budget::update(double amount,
 bool Budget::read(const QJsonObject &json)
 {
     LOG_IN("<QJsonObject>")
-    static const QStringList keys=(QStringList()<<Budget::KW_NAME
-                                                <<Budget::KW_AMOUNT
-                                                <<Budget::KW_DESCRIPTION);
+    static const QStringList keys=(QStringList()<<KW_NAME
+                                                <<KW_AMOUNT
+                                                <<KW_DESCRIPTION);
     JSON_CHECK_KEYS(keys);
     /**/
     m_name=json[KW_NAME].toString();

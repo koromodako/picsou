@@ -28,25 +28,42 @@ class PicsouDBO : public QObject
 {
     Q_OBJECT
 public:
+    static const QString KW_WKEY;
+    static const QString KW_DATA;
+
     PicsouDBO(bool valid, PicsouDBO *parent);
 
     inline QUuid id() const { return m_id; }
     inline bool valid() const { return m_valid; }
+    inline bool wrapped() const { return m_wrapped; }
 
     inline void set_parent(PicsouDBO *parent) { m_parent=parent; }
 
     virtual bool read(const QJsonObject &json)=0;
     virtual bool write(QJsonObject &json) const=0;
+    virtual bool read_unwrapped(const QJsonObject &json);
+    virtual bool write_unwrapped(QJsonObject &json) const;
+
+    bool unwrap(const QString &pswd);
+    bool rewrap(const QString &prev_pswd, const QString &next_pswd);
+    void init_wkey(const QString &pswd);
 
 signals:
     void modified();
 
 protected:
-    void set_valid(bool valid=true) { m_valid=valid; }
+    inline void set_valid(bool valid=true) { m_valid=valid; }
+
+    bool read_wrapped(const QJsonObject &json);
+    bool write_wrapped(QJsonObject &json) const;
 
 private:
     QUuid m_id;
     bool m_valid;
+    bool m_wrapped;
+    QString m_wkey;
+    QString m_data;
+    QString m_pswd;
     PicsouDBO *m_parent;
 };
 
