@@ -34,6 +34,7 @@ public:
     virtual ~User();
     User(PicsouDBO *parent);
     User(const QString &name,
+         const QString &pswd,
          PicsouDBO *parent);
 
     void update(const QString &name);
@@ -57,6 +58,8 @@ public:
 
     bool read(const QJsonObject &json);
     bool write(QJsonObject &json) const;
+    bool read_unwrapped(const QJsonObject &json);
+    bool write_unwrapped(QJsonObject &json) const;
 
     bool operator <(const User &other);
 

@@ -67,7 +67,7 @@ void ScheduledOperation::update(const Amount &amount,
 bool ScheduledOperation::read(const QJsonObject &json)
 {
     LOG_IN("<QJsonObject>");
-    static const QStringList keys=(QStringList()<<ScheduledOperation::KW_NAME
+    static const QStringList keys=(QStringList()<<KW_NAME
                                                 <<Schedule::KW_FROM_YEAR
                                                 <<Schedule::KW_FROM_MONTH
                                                 <<Schedule::KW_FROM_DAY

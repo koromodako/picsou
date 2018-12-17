@@ -84,7 +84,9 @@ SOURCES += \
     ui/widgets/picsoutablewidget.cpp \
     ui/widgets/operationstatistics.cpp \
     model/picsoudbo.cpp \
-    utils/crypto.cpp
+    utils/crypto.cpp \
+    model/converter/converter_100_110.cpp \
+    model/converter/converter_110_200.cpp
 
 HEADERS += \
     picsou.h \
@@ -131,7 +133,8 @@ HEADERS += \
     ui/items/picsoutableitem.h \
     ui/widgets/picsoutablewidget.h \
     ui/widgets/operationstatistics.h \
-    utils/crypto.h
+    utils/crypto.h \
+    model/converter/converters.h
 
 FORMS += \
     ui/mainwindow.ui \

@@ -16,46 +16,24 @@
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 #include "converter.h"
+#include "converters.h"
 #include "utils/macro.h"
 
 #include <QList>
 #include <QPair>
 #include <QJsonObject>
-#include "model/object/picsoudb.h"
 
-typedef void (*db_converter_t)(QJsonDocument *doc);
+#define makeConverterPair(version, converter) \
+    QPair<SemVer, db_converter_t>((version), (converter))
 
-void convert_100_110(QJsonDocument *doc)
-{
-    LOG_IN("doc="<<doc);
-    QJsonArray user_ary, account_ary, new_user_ary, new_accout_ary;
-    QJsonObject db;
-    db=doc->object();
-    user_ary=db[PicsouDB::KW_USERS].toArray();
-    for(const auto user_ref : user_ary) {
-        QJsonObject user=user_ref.toObject();
-        account_ary=user[User::KW_ACCOUNTS].toArray();
-        for(const auto account_ref : account_ary) {
-            QJsonObject account=account_ref.toObject();
-            account[Account::KW_NOTES]="";
-            new_accout_ary.append(account);
-        }
-        user[User::KW_ACCOUNTS]=new_accout_ary;
-        new_user_ary.append(user);
-    }
-    db[PicsouDB::KW_VERSION]=SemVer(1,1,0).to_str();
-    db[PicsouDB::KW_USERS]=new_user_ary;
-    doc->setObject(db);
-    LOG_VOID_RETURN();
-}
-
-bool Converter::convert(QJsonDocument *doc, SemVer from)
+bool Converter::convert(QJsonDocument *doc, SemVer from, PicsouUIService *ui_svc)
 {
     LOG_IN("doc="<<doc<<",from="<<from);
     /* initialize convesion list */
     bool convert;
     QList<QPair<SemVer, db_converter_t>> converter_list;
-    converter_list.append(QPair<SemVer, db_converter_t>(SemVer(1, 0, 0), convert_100_110));
+    converter_list.append(makeConverterPair(SemVer(1, 0, 0), convert_100_110));
+    converter_list.append(makeConverterPair(SemVer(1, 1, 0), convert_110_200));
     /* apply conversions */
     LOG_DEBUG("attempting conversion.");
     convert=false;
@@ -66,8 +44,10 @@ bool Converter::convert(QJsonDocument *doc, SemVer from)
         }
         if(convert) {
             LOG_DEBUG("applying converter for version: "<<converter.first.to_str());
-            converter.second(doc);
+            converter.second(doc, ui_svc);
         }
     }
     LOG_BOOL_RETURN(convert);
 }
+
+#undef makeConverterPair
