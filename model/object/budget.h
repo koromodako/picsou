@@ -18,9 +18,9 @@
 #ifndef BUDGET_H
 #define BUDGET_H
 
-#include "../picsoumodelobj.h"
+#include "../picsoudbo.h"
 
-class Budget : public PicsouModelObj
+class Budget : public PicsouDBO
 {
     Q_OBJECT
 public:
@@ -28,19 +28,19 @@ public:
     static const QString KW_AMOUNT;
     static const QString KW_DESCRIPTION;
 
-    Budget(PicsouModelObj *parent);
+    Budget(PicsouDBO *parent);
     Budget(double amount,
            const QString &name,
            const QString &description,
-           PicsouModelObj *parent);
+           PicsouDBO *parent);
 
     void update(double amount,
                 const QString &name,
                 const QString &description);
 
-    inline double amount() const { return _amount; }
-    inline QString name() const { return _name; }
-    inline QString description() const { return _description; }
+    inline double amount() const { return m_amount; }
+    inline QString name() const { return m_name; }
+    inline QString description() const { return m_description; }
 
     bool read(const QJsonObject &json);
     bool write(QJsonObject &json) const;
@@ -48,9 +48,9 @@ public:
     bool operator <(const Budget &other);
 
 private:
-    double _amount;
-    QString _name;
-    QString _description;
+    double m_amount;
+    QString m_name;
+    QString m_description;
 };
 
 DECL_PICSOU_MOD_OBJ_PTR(Budget,

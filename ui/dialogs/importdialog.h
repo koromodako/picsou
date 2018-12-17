@@ -36,7 +36,7 @@ public:
                           QWidget *parent=nullptr);
 
 private:
-    PicsouTableWidget *_table;
+    PicsouTableWidget *m_table;
     Ui::ImportDialog *ui;
 };
 

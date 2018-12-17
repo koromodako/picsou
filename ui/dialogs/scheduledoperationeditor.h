@@ -52,13 +52,13 @@ public slots:
     void accept();
 
 private:
-    Amount *_amount;
-    QString *_payment_method;
-    QString *_budget;
-    QString *_recipient;
-    QString *_description;
-    QString *_name;
-    Schedule *_schedule;
+    Amount *m_amount;
+    QString *m_payment_method;
+    QString *m_budget;
+    QString *m_recipient;
+    QString *m_description;
+    QString *m_name;
+    Schedule *m_schedule;
     Ui::ScheduledOperationEditor *ui;
 };
 

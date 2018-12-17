@@ -55,7 +55,7 @@
 PicsouUIService::~PicsouUIService()
 {
     LOG_IN_VOID();
-    delete _mw;
+    delete m_mw;
     LOG_VOID_RETURN();
 }
 
@@ -63,15 +63,14 @@ PicsouUIService::PicsouUIService(PicsouApplication *papp) :
     PicsouAbstractService(papp)
 {
     LOG_IN("papp="<<papp);
-    _mw=new MainWindow(this);
+    m_mw=new MainWindow(this);
     LOG_VOID_RETURN();
 }
 
 bool PicsouUIService::initialize()
 {
     LOG_IN_VOID();
-    connect(papp()->model_svc(), &PicsouModelService::updated,
-            this, &PicsouUIService::notify_model_updated);
+    connect(papp()->model_svc(), &PicsouModelService::updated, this, &PicsouUIService::notify_model_updated);
     LOG_BOOL_RETURN(true);
 }
 
@@ -242,7 +241,7 @@ OperationCollection PicsouUIService::search_operations(const SearchQuery &query)
                                              tr("Abort search"),
                                              future.progressMinimum(),
                                              future.progressMaximum(),
-                                             _mw);
+                                             m_mw);
                     progress.setWindowModality(Qt::WindowModal);
 
                     while(!future.isFinished()) {
@@ -267,7 +266,7 @@ OperationCollection PicsouUIService::search_operations(const SearchQuery &query)
         }
     }
     if(ops.length()==0) {
-        QMessageBox::information(_mw,
+        QMessageBox::information(m_mw,
                                  tr("No result"),
                                  tr("No operation matched the search query."),
                                  QMessageBox::Ok);
@@ -322,14 +321,14 @@ PicsouUIViewer *PicsouUIService::viewer_from_item(QTreeWidgetItem *item)
 void PicsouUIService::show_mainwindow()
 {
     LOG_IN_VOID();
-    _mw->show();
+    m_mw->show();
     LOG_VOID_RETURN();
 }
 
 void PicsouUIService::show_about_picsou()
 {
     LOG_IN_VOID();
-    AboutPicsou *about=new AboutPicsou(_mw);
+    AboutPicsou *about=new AboutPicsou(m_mw);
     about->setAttribute(Qt::WA_DeleteOnClose);
     about->show();
     LOG_VOID_RETURN();
@@ -362,7 +361,7 @@ void PicsouUIService::db_new()
         emit svc_op_canceled();
         LOG_VOID_RETURN();
     }
-    QString filename=QFileDialog::getSaveFileName(_mw,
+    QString filename=QFileDialog::getSaveFileName(m_mw,
                                           tr("Create file"),
                                           QString(),
                                           tr("Database (*.psdb)"));
@@ -371,7 +370,7 @@ void PicsouUIService::db_new()
         LOG_VOID_RETURN();
     }
     QString name, description;
-    if(PicsouDBEditor(&name, &description, _mw).exec()==QDialog::Rejected) {
+    if(PicsouDBEditor(&name, &description, m_mw).exec()==QDialog::Rejected) {
         emit svc_op_canceled();
         LOG_VOID_RETURN();
     }
@@ -391,7 +390,7 @@ void PicsouUIService::db_open()
         emit svc_op_canceled();
         LOG_VOID_RETURN();
     }
-    filename=QFileDialog::getOpenFileName(_mw,
+    filename=QFileDialog::getOpenFileName(m_mw,
                                           tr("Open file"),
                                           QString(),
                                           tr("Database (*.psdb)"));
@@ -414,7 +413,7 @@ void PicsouUIService::db_close()
         LOG_VOID_RETURN();
     }
     if(papp()->model_svc()->is_db_modified() &&
-       QMessageBox::question(_mw,
+       QMessageBox::question(m_mw,
                              tr("Save database"),
                              tr("Do you want to save the database before "
                                 "closing it?"),
@@ -445,7 +444,7 @@ void PicsouUIService::db_save_as()
 {
     LOG_IN_VOID();
     if(papp()->model_svc()->is_db_opened()) {
-        QString filename=QFileDialog::getSaveFileName(_mw,
+        QString filename=QFileDialog::getSaveFileName(m_mw,
                                               tr("Open file"),
                                               QString(),
                                               tr("Database (*.psdb)"));
@@ -469,7 +468,7 @@ void PicsouUIService::user_add()
     if(UserEditor(&username,
                   &old_pwd,
                   &new_pwd,
-                  _mw).exec()==QDialog::Rejected) {
+                  m_mw).exec()==QDialog::Rejected) {
         emit svc_op_canceled();
         LOG_VOID_RETURN();
     }
@@ -490,7 +489,7 @@ void PicsouUIService::user_edit(QUuid id)
     if(UserEditor(&username,
                   &old_pwd,
                   &new_pwd,
-                  _mw).exec()==QDialog::Rejected) {
+                  m_mw).exec()==QDialog::Rejected) {
         emit svc_op_canceled();
         LOG_VOID_RETURN();
     }
@@ -524,7 +523,7 @@ void PicsouUIService::budget_add(QUuid user_id)
     if(BudgetEditor (&amount,
                      &name,
                      &description,
-                     _mw).exec()==QDialog::Rejected) {
+                     m_mw).exec()==QDialog::Rejected) {
         emit svc_op_canceled();
         LOG_VOID_RETURN();
     }
@@ -552,7 +551,7 @@ void PicsouUIService::budget_edit(QUuid user_id, QUuid budget_id)
     if(BudgetEditor(&amount,
                     &name,
                     &description,
-                    _mw).exec()==QDialog::Rejected) {
+                    m_mw).exec()==QDialog::Rejected) {
         emit svc_op_canceled();
         LOG_VOID_RETURN();
     }
@@ -586,7 +585,7 @@ void PicsouUIService::account_add(QUuid user_id)
         LOG_VOID_RETURN();
     }
     QString name, description;
-    if(AccountEditor(&name, &description, _mw).exec()==QDialog::Rejected) {
+    if(AccountEditor(&name, &description, m_mw).exec()==QDialog::Rejected) {
         emit svc_op_canceled();
         LOG_VOID_RETURN();
     }
@@ -610,7 +609,7 @@ void PicsouUIService::account_edit(QUuid user_id, QUuid account_id)
     }
     QString name=account->name();
     QString notes=account->notes();
-    if(AccountEditor(&name, &notes, _mw).exec()==QDialog::Rejected) {
+    if(AccountEditor(&name, &notes, m_mw).exec()==QDialog::Rejected) {
         emit svc_op_canceled();
         LOG_VOID_RETURN();
     }
@@ -644,7 +643,7 @@ void PicsouUIService::pm_add(QUuid account_id)
         LOG_VOID_RETURN();
     }
     QString name;
-    if(PaymentMethodEditor(&name, _mw).exec()==QDialog::Rejected) {
+    if(PaymentMethodEditor(&name, m_mw).exec()==QDialog::Rejected) {
         emit svc_op_canceled();
         LOG_VOID_RETURN();
     }
@@ -663,7 +662,7 @@ void PicsouUIService::pm_edit(QUuid account_id, QUuid pm_id)
     }
     PaymentMethodPtr pm=account->find_payment_method(pm_id);
     QString name=pm->name();
-    if(PaymentMethodEditor(&name, _mw).exec()==QDialog::Rejected) {
+    if(PaymentMethodEditor(&name, m_mw).exec()==QDialog::Rejected) {
         emit svc_op_canceled();
         LOG_VOID_RETURN();
     }
@@ -721,7 +720,7 @@ void PicsouUIService::sop_add(QUuid user_id, QUuid account_id)
                                     &payment_method,
                                     &name,
                                     &schedule,
-                                    _mw);
+                                    m_mw);
     editor.set_budgets(budgets);
     editor.set_frequency_units(Schedule::frequency_units());
     editor.set_payment_methods(payment_methods);
@@ -768,7 +767,7 @@ void PicsouUIService::sop_edit(QUuid user_id, QUuid account_id, QUuid sop_id)
                                     &payment_method,
                                     &name,
                                     &schedule,
-                                    _mw);
+                                    m_mw);
     QStringList budgets=user->budgets_str(true);
     if(budgets.empty()) {
         emit svc_op_failed(tr("Logical error: make sure you have defined at least one budget before adding operations."));
@@ -847,7 +846,7 @@ void PicsouUIService::op_add(QUuid user_id, QUuid account_id, int year, int mont
                            &description,
                            year,
                            month,
-                           _mw);
+                           m_mw);
     editor.set_budgets(budgets);
     editor.set_payment_methods(payment_methods);
     if(editor.exec()==QDialog::Rejected) {
@@ -895,7 +894,7 @@ void PicsouUIService::op_edit(QUuid user_id, QUuid account_id, QUuid op_id, int 
     }
     OperationEditor editor(&date, &amount, &payment_method,
                            &budget, &recipient, &description,
-                           year, month, _mw);
+                           year, month, m_mw);
     editor.set_budgets(user->budgets_str(true));
     editor.set_payment_methods(account->payment_methods_str(true));
     if(editor.exec()==QDialog::Rejected) {
@@ -936,7 +935,7 @@ void PicsouUIService::ops_import(QUuid account_id)
         emit svc_op_failed(tr("Internal error: invalid account pointer."));
         LOG_VOID_RETURN();
     }
-    QString filename=QFileDialog::getOpenFileName(_mw,
+    QString filename=QFileDialog::getOpenFileName(m_mw,
                                                   tr("Import file"),
                                                   QString(),
                                                   tr("Files (*.csv *.xml *.json)"));
@@ -954,12 +953,12 @@ void PicsouUIService::ops_import(QUuid account_id)
     }
     OperationCollection ops=papp()->model_svc()->load_ops(fmt, filename);
     if(ops.length()==0) {
-        QMessageBox::warning(_mw,
+        QMessageBox::warning(m_mw,
                              tr("Empty import"),
                              tr("Import result is empty. Invalid or empty input file."));
         LOG_VOID_RETURN();
     }
-    if(ImportDialog(ops, _mw).exec()==QDialog::Rejected) {
+    if(ImportDialog(ops, m_mw).exec()==QDialog::Rejected) {
         emit svc_op_canceled();
         ops.clear();
         LOG_VOID_RETURN();
@@ -986,7 +985,7 @@ void PicsouUIService::ops_export(QUuid account_id)
             <<PicsouModelService::XML
             <<PicsouModelService::JSON;
     bool ok;
-    QString fmt_str=QInputDialog::getItem(_mw,
+    QString fmt_str=QInputDialog::getItem(m_mw,
                                           tr("Which format?"),
                                           tr("Select output format"),
                                           formats,
@@ -997,7 +996,7 @@ void PicsouUIService::ops_export(QUuid account_id)
         emit svc_op_canceled();
         LOG_VOID_RETURN();
     }
-    QString filename=QFileDialog::getSaveFileName(_mw,
+    QString filename=QFileDialog::getSaveFileName(m_mw,
                                                   tr("Export file"),
                                                   QString(),
                                                   fmt_str);
@@ -1011,7 +1010,7 @@ void PicsouUIService::ops_export(QUuid account_id)
         emit svc_op_failed(tr("Internal error: failed to export operations."));
         LOG_VOID_RETURN();
     }
-    QMessageBox::information(_mw,
+    QMessageBox::information(m_mw,
                              tr("Export successful"),
                              tr("Operation successfully exported to %0").arg(filename));
     emit ops_exported();
@@ -1030,7 +1029,7 @@ bool PicsouUIService::close_any_opened_db()
 {
     LOG_IN_VOID();
     if(papp()->model_svc()->is_db_modified() &&
-       QMessageBox::question(_mw,
+       QMessageBox::question(m_mw,
                              tr("Close database"),
                              tr("Only one database can be opened at "
                                 "once, do you want to close current "

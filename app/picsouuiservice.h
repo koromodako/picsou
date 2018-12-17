@@ -136,7 +136,7 @@ private:
     bool close_any_opened_db();
 
 private:
-    MainWindow *_mw;
+    MainWindow *m_mw;
 };
 
 #endif // PICSOUUISERVICE_H

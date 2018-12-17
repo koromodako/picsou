@@ -18,7 +18,7 @@
 #ifndef OPERATION_H
 #define OPERATION_H
 
-#include "../picsoumodelobj.h"
+#include "../picsoudbo.h"
 #include "amount.h"
 
 #include <QDate>
@@ -30,7 +30,7 @@ DECL_PICSOU_MOD_OBJ_PTR(PaymentMethod,
                         PaymentMethodPtrList,
                         PaymentMethodShPtrList);
 
-class Operation : public PicsouModelObj
+class Operation : public PicsouDBO
 {
     Q_OBJECT
 public:
@@ -48,14 +48,14 @@ public:
     static const QString KW_DESCRIPTION;
     static const QString KW_PAYMENT_METHOD;
 
-    Operation(PicsouModelObj *parent);
+    Operation(PicsouDBO *parent);
     Operation(const Amount &amount,
               const QDate &date,
               const QString &budget,
               const QString &recipient,
               const QString &description,
               const QString &payment_method,
-              PicsouModelObj *parent);
+              PicsouDBO *parent);
 
     void update(Amount amount,
                 const QDate &date,
@@ -64,30 +64,30 @@ public:
                 const QString &description,
                 const QString &payment_method);
 
-    void mark_scheduled() { _scheduled=true; }
+    void mark_scheduled() { m_scheduled=true; }
 
-    inline Amount amount() const { return _amount; }
-    inline QDate date() const { return _date; }
-    inline QString budget() const { return _budget; }
-    inline QString recipient() const { return _recipient; }
-    inline QString description() const { return _description; }
-    inline QString payment_method() const { return _payment_method; }
-    inline Type type() const { return (_amount<0.?DEBIT:CREDIT); }
-    inline bool scheduled() const { return _scheduled; }
+    inline Amount amount() const { return m_amount; }
+    inline QDate date() const { return m_date; }
+    inline QString budget() const { return m_budget; }
+    inline QString recipient() const { return m_recipient; }
+    inline QString description() const { return m_description; }
+    inline QString payment_method() const { return m_payment_method; }
+    inline Type type() const { return (m_amount<0.?DEBIT:CREDIT); }
+    inline bool scheduled() const { return m_scheduled; }
 
     bool read(const QJsonObject &json);
     bool write(QJsonObject &json) const;
 
-    inline bool operator<(const Operation &other) { return _date<other._date; }
+    inline bool operator<(const Operation &other) { return m_date<other.m_date; }
 
 private:
-    Amount _amount;
-    QDate _date;
-    QString _budget;
-    QString _recipient;
-    QString _description;
-    QString _payment_method;
-    bool _scheduled=false;
+    Amount m_amount;
+    QDate m_date;
+    QString m_budget;
+    QString m_recipient;
+    QString m_description;
+    QString m_payment_method;
+    bool m_scheduled=false;
 };
 
 DECL_PICSOU_MOD_OBJ_PTR(Operation,

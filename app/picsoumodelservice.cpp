@@ -47,9 +47,9 @@ PicsouModelService::~PicsouModelService()
 
 PicsouModelService::PicsouModelService(PicsouApplication *papp) :
     PicsouAbstractService(papp),
-    _db(nullptr),
-    _filename(QString()),
-    _is_db_modified(false)
+    m_db(nullptr),
+    m_filename(QString()),
+    m_is_db_modified(false)
 {
     LOG_IN("papp="<<papp);
     LOG_VOID_RETURN();
@@ -76,14 +76,14 @@ bool PicsouModelService::new_db(QString filename,
     if(is_db_opened()) {
         LOG_BOOL_RETURN(false);
     }
-    _db=PicsouDBPtr(new PicsouDB(SemVer(PICSOU_DB_MAJOR,
+    m_db=PicsouDBPtr(new PicsouDB(SemVer(PICSOU_DB_MAJOR,
                                         PICSOU_DB_MINOR,
                                         PICSOU_DB_PATCH),
                                  name,
                                  description));
-    _filename=filename;
-    _is_db_modified=true;
-    connect(_db, &PicsouDB::modified, this, &PicsouModelService::notify_ui);
+    m_filename=filename;
+    m_is_db_modified=true;
+    connect(m_db, &PicsouDB::modified, this, &PicsouModelService::notify_ui);
     LOG_BOOL_RETURN(true);
 }
 
@@ -104,12 +104,12 @@ bool PicsouModelService::open_db(QString filename)
         LOG_BOOL_RETURN(false);
     }
     SemVer db_version;
-    _db=PicsouDBPtr(new PicsouDB);
+    m_db=PicsouDBPtr(new PicsouDB);
     for(;;) {
-        if(_db->read(doc.object())) {
+        if(m_db->read(doc.object())) {
             break;
         }
-        db_version=_db->version();
+        db_version=m_db->version();
         LOG_DEBUG("valid DB version: "<<db_version.is_valid());
         LOG_DEBUG(db_version.to_str()<<"<"<<PICSOU_DB_VERSION.to_str()<<" : "<<(db_version<PICSOU_DB_VERSION));
         if(db_version.is_valid()&&db_version<PICSOU_DB_VERSION) {
@@ -120,15 +120,15 @@ bool PicsouModelService::open_db(QString filename)
         }
         LOG_BOOL_RETURN(false);
     }
-    _filename=filename;
-    connect(_db, &PicsouDB::modified, this, &PicsouModelService::notify_ui);
+    m_filename=filename;
+    connect(m_db, &PicsouDB::modified, this, &PicsouModelService::notify_ui);
     LOG_BOOL_RETURN(true);
 }
 
 bool PicsouModelService::save_db()
 {
     LOG_IN_VOID();
-    LOG_BOOL_RETURN(save_db_as(_filename));
+    LOG_BOOL_RETURN(save_db_as(m_filename));
 }
 
 bool PicsouModelService::save_db_as(QString filename)
@@ -138,7 +138,7 @@ bool PicsouModelService::save_db_as(QString filename)
         LOG_BOOL_RETURN(false);
     }
     QJsonObject json;
-    if(!_db->write(json)) {
+    if(!m_db->write(json)) {
         LOG_BOOL_RETURN(false);
     }
     QFile f(filename);
@@ -150,8 +150,8 @@ bool PicsouModelService::save_db_as(QString filename)
         LOG_BOOL_RETURN(false);
     }
     f.close();
-    _filename=filename;
-    _is_db_modified=false;
+    m_filename=filename;
+    m_is_db_modified=false;
     LOG_BOOL_RETURN(true);
 }
 
@@ -159,9 +159,9 @@ bool PicsouModelService::close_db()
 {
     LOG_IN_VOID();
     if(is_db_opened()) {
-        _filename.clear();
-        _is_db_modified=false;
-        delete _db;
+        m_filename.clear();
+        m_is_db_modified=false;
+        delete m_db;
         LOG_BOOL_RETURN(true);
     }
     LOG_BOOL_RETURN(false);
@@ -170,7 +170,7 @@ bool PicsouModelService::close_db()
 bool PicsouModelService::is_db_opened()
 {
     LOG_IN_VOID();
-    LOG_BOOL_RETURN(!(_db.isNull()));
+    LOG_BOOL_RETURN(!(m_db.isNull()));
 }
 
 OperationCollection PicsouModelService::load_ops(ImportExportFormat fmt,
@@ -215,7 +215,7 @@ bool PicsouModelService::dump_ops(ImportExportFormat fmt,
 UserPtr PicsouModelService::find_user(QUuid id) const
 {
     LOG_IN("id="<<id);
-    UserPtr user=_db->find_user(id);
+    UserPtr user=m_db->find_user(id);
     LOG_DEBUG("-> user="<<user);
     return user;
 }
@@ -223,7 +223,7 @@ UserPtr PicsouModelService::find_user(QUuid id) const
 AccountPtr PicsouModelService::find_account(QUuid id) const
 {
     LOG_IN("id="<<id);
-    AccountPtr account=_db->find_account(id);
+    AccountPtr account=m_db->find_account(id);
     LOG_DEBUG("-> account="<<account);
     return account;
 }
@@ -231,8 +231,8 @@ AccountPtr PicsouModelService::find_account(QUuid id) const
 void PicsouModelService::notify_ui()
 {
     LOG_IN_VOID();
-    _is_db_modified=true;
-    emit updated(_db);
+    m_is_db_modified=true;
+    emit updated(m_db);
     LOG_VOID_RETURN();
 }
 

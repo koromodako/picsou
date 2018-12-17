@@ -29,47 +29,47 @@ const QString Account::KW_SCHEDULED_OPS="scheduled_ops";
 
 Account::~Account()
 {
-    DELETE_HASH_CONTENT(ScheduledOperationPtr, _scheduled_ops);
-    DELETE_HASH_CONTENT(PaymentMethodPtr, _payment_methods);
-    DELETE_HASH_CONTENT(OperationPtr, _ops);
+    DELETE_HASH_CONTENT(ScheduledOperationPtr, m_scheduled_ops);
+    DELETE_HASH_CONTENT(PaymentMethodPtr, m_payment_methods);
+    DELETE_HASH_CONTENT(OperationPtr, m_ops);
 }
 
-Account::Account(PicsouModelObj *parent) :
-    PicsouModelObj(false, parent),
-    _name(QString()),
-    _notes(QString())
+Account::Account(PicsouDBO *parent) :
+    PicsouDBO(false, parent),
+    m_name(QString()),
+    m_notes(QString())
 {
 
 }
 
 Account::Account(const QString &name,
                  const QString &notes,
-                 PicsouModelObj *parent) :
-    PicsouModelObj(true, parent),
-    _name(name),
-    _notes(notes)
+                 PicsouDBO *parent) :
+    PicsouDBO(true, parent),
+    m_name(name),
+    m_notes(notes)
 {
 
 }
 
 void Account::update(const QString &name, const QString &notes)
 {
-    _name=name;
-    _notes=notes;
+    m_name=name;
+    m_notes=notes;
     emit modified();
 }
 
 void Account::add_payment_method(const QString &name)
 {
     PaymentMethodPtr pm=PaymentMethodPtr(new PaymentMethod(name, this));
-    _payment_methods.insert(pm->id(), pm);
+    m_payment_methods.insert(pm->id(), pm);
     emit modified();
 }
 
 bool Account::remove_payment_method(QUuid id)
 {
     bool success=false;
-    switch (_payment_methods.remove(id)) {
+    switch (m_payment_methods.remove(id)) {
     case 0:
         /* TRACE */
         break;
@@ -100,14 +100,14 @@ void Account::add_scheduled_operation(const Amount &amount,
                                                                            name,
                                                                            schedule,
                                                                            this));
-    _scheduled_ops.insert(sop->id(), sop);
+    m_scheduled_ops.insert(sop->id(), sop);
     emit modified();
 }
 
 bool Account::remove_scheduled_operation(QUuid id)
 {
     bool success=false;
-    switch (_scheduled_ops.remove(id)) {
+    switch (m_scheduled_ops.remove(id)) {
     case 0:
         /* TRACE */
         break;
@@ -136,7 +136,7 @@ void Account::add_operation(const Amount &amount,
                                                description,
                                                payment_method,
                                                this));
-     _ops.insert(op->id(), op);
+     m_ops.insert(op->id(), op);
      emit modified();
 }
 
@@ -144,7 +144,7 @@ void Account::add_operations(const OperationPtrList &ops)
 {
     for(const auto &op : ops) {
         op->set_parent(this);
-        _ops.insert(op->id(), op);
+        m_ops.insert(op->id(), op);
     }
     if(ops.length()>0) {
         emit modified();
@@ -154,7 +154,7 @@ void Account::add_operations(const OperationPtrList &ops)
 bool Account::remove_operation(QUuid id)
 {
     bool success=false;
-    switch (_ops.remove(id)) {
+    switch (m_ops.remove(id)) {
     case 0:
         /* TRACE */
         break;
@@ -172,8 +172,8 @@ bool Account::remove_operation(QUuid id)
 PaymentMethodPtr Account::find_payment_method(QUuid id)
 {
     PaymentMethodPtr pm;
-    QHash<QUuid, PaymentMethodPtr>::const_iterator it=_payment_methods.find(id);
-    if(it!=_payment_methods.end()) {
+    QHash<QUuid, PaymentMethodPtr>::const_iterator it=m_payment_methods.find(id);
+    if(it!=m_payment_methods.end()) {
         pm=*it;
     }
     return pm;
@@ -182,8 +182,8 @@ PaymentMethodPtr Account::find_payment_method(QUuid id)
 ScheduledOperationPtr Account::find_scheduled_operation(QUuid id)
 {
     ScheduledOperationPtr sop;
-    QHash<QUuid, ScheduledOperationPtr>::const_iterator it=_scheduled_ops.find(id);
-    if(it!=_scheduled_ops.end()) {
+    QHash<QUuid, ScheduledOperationPtr>::const_iterator it=m_scheduled_ops.find(id);
+    if(it!=m_scheduled_ops.end()) {
         sop=*it;
     }
     return sop;
@@ -192,8 +192,8 @@ ScheduledOperationPtr Account::find_scheduled_operation(QUuid id)
 OperationPtr Account::find_operation(QUuid id)
 {
     OperationPtr op;
-    QHash<QUuid, OperationPtr>::const_iterator it=_ops.find(id);
-    if(it!=_ops.end()) {
+    QHash<QUuid, OperationPtr>::const_iterator it=m_ops.find(id);
+    if(it!=m_ops.end()) {
         op=*it;
     }
     return op;
@@ -204,10 +204,10 @@ OperationPtr Account::find_operation(QUuid id)
 int Account::min_year() const
 {
     int min_y=INT_MAX;
-    for(const auto &op : _ops) {
+    for(const auto &op : m_ops) {
         min_y=min(min_y, op->date().year());
     }
-    for(const auto &sop : _scheduled_ops) {
+    for(const auto &sop : m_scheduled_ops) {
         min_y=min(min_y, sop->schedule().from().year());
     }
     return min_y;
@@ -223,7 +223,7 @@ bool pm_cmp(const PaymentMethodPtr &a, const PaymentMethodPtr &b)
 
 PaymentMethodPtrList Account::payment_methods(bool sorted) const
 {
-    PaymentMethodPtrList p_methods=_payment_methods.values();
+    PaymentMethodPtrList p_methods=m_payment_methods.values();
     if(sorted) {
         std::sort(p_methods.begin(), p_methods.end(), pm_cmp);
     }
@@ -250,14 +250,14 @@ bool Account::read(const QJsonObject &json)
                                                 <<Account::KW_OPS);
     JSON_CHECK_KEYS(keys);
     /**/
-    _name=json[KW_NAME].toString();
-    _notes=json[KW_NOTES].toString();
+    m_name=json[KW_NAME].toString();
+    m_notes=json[KW_NOTES].toString();
     JSON_READ_LIST(json, KW_PAYMENT_METHODS,
-                   _payment_methods, PaymentMethod, this);
+                   m_payment_methods, PaymentMethod, this);
     JSON_READ_LIST(json, KW_SCHEDULED_OPS,
-                   _scheduled_ops, ScheduledOperation, this);
+                   m_scheduled_ops, ScheduledOperation, this);
     JSON_READ_LIST(json, KW_OPS,
-                   _ops, Operation, this);
+                   m_ops, Operation, this);
     /**/
     set_valid();
     LOG_BOOL_RETURN(valid());
@@ -266,16 +266,16 @@ bool Account::read(const QJsonObject &json)
 bool Account::write(QJsonObject &json) const
 {
     LOG_IN("<QJsonObject>")
-    json[KW_NAME]=_name;
-    json[KW_NOTES]=_notes;
-    JSON_WRITE_LIST(json, KW_PAYMENT_METHODS, _payment_methods.values());
-    JSON_WRITE_LIST(json, KW_SCHEDULED_OPS, _scheduled_ops.values());
-    JSON_WRITE_LIST(json, KW_OPS, _ops.values());
+    json[KW_NAME]=m_name;
+    json[KW_NOTES]=m_notes;
+    JSON_WRITE_LIST(json, KW_PAYMENT_METHODS, m_payment_methods.values());
+    JSON_WRITE_LIST(json, KW_SCHEDULED_OPS, m_scheduled_ops.values());
+    JSON_WRITE_LIST(json, KW_OPS, m_ops.values());
     /**/
     LOG_BOOL_RETURN(true);
 }
 
 bool Account::operator <(const Account &other)
 {
-    return (_name<other._name);
+    return (m_name<other.m_name);
 }

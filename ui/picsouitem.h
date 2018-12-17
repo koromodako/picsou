@@ -25,13 +25,13 @@ class PicsouItem
 public:
     virtual ~PicsouItem();
 
-    inline QUuid mod_obj_id() const { return _id; }
+    inline QUuid mod_obj_id() const { return m_id; }
 
 protected:
     PicsouItem(QUuid id);
 
 private:
-    QUuid _id;
+    QUuid m_id;
 };
 
 #endif // PICSOUITEM_H

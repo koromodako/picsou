@@ -28,7 +28,7 @@ class ScheduledOperation : public Operation
 public:
     static const QString KW_NAME;
 
-    ScheduledOperation(PicsouModelObj *parent);
+    ScheduledOperation(PicsouDBO *parent);
     ScheduledOperation(const Amount &amount,
                        const QString &budget,
                        const QString &recipient,
@@ -36,10 +36,10 @@ public:
                        const QString &payment_method,
                        const QString &name,
                        const Schedule &schedule,
-                       PicsouModelObj *parent);
+                       PicsouDBO *parent);
 
-    inline QString name() const { return _name; }
-    inline Schedule schedule() const { return _schedule; }
+    inline QString name() const { return m_name; }
+    inline Schedule schedule() const { return m_schedule; }
 
     void update(const Amount &amount,
                 const QString &budget,
@@ -53,8 +53,8 @@ public:
     bool write(QJsonObject &json) const;
 
 private:
-    QString _name;
-    Schedule _schedule;
+    QString m_name;
+    Schedule m_schedule;
 };
 
 DECL_PICSOU_MOD_OBJ_PTR(ScheduledOperation,

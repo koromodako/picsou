@@ -34,11 +34,11 @@ public:
         M_FORMAT
     };
 
-    inline int major_num() const { return _major; }
-    inline int minor_num() const { return _minor; }
-    inline int patch_num() const { return _patch; }
+    inline int major_num() const { return m_major; }
+    inline int minor_num() const { return m_minor; }
+    inline int patch_num() const { return m_patch; }
 
-    inline bool is_valid() const { return !(_major<0||_minor<0||_patch<0); }
+    inline bool is_valid() const { return !(m_major<0||m_minor<0||m_patch<0); }
 
     QString to_str(Format fmt=MMP_FORMAT) const;
 
@@ -51,9 +51,9 @@ public:
 
 
 private:
-    int _major;
-    int _minor;
-    int _patch;
+    int m_major;
+    int m_minor;
+    int m_patch;
 };
 
 QDebug operator<<(QDebug debug, const SemVer &semver);

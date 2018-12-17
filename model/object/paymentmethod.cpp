@@ -20,22 +20,22 @@
 
 const QString PaymentMethod::KW_NAME="name";
 
-PaymentMethod::PaymentMethod(PicsouModelObj *parent) :
-    PicsouModelObj(false, parent)
+PaymentMethod::PaymentMethod(PicsouDBO *parent) :
+    PicsouDBO(false, parent)
 {
 
 }
 
-PaymentMethod::PaymentMethod(const QString &name, PicsouModelObj *parent) :
-    PicsouModelObj(true, parent),
-    _name(name)
+PaymentMethod::PaymentMethod(const QString &name, PicsouDBO *parent) :
+    PicsouDBO(true, parent),
+    m_name(name)
 {
 
 }
 
 void PaymentMethod::update(const QString &name)
 {
-    _name=name;
+    m_name=name;
     emit modified();
 }
 
@@ -44,7 +44,7 @@ bool PaymentMethod::read(const QJsonObject &json)
     LOG_IN("<QJsonObject>")
     static const QStringList keys=(QStringList()<<PaymentMethod::KW_NAME);
     JSON_CHECK_KEYS(keys);
-    _name=json[KW_NAME].toString();
+    m_name=json[KW_NAME].toString();
     set_valid();
     LOG_BOOL_RETURN(valid());
 }
@@ -52,11 +52,11 @@ bool PaymentMethod::read(const QJsonObject &json)
 bool PaymentMethod::write(QJsonObject &json) const
 {
     LOG_IN("<QJsonObject>")
-    json[KW_NAME]=_name;
+    json[KW_NAME]=m_name;
     LOG_BOOL_RETURN(true);
 }
 
 bool PaymentMethod::operator <(const PaymentMethod &other)
 {
-    return (_name<other._name);
+    return (m_name<other.m_name);
 }

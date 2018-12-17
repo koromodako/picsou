@@ -28,10 +28,10 @@ public:
 protected:
     explicit PicsouUI(PicsouUIService *ui_svc);
 
-    inline PicsouUIService *ui_svc() { return _ui_svc; }
+    inline PicsouUIService *ui_svc() { return m_ui_svc; }
 
 private:
-    PicsouUIService *_ui_svc;
+    PicsouUIService *m_ui_svc;
 };
 
 #endif // PICSOUUI_H

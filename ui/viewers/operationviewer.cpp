@@ -23,8 +23,8 @@
 
 OperationViewer::~OperationViewer()
 {
-    delete _ops_stats;
-    delete _table;
+    delete m_ops_stats;
+    delete m_table;
     delete ui;
 }
 
@@ -36,41 +36,33 @@ OperationViewer::OperationViewer(PicsouUIService *ui_svc,
                                  int month,
                                  QWidget *parent) :
     PicsouUIViewer(ui_svc, account_id, parent),
-    _user_id(user_id),
-    _year(year),
-    _month(month),
-    _scale(scale),
+    m_user_id(user_id),
+    m_year(year),
+    m_month(month),
+    m_scale(scale),
     ui(new Ui::OperationViewer)
 {
     ui->setupUi(this);
-    connect(ui_svc, &PicsouUIService::model_updated,
-            this, &OperationViewer::refresh);
+    connect(ui_svc, &PicsouUIService::model_updated, this, &OperationViewer::refresh);
 
-    _table=new PicsouTableWidget;
-    ui->main_layout->insertWidget(0, _table);
+    m_table=new PicsouTableWidget;
+    ui->main_layout->insertWidget(0, m_table);
 
-    _ops_stats=new OperationStatistics;
-    ui->main_layout->addWidget(_ops_stats);
+    m_ops_stats=new OperationStatistics;
+    ui->main_layout->addWidget(m_ops_stats);
 
     /* ops */
-    connect(ui->add_op, &QPushButton::clicked,
-            this, &OperationViewer::add_op);
-    connect(ui->action_add_op, &QAction::triggered,
-            this, &OperationViewer::add_op);
+    connect(ui->add_op, &QPushButton::clicked, this, &OperationViewer::add_op);
+    connect(ui->action_add_op, &QAction::triggered, this, &OperationViewer::add_op);
     addAction(ui->action_add_op);
 
-    connect(ui->edit_op, &QPushButton::clicked,
-            this, &OperationViewer::edit_op);
-    connect(ui->action_edit_op, &QAction::triggered,
-            this, &OperationViewer::edit_op);
-    connect(_table, &PicsouTableWidget::cellDoubleClicked,
-            this, &OperationViewer::table_edit_op);
+    connect(ui->edit_op, &QPushButton::clicked, this, &OperationViewer::edit_op);
+    connect(ui->action_edit_op, &QAction::triggered, this, &OperationViewer::edit_op);
+    connect(m_table, &PicsouTableWidget::cellDoubleClicked, this, &OperationViewer::table_edit_op);
     addAction(ui->action_edit_op);
 
-    connect(ui->remove_op, &QPushButton::clicked,
-            this, &OperationViewer::remove_op);
-    connect(ui->action_remove_op, &QAction::triggered,
-            this, &OperationViewer::remove_op);
+    connect(ui->remove_op, &QPushButton::clicked, this, &OperationViewer::remove_op);
+    connect(ui->action_remove_op, &QAction::triggered, this, &OperationViewer::remove_op);
     addAction(ui->action_remove_op);
 }
 
@@ -79,47 +71,47 @@ void OperationViewer::refresh(const PicsouDBPtr db)
     int year=-1, month=-1;
     OperationCollection ops;
 
-    switch (_scale) {
+    switch (m_scale) {
         case VS_YEAR:
-            year=_year;
+            year=m_year;
             break;
         case VS_MONTH:
-            year=_year;
-            month=_month;
+            year=m_year;
+            month=m_month;
             break;
     }
 
     ops=db->ops(mod_obj_id(), year, month);
-    _table->refresh(ops);
-    _ops_stats->refresh(ops);
+    m_table->refresh(ops);
+    m_ops_stats->refresh(ops);
 }
 
 void OperationViewer::add_op()
 {
-    ui_svc()->op_add(_user_id, mod_obj_id(), _year, _month);
+    ui_svc()->op_add(m_user_id, mod_obj_id(), m_year, m_month);
 }
 
 void OperationViewer::edit_op()
 {
     QUuid op_id;
-    if(_table->is_current_op_scheduled()) {
+    if(m_table->is_current_op_scheduled()) {
         ui_svc()->svc_op_failed(tr("Logical error: you can't edit a scheduled operation from this view."));
         return;
     }
-    op_id=_table->current_op();
+    op_id=m_table->current_op();
     if(!op_id.isNull()) {
-        ui_svc()->op_edit(_user_id, mod_obj_id(), op_id, _year, _month);
+        ui_svc()->op_edit(m_user_id, mod_obj_id(), op_id, m_year, m_month);
     }
 }
 
 void OperationViewer::remove_op()
 {
     QUuid op_id;
-    if(_table->is_current_op_scheduled()) {
+    if(m_table->is_current_op_scheduled()) {
         ui_svc()->svc_op_failed(tr("Logical error: you can't remove a scheduled operation from this view."));
         return;
     }
-    op_id=_table->current_op();
+    op_id=m_table->current_op();
     if(!op_id.isNull()) {
         ui_svc()->op_remove(mod_obj_id(), op_id);
     }

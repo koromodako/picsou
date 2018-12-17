@@ -39,9 +39,9 @@ public slots:
     void accept();
 
 private:
-    double *_amount;
-    QString *_name;
-    QString *_description;
+    double *m_amount;
+    QString *m_name;
+    QString *m_description;
     Ui::BudgetEditor *ui;
 };
 

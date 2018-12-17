@@ -27,31 +27,29 @@ AccountEditor::AccountEditor(QString *name,
                              QString *description,
                              QWidget *parent) :
     QDialog(parent),
-    _name(name),
-    _description(description),
+    m_name(name),
+    m_description(description),
     ui(new Ui::AccountEditor)
 {
     ui->setupUi(this);
 
     setWindowTitle(tr("Account Editor"));
 
-    if(!_name->isNull()) {
-        ui->name->setText(*_name);
+    if(!m_name->isNull()) {
+        ui->name->setText(*m_name);
     }
-    if(!_description->isNull()) {
-        ui->description->setPlainText(*_description);
+    if(!m_description->isNull()) {
+        ui->description->setPlainText(*m_description);
     }
 
-    connect(ui->save, &QPushButton::clicked,
-            this, &AccountEditor::accept);
-    connect(ui->cancel, &QPushButton::clicked,
-            this, &AccountEditor::reject);
+    connect(ui->save, &QPushButton::clicked, this, &AccountEditor::accept);
+    connect(ui->cancel, &QPushButton::clicked, this, &AccountEditor::reject);
 }
 
 void AccountEditor::accept()
 {
-    (*_name)=ui->name->text();
-    (*_description)=ui->description->toPlainText();
+    (*m_name)=ui->name->text();
+    (*m_description)=ui->description->toPlainText();
     QDialog::accept();
 }
 

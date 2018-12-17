@@ -23,7 +23,7 @@
 
 #include <QHash>
 
-class User : public PicsouModelObj
+class User : public PicsouDBO
 {
     Q_OBJECT
 public:
@@ -32,9 +32,9 @@ public:
     static const QString KW_ACCOUNTS;
 
     virtual ~User();
-    User(PicsouModelObj *parent);
+    User(PicsouDBO *parent);
     User(const QString &name,
-         PicsouModelObj *parent);
+         PicsouDBO *parent);
 
     void update(const QString &name);
 
@@ -47,7 +47,7 @@ public:
                      const QString &description);
     bool remove_account(QUuid id);
 
-    inline QString name() const { return _name; }
+    inline QString name() const { return m_name; }
     BudgetPtrList budgets(bool sorted=false) const;
     QStringList budgets_str(bool sorted=false) const;
     AccountPtrList accounts(bool sorted=false) const;
@@ -61,9 +61,9 @@ public:
     bool operator <(const User &other);
 
 private:
-    QString _name;
-    QHash<QUuid, BudgetPtr> _budgets;
-    QHash<QUuid, AccountPtr> _accounts;
+    QString m_name;
+    QHash<QUuid, BudgetPtr> m_budgets;
+    QHash<QUuid, AccountPtr> m_accounts;
 };
 
 DECL_PICSOU_MOD_OBJ_PTR(User,

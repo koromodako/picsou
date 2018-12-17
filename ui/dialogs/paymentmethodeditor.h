@@ -36,7 +36,7 @@ public slots:
     void accept();
 
 private:
-    QString *_name;
+    QString *m_name;
     Ui::PaymentMethodEditor *ui;
 };
 

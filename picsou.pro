@@ -54,7 +54,6 @@ SOURCES += \
     model/object/user.cpp \
     model/searchquery.cpp \
     model/operationcollection.cpp \
-    model/picsoumodelobj.cpp \
     model/picsoudb.cpp \
     model/converter/converter.cpp \
     app/picsouapplication.cpp \
@@ -83,7 +82,9 @@ SOURCES += \
     ui/picsouitem.cpp \
     ui/items/picsoutableitem.cpp \
     ui/widgets/picsoutablewidget.cpp \
-    ui/widgets/operationstatistics.cpp
+    ui/widgets/operationstatistics.cpp \
+    model/picsoudbo.cpp \
+    utils/crypto.cpp
 
 HEADERS += \
     picsou.h \
@@ -97,7 +98,6 @@ HEADERS += \
     model/object/user.h \
     model/searchquery.h \
     model/picsoudb.h \
-    model/picsoumodelobj.h \
     utils/macro.h \
     utils/semver.h \
     app/picsouapplication.h \
@@ -129,7 +129,9 @@ HEADERS += \
     model/operationcollection.h \
     ui/widgets/operationstatistics.h \
     model/converter/converter.h \
-    model/object/schedule.h
+    model/object/schedule.h \
+    model/picsoudbo.h \
+    utils/crypto.h
 
 FORMS += \
     ui/mainwindow.ui \

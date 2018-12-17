@@ -47,14 +47,14 @@ public slots:
     void accept();
 
 private:
-    QDate *_date;
-    Amount *_amount;
-    QString *_payment_method;
-    QString *_budget;
-    QString *_recipient;
-    QString *_description;
-    int _year;
-    int _month;
+    QDate *m_date;
+    Amount *m_amount;
+    QString *m_payment_method;
+    QString *m_budget;
+    QString *m_recipient;
+    QString *m_description;
+    int m_year;
+    int m_month;
     Ui::OperationEditor *ui;
 };
 

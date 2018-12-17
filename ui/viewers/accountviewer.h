@@ -58,10 +58,10 @@ public slots:
     void table_edit_op(int row, int col);
 
 private:
-    QUuid _user_id;
-    QString _rolling_expense_lab;
-    PicsouTableWidget *_table;
-    OperationStatistics *_ops_stats;
+    QUuid m_user_id;
+    QString m_rolling_expense_lab;
+    PicsouTableWidget *m_table;
+    OperationStatistics *m_ops_stats;
     Ui::AccountViewer *ui;
 };
 

@@ -52,11 +52,11 @@ public:
     static FrequencyUnit str2freq_unit(const QString &freq_unit);
     static QStringList frequency_units();
 
-    inline QDate from() const { return _from; }
-    inline QDate until() const { return _until; }
-    inline bool endless() const { return _endless; }
-    inline int freq_value() const { return _freq_value; }
-    inline FrequencyUnit freq_unit() const { return _freq_unit; }
+    inline QDate from() const { return m_from; }
+    inline QDate until() const { return m_until; }
+    inline bool endless() const { return m_endless; }
+    inline int freq_value() const { return m_freq_value; }
+    inline FrequencyUnit freq_unit() const { return m_freq_unit; }
 
     bool valid() const;
     bool contains(const QDate &date) const;
@@ -69,11 +69,11 @@ public:
                 FrequencyUnit freq_unit);
 
 private:
-    QDate _from;
-    QDate _until;
-    bool _endless;
-    int _freq_value;
-    FrequencyUnit _freq_unit;
+    QDate m_from;
+    QDate m_until;
+    bool m_endless;
+    int m_freq_value;
+    FrequencyUnit m_freq_unit;
 };
 
 #endif // SCHEDULE_H

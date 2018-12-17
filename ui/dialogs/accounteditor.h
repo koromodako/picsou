@@ -38,8 +38,8 @@ public slots:
     void accept();
 
 private:
-    QString *_name;
-    QString *_description;
+    QString *m_name;
+    QString *m_description;
     Ui::AccountEditor *ui;
 };
 

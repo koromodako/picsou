@@ -54,12 +54,12 @@ public slots:
     void table_edit_op(int row, int col);
 
 private:
-    QUuid _user_id;
-    int _year;
-    int _month;
-    ViewerScale _scale;
-    PicsouTableWidget *_table;
-    OperationStatistics *_ops_stats;
+    QUuid m_user_id;
+    int m_year;
+    int m_month;
+    ViewerScale m_scale;
+    PicsouTableWidget *m_table;
+    OperationStatistics *m_ops_stats;
     Ui::OperationViewer *ui;
 };
 

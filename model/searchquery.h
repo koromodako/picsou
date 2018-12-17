@@ -37,26 +37,26 @@ public:
 
     bool accepts(const OperationPtr &op) const;
 
-    inline QString username() const { return _username; }
-    inline QString account_name() const { return _account_name; }
+    inline QString username() const { return m_username; }
+    inline QString account_name() const { return m_account_name; }
 
 private:
-    QString _username;
-    QString _account_name;
-    QDate _from;
-    QDate _to;
-    Amount _min;
-    Amount _max;
-    QRegularExpression _description_re;
-    QRegularExpression _recipient_re;
-    QStringList _budgets;
-    QStringList _pms;
+    QString m_username;
+    QString m_account_name;
+    QDate m_from;
+    QDate m_to;
+    Amount m_min;
+    Amount m_max;
+    QRegularExpression m_description_re;
+    QRegularExpression m_recipient_re;
+    QStringList m_budgets;
+    QStringList m_pms;
 };
 
 struct SearchQueryFilter
 {
     SearchQueryFilter(const SearchQuery &query) :
-        _query(query)
+        m_query(query)
     {
 
     }
@@ -65,10 +65,10 @@ struct SearchQueryFilter
 
     bool operator()(const OperationPtr &op)
     {
-        return _query.accepts(op);
+        return m_query.accepts(op);
     }
 
-    SearchQuery _query;
+    SearchQuery m_query;
 };
 
 #endif // SEARCHQUERY_H

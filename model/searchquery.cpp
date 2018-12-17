@@ -28,16 +28,16 @@ SearchQuery::SearchQuery(const QString &username,
                          const QString &recipient_re,
                          const QStringList &budgets,
                          const QStringList &pms) :
-    _username(username),
-    _account_name(account_name),
-    _from(from),
-    _to(to),
-    _min(min),
-    _max(max),
-    _description_re(description_re, QRegularExpression::CaseInsensitiveOption),
-    _recipient_re(recipient_re, QRegularExpression::CaseInsensitiveOption),
-    _budgets(budgets),
-    _pms(pms)
+    m_username(username),
+    m_account_name(account_name),
+    m_from(from),
+    m_to(to),
+    m_min(min),
+    m_max(max),
+    m_description_re(description_re, QRegularExpression::CaseInsensitiveOption),
+    m_recipient_re(recipient_re, QRegularExpression::CaseInsensitiveOption),
+    m_budgets(budgets),
+    m_pms(pms)
 {
     LOG_IN("username="<<username
            <<",account_name="<<account_name
@@ -49,8 +49,8 @@ SearchQuery::SearchQuery(const QString &username,
            <<",recipient_re="<<recipient_re
            <<",budgets="<<budgets
            <<",pms="<<pms);
-    _description_re.optimize();
-    _recipient_re.optimize();
+    m_description_re.optimize();
+    m_recipient_re.optimize();
     LOG_VOID_RETURN();
 }
 
@@ -61,28 +61,28 @@ bool SearchQuery::accepts(const OperationPtr &op) const
     Amount amount=qAbs(op->amount());
     QString recipient=op->recipient();
     QString description=op->description();
-    if(date<_from||date>_to) {
-        LOG_DEBUG("rejecting "<<op<<" because "<<date<<"<"<<_from<<"||"<<date<<">"<<_to);
+    if(date<m_from||date>m_to) {
+        LOG_DEBUG("rejecting "<<op<<" because "<<date<<"<"<<m_from<<"||"<<date<<">"<<m_to);
         LOG_BOOL_RETURN(false);
     }
-    if(amount<_min||amount>_max) {
-        LOG_DEBUG("rejecting "<<op<<" because "<<amount.value()<<"<"<<_min.value()<<"||"<<amount.value()<<">"<<_max.value());
+    if(amount<m_min||amount>m_max) {
+        LOG_DEBUG("rejecting "<<op<<" because "<<amount.value()<<"<"<<m_min.value()<<"||"<<amount.value()<<">"<<m_max.value());
         LOG_BOOL_RETURN(false);
     }
-    if(!_budgets.contains(op->budget())) {
-        LOG_DEBUG("rejecting "<<op<<" because "<<op->budget()<<" not in "<<_budgets);
+    if(!m_budgets.contains(op->budget())) {
+        LOG_DEBUG("rejecting "<<op<<" because "<<op->budget()<<" not in "<<m_budgets);
         LOG_BOOL_RETURN(false);
     }
-    if(!_pms.contains(op->payment_method())) {
-        LOG_DEBUG("rejecting "<<op<<" because "<<op->payment_method()<<" not in "<<_pms);
+    if(!m_pms.contains(op->payment_method())) {
+        LOG_DEBUG("rejecting "<<op<<" because "<<op->payment_method()<<" not in "<<m_pms);
         LOG_BOOL_RETURN(false);
     }
-    if(!recipient.isEmpty()&&!_recipient_re.match(recipient).hasMatch()) {
-        LOG_DEBUG("rejecting "<<op<<" because \""<<recipient<<"\" is not matched by "<<_recipient_re.pattern());
+    if(!recipient.isEmpty()&&!m_recipient_re.match(recipient).hasMatch()) {
+        LOG_DEBUG("rejecting "<<op<<" because \""<<recipient<<"\" is not matched by "<<m_recipient_re.pattern());
         LOG_BOOL_RETURN(false);
     }
-    if(!description.isEmpty()&&!_description_re.match(description).hasMatch()) {
-        LOG_DEBUG("rejecting "<<op<<" because \""<<description<<"\" is not matched by "<<_description_re.pattern());
+    if(!description.isEmpty()&&!m_description_re.match(description).hasMatch()) {
+        LOG_DEBUG("rejecting "<<op<<" because \""<<description<<"\" is not matched by "<<m_description_re.pattern());
         LOG_BOOL_RETURN(false);
     }
     LOG_DEBUG("accepting "<<op);
