@@ -29,18 +29,22 @@ class UserEditor : public QDialog
     Q_OBJECT
 public:
     virtual ~UserEditor();
-    explicit UserEditor(QString *username,
-                        QString *old_pwd,
-                        QString *new_pwd,
-                        QWidget *parent=nullptr);
+    explicit UserEditor(QWidget *parent,
+                        const QString &username = QString(),
+                        const QString &old_pswd = QString(),
+                        const QString &new_pswd = QString());
+
+    inline QString username() const { return m_username; }
+    inline QString old_pswd() const { return m_old_pswd; }
+    inline QString new_pswd() const { return m_new_pswd; }
 
 public slots:
     void accept();
 
 private:
-    QString *m_username;
-    QString *m_old_pwd;
-    QString *m_new_pwd;
+    QString m_username;
+    QString m_old_pswd;
+    QString m_new_pswd;
     Ui::UserEditor *ui;
 };
 

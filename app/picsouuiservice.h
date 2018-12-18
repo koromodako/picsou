@@ -39,6 +39,10 @@ public:
     bool initialize();
     void terminate();
 
+    bool prompt_for_pswd(const QString &username,
+                         QString &pswd,
+                         bool confirmed=false);
+
     bool populate_db_tree(QTreeWidget* const tree);
     bool populate_user_cb(QComboBox * const cb);
     bool populate_account_cb(const QString &username,

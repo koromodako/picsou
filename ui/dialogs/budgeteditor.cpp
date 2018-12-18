@@ -23,11 +23,10 @@ BudgetEditor::~BudgetEditor()
     delete ui;
 }
 
-
-BudgetEditor::BudgetEditor(double *amount,
-                           QString *name,
-                           QString *description,
-                           QWidget *parent) :
+BudgetEditor::BudgetEditor(QWidget *parent,
+                           double amount,
+                           const QString &name,
+                           const QString &description) :
     QDialog(parent),
     m_amount(amount),
     m_name(name),
@@ -40,13 +39,13 @@ BudgetEditor::BudgetEditor(double *amount,
 
     ui->amount->setPrefix(tr("$"));
     ui->amount->setSuffix(tr(" "));
-    ui->amount->setValue(*m_amount);
+    ui->amount->setValue(m_amount);
 
-    if(!m_name->isNull()) {
-        ui->name->setText(*m_name);
+    if(!m_name.isNull()) {
+        ui->name->setText(m_name);
     }
-    if(!m_description->isNull()) {
-        ui->description->setPlainText(*m_description);
+    if(!m_description.isNull()) {
+        ui->description->setPlainText(m_description);
     }
 
     connect(ui->save, &QPushButton::clicked, this, &BudgetEditor::accept);
@@ -55,8 +54,8 @@ BudgetEditor::BudgetEditor(double *amount,
 
 void BudgetEditor::accept()
 {
-    (*m_amount)=ui->amount->value();
-    (*m_name)=ui->name->text();
-    (*m_description)=ui->description->toPlainText();
+    m_amount=ui->amount->value();
+    m_name=ui->name->text();
+    m_description=ui->description->toPlainText();
     QDialog::accept();
 }

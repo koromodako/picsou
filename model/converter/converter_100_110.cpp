@@ -5,7 +5,7 @@
 #include <QJsonArray>
 #include <QJsonObject>
 
-void convert_100_110(QJsonDocument *doc)
+bool convert_100_110(QJsonDocument *doc, PicsouUIService *)
 {
     LOG_IN("doc="<<doc);
     QJsonObject db=doc->object();
@@ -24,8 +24,8 @@ void convert_100_110(QJsonDocument *doc)
         user[User::KW_ACCOUNTS]=new_accout_ary;
         new_user_ary.append(user);
     }
-    db[PicsouDB::KW_VERSION]=SemVer(1,1,0).to_str();
+    db[PicsouDB::KW_VERSION]=SemVer(1, 1, 0).to_str();
     db[PicsouDB::KW_USERS]=new_user_ary;
     doc->setObject(db);
-    LOG_VOID_RETURN();
+    LOG_BOOL_RETURN(true);
 }

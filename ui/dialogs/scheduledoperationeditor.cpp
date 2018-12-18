@@ -25,20 +25,20 @@ ScheduledOperationEditor::~ScheduledOperationEditor()
     delete ui;
 }
 
-ScheduledOperationEditor::ScheduledOperationEditor(Amount *amount,
-                                                   QString *budget,
-                                                   QString *recipient,
-                                                   QString *description,
-                                                   QString *payment_method,
-                                                   QString *name,
-                                                   Schedule *schedule,
-                                                   QWidget *parent) :
+ScheduledOperationEditor::ScheduledOperationEditor(QWidget *parent,
+                                                   const Amount &amount,
+                                                   const QString &budget,
+                                                   const QString &recipient,
+                                                   const QString &description,
+                                                   const QString &payment_method,
+                                                   const QString &name,
+                                                   const Schedule &schedule) :
     QDialog(parent),
     m_amount(amount),
-    m_payment_method(payment_method),
     m_budget(budget),
     m_recipient(recipient),
     m_description(description),
+    m_payment_method(payment_method),
     m_name(name),
     m_schedule(schedule),
     ui(new Ui::ScheduledOperationEditor)
@@ -47,30 +47,30 @@ ScheduledOperationEditor::ScheduledOperationEditor(Amount *amount,
 
     setWindowTitle(tr("Scheduled Operation Editor"));
 
-    if(!m_name->isNull()) {
-        ui->name->setText(*m_name);
+    if(!m_name.isNull()) {
+        ui->name->setText(m_name);
     }
 
     ui->amount->setPrefix(tr("$"));
     ui->amount->setSuffix(tr(" "));
-    ui->amount->setValue(m_amount->value());
+    ui->amount->setValue(m_amount.value());
 
     ui->budget->setEditable(false);
     ui->payment_method->setEditable(false);
 
-    if(!m_recipient->isNull()) {
-        ui->recipient->setText(*m_recipient);
+    if(!m_recipient.isNull()) {
+        ui->recipient->setText(m_recipient);
     }
-    if(!m_description->isNull()) {
-        ui->description->setPlainText(*m_description);
+    if(!m_description.isNull()) {
+        ui->description->setPlainText(m_description);
     }
 
-    ui->from->setDate(m_schedule->from());
-    ui->until->setDate(m_schedule->until());
-    ui->endless->setChecked(m_schedule->endless());
+    ui->from->setDate(m_schedule.from());
+    ui->until->setDate(m_schedule.until());
+    ui->endless->setChecked(m_schedule.endless());
 
     ui->freq_value->setMinimum(1);
-    ui->freq_value->setValue(m_schedule->freq_value());
+    ui->freq_value->setValue(m_schedule.freq_value());
     ui->freq_unit->setEditable(false);
 
     connect(ui->from, &QDateEdit::dateChanged, this, &ScheduledOperationEditor::limit_until);
@@ -85,8 +85,8 @@ void ScheduledOperationEditor::set_budgets(const QStringList &budgets)
 {
     ui->budget->clear();
     ui->budget->addItems(budgets);
-    if(!m_budget->isNull()) {
-        ui->budget->setCurrentText(*m_budget);
+    if(!m_budget.isNull()) {
+        ui->budget->setCurrentText(m_budget);
     }
 }
 
@@ -94,15 +94,15 @@ void ScheduledOperationEditor::set_frequency_units(const QStringList &frequency_
 {
     ui->freq_unit->clear();
     ui->freq_unit->addItems(frequency_units);
-    ui->freq_unit->setCurrentText(Schedule::freq_unit2str(m_schedule->freq_unit()));
+    ui->freq_unit->setCurrentText(Schedule::freq_unit2str(m_schedule.freq_unit()));
 }
 
 void ScheduledOperationEditor::set_payment_methods(const QStringList &payment_methods)
 {
     ui->payment_method->clear();
     ui->payment_method->addItems(payment_methods);
-    if(!m_payment_method->isNull()) {
-        ui->payment_method->setCurrentText(*m_payment_method);
+    if(!m_payment_method.isNull()) {
+        ui->payment_method->setCurrentText(m_payment_method);
     }
 }
 
@@ -138,13 +138,13 @@ void ScheduledOperationEditor::limit_until(const QDate &from)
 
 void ScheduledOperationEditor::accept()
 {
-    (*m_amount)=ui->amount->value();
-    (*m_payment_method)=ui->payment_method->currentText();
-    (*m_budget)=ui->budget->currentText();
-    (*m_recipient)=ui->recipient->text();
-    (*m_description)=ui->description->toPlainText();
-    (*m_name)=ui->name->text();
-    m_schedule->update(ui->from->date(),
+    m_amount=ui->amount->value();
+    m_payment_method=ui->payment_method->currentText();
+    m_budget=ui->budget->currentText();
+    m_recipient=ui->recipient->text();
+    m_description=ui->description->toPlainText();
+    m_name=ui->name->text();
+    m_schedule.update(ui->from->date(),
                        ui->until->date(),
                        ui->endless->isChecked(),
                        ui->freq_value->value(),

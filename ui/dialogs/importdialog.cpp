@@ -24,8 +24,7 @@ ImportDialog::~ImportDialog()
     delete ui;
 }
 
-ImportDialog::ImportDialog(OperationCollection ops,
-                           QWidget *parent) :
+ImportDialog::ImportDialog(QWidget *parent, const OperationCollection &ops) :
     QDialog(parent),
     ui(new Ui::ImportDialog)
 {
@@ -39,4 +38,3 @@ ImportDialog::ImportDialog(OperationCollection ops,
     connect(ui->save, &QPushButton::clicked, this, &ImportDialog::accept);
     connect(ui->cancel, &QPushButton::clicked, this, &ImportDialog::reject);
 }
-

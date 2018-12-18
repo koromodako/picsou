@@ -80,6 +80,48 @@ void PicsouUIService::terminate()
     LOG_VOID_RETURN();
 }
 
+#define GET_PSWD(title, label, ok) \
+    QInputDialog::getText(m_mw, (title), (label), QLineEdit::Password, QString(), \
+                          (ok), Qt::WindowFlags(), Qt::ImhSensitiveData)
+
+bool PicsouUIService::prompt_for_pswd(const QString &username, QString &pswd, bool confirmed)
+{
+    LOG_IN("username="<<username<<",pswd,confirmed="<<BOOL2STR(confirmed));
+    bool ok=false;
+    QString cpswd, lpswd;
+    while(lpswd.isNull()) {
+        lpswd=GET_PSWD(tr("Passphrase for %0").arg(username), tr("Enter the passphrase:"), &ok);
+        if(!ok) {
+            LOG_CRITICAL("user refused to give a passphrase.");
+            LOG_BOOL_RETURN(false);
+        }
+        if(lpswd.isNull()) {
+            QMessageBox::warning(m_mw, tr("Passphrase cannot be empty."),
+                                 tr("You must enter a non empty passphrase, or 'Cancel' the dialog."));
+        }
+    }
+    while(confirmed&&cpswd.isNull()) {
+        cpswd=GET_PSWD(tr("Passphrase confirmation for %0").arg(username),
+                       tr("Confirm the passphrase:"),
+                       &ok);
+        if(!ok) {
+            LOG_CRITICAL("user refused to confirm the passphrase.");
+            LOG_BOOL_RETURN(false);
+        }
+        if(cpswd.isNull()) {
+            QMessageBox::warning(m_mw, tr("Confirmation passphrase cannot be empty."),
+                                 tr("You must enter a non empty confirmation passphrase, or 'Cancel' the dialog."));
+        } else if(cpswd!=lpswd) {
+            QMessageBox::warning(m_mw, tr("Confirmation passphrase differs from initial passphrase."),
+                                 tr("You must enter the same passphrase in both dialogs, or 'Cancel' the dialog."));
+        }
+    }
+    pswd=lpswd;
+    LOG_BOOL_RETURN(true);
+}
+
+#undef GET_PSWD
+
 bool PicsouUIService::populate_db_tree(QTreeWidget* const tree)
 {
     LOG_IN("tree="<<tree);
@@ -96,18 +138,10 @@ bool PicsouUIService::populate_db_tree(QTreeWidget* const tree)
     int month_stop, today_y=today.year();
     const PicsouDB *db=papp()->model_svc()->db();
     QTreeWidgetItem *root_itm, *user_itm, *account_itm, *year_itm, *month_itm;
-    root_itm=new PicsouTreeItem(tree,
-                                PicsouTreeItem::T_ROOT,
-                                root_ico,
-                                db->name(),
-                                db->id());
+    root_itm=new PicsouTreeItem(tree, PicsouTreeItem::T_ROOT, root_ico, db->name(), db->id());
 
     for(const auto &user : db->users(true)) {
-        user_itm=new PicsouTreeItem(root_itm,
-                                    PicsouTreeItem::T_USER,
-                                    user_ico,
-                                    user->name(),
-                                    user->id());
+        user_itm=new PicsouTreeItem(root_itm, PicsouTreeItem::T_USER, user_ico, user->name(), user->id());
 
         AccountPtrList accounts=user->accounts(true);
         for(const auto &account : accounts) {
@@ -228,22 +262,16 @@ OperationCollection PicsouUIService::search_operations(const SearchQuery &query)
                     LOG_DEBUG("found account: "<<account->name());
                     OperationCollection ops_col=papp()->model_svc()->db()->ops(account->id());
                     OperationPtrList ops_list=ops_col.list(true);
-
                     LOG_DEBUG("searching among "<<ops_list.length()<<" operations");
-                    future=QtConcurrent::filtered(ops_list.begin(),
-                                                  ops_list.end(),
-                                                  SearchQueryFilter(query));
-
+                    future=QtConcurrent::filtered(ops_list.begin(), ops_list.end(), SearchQueryFilter(query));
                     LOG_DEBUG("future min: "<<future.progressMinimum());
                     LOG_DEBUG("future max: "<<future.progressMaximum());
-
                     QProgressDialog progress(tr("Searching among %0 operations...").arg(ops_list.length()),
                                              tr("Abort search"),
                                              future.progressMinimum(),
                                              future.progressMaximum(),
                                              m_mw);
                     progress.setWindowModality(Qt::WindowModal);
-
                     while(!future.isFinished()) {
                         LOG_DEBUG("searching the dataset...");
                         progress.setValue(future.progressValue());
@@ -255,10 +283,8 @@ OperationCollection PicsouUIService::search_operations(const SearchQuery &query)
                         QThread::msleep(100);
                     }
                     progress.setValue(future.progressValue());
-
                     ops=future.results();
-                    LOG_DEBUG("search successful! (results count: "<<ops.length()
-                                                                   <<")");
+                    LOG_DEBUG("search successful! (results count: "<<ops.length()<<")");
 
                     break;
                 }
@@ -266,10 +292,7 @@ OperationCollection PicsouUIService::search_operations(const SearchQuery &query)
         }
     }
     if(ops.length()==0) {
-        QMessageBox::information(m_mw,
-                                 tr("No result"),
-                                 tr("No operation matched the search query."),
-                                 QMessageBox::Ok);
+        QMessageBox::information(m_mw, tr("No result"), tr("No operation matched the search query."));
     }
     LOG_DEBUG("-> ops.length="<<ops.length());
     return ops;
@@ -361,20 +384,17 @@ void PicsouUIService::db_new()
         emit svc_op_canceled();
         LOG_VOID_RETURN();
     }
-    QString filename=QFileDialog::getSaveFileName(m_mw,
-                                          tr("Create file"),
-                                          QString(),
-                                          tr("Database (*.psdb)"));
+    QString filename=QFileDialog::getSaveFileName(m_mw, tr("Create file"), QString(), tr("Database (*.psdb)"));
     if(filename.isNull()) {
         emit svc_op_canceled();
         LOG_VOID_RETURN();
     }
-    QString name, description;
-    if(PicsouDBEditor(&name, &description, m_mw).exec()==QDialog::Rejected) {
+    PicsouDBEditor editor(m_mw);
+    if(editor.exec()==QDialog::Rejected) {
         emit svc_op_canceled();
         LOG_VOID_RETURN();
     }
-    if(papp()->model_svc()->new_db(filename, name, description)) {
+    if(papp()->model_svc()->new_db(filename, editor.name(), editor.description())) {
         emit db_opened();
         LOG_VOID_RETURN();
     }
@@ -390,10 +410,7 @@ void PicsouUIService::db_open()
         emit svc_op_canceled();
         LOG_VOID_RETURN();
     }
-    filename=QFileDialog::getOpenFileName(m_mw,
-                                          tr("Open file"),
-                                          QString(),
-                                          tr("Database (*.psdb)"));
+    filename=QFileDialog::getOpenFileName(m_mw, tr("Open file"), QString(), tr("Database (*.psdb)"));
     if(filename.isNull()) {
         emit svc_op_canceled();
         LOG_VOID_RETURN();
@@ -413,11 +430,8 @@ void PicsouUIService::db_close()
         LOG_VOID_RETURN();
     }
     if(papp()->model_svc()->is_db_modified() &&
-       QMessageBox::question(m_mw,
-                             tr("Save database"),
-                             tr("Do you want to save the database before "
-                                "closing it?"),
-                             QMessageBox::Save | QMessageBox::Discard,
+       QMessageBox::question(m_mw, tr("Save database"), tr("Do you want to save the database before closing it?"),
+                             QMessageBox::Save|QMessageBox::Discard,
                              QMessageBox::Save)==QMessageBox::Save) {
         db_save();
     }
@@ -444,10 +458,7 @@ void PicsouUIService::db_save_as()
 {
     LOG_IN_VOID();
     if(papp()->model_svc()->is_db_opened()) {
-        QString filename=QFileDialog::getSaveFileName(m_mw,
-                                              tr("Open file"),
-                                              QString(),
-                                              tr("Database (*.psdb)"));
+        QString filename=QFileDialog::getSaveFileName(m_mw, tr("Open file"), QString(), tr("Database (*.psdb)"));
         if(filename.isNull()) {
             emit svc_op_canceled();
             LOG_VOID_RETURN();
@@ -464,15 +475,12 @@ void PicsouUIService::db_save_as()
 void PicsouUIService::user_add()
 {
     LOG_IN_VOID();
-    QString username, old_pwd, new_pwd;
-    if(UserEditor(&username,
-                  &old_pwd,
-                  &new_pwd,
-                  m_mw).exec()==QDialog::Rejected) {
+    UserEditor editor(m_mw);
+    if(editor.exec()==QDialog::Rejected) {
         emit svc_op_canceled();
         LOG_VOID_RETURN();
     }
-    papp()->model_svc()->db()->add_user(username);
+    papp()->model_svc()->db()->add_user(editor.username(), editor.new_pswd());
     emit user_added();
     LOG_VOID_RETURN();
 }
@@ -485,15 +493,15 @@ void PicsouUIService::user_edit(QUuid id)
         emit svc_op_failed(tr("Internal error: invalid user pointer."));
         LOG_VOID_RETURN();
     }
-    QString username=user->name(), old_pwd, new_pwd;
-    if(UserEditor(&username,
-                  &old_pwd,
-                  &new_pwd,
-                  m_mw).exec()==QDialog::Rejected) {
+    UserEditor editor(m_mw, user->name());
+    if(editor.exec()==QDialog::Rejected) {
         emit svc_op_canceled();
         LOG_VOID_RETURN();
     }
-    user->update(username);
+    if(!user->update(editor.username(), editor.old_pswd(), editor.new_pswd())) {
+        emit svc_op_failed(tr("Internal error: failed to update."));
+        LOG_VOID_RETURN();
+    }
     emit user_edited();
     LOG_VOID_RETURN();
 }
@@ -518,16 +526,12 @@ void PicsouUIService::budget_add(QUuid user_id)
         emit svc_op_failed(tr("Internal error: invalid user pointer."));
         LOG_VOID_RETURN();
     }
-    double amount=0.;
-    QString name, description;
-    if(BudgetEditor (&amount,
-                     &name,
-                     &description,
-                     m_mw).exec()==QDialog::Rejected) {
+    BudgetEditor editor(m_mw);
+    if(editor.exec()==QDialog::Rejected) {
         emit svc_op_canceled();
         LOG_VOID_RETURN();
     }
-    user->add_budget(amount, name, description);
+    user->add_budget(editor.amount(), editor.name(), editor.description());
     emit budget_added();
     LOG_VOID_RETURN();
 }
@@ -545,17 +549,12 @@ void PicsouUIService::budget_edit(QUuid user_id, QUuid budget_id)
         emit svc_op_failed(tr("Internal error: invalid budget pointer."));
         LOG_VOID_RETURN();
     }
-    double amount=budget->amount();
-    QString name=budget->name();
-    QString description=budget->description();
-    if(BudgetEditor(&amount,
-                    &name,
-                    &description,
-                    m_mw).exec()==QDialog::Rejected) {
+    BudgetEditor editor(m_mw, budget->amount(), budget->name(), budget->description());
+    if(editor.exec()==QDialog::Rejected) {
         emit svc_op_canceled();
         LOG_VOID_RETURN();
     }
-    budget->update(amount, name, description);
+    budget->update(editor.amount(), editor.name(), editor.description());
     emit budget_edited();
     LOG_VOID_RETURN();
 }
@@ -584,12 +583,12 @@ void PicsouUIService::account_add(QUuid user_id)
         emit svc_op_failed(tr("Internal error: invalid account pointer."));
         LOG_VOID_RETURN();
     }
-    QString name, description;
-    if(AccountEditor(&name, &description, m_mw).exec()==QDialog::Rejected) {
+    AccountEditor editor(m_mw);
+    if(editor.exec()==QDialog::Rejected) {
         emit svc_op_canceled();
         LOG_VOID_RETURN();
     }
-    user->add_account(name, description);
+    user->add_account(editor.name(), editor.notes());
     emit account_added();
     LOG_VOID_RETURN();
 }
@@ -609,11 +608,12 @@ void PicsouUIService::account_edit(QUuid user_id, QUuid account_id)
     }
     QString name=account->name();
     QString notes=account->notes();
-    if(AccountEditor(&name, &notes, m_mw).exec()==QDialog::Rejected) {
+    AccountEditor editor(m_mw, account->name(), account->notes());
+    if(editor.exec()==QDialog::Rejected) {
         emit svc_op_canceled();
         LOG_VOID_RETURN();
     }
-    account->update(name, notes);
+    account->update(editor.name(), editor.notes());
     emit account_edited();
     LOG_VOID_RETURN();
 }
@@ -642,12 +642,12 @@ void PicsouUIService::pm_add(QUuid account_id)
         emit svc_op_failed(tr("Internal error: invalid account pointer."));
         LOG_VOID_RETURN();
     }
-    QString name;
-    if(PaymentMethodEditor(&name, m_mw).exec()==QDialog::Rejected) {
+    PaymentMethodEditor editor(m_mw);
+    if(editor.exec()==QDialog::Rejected) {
         emit svc_op_canceled();
         LOG_VOID_RETURN();
     }
-    account->add_payment_method(name);
+    account->add_payment_method(editor.name());
     emit pm_added();
     LOG_VOID_RETURN();
 }
@@ -661,12 +661,12 @@ void PicsouUIService::pm_edit(QUuid account_id, QUuid pm_id)
         LOG_VOID_RETURN();
     }
     PaymentMethodPtr pm=account->find_payment_method(pm_id);
-    QString name=pm->name();
-    if(PaymentMethodEditor(&name, m_mw).exec()==QDialog::Rejected) {
+    PaymentMethodEditor editor(m_mw, pm->name());
+    if(editor.exec()==QDialog::Rejected) {
         emit svc_op_canceled();
         LOG_VOID_RETURN();
     }
-    pm->update(name);
+    pm->update(editor.name());
     emit pm_edited();
     LOG_VOID_RETURN();
 }
@@ -700,9 +700,6 @@ void PicsouUIService::sop_add(QUuid user_id, QUuid account_id)
         emit svc_op_failed(tr("Internal error: invalid account pointer."));
         LOG_VOID_RETURN();
     }
-    Amount amount;
-    QString payment_method, budget, recipient, description, name;
-    Schedule schedule;
     QStringList budgets=user->budgets_str(true);
     if(budgets.empty()) {
         emit svc_op_failed(tr("Logical error: make sure you have defined at least one budget before adding operations."));
@@ -713,14 +710,7 @@ void PicsouUIService::sop_add(QUuid user_id, QUuid account_id)
         emit svc_op_failed(tr("Logical error: make sure you have defined at least one payment method before adding operations."));
         LOG_VOID_RETURN();
     }
-    ScheduledOperationEditor editor(&amount,
-                                    &budget,
-                                    &recipient,
-                                    &description,
-                                    &payment_method,
-                                    &name,
-                                    &schedule,
-                                    m_mw);
+    ScheduledOperationEditor editor(m_mw);
     editor.set_budgets(budgets);
     editor.set_frequency_units(Schedule::frequency_units());
     editor.set_payment_methods(payment_methods);
@@ -728,13 +718,13 @@ void PicsouUIService::sop_add(QUuid user_id, QUuid account_id)
         emit svc_op_canceled();
         LOG_VOID_RETURN();
     }
-    account->add_scheduled_operation(amount,
-                                     payment_method,
-                                     budget,
-                                     recipient,
-                                     description,
-                                     name,
-                                     schedule);
+    account->add_scheduled_operation(editor.amount(),
+                                     editor.payment_method(),
+                                     editor.budget(),
+                                     editor.recipient(),
+                                     editor.description(),
+                                     editor.name(),
+                                     editor.schedule());
     emit sop_added();
     LOG_VOID_RETURN();
 }
@@ -752,22 +742,6 @@ void PicsouUIService::sop_edit(QUuid user_id, QUuid account_id, QUuid sop_id)
         emit svc_op_failed(tr("Internal error: invalid account pointer."));
         LOG_VOID_RETURN();
     }
-    ScheduledOperationPtr sop=account->find_scheduled_operation(sop_id);
-    Amount amount=sop->amount();
-    QString payment_method=sop->payment_method(),
-            budget=sop->budget(),
-            recipient=sop->recipient(),
-            description=sop->description(),
-            name=sop->name();
-    Schedule schedule=sop->schedule();
-    ScheduledOperationEditor editor(&amount,
-                                    &budget,
-                                    &recipient,
-                                    &description,
-                                    &payment_method,
-                                    &name,
-                                    &schedule,
-                                    m_mw);
     QStringList budgets=user->budgets_str(true);
     if(budgets.empty()) {
         emit svc_op_failed(tr("Logical error: make sure you have defined at least one budget before adding operations."));
@@ -778,6 +752,15 @@ void PicsouUIService::sop_edit(QUuid user_id, QUuid account_id, QUuid sop_id)
         emit svc_op_failed(tr("Logical error: make sure you have defined at least one payment method before adding operations."));
         LOG_VOID_RETURN();
     }
+    ScheduledOperationPtr sop=account->find_scheduled_operation(sop_id);
+    ScheduledOperationEditor editor(m_mw,
+                                    sop->amount(),
+                                    sop->budget(),
+                                    sop->recipient(),
+                                    sop->description(),
+                                    sop->payment_method(),
+                                    sop->name(),
+                                    sop->schedule());
     editor.set_budgets(budgets);
     editor.set_frequency_units(Schedule::frequency_units());
     editor.set_payment_methods(payment_methods);
@@ -785,13 +768,13 @@ void PicsouUIService::sop_edit(QUuid user_id, QUuid account_id, QUuid sop_id)
         emit svc_op_canceled();
         LOG_VOID_RETURN();
     }
-    sop->update(amount,
-                budget,
-                recipient,
-                description,
-                payment_method,
-                name,
-                schedule);
+    sop->update(editor.amount(),
+                editor.budget(),
+                editor.recipient(),
+                editor.description(),
+                editor.payment_method(),
+                editor.name(),
+                editor.schedule());
     emit sop_edited();
     LOG_VOID_RETURN();
 }
@@ -835,42 +818,26 @@ void PicsouUIService::op_add(QUuid user_id, QUuid account_id, int year, int mont
         emit svc_op_failed(tr("Logical error: make sure you have defined at least one payment method before adding operations."));
         LOG_VOID_RETURN();
     }
-    QDate date;
-    Amount amount;
-    QString payment_method, budget, recipient, description;
-    OperationEditor editor(&date,
-                           &amount,
-                           &payment_method,
-                           &budget,
-                           &recipient,
-                           &description,
-                           year,
-                           month,
-                           m_mw);
+    OperationEditor editor(m_mw, year, month);
     editor.set_budgets(budgets);
     editor.set_payment_methods(payment_methods);
     if(editor.exec()==QDialog::Rejected) {
         emit svc_op_canceled();
         LOG_VOID_RETURN();
     }
-    account->add_operation(amount,
-                           date,
-                           budget,
-                           recipient,
-                           description,
-                           payment_method);
-
+    account->add_operation(editor.amount(),
+                           editor.date(),
+                           editor.budget(),
+                           editor.recipient(),
+                           editor.description(),
+                           editor.payment_method());
     emit op_added();
     LOG_VOID_RETURN();
 }
 
 void PicsouUIService::op_edit(QUuid user_id, QUuid account_id, QUuid op_id, int year, int month)
 {
-    LOG_IN("user_id="<<user_id
-                     <<",account_id="<<account_id
-                     <<",op_id="<<op_id
-                     <<",year="<<year
-                     <<",month="<<month);
+    LOG_IN("user_id="<<user_id<<",account_id="<<account_id<<",op_id="<<op_id<<",year="<<year<<",month="<<month);
     AccountPtr account=papp()->model_svc()->find_account(account_id);
     if(account.isNull()) {
         emit svc_op_failed(tr("Internal error: invalid account pointer."));
@@ -881,32 +848,30 @@ void PicsouUIService::op_edit(QUuid user_id, QUuid account_id, QUuid op_id, int 
         emit svc_op_failed(tr("Internal error: invalid op pointer."));
         LOG_VOID_RETURN();
     }
-    QDate date=op->date();
-    Amount amount=op->amount();
-    QString payment_method=op->payment_method(),
-            budget=op->budget(),
-            recipient=op->recipient(),
-            description=op->description();
     UserPtr user=papp()->model_svc()->find_user(user_id);
     if(user.isNull()) {
         emit svc_op_failed(tr("Internal error: invalid user pointer."));
         LOG_VOID_RETURN();
     }
-    OperationEditor editor(&date, &amount, &payment_method,
-                           &budget, &recipient, &description,
-                           year, month, m_mw);
+    OperationEditor editor(m_mw, year, month,
+                           op->date(),
+                           op->amount(),
+                           op->payment_method(),
+                           op->budget(),
+                           op->recipient(),
+                           op->description());
     editor.set_budgets(user->budgets_str(true));
     editor.set_payment_methods(account->payment_methods_str(true));
     if(editor.exec()==QDialog::Rejected) {
         emit svc_op_canceled();
         LOG_VOID_RETURN();
     }
-    op->update(amount,
-               date,
-               budget,
-               recipient,
-               description,
-               payment_method);
+    op->update(editor.amount(),
+               editor.date(),
+               editor.budget(),
+               editor.recipient(),
+               editor.description(),
+               editor.payment_method());
     emit op_edited();
     LOG_VOID_RETURN();
 }
@@ -935,10 +900,7 @@ void PicsouUIService::ops_import(QUuid account_id)
         emit svc_op_failed(tr("Internal error: invalid account pointer."));
         LOG_VOID_RETURN();
     }
-    QString filename=QFileDialog::getOpenFileName(m_mw,
-                                                  tr("Import file"),
-                                                  QString(),
-                                                  tr("Files (*.csv *.xml *.json)"));
+    QString filename=QFileDialog::getOpenFileName(m_mw, tr("Import file"), QString(), tr("Files (*.csv *.xml *.json)"));
     if(filename.isNull()) {
         emit svc_op_canceled();
         LOG_VOID_RETURN();
@@ -953,12 +915,10 @@ void PicsouUIService::ops_import(QUuid account_id)
     }
     OperationCollection ops=papp()->model_svc()->load_ops(fmt, filename);
     if(ops.length()==0) {
-        QMessageBox::warning(m_mw,
-                             tr("Empty import"),
-                             tr("Import result is empty. Invalid or empty input file."));
+        QMessageBox::warning(m_mw, tr("Empty import"), tr("Import result is empty. Invalid or empty input file."));
         LOG_VOID_RETURN();
     }
-    if(ImportDialog(ops, m_mw).exec()==QDialog::Rejected) {
+    if(ImportDialog(m_mw, ops).exec()==QDialog::Rejected) {
         emit svc_op_canceled();
         ops.clear();
         LOG_VOID_RETURN();
@@ -985,21 +945,12 @@ void PicsouUIService::ops_export(QUuid account_id)
             <<PicsouModelService::XML
             <<PicsouModelService::JSON;
     bool ok;
-    QString fmt_str=QInputDialog::getItem(m_mw,
-                                          tr("Which format?"),
-                                          tr("Select output format"),
-                                          formats,
-                                          0,
-                                          false,
-                                          &ok);
+    QString fmt_str=QInputDialog::getItem(m_mw, tr("Which format?"), tr("Select output format"), formats, 0, false, &ok);
     if(!ok) {
         emit svc_op_canceled();
         LOG_VOID_RETURN();
     }
-    QString filename=QFileDialog::getSaveFileName(m_mw,
-                                                  tr("Export file"),
-                                                  QString(),
-                                                  fmt_str);
+    QString filename=QFileDialog::getSaveFileName(m_mw, tr("Export file"), QString(), fmt_str);
     if(filename.isNull()) {
         emit svc_op_canceled();
         LOG_VOID_RETURN();
@@ -1010,8 +961,7 @@ void PicsouUIService::ops_export(QUuid account_id)
         emit svc_op_failed(tr("Internal error: failed to export operations."));
         LOG_VOID_RETURN();
     }
-    QMessageBox::information(m_mw,
-                             tr("Export successful"),
+    QMessageBox::information(m_mw, tr("Export successful"),
                              tr("Operation successfully exported to %0").arg(filename));
     emit ops_exported();
     LOG_VOID_RETURN();
@@ -1029,12 +979,9 @@ bool PicsouUIService::close_any_opened_db()
 {
     LOG_IN_VOID();
     if(papp()->model_svc()->is_db_modified() &&
-       QMessageBox::question(m_mw,
-                             tr("Close database"),
-                             tr("Only one database can be opened at "
-                                "once, do you want to close current "
-                                "database?"),
-                             QMessageBox::Close | QMessageBox::Cancel,
+       QMessageBox::question(m_mw, tr("Close database"),
+                             tr("Only one database can be opened at once, do you want to close current database?"),
+                             QMessageBox::Close|QMessageBox::Cancel,
                              QMessageBox::Cancel)==QMessageBox::Cancel) {
         LOG_BOOL_RETURN(false);
     }

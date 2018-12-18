@@ -30,7 +30,7 @@ class AboutPicsou : public QDialog
 
 public:
     virtual ~AboutPicsou();
-    explicit AboutPicsou(QWidget *parent=nullptr);
+    explicit AboutPicsou(QWidget *parent);
 
 private:
     Ui::AboutPicsou *ui;

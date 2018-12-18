@@ -18,6 +18,7 @@
 #ifndef OPERATIONEDITOR_H
 #define OPERATIONEDITOR_H
 
+#include <QDate>
 #include <QDialog>
 #include "utils/amount.h"
 
@@ -30,29 +31,36 @@ class OperationEditor : public QDialog
     Q_OBJECT
 public:
     virtual ~OperationEditor();
-    explicit OperationEditor(QDate *date,
-                             Amount *amount,
-                             QString *payment_method,
-                             QString *budget,
-                             QString *recipient,
-                             QString *description,
+    explicit OperationEditor(QWidget *parent,
                              int year=-1,
                              int month=-1,
-                             QWidget *parent=nullptr);
+                             const QDate &date = QDate(),
+                             const Amount &amount = Amount(),
+                             const QString &payment_method = QString(),
+                             const QString &budget = QString(),
+                             const QString &recipient = QString(),
+                             const QString &description = QString());
 
     void set_budgets(const QStringList &budgets);
     void set_payment_methods(const QStringList &payment_methods);
+
+    inline QDate date() const { return m_date; }
+    inline Amount amount() const { return m_amount; }
+    inline QString payment_method() const { return m_payment_method; }
+    inline QString budget() const { return m_budget; }
+    inline QString recipient() const { return m_recipient; }
+    inline QString description() const { return m_description; }
 
 public slots:
     void accept();
 
 private:
-    QDate *m_date;
-    Amount *m_amount;
-    QString *m_payment_method;
-    QString *m_budget;
-    QString *m_recipient;
-    QString *m_description;
+    QDate m_date;
+    Amount m_amount;
+    QString m_payment_method;
+    QString m_budget;
+    QString m_recipient;
+    QString m_description;
     int m_year;
     int m_month;
     Ui::OperationEditor *ui;

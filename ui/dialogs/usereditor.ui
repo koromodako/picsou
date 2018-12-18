@@ -35,23 +35,23 @@
         </widget>
        </item>
        <item>
-        <widget class="QLabel" name="old_pwd_label">
+        <widget class="QLabel" name="old_pswd_label">
          <property name="text">
-          <string>Old password:</string>
+          <string>Old passphrase:</string>
          </property>
         </widget>
        </item>
        <item>
-        <widget class="QLabel" name="new_pwd_label">
+        <widget class="QLabel" name="new_pswd_label">
          <property name="text">
-          <string>New password:</string>
+          <string>New passphrase:</string>
          </property>
         </widget>
        </item>
        <item>
-        <widget class="QLabel" name="repeat_new_pwd_label">
+        <widget class="QLabel" name="repeat_new_pswd_label">
          <property name="text">
-          <string>Repeat new password:</string>
+          <string>Repeat new passphrase:</string>
          </property>
         </widget>
        </item>
@@ -70,23 +70,23 @@
         </widget>
        </item>
        <item>
-        <widget class="QLineEdit" name="old_pwd">
+        <widget class="QLineEdit" name="old_pswd">
          <property name="placeholderText">
-          <string>Old password goes here...</string>
+          <string>Old passphrase goes here...</string>
          </property>
         </widget>
        </item>
        <item>
-        <widget class="QLineEdit" name="new_pwd">
+        <widget class="QLineEdit" name="new_pswd">
          <property name="placeholderText">
-          <string>New password goes here...</string>
+          <string>New passphrase goes here...</string>
          </property>
         </widget>
        </item>
        <item>
-        <widget class="QLineEdit" name="repeat_new_pwd">
+        <widget class="QLineEdit" name="repeat_new_pswd">
          <property name="placeholderText">
-          <string>Repeat new password here...</string>
+          <string>Repeat new passphrase here...</string>
          </property>
         </widget>
        </item>
@@ -100,7 +100,7 @@
       <bool>true</bool>
      </property>
      <property name="text">
-      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; color:#aa0000;&quot;&gt;Error: new password fields differs...&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; color:#aa0000;&quot;&gt;Error: passphrase fields differs...&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
      </property>
      <property name="textFormat">
       <enum>Qt::AutoText</enum>

@@ -32,8 +32,8 @@ class ImportDialog : public QDialog
 
 public:
     virtual ~ImportDialog();
-    explicit ImportDialog(OperationCollection ops,
-                          QWidget *parent=nullptr);
+    explicit ImportDialog(QWidget *parent,
+                          const OperationCollection &ops);
 
 private:
     PicsouTableWidget *m_table;

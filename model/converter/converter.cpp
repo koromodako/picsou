@@ -28,26 +28,28 @@
 
 bool Converter::convert(QJsonDocument *doc, SemVer from, PicsouUIService *ui_svc)
 {
-    LOG_IN("doc="<<doc<<",from="<<from);
+    LOG_IN("doc="<<doc<<",from="<<from<<",ui_svc="<<ui_svc);
     /* initialize convesion list */
-    bool convert;
+    bool converted=false;
     QList<QPair<SemVer, db_converter_t>> converter_list;
     converter_list.append(makeConverterPair(SemVer(1, 0, 0), convert_100_110));
     converter_list.append(makeConverterPair(SemVer(1, 1, 0), convert_110_200));
     /* apply conversions */
     LOG_DEBUG("attempting conversion.");
-    convert=false;
     for(const auto &converter : converter_list) {
         LOG_DEBUG(converter.first.to_str()<<" == "<<from.to_str()<<" : "<<(converter.first==from));
         if(converter.first==from) {
-            convert=true;
+            converted=true;
         }
-        if(convert) {
+        if(converted) {
             LOG_DEBUG("applying converter for version: "<<converter.first.to_str());
-            converter.second(doc, ui_svc);
+            if(!converter.second(doc, ui_svc)) {
+                LOG_CRITICAL("conversion failed.");
+                LOG_BOOL_RETURN(false);
+            }
         }
     }
-    LOG_BOOL_RETURN(convert);
+    LOG_BOOL_RETURN(converted);
 }
 
 #undef makeConverterPair

@@ -20,6 +20,7 @@
 
 #include <QDialog>
 #include "utils/amount.h"
+#include "utils/schedule.h"
 
 class Schedule;
 
@@ -32,33 +33,43 @@ class ScheduledOperationEditor : public QDialog
     Q_OBJECT
 public:
     virtual ~ScheduledOperationEditor();
-    explicit ScheduledOperationEditor(Amount *amount,
-                                      QString *budget,
-                                      QString *recipient,
-                                      QString *description,
-                                      QString *payment_method,
-                                      QString *name,
-                                      Schedule *schedule,
-                                      QWidget *parent=nullptr);
+    explicit ScheduledOperationEditor(QWidget *parent,
+                                      const Amount &amount = Amount(),
+                                      const QString &budget = QString(),
+                                      const QString &recipient = QString(),
+                                      const QString &description = QString(),
+                                      const QString &payment_method = QString(),
+                                      const QString &name = QString(),
+                                      const Schedule &schedule = Schedule());
 
     void set_budgets(const QStringList &budgets);
     void set_frequency_units(const QStringList &frequency_units);
     void set_payment_methods(const QStringList &payment_methods);
 
+    inline Amount amount() const { return m_amount; }
+    inline QString budget() const { return m_budget; }
+    inline QString recipient() const { return m_recipient; }
+    inline QString description() const { return m_description; }
+    inline QString payment_method() const { return m_payment_method; }
+    inline QString name() const { return m_name; }
+    inline Schedule schedule() const { return m_schedule; }
+
 public slots:
+    void accept();
+
+private slots:
     void endless(bool checked);
     void limit_freq(const QString &freq_unit);
     void limit_until(const QDate &from);
-    void accept();
 
 private:
-    Amount *m_amount;
-    QString *m_payment_method;
-    QString *m_budget;
-    QString *m_recipient;
-    QString *m_description;
-    QString *m_name;
-    Schedule *m_schedule;
+    Amount m_amount;
+    QString m_budget;
+    QString m_recipient;
+    QString m_description;
+    QString m_payment_method;
+    QString m_name;
+    Schedule m_schedule;
     Ui::ScheduledOperationEditor *ui;
 };
 
