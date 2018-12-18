@@ -23,23 +23,23 @@ AccountEditor::~AccountEditor()
     delete ui;
 }
 
-AccountEditor::AccountEditor(QString *name,
-                             QString *description,
-                             QWidget *parent) :
+AccountEditor::AccountEditor(QWidget *parent,
+                             const QString &name,
+                             const QString &notes) :
     QDialog(parent),
     m_name(name),
-    m_description(description),
+    m_notes(notes),
     ui(new Ui::AccountEditor)
 {
     ui->setupUi(this);
 
     setWindowTitle(tr("Account Editor"));
 
-    if(!m_name->isNull()) {
-        ui->name->setText(*m_name);
+    if(!m_name.isNull()) {
+        ui->name->setText(m_name);
     }
-    if(!m_description->isNull()) {
-        ui->description->setPlainText(*m_description);
+    if(!m_notes.isNull()) {
+        ui->description->setPlainText(m_notes);
     }
 
     connect(ui->save, &QPushButton::clicked, this, &AccountEditor::accept);
@@ -48,8 +48,8 @@ AccountEditor::AccountEditor(QString *name,
 
 void AccountEditor::accept()
 {
-    (*m_name)=ui->name->text();
-    (*m_description)=ui->description->toPlainText();
+    m_name=ui->name->text();
+    m_notes=ui->description->toPlainText();
     QDialog::accept();
 }
 

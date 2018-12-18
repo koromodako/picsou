@@ -37,7 +37,9 @@ public:
          const QString &pswd,
          PicsouDBO *parent);
 
-    void update(const QString &name);
+    bool update(const QString &name,
+                const QString &old_pswd,
+                const QString &new_pswd);
 
     void add_budget(double amount,
                     const QString &name,
@@ -45,7 +47,7 @@ public:
     bool remove_budget(QUuid id);
 
     void add_account(const QString &name,
-                     const QString &description);
+                     const QString &notes);
     bool remove_account(QUuid id);
 
     inline QString name() const { return m_name; }

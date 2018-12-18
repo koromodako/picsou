@@ -44,10 +44,17 @@ User::User(const QString &name,
     PicsouDBO::init_wkey(pswd);
 }
 
-void User::update(const QString &name)
+bool User::update(const QString &name,
+                  const QString &old_pswd,
+                  const QString &new_pswd)
 {
+    if(!rewrap(old_pswd, new_pswd)) {
+        LOG_CRITICAL("failed to rewrap.");
+        LOG_BOOL_RETURN(false);
+    }
     m_name=name;
     emit modified();
+    LOG_BOOL_RETURN(true);
 }
 
 void User::add_budget(double amount,
@@ -78,9 +85,9 @@ bool User::remove_budget(QUuid id)
 }
 
 void User::add_account(const QString &name,
-                       const QString &description)
+                       const QString &notes)
 {
-    AccountPtr account=AccountPtr(new Account(name, description, this));
+    AccountPtr account=AccountPtr(new Account(name, notes, this));
     m_accounts.insert(account->id(), account);
     emit modified();
 }

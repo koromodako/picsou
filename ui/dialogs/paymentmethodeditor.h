@@ -29,14 +29,16 @@ class PaymentMethodEditor : public QDialog
     Q_OBJECT
 public:
     virtual ~PaymentMethodEditor();
-    explicit PaymentMethodEditor(QString *name,
-                                 QWidget *parent=nullptr);
+    explicit PaymentMethodEditor(QWidget *parent,
+                                 const QString &name = QString());
+
+    inline QString name() const { return m_name; }
 
 public slots:
     void accept();
 
 private:
-    QString *m_name;
+    QString m_name;
     Ui::PaymentMethodEditor *ui;
 };
 

@@ -23,15 +23,15 @@ OperationEditor::~OperationEditor()
     delete ui;
 }
 
-OperationEditor::OperationEditor(QDate *date,
-                                 Amount *amount,
-                                 QString *payment_method,
-                                 QString *budget,
-                                 QString *recipient,
-                                 QString *description,
+OperationEditor::OperationEditor(QWidget *parent,
                                  int year,
                                  int month,
-                                 QWidget *parent) :
+                                 const QDate &date,
+                                 const Amount &amount,
+                                 const QString &payment_method,
+                                 const QString &budget,
+                                 const QString &recipient,
+                                 const QString &description) :
     QDialog(parent),
     m_date(date),
     m_amount(amount),
@@ -50,10 +50,10 @@ OperationEditor::OperationEditor(QDate *date,
 
     ui->amount->setPrefix(tr("$"));
     ui->amount->setSuffix(tr(" "));
-    ui->amount->setValue(m_amount->value());
+    ui->amount->setValue(m_amount.value());
 
-    if(!m_date->isNull()){
-        ui->date->setDate(*m_date);
+    if(!m_date.isNull()){
+        ui->date->setDate(m_date);
     } else {
         ui->date->setDate(QDate::currentDate());
     }
@@ -74,11 +74,11 @@ OperationEditor::OperationEditor(QDate *date,
     ui->budget->setEditable(false);
     ui->payment_method->setEditable(false);
 
-    if(!m_recipient->isNull()){
-        ui->recipient->setText(*m_recipient);
+    if(!m_recipient.isNull()){
+        ui->recipient->setText(m_recipient);
     }
-    if(!m_description->isNull()){
-        ui->description->setPlainText(*m_description);
+    if(!m_description.isNull()){
+        ui->description->setPlainText(m_description);
     }
 
     connect(ui->save, &QPushButton::clicked, this, &OperationEditor::accept);
@@ -89,8 +89,8 @@ void OperationEditor::set_budgets(const QStringList &budgets)
 {
     ui->budget->clear();
     ui->budget->addItems(budgets);
-    if(!m_budget->isNull()){
-        ui->budget->setCurrentText(*m_budget);
+    if(!m_budget.isNull()){
+        ui->budget->setCurrentText(m_budget);
     }
 }
 
@@ -98,19 +98,18 @@ void OperationEditor::set_payment_methods(const QStringList &payment_methods)
 {
     ui->payment_method->clear();
     ui->payment_method->addItems(payment_methods);
-    if(!m_payment_method->isNull()){
-        ui->payment_method->setCurrentText(*m_payment_method);
+    if(!m_payment_method.isNull()){
+        ui->payment_method->setCurrentText(m_payment_method);
     }
 }
 
-
 void OperationEditor::accept()
 {
-    (*m_amount)=ui->amount->value();
-    (*m_date)=ui->date->date();
-    (*m_payment_method)=ui->payment_method->currentText();
-    (*m_budget)=ui->budget->currentText();
-    (*m_recipient)=ui->recipient->text();
-    (*m_description)=ui->description->toPlainText();
+    m_amount=ui->amount->value();
+    m_date=ui->date->date();
+    m_payment_method=ui->payment_method->currentText();
+    m_budget=ui->budget->currentText();
+    m_recipient=ui->recipient->text();
+    m_description=ui->description->toPlainText();
     QDialog::accept();
 }

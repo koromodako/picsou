@@ -5,9 +5,9 @@
 
 class PicsouUIService;
 
-typedef void (*db_converter_t)(QJsonDocument *doc, PicsouUIService *ui_svc);
+typedef bool (*db_converter_t)(QJsonDocument *doc, PicsouUIService *ui_svc);
 
-void convert_100_110(QJsonDocument *doc, PicsouUIService *ui_svc);
-void convert_110_200(QJsonDocument *doc, PicsouUIService *ui_svc);
+bool convert_100_110(QJsonDocument *doc, PicsouUIService *ui_svc);
+bool convert_110_200(QJsonDocument *doc, PicsouUIService *ui_svc);
 
 #endif // CONVERTERS_H

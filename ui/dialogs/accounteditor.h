@@ -30,16 +30,19 @@ class AccountEditor : public QDialog
 
 public:
     virtual ~AccountEditor();
-    explicit AccountEditor(QString *name,
-                           QString *description,
-                           QWidget *parent=nullptr);
+    explicit AccountEditor(QWidget *parent,
+                           const QString &name = QString(),
+                           const QString &notes = QString());
+
+    inline QString name() const { return m_name; }
+    inline QString notes() const { return m_notes; }
 
 public slots:
     void accept();
 
 private:
-    QString *m_name;
-    QString *m_description;
+    QString m_name;
+    QString m_notes;
     Ui::AccountEditor *ui;
 };
 

@@ -23,17 +23,16 @@
 UserEditor::~UserEditor()
 {
     delete ui;
-    /* do not delete private members here */
 }
 
-UserEditor::UserEditor(QString *username,
-                       QString *old_pwd,
-                       QString *new_pwd,
-                       QWidget *parent) :
+UserEditor::UserEditor(QWidget *parent,
+                       const QString &username,
+                       const QString &old_pswd,
+                       const QString &new_pswd) :
     QDialog(parent),
     m_username(username),
-    m_old_pwd(old_pwd),
-    m_new_pwd(new_pwd),
+    m_old_pswd(old_pswd),
+    m_new_pswd(new_pswd),
     ui(new Ui::UserEditor)
 {
     bool user_edit=false;
@@ -43,20 +42,20 @@ UserEditor::UserEditor(QString *username,
 
     ui->error->setVisible(false);
 
-    ui->old_pwd->setEchoMode(QLineEdit::Password);
-    ui->new_pwd->setEchoMode(QLineEdit::Password);
-    ui->repeat_new_pwd->setEchoMode(QLineEdit::Password);
+    ui->old_pswd->setEchoMode(QLineEdit::Password);
+    ui->new_pswd->setEchoMode(QLineEdit::Password);
+    ui->repeat_new_pswd->setEchoMode(QLineEdit::Password);
 
-    ui->old_pwd->setInputMethodHints(Qt::ImhSensitiveData);
-    ui->new_pwd->setInputMethodHints(Qt::ImhSensitiveData);
-    ui->repeat_new_pwd->setInputMethodHints(Qt::ImhSensitiveData);
+    ui->old_pswd->setInputMethodHints(Qt::ImhSensitiveData);
+    ui->new_pswd->setInputMethodHints(Qt::ImhSensitiveData);
+    ui->repeat_new_pswd->setInputMethodHints(Qt::ImhSensitiveData);
 
-    if((user_edit=!m_username->isNull())) {
-        ui->username->setText(*m_username);
+    if((user_edit=!m_username.isNull())) {
+        ui->username->setText(m_username);
     }
 
-    ui->old_pwd->setVisible(user_edit);
-    ui->old_pwd_label->setVisible(user_edit);
+    ui->old_pswd->setVisible(user_edit);
+    ui->old_pswd_label->setVisible(user_edit);
 
     connect(ui->save, &QPushButton::clicked, this, &UserEditor::accept);
     connect(ui->cancel, &QPushButton::clicked, this, &UserEditor::reject);
@@ -66,13 +65,13 @@ void UserEditor::accept()
 {
     ui->error->setVisible(false);
 
-    if(ui->new_pwd->text()!=ui->repeat_new_pwd->text()) {
+    if(ui->new_pswd->text()!=ui->repeat_new_pswd->text()) {
         ui->error->setVisible(true);
         return;
     }
 
-    (*m_old_pwd)=ui->old_pwd->text();
-    (*m_new_pwd)=ui->new_pwd->text();
-    (*m_username)=ui->username->text();
+    m_old_pswd=ui->old_pswd->text();
+    m_new_pswd=ui->new_pswd->text();
+    m_username=ui->username->text();
     QDialog::accept();
 }

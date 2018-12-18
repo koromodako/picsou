@@ -18,7 +18,12 @@
 #include "paymentmethodeditor.h"
 #include "ui_paymentmethodeditor.h"
 
-PaymentMethodEditor::PaymentMethodEditor(QString *name, QWidget *parent) :
+PaymentMethodEditor::~PaymentMethodEditor()
+{
+    delete ui;
+}
+
+PaymentMethodEditor::PaymentMethodEditor(QWidget *parent, const QString &name) :
     QDialog(parent),
     m_name(name),
     ui(new Ui::PaymentMethodEditor)
@@ -27,8 +32,8 @@ PaymentMethodEditor::PaymentMethodEditor(QString *name, QWidget *parent) :
 
     setWindowTitle(tr("Payment Method Editor"));
 
-    if(!m_name->isNull()) {
-        ui->name->setText(*m_name);
+    if(!m_name.isNull()) {
+        ui->name->setText(m_name);
     }
 
     connect(ui->save, &QPushButton::clicked, this, &PaymentMethodEditor::accept);
@@ -37,11 +42,6 @@ PaymentMethodEditor::PaymentMethodEditor(QString *name, QWidget *parent) :
 
 void PaymentMethodEditor::accept()
 {
-    (*m_name)=ui->name->text();
+    m_name=ui->name->text();
     QDialog::accept();
-}
-
-PaymentMethodEditor::~PaymentMethodEditor()
-{
-    delete ui;
 }

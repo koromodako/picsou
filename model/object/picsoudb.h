@@ -38,7 +38,7 @@ public:
              const QString &name,
              const QString &description);
 
-    void add_user(const QString &username);
+    void add_user(const QString &username, const QString &pswd);
     bool remove_user(QUuid id);
 
     inline QDate timestamp() const { return m_timestamp; }

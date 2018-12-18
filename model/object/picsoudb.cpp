@@ -48,9 +48,9 @@ PicsouDB::PicsouDB(SemVer version,
 
 }
 
-void PicsouDB::add_user(const QString &username)
+void PicsouDB::add_user(const QString &username, const QString &pswd)
 {
-    UserPtr user=UserPtr(new User(username, this));
+    UserPtr user=UserPtr(new User(username, pswd, this));
     m_users.insert(user->id(), user);
     emit modified();
 }

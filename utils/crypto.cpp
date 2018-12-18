@@ -5,24 +5,19 @@ bool Crypto::init()
 
 }
 
-bool Crypto::term()
-{
-
-}
-
 bool Crypto::init_wkey(const QString &pswd, QString &wkey)
 {
 
 }
 
-bool Crypto::rewrap(const QString &prev_secret,
-                    const QString &next_secret,
+bool Crypto::rewrap(const QString &prev_pswd,
+                    const QString &next_pswd,
                     QString &wkey)
 {
 
 }
 
-bool Crypto::encrypt(const QString &secret,
+bool Crypto::encrypt(const QString &pswd,
                      const QString &wkey,
                      const QByteArray &in,
                      QString &out)
@@ -30,7 +25,7 @@ bool Crypto::encrypt(const QString &secret,
 
 }
 
-bool Crypto::decrypt(const QString &secret,
+bool Crypto::decrypt(const QString &pswd,
                      const QString &wkey,
                      const QString &in,
                      QByteArray &out)

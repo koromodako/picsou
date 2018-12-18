@@ -24,9 +24,9 @@ PicsouDBEditor::~PicsouDBEditor()
     /* do not delete anything else here */
 }
 
-PicsouDBEditor::PicsouDBEditor(QString *name,
-                               QString *description,
-                               QWidget *parent) :
+PicsouDBEditor::PicsouDBEditor(QWidget *parent,
+                               const QString &name,
+                               const QString &description) :
     QDialog(parent),
     m_name(name),
     m_description(description),
@@ -42,7 +42,7 @@ PicsouDBEditor::PicsouDBEditor(QString *name,
 
 void PicsouDBEditor::accept()
 {
-    (*m_name)=ui->name->text();
-    (*m_description)=ui->description->toPlainText();
+    m_name=ui->name->text();
+    m_description=ui->description->toPlainText();
     QDialog::accept();
 }

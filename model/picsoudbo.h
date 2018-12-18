@@ -29,7 +29,7 @@ class PicsouDBO : public QObject
     Q_OBJECT
 public:
     static const QString KW_WKEY;
-    static const QString KW_DATA;
+    static const QString KW_WDAT;
 
     PicsouDBO(bool valid, PicsouDBO *parent);
 
@@ -45,7 +45,6 @@ public:
     virtual bool write_unwrapped(QJsonObject &json) const;
 
     bool unwrap(const QString &pswd);
-    bool rewrap(const QString &prev_pswd, const QString &next_pswd);
     void init_wkey(const QString &pswd);
 
 signals:
@@ -54,6 +53,7 @@ signals:
 protected:
     inline void set_valid(bool valid=true) { m_valid=valid; }
 
+    bool rewrap(const QString &prev_pswd, const QString &next_pswd);
     bool read_wrapped(const QJsonObject &json);
     bool write_wrapped(QJsonObject &json) const;
 
@@ -62,7 +62,7 @@ private:
     bool m_valid;
     bool m_wrapped;
     QString m_wkey;
-    QString m_data;
+    QString m_wdat;
     QString m_pswd;
     PicsouDBO *m_parent;
 };

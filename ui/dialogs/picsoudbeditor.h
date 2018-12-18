@@ -30,16 +30,19 @@ class PicsouDBEditor : public QDialog
 
 public:
     virtual ~PicsouDBEditor();
-    explicit PicsouDBEditor(QString *name,
-                            QString *description,
-                            QWidget *parent=nullptr);
+    explicit PicsouDBEditor(QWidget *parent,
+                            const QString &name = QString(),
+                            const QString &description = QString());
+
+    inline QString name() const { return m_name; }
+    inline QString description() const { return m_description; }
 
 public slots:
     void accept();
 
 private:
-    QString *m_name;
-    QString *m_description;
+    QString m_name;
+    QString m_description;
     Ui::PicsouDBEditor *ui;
 };
 
