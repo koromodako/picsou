@@ -27,8 +27,8 @@ static const QString PICSOU_COMMIT="%{COMMIT}%";
 static const QString PICSOU_STATUS="%{STATUS}%";
 static const QString PICSOU_LICENSE_URL="https://github.com/koromodako/picsou/blob/master/LICENSE";
 
-static const int PICSOU_DB_MAJOR=1;
-static const int PICSOU_DB_MINOR=1;
+static const int PICSOU_DB_MAJOR=2;
+static const int PICSOU_DB_MINOR=0;
 static const int PICSOU_DB_PATCH=0;
 static const SemVer PICSOU_DB_VERSION=SemVer(PICSOU_DB_MAJOR, PICSOU_DB_MINOR, PICSOU_DB_PATCH);
 

@@ -120,6 +120,7 @@ bool PicsouModelService::open_db(QString filename)
             }
             /* conversion failed */
         }
+        LOG_CRITICAL("conversion failed or database is corrupted.");
         LOG_BOOL_RETURN(false);
     }
     m_filename=filename;
