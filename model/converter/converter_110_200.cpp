@@ -1,6 +1,6 @@
 #include "converters.h"
 #include "utils/macro.h"
-#include "utils/crypto.h"
+#include "utils/crypto_ctx.h"
 #include "app/picsouuiservice.h"
 #include "model/object/picsoudb.h"
 
@@ -26,19 +26,20 @@ bool convert_110_200(QJsonDocument *doc, PicsouUIService *ui_svc)
             LOG_CRITICAL("failed to retrieve user password.");
             LOG_BOOL_RETURN(false);
         }
-        QString wkey;
-        if(!Crypto::init_wkey(pswd, wkey)) {
-            LOG_CRITICAL("Crypto::init_wkey() operation failed.");
+        CryptoCtx wctx;
+        if(!wctx.init(pswd)) {
+            LOG_CRITICAL("CryptoCtx::init() operation failed.");
             LOG_BOOL_RETURN(false);
         }
         QString wdat;
         QJsonDocument wdoc(user_wrapped);
-        if(!Crypto::encrypt(pswd, wkey, wdoc.toBinaryData(), wdat)) {
-            LOG_CRITICAL("Crypto::encrypt() operation failed.");
+        if(!wctx.wrap(wdoc.toBinaryData(), wdat)) {
+            LOG_CRITICAL("CryptoCtx::wrap() operation failed.");
             LOG_BOOL_RETURN(false);
         }
-        new_user[PicsouDBO::KW_WKEY]=wkey;
         new_user[PicsouDBO::KW_WDAT]=wdat;
+        new_user[PicsouDBO::KW_WKEY]=wctx.wkey();
+        new_user[PicsouDBO::KW_WSALT]=wctx.wsalt();
         new_user_ary.append(new_user);
     }
     db[PicsouDB::KW_VERSION]=SemVer(2, 0, 0).to_str();

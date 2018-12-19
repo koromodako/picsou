@@ -48,9 +48,14 @@ bool User::update(const QString &name,
                   const QString &old_pswd,
                   const QString &new_pswd)
 {
-    if(!rewrap(old_pswd, new_pswd)) {
-        LOG_CRITICAL("failed to rewrap.");
-        LOG_BOOL_RETURN(false);
+    LOG_IN("name="<<name<<"old_pswd,new_pswd");
+    if(!old_pswd.isNull()&&!new_pswd.isNull()) {
+        LOG_INFO("attemtping wkey rewraping.");
+        if(!rewrap(old_pswd, new_pswd)) {
+            LOG_CRITICAL("failed to rewrap.");
+            LOG_BOOL_RETURN(false);
+        }
+        LOG_INFO("rewraping succeeded.");
     }
     m_name=name;
     emit modified();

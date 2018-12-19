@@ -97,7 +97,7 @@ bool Operation::read(const QJsonObject &json)
 
 bool Operation::write(QJsonObject &json) const
 {
-    LOG_IN("<QJsonObject>")
+    LOG_IN("<QJsonObject>");
     json[KW_AMOUNT]=m_amount.value();
     json[KW_DAY]=m_date.day();
     json[KW_MONTH]=m_date.month();

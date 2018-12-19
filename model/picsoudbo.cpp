@@ -17,17 +17,17 @@
  */
 #include "picsoudbo.h"
 #include "utils/macro.h"
-#include "utils/crypto.h"
+#include "utils/crypto_ctx.h"
 
 #include <QJsonDocument>
 
-const QString PicsouDBO::KW_WKEY="wkey";
 const QString PicsouDBO::KW_WDAT="data";
+const QString PicsouDBO::KW_WKEY="key";
+const QString PicsouDBO::KW_WSALT="salt";
 
 PicsouDBO::PicsouDBO(bool valid, PicsouDBO *parent) :
     m_id(QUuid::createUuid()),
     m_valid(valid),
-    m_wrapped(false),
     m_parent(parent)
 {
     if(parent!=nullptr) {
@@ -53,8 +53,8 @@ bool PicsouDBO::unwrap(const QString &pswd)
 {
     LOG_IN("pswd");
     QByteArray data;
-    if(!Crypto::decrypt(pswd, m_wkey, m_wdat, data)) {
-        LOG_CRITICAL("Crypto::decrypt() operation failed.");
+    if(!m_wctx.unwrap(pswd, m_wdat, data)) {
+        LOG_CRITICAL("CryptoCtx::unwrap() operation failed.");
         LOG_BOOL_RETURN(false);
     }
     QJsonDocument doc=QJsonDocument::fromBinaryData(data);
@@ -66,16 +66,14 @@ bool PicsouDBO::unwrap(const QString &pswd)
         LOG_CRITICAL("read_unwrapped() operation failed.");
         LOG_BOOL_RETURN(false);
     }
-    m_pswd=pswd;
-    m_wrapped=false;
     LOG_BOOL_RETURN(true);
 }
 
 void PicsouDBO::init_wkey(const QString &pswd)
 {
     LOG_IN("pswd");
-    if(!Crypto::init_wkey(pswd, m_wkey)) {
-        LOG_CRITICAL("Crypto::init_wkey() operation failed.");
+    if(!m_wctx.init(pswd)) {
+        LOG_CRITICAL("CryptoCtx::init() operation failed.");
     }
     LOG_VOID_RETURN();
 }
@@ -83,13 +81,9 @@ void PicsouDBO::init_wkey(const QString &pswd)
 bool PicsouDBO::rewrap(const QString &prev_pswd, const QString &next_pswd)
 {
     LOG_IN("prev_pswd,next_pswd");
-    if(!Crypto::rewrap(prev_pswd, next_pswd, m_wkey)) {
-        LOG_CRITICAL("Crypto::rewrap() operation failed.");
+    if(!m_wctx.rewrap(prev_pswd, next_pswd)) {
+        LOG_CRITICAL("CryptoCtx::rewrap() operation failed.");
         LOG_BOOL_RETURN(false);
-    }
-    if(!wrapped()) {
-        /* underlying object has been unwrapped => update cached pswd */
-        m_pswd=next_pswd;
     }
     emit modified();
     LOG_BOOL_RETURN(true);
@@ -98,12 +92,12 @@ bool PicsouDBO::rewrap(const QString &prev_pswd, const QString &next_pswd)
 bool PicsouDBO::read_wrapped(const QJsonObject &json)
 {
     LOG_IN("json");
-    static const QStringList keys=(QStringList()<<KW_WKEY<<KW_WDAT);
+    static const QStringList keys=(QStringList()<<KW_WDAT<<KW_WKEY<<KW_WSALT);
     JSON_CHECK_KEYS(keys);
     /* loads wrapped data but does not unwrap it */
-    m_wkey=json[KW_WKEY].toString();
     m_wdat=json[KW_WDAT].toString();
-    m_wrapped=true;
+    m_wctx=CryptoCtx(json[KW_WKEY].toString(),
+                     json[KW_WSALT].toString());
     LOG_BOOL_RETURN(wrapped());
 }
 
@@ -116,22 +110,19 @@ bool PicsouDBO::write_wrapped(QJsonObject &json) const
         wrapped_data=m_wdat;
     } else {
         /* underlying object has been unwrapped and might have been modified => update data */
-        if(m_wkey.isNull()) {
-            LOG_CRITICAL("m_wkey is null.");
-            LOG_BOOL_RETURN(false);
-        }
         QJsonObject wjson;
         if(!write_unwrapped(wjson)) {
             LOG_CRITICAL("write_unwrapped() operation failed.");
             LOG_BOOL_RETURN(false);
         }
         QJsonDocument wdoc(wjson);
-        if(!Crypto::encrypt(m_pswd, m_wkey, wdoc.toBinaryData(), wrapped_data)) {
-            LOG_CRITICAL("Crypto::encrypt() operation failed.");
+        if(!m_wctx.wrap(wdoc.toBinaryData(), wrapped_data)) {
+            LOG_CRITICAL("CryptoCtx::wrap() operation failed.");
             LOG_BOOL_RETURN(false);
         }
     }
-    json[KW_WKEY]=m_wkey;
     json[KW_WDAT]=wrapped_data;
+    json[KW_WKEY]=m_wctx.wkey();
+    json[KW_WSALT]=m_wctx.wsalt();
     LOG_BOOL_RETURN(true);
 }

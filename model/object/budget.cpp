@@ -52,7 +52,7 @@ void Budget::update(double amount,
 
 bool Budget::read(const QJsonObject &json)
 {
-    LOG_IN("<QJsonObject>")
+    LOG_IN("<QJsonObject>");
     static const QStringList keys=(QStringList()<<KW_NAME
                                                 <<KW_AMOUNT
                                                 <<KW_DESCRIPTION);
@@ -68,7 +68,7 @@ bool Budget::read(const QJsonObject &json)
 
 bool Budget::write(QJsonObject &json) const
 {
-    LOG_IN("<QJsonObject>")
+    LOG_IN("<QJsonObject>");
     json[KW_NAME]=m_name;
     json[KW_AMOUNT]=m_amount;
     json[KW_DESCRIPTION]=m_description;

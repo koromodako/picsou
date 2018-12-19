@@ -242,7 +242,7 @@ QStringList Account::payment_methods_str(bool sorted) const
 
 bool Account::read(const QJsonObject &json)
 {
-    LOG_IN("<QJsonObject>")
+    LOG_IN("<QJsonObject>");
     static const QStringList keys=(QStringList()<<KW_NAME
                                                 <<KW_NOTES
                                                 <<KW_PAYMENT_METHODS
@@ -265,7 +265,7 @@ bool Account::read(const QJsonObject &json)
 
 bool Account::write(QJsonObject &json) const
 {
-    LOG_IN("<QJsonObject>")
+    LOG_IN("<QJsonObject>");
     json[KW_NAME]=m_name;
     json[KW_NOTES]=m_notes;
     JSON_WRITE_LIST(json, KW_PAYMENT_METHODS, m_payment_methods.values());

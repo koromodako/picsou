@@ -277,7 +277,7 @@ OperationCollection PicsouUIService::search_operations(const SearchQuery &query)
                         progress.setValue(future.progressValue());
                         if (progress.wasCanceled()) {
                             future.cancel();
-                            LOG_WARNING("search cancelled.")
+                            LOG_WARNING("search cancelled.");
                             return ops;
                         }
                         QThread::msleep(100);

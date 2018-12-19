@@ -25,19 +25,20 @@
 #include <QXmlStreamWriter>
 
 #include "picsou.h"
+#include "utils/crypto_ctx.h"
 #include "app/picsouapplication.h"
 #include "model/object/picsoudb.h"
 #include "model/converter/converter.h"
 
-#define XML_ELEM_OP "operation"
-#define XML_ATTR_YEAR "year"
-#define XML_ATTR_MONTH "month"
-#define XML_ATTR_DAY "day"
-#define XML_ATTR_AMOUNT "amount"
-#define XML_ATTR_BUDGET "budget"
-#define XML_ATTR_RECIPIENT "recipient"
-#define XML_ATTR_PAYMENT_METHOD "paymentMethod"
-#define XML_ATTR_DESCRIPTION "description"
+static const QString XML_ELEM_OP="operation";
+static const QString XML_ATTR_YEAR="year";
+static const QString XML_ATTR_MONTH="month";
+static const QString XML_ATTR_DAY="day";
+static const QString XML_ATTR_AMOUNT="amount";
+static const QString XML_ATTR_BUDGET="budget";
+static const QString XML_ATTR_RECIPIENT="recipient";
+static const QString XML_ATTR_PAYMENT_METHOD="paymentMethod";
+static const QString XML_ATTR_DESCRIPTION="description";
 
 PicsouModelService::~PicsouModelService()
 {
@@ -59,7 +60,7 @@ PicsouModelService::PicsouModelService(PicsouApplication *papp) :
 bool PicsouModelService::initialize()
 {
     LOG_IN_VOID();
-    LOG_BOOL_RETURN(true);
+    LOG_BOOL_RETURN(CryptoCtx::lib_init());
 }
 
 void PicsouModelService::terminate()
