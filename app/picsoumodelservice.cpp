@@ -85,7 +85,8 @@ bool PicsouModelService::new_db(QString filename,
                                  description));
     m_filename=filename;
     m_is_db_modified=true;
-    connect(m_db, &PicsouDB::modified, this, &PicsouModelService::notify_ui);
+    connect(m_db, &PicsouDB::modified, this, &PicsouModelService::dbo_modified);
+    connect(m_db, &PicsouDB::unwrapped, this, &PicsouModelService::dbo_unwrapped);
     LOG_BOOL_RETURN(true);
 }
 
@@ -99,8 +100,16 @@ bool PicsouModelService::open_db(QString filename)
     if(!f.open(QIODevice::ReadOnly)) {
         LOG_BOOL_RETURN(false);
     }
+    QByteArray raw=f.readAll();
+    /* attempt uncompressing */
+    QByteArray jdata=qUncompress(raw);
+    if(jdata.isEmpty()) {
+        /* ensure backward compatibility */
+        jdata=raw;
+    }
+    /* parse json data */
     QJsonParseError err;
-    QJsonDocument doc=QJsonDocument::fromJson(f.readAll(), &err);
+    QJsonDocument doc=QJsonDocument::fromJson(jdata, &err);
     if(doc.isNull()) {
         LOG_CRITICAL("JSON document is NULL!");
         LOG_BOOL_RETURN(false);
@@ -108,23 +117,30 @@ bool PicsouModelService::open_db(QString filename)
     SemVer db_version;
     m_db=PicsouDBPtr(new PicsouDB);
     for(;;) {
+        /* attempt to load objects from json */
         if(m_db->read(doc.object())) {
+            /* everything seems fine, break and go ahead */
             break;
         }
+        /* something is wrong... */
         db_version=m_db->version();
         LOG_DEBUG("valid DB version: "<<db_version.is_valid());
         LOG_DEBUG(db_version.to_str()<<"<"<<PICSOU_DB_VERSION.to_str()<<" : "<<(db_version<PICSOU_DB_VERSION));
         if(db_version.is_valid()&&db_version<PICSOU_DB_VERSION) {
+            /* database version is older than currently supported, attempt conversion */
             if(Converter::convert(&doc, db_version, papp()->ui_svc())) {
-                continue; /* retry to read document */
+                /* retry to read document */
+                continue;
             }
             /* conversion failed */
         }
         LOG_CRITICAL("conversion failed or database is corrupted.");
         LOG_BOOL_RETURN(false);
     }
+    /* success */
     m_filename=filename;
-    connect(m_db, &PicsouDB::modified, this, &PicsouModelService::notify_ui);
+    connect(m_db, &PicsouDB::modified, this, &PicsouModelService::dbo_modified);
+    connect(m_db, &PicsouDB::unwrapped, this, &PicsouModelService::dbo_unwrapped);
     LOG_BOOL_RETURN(true);
 }
 
@@ -148,8 +164,9 @@ bool PicsouModelService::save_db_as(QString filename)
     if(!f.open(QIODevice::WriteOnly)) {
         LOG_BOOL_RETURN(false);
     }
-    QByteArray json_data=QJsonDocument(json).toJson();
-    if(f.write(json_data)!=json_data.size()) {
+    QByteArray jdata=QJsonDocument(json).toJson(QJsonDocument::Compact);
+    QByteArray compressed=qCompress(jdata);
+    if(f.write(compressed)!=compressed.size()) {
         LOG_BOOL_RETURN(false);
     }
     f.close();
@@ -231,11 +248,18 @@ AccountPtr PicsouModelService::find_account(QUuid id) const
     return account;
 }
 
-void PicsouModelService::notify_ui()
+void PicsouModelService::dbo_modified()
 {
     LOG_IN_VOID();
     m_is_db_modified=true;
     emit updated(m_db);
+    LOG_VOID_RETURN();
+}
+
+void PicsouModelService::dbo_unwrapped()
+{
+    LOG_IN_VOID();
+    emit unwrapped(m_db);
     LOG_VOID_RETURN();
 }
 

@@ -6,7 +6,7 @@
 TARGET = picsou
 TEMPLATE = app
 
-QT += core widgets concurrent
+QT += core svg widgets concurrent
 CONFIG += c++14
 # Run prebuild script
 system(./prebuild)
@@ -80,7 +80,8 @@ SOURCES += \
     model/picsoudbo.cpp \
     model/converter/converter_100_110.cpp \
     model/converter/converter_110_200.cpp \
-    utils/crypto_ctx.cpp
+    utils/crypto_ctx.cpp \
+    ui/viewers/lockedobjectviewer.cpp
 
 HEADERS += \
     picsou.h \
@@ -128,7 +129,8 @@ HEADERS += \
     ui/widgets/picsoutablewidget.h \
     ui/widgets/operationstatistics.h \
     model/converter/converters.h \
-    utils/crypto_ctx.h
+    utils/crypto_ctx.h \
+    ui/viewers/lockedobjectviewer.h
 
 FORMS += \
     ui/mainwindow.ui \
@@ -145,7 +147,8 @@ FORMS += \
     ui/viewers/picsoudbviewer.ui \
     ui/viewers/accountviewer.ui \
     ui/viewers/userviewer.ui \
-    ui/widgets/operationstatistics.ui
+    ui/widgets/operationstatistics.ui \
+    ui/viewers/lockedobjectviewer.ui
 
 RESOURCES += \
     picsou.qrc

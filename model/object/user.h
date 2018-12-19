@@ -41,7 +41,7 @@ public:
                 const QString &old_pswd,
                 const QString &new_pswd);
 
-    void add_budget(double amount,
+    void add_budget(const Amount &amount,
                     const QString &name,
                     const QString &description);
     bool remove_budget(QUuid id);

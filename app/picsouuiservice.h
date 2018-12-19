@@ -61,11 +61,15 @@ signals:
     void svc_op_failed(QString error);
     void svc_op_canceled();
 
-    void model_updated(const PicsouDBPtr db);
+    void notify_model_updated(const PicsouDBPtr db);
+    void notify_model_unwrapped(const PicsouDBPtr db);
+
+    void unlocked();
 
     void db_opened();
     void db_saved();
     void db_modified();
+    void db_unwrapped();
     void db_closed();
 
     void user_added();
@@ -101,6 +105,8 @@ public slots:
     void show_about_picsou();
     void show_github_repo();
     void show_license();
+    /*  */
+    void unlock(QUuid id);
     /* DB ops */
     void db_new();
     void db_open();
@@ -134,7 +140,8 @@ public slots:
     void ops_import(QUuid account_id);
     void ops_export(QUuid account_id);
 
-    void notify_model_updated(const PicsouDBPtr db);
+    void notified_model_updated(const PicsouDBPtr db);
+    void notified_model_unwrapped(const PicsouDBPtr db);
 
 private:
     bool close_any_opened_db();

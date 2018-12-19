@@ -49,20 +49,22 @@ bool User::update(const QString &name,
                   const QString &new_pswd)
 {
     LOG_IN("name="<<name<<"old_pswd,new_pswd");
-    if(!old_pswd.isNull()&&!new_pswd.isNull()) {
+    if(!old_pswd.isEmpty()&&!new_pswd.isEmpty()) {
         LOG_INFO("attemtping wkey rewraping.");
         if(!rewrap(old_pswd, new_pswd)) {
             LOG_CRITICAL("failed to rewrap.");
             LOG_BOOL_RETURN(false);
         }
         LOG_INFO("rewraping succeeded.");
+    } else {
+        LOG_INFO("passphrase unchanged.");
     }
     m_name=name;
     emit modified();
     LOG_BOOL_RETURN(true);
 }
 
-void User::add_budget(double amount,
+void User::add_budget(const Amount &amount,
                       const QString &name,
                       const QString &description)
 {

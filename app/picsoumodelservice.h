@@ -63,9 +63,11 @@ public:
 
 signals:
     void updated(const PicsouDBPtr db);
+    void unwrapped(const PicsouDBPtr db);
 
 public slots:
-    void notify_ui();
+    void dbo_modified();
+    void dbo_unwrapped();
 
 private:
     OperationCollection xml_load_ops(QFile &f);

@@ -103,6 +103,10 @@ OperationCollection PicsouDB::ops(QUuid account_id,
 {
     OperationCollection selected_ops;
     AccountPtr account=find_account(account_id);
+    if(account.isNull()) {
+        LOG_WARNING("failed to find account.");
+        return selected_ops;
+    }
     for(const auto &sop : account->scheduled_ops()) {
         for(const auto &date : sop->schedule().dates(year, month)) {
             Operation *op=new Operation(sop->amount(),
@@ -133,6 +137,9 @@ AccountPtr PicsouDB::find_account(QUuid id) const
     AccountPtr account;
     for(const auto &user : m_users.values()) {
         account=user->find_account(id);
+        if(account.isNull()) {
+            continue;
+        }
         if(account->valid()) {
             break;
         }

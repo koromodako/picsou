@@ -28,7 +28,7 @@ Budget::Budget(PicsouDBO *parent) :
 
 }
 
-Budget::Budget(double amount,
+Budget::Budget(const Amount &amount,
                const QString &name,
                const QString &description,
                PicsouDBO *parent) :
@@ -40,7 +40,7 @@ Budget::Budget(double amount,
 
 }
 
-void Budget::update(double amount,
+void Budget::update(const Amount &amount,
                     const QString &name,
                     const QString &description)
 {
@@ -70,7 +70,7 @@ bool Budget::write(QJsonObject &json) const
 {
     LOG_IN("<QJsonObject>");
     json[KW_NAME]=m_name;
-    json[KW_AMOUNT]=m_amount;
+    json[KW_AMOUNT]=m_amount.value();
     json[KW_DESCRIPTION]=m_description;
     /**/
     LOG_BOOL_RETURN(true);

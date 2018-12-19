@@ -40,23 +40,27 @@ public:
                    const QString &text,
                    QUuid id,
                    int year=-1,
-                   int month=-1);
+                   int month=-1,
+                   bool wrapped=false);
     PicsouTreeItem(QTreeWidgetItem *parent,
                    Type type,
                    const QIcon &icon,
                    const QString &text,
                    QUuid id,
                    int year=-1,
-                   int month=-1);
+                   int month=-1,
+                   bool wrapped=false);
 
     PicsouTreeItem *parent() const;
 
     inline int year() const { return m_year; }
     inline int month() const { return m_month; }
+    inline bool wrapped() const { return m_wrapped; }
 
 private:
     int m_year;
     int m_month;
+    bool m_wrapped;
 };
 
 #endif // PICSOUTREEWIDGETITEM_H

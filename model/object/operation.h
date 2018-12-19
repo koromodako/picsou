@@ -35,6 +35,7 @@ class Operation : public PicsouDBO
     Q_OBJECT
 public:
     enum Type {
+        NEUTRAL,
         CREDIT,
         DEBIT
     };
@@ -72,7 +73,7 @@ public:
     inline QString recipient() const { return m_recipient; }
     inline QString description() const { return m_description; }
     inline QString payment_method() const { return m_payment_method; }
-    inline Type type() const { return (m_amount<0.?DEBIT:CREDIT); }
+    inline Type type() const { return (m_amount==0.?NEUTRAL:(m_amount<0.?DEBIT:CREDIT)); }
     inline bool scheduled() const { return m_scheduled; }
 
     bool read(const QJsonObject &json);

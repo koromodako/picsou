@@ -53,6 +53,7 @@ public:
 
 signals:
     void modified();
+    void unwrapped();
 
 protected:
     inline void set_valid(bool valid=true) { m_valid=valid; }

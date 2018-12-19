@@ -32,6 +32,7 @@ PicsouDBO::PicsouDBO(bool valid, PicsouDBO *parent) :
 {
     if(parent!=nullptr) {
         connect(this, &PicsouDBO::modified, parent, &PicsouDBO::modified);
+        connect(this, &PicsouDBO::unwrapped, parent, &PicsouDBO::unwrapped);
     }
 }
 
@@ -57,15 +58,17 @@ bool PicsouDBO::unwrap(const QString &pswd)
         LOG_CRITICAL("CryptoCtx::unwrap() operation failed.");
         LOG_BOOL_RETURN(false);
     }
-    QJsonDocument doc=QJsonDocument::fromBinaryData(data);
+    QJsonParseError err;
+    QJsonDocument doc=QJsonDocument::fromJson(data, &err);
     if(doc.isNull()) {
-        LOG_CRITICAL("Crypto::decrypt() operation failed.");
+        LOG_CRITICAL("failed to parse JSON: "<<err.errorString());
         LOG_BOOL_RETURN(false);
     }
     if(!read_unwrapped(doc.object())) {
         LOG_CRITICAL("read_unwrapped() operation failed.");
         LOG_BOOL_RETURN(false);
     }
+    emit unwrapped();
     LOG_BOOL_RETURN(true);
 }
 
@@ -116,7 +119,7 @@ bool PicsouDBO::write_wrapped(QJsonObject &json) const
             LOG_BOOL_RETURN(false);
         }
         QJsonDocument wdoc(wjson);
-        if(!m_wctx.wrap(wdoc.toBinaryData(), wrapped_data)) {
+        if(!m_wctx.wrap(wdoc.toJson(QJsonDocument::Compact), wrapped_data)) {
             LOG_CRITICAL("CryptoCtx::wrap() operation failed.");
             LOG_BOOL_RETURN(false);
         }

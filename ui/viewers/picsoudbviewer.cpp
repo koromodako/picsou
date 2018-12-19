@@ -35,7 +35,7 @@ PicsouDBViewer::PicsouDBViewer(PicsouUIService *ui_svc,
     ui(new Ui::PicsouDBViewer)
 {
     ui->setupUi(this);
-    connect(ui_svc, &PicsouUIService::model_updated, this, &PicsouDBViewer::refresh);
+    connect(ui_svc, &PicsouUIService::notify_model_updated, this, &PicsouDBViewer::refresh);
     /* user editor */
     connect(ui->add_user, &QPushButton::clicked, this, &PicsouDBViewer::add_user);
     connect(ui->action_add_user, &QAction::triggered, this, &PicsouDBViewer::add_user);
