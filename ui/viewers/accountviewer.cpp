@@ -41,7 +41,7 @@ AccountViewer::AccountViewer(PicsouUIService *ui_svc,
     ui(new Ui::AccountViewer)
 {
     ui->setupUi(this);
-    connect(ui_svc, &PicsouUIService::model_updated, this, &AccountViewer::refresh);
+    connect(ui_svc, &PicsouUIService::notify_model_updated, this, &AccountViewer::refresh);
 
     m_table=new PicsouTableWidget;
     ui->ops_layout->insertWidget(0, m_table);
@@ -101,6 +101,10 @@ void AccountViewer::refresh(const PicsouDBPtr db)
 {
     OperationCollection ops;
     AccountPtr account=db->find_account(mod_obj_id());
+    if(account.isNull()) {
+        LOG_WARNING("failed to find account!");
+        return;
+    }
     /* payment methods */
     ui->payment_methods->clear();
     for(const auto &pm : account->payment_methods(true)) {

@@ -39,7 +39,8 @@ public:
         DB_CLOSED,
         DB_OPENED,
         DB_SAVED,
-        DB_MODIFIED
+        DB_MODIFIED,
+        DB_UNWRAPPED
     };
 
     virtual ~MainWindow();
@@ -50,6 +51,7 @@ public slots:
     void db_opened();
     void db_saved();
     void db_modified();
+    void db_unwrapped();
     void db_closed();
 
     void op_canceled();

@@ -43,7 +43,7 @@ OperationViewer::OperationViewer(PicsouUIService *ui_svc,
     ui(new Ui::OperationViewer)
 {
     ui->setupUi(this);
-    connect(ui_svc, &PicsouUIService::model_updated, this, &OperationViewer::refresh);
+    connect(ui_svc, &PicsouUIService::notify_model_updated, this, &OperationViewer::refresh);
 
     m_table=new PicsouTableWidget;
     ui->main_layout->insertWidget(0, m_table);

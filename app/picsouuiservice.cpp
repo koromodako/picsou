@@ -40,6 +40,7 @@
 #include "ui/dialogs/aboutpicsou.h"
 #include "ui/dialogs/usereditor.h"
 
+#include "ui/viewers/lockedobjectviewer.h"
 #include "ui/viewers/operationviewer.h"
 #include "ui/viewers/picsoudbviewer.h"
 #include "ui/viewers/accountviewer.h"
@@ -70,7 +71,8 @@ PicsouUIService::PicsouUIService(PicsouApplication *papp) :
 bool PicsouUIService::initialize()
 {
     LOG_IN_VOID();
-    connect(papp()->model_svc(), &PicsouModelService::updated, this, &PicsouUIService::notify_model_updated);
+    connect(papp()->model_svc(), &PicsouModelService::updated, this, &PicsouUIService::notified_model_updated);
+    connect(papp()->model_svc(), &PicsouModelService::unwrapped, this, &PicsouUIService::notified_model_unwrapped);
     LOG_BOOL_RETURN(true);
 }
 
@@ -130,7 +132,8 @@ bool PicsouUIService::populate_db_tree(QTreeWidget* const tree)
     }
 
     static const QIcon root_ico=QIcon(":/resources/material-design/svg/database.svg"),
-                       user_ico=QIcon(":/resources/material-design/svg/account-circle.svg"),
+                       lock_ico=QIcon(":/resources/material-design/svg/folder-lock.svg"),
+                       unlock_ico=QIcon(":/resources/material-design/svg/folder-lock-open.svg"),
                        account_ico=QIcon(":/resources/material-design/svg/account-card-details.svg"),
                        calendar_ico=QIcon(":/resources/material-design/svg/calendar-blank.svg");
 
@@ -141,7 +144,13 @@ bool PicsouUIService::populate_db_tree(QTreeWidget* const tree)
     root_itm=new PicsouTreeItem(tree, PicsouTreeItem::T_ROOT, root_ico, db->name(), db->id());
 
     for(const auto &user : db->users(true)) {
-        user_itm=new PicsouTreeItem(root_itm, PicsouTreeItem::T_USER, user_ico, user->name(), user->id());
+
+        if(user->wrapped()) {
+            user_itm=new PicsouTreeItem(root_itm, PicsouTreeItem::T_USER, lock_ico, user->name(), user->id(), -1, -1, true);
+            continue;
+        } else {
+            user_itm=new PicsouTreeItem(root_itm, PicsouTreeItem::T_USER, unlock_ico, user->name(), user->id());
+        }
 
         AccountPtrList accounts=user->accounts(true);
         for(const auto &account : accounts) {
@@ -307,36 +316,40 @@ PicsouUIViewer *PicsouUIService::viewer_from_item(QTreeWidgetItem *item)
         return w;
     }
     PicsouTreeItem *pitem=static_cast<PicsouTreeItem*>(item);
-    switch (pitem->type()) {
-    case PicsouTreeItem::T_ROOT:
-        w=new PicsouDBViewer(this, pitem->mod_obj_id());
-        break;
-    case PicsouTreeItem::T_USER:
-        w=new UserViewer(this, pitem->mod_obj_id());
-        break;
-    case PicsouTreeItem::T_ACCOUNT:
-        w=new AccountViewer(this,
-                            pitem->parent()->mod_obj_id(),
-                            pitem->mod_obj_id());
-        break;
-    case PicsouTreeItem::T_YEAR:
-        w=new OperationViewer(this,
-                              pitem->parent()->parent()->mod_obj_id(),
-                              pitem->parent()->mod_obj_id(),
-                              OperationViewer::VS_YEAR,
-                              pitem->year());
-        break;
-    case PicsouTreeItem::T_MONTH:
-        w=new OperationViewer(this,
-                              pitem->parent()->parent()->parent()->mod_obj_id(),
-                              pitem->parent()->parent()->mod_obj_id(),
-                              OperationViewer::VS_MONTH,
-                              pitem->year(),
-                              pitem->month());
-        break;
+    if(pitem->wrapped()) {
+        w=new LockedObjectViewer(this, pitem->mod_obj_id());
+    } else {
+        switch (pitem->type()) {
+        case PicsouTreeItem::T_ROOT:
+            w=new PicsouDBViewer(this, pitem->mod_obj_id());
+            break;
+        case PicsouTreeItem::T_USER:
+            w=new UserViewer(this, pitem->mod_obj_id());
+            break;
+        case PicsouTreeItem::T_ACCOUNT:
+            w=new AccountViewer(this,
+                                pitem->parent()->mod_obj_id(),
+                                pitem->mod_obj_id());
+            break;
+        case PicsouTreeItem::T_YEAR:
+            w=new OperationViewer(this,
+                                  pitem->parent()->parent()->mod_obj_id(),
+                                  pitem->parent()->mod_obj_id(),
+                                  OperationViewer::VS_YEAR,
+                                  pitem->year());
+            break;
+        case PicsouTreeItem::T_MONTH:
+            w=new OperationViewer(this,
+                                  pitem->parent()->parent()->parent()->mod_obj_id(),
+                                  pitem->parent()->parent()->mod_obj_id(),
+                                  OperationViewer::VS_MONTH,
+                                  pitem->year(),
+                                  pitem->month());
+            break;
+        }
     }
     /* trigger viewer content update */
-    emit model_updated(papp()->model_svc()->db());
+    emit notify_model_updated(papp()->model_svc()->db());
     LOG_DEBUG("-> w="<<w);
     return w;
 }
@@ -368,6 +381,27 @@ void PicsouUIService::show_license()
 {
     LOG_IN_VOID();
     QDesktopServices::openUrl(QUrl(PICSOU_LICENSE_URL, QUrl::StrictMode));
+    LOG_VOID_RETURN();
+}
+
+void PicsouUIService::unlock(QUuid id)
+{
+    LOG_IN_VOID();
+    UserPtr user=papp()->model_svc()->find_user(id);
+    if(user.isNull()) {
+        emit svc_op_failed(tr("Failed to find user."));
+        LOG_VOID_RETURN();
+    }
+    QString pswd;
+    if(!prompt_for_pswd(user->name(), pswd)) {
+        emit svc_op_canceled();
+        LOG_VOID_RETURN();
+    }
+    if(!user->unwrap(pswd)) {
+        emit svc_op_failed(tr("Failed to unwrap user."));
+        LOG_VOID_RETURN();
+    }
+    emit unlocked();
     LOG_VOID_RETURN();
 }
 
@@ -661,6 +695,10 @@ void PicsouUIService::pm_edit(QUuid account_id, QUuid pm_id)
         LOG_VOID_RETURN();
     }
     PaymentMethodPtr pm=account->find_payment_method(pm_id);
+    if(pm.isNull()) {
+        emit svc_op_failed(tr("Internal error: invalid payment method pointer."));
+        LOG_VOID_RETURN();
+    }
     PaymentMethodEditor editor(m_mw, pm->name());
     if(editor.exec()==QDialog::Rejected) {
         emit svc_op_canceled();
@@ -753,6 +791,10 @@ void PicsouUIService::sop_edit(QUuid user_id, QUuid account_id, QUuid sop_id)
         LOG_VOID_RETURN();
     }
     ScheduledOperationPtr sop=account->find_scheduled_operation(sop_id);
+    if(sop.isNull()) {
+        emit svc_op_failed(tr("Internal error: invalid scheduled operation pointer."));
+        LOG_VOID_RETURN();
+    }
     ScheduledOperationEditor editor(m_mw,
                                     sop->amount(),
                                     sop->budget(),
@@ -937,13 +979,9 @@ void PicsouUIService::ops_export(QUuid account_id)
         LOG_VOID_RETURN();
     }
     QStringList formats;
-    formats<<"CSV (*.csv)"
-           <<"XML (*.xml)"
-           <<"JSON (*.json)";
+    formats<<"CSV (*.csv)"<<"XML (*.xml)"<<"JSON (*.json)";
     QList<PicsouModelService::ImportExportFormat> eformats;
-    eformats<<PicsouModelService::CSV
-            <<PicsouModelService::XML
-            <<PicsouModelService::JSON;
+    eformats<<PicsouModelService::CSV<<PicsouModelService::XML<<PicsouModelService::JSON;
     bool ok;
     QString fmt_str=QInputDialog::getItem(m_mw, tr("Which format?"), tr("Select output format"), formats, 0, false, &ok);
     if(!ok) {
@@ -967,11 +1005,19 @@ void PicsouUIService::ops_export(QUuid account_id)
     LOG_VOID_RETURN();
 }
 
-void PicsouUIService::notify_model_updated(const PicsouDBPtr db)
+void PicsouUIService::notified_model_updated(const PicsouDBPtr db)
 {
     LOG_IN_VOID();
-    emit model_updated(db);
+    emit notify_model_updated(db);
     emit db_modified();
+    LOG_VOID_RETURN();
+}
+
+void PicsouUIService::notified_model_unwrapped(const PicsouDBPtr db)
+{
+    LOG_IN_VOID();
+    emit notify_model_unwrapped(db);
+    emit db_unwrapped();
     LOG_VOID_RETURN();
 }
 

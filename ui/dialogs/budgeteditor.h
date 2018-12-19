@@ -19,6 +19,7 @@
 #define BUDGETEDITOR_H
 
 #include <QDialog>
+#include "utils/amount.h"
 
 namespace Ui {
 class BudgetEditor;
@@ -31,11 +32,11 @@ class BudgetEditor : public QDialog
 public:
     virtual ~BudgetEditor();
     explicit BudgetEditor(QWidget *parent,
-                          double amount = 0.,
+                          const Amount &amount = 0.,
                           const QString &name = QString(),
                           const QString &description = QString());
 
-    inline double amount() const { return m_amount; }
+    inline Amount amount() const { return m_amount; }
     inline QString name() const { return m_name; }
     inline QString description() const { return m_description; }
 
@@ -43,7 +44,7 @@ public slots:
     void accept();
 
 private:
-    double m_amount;
+    Amount m_amount;
     QString m_name;
     QString m_description;
     Ui::BudgetEditor *ui;

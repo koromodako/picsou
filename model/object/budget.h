@@ -18,7 +18,8 @@
 #ifndef BUDGET_H
 #define BUDGET_H
 
-#include "../picsoudbo.h"
+#include "utils/amount.h"
+#include "model/picsoudbo.h"
 
 class Budget : public PicsouDBO
 {
@@ -29,16 +30,16 @@ public:
     static const QString KW_DESCRIPTION;
 
     Budget(PicsouDBO *parent);
-    Budget(double amount,
+    Budget(const Amount &amount,
            const QString &name,
            const QString &description,
            PicsouDBO *parent);
 
-    void update(double amount,
+    void update(const Amount &amount,
                 const QString &name,
                 const QString &description);
 
-    inline double amount() const { return m_amount; }
+    inline Amount amount() const { return m_amount; }
     inline QString name() const { return m_name; }
     inline QString description() const { return m_description; }
 
@@ -48,7 +49,7 @@ public:
     bool operator <(const Budget &other);
 
 private:
-    double m_amount;
+    Amount m_amount;
     QString m_name;
     QString m_description;
 };

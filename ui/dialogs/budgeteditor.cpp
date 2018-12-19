@@ -24,7 +24,7 @@ BudgetEditor::~BudgetEditor()
 }
 
 BudgetEditor::BudgetEditor(QWidget *parent,
-                           double amount,
+                           const Amount &amount,
                            const QString &name,
                            const QString &description) :
     QDialog(parent),
@@ -39,7 +39,7 @@ BudgetEditor::BudgetEditor(QWidget *parent,
 
     ui->amount->setPrefix(tr("$"));
     ui->amount->setSuffix(tr(" "));
-    ui->amount->setValue(m_amount);
+    ui->amount->setValue(m_amount.value());
 
     if(!m_name.isNull()) {
         ui->name->setText(m_name);

@@ -17,7 +17,7 @@
  */
 #include "userviewer.h"
 #include "ui_userviewer.h"
-
+#include "utils/macro.h"
 #include "app/picsouuiservice.h"
 #include "ui/items/picsoulistitem.h"
 
@@ -34,7 +34,7 @@ UserViewer::UserViewer(PicsouUIService *ui_svc,
 {
     ui->setupUi(this);
 
-    connect(ui_svc, &PicsouUIService::model_updated, this, &UserViewer::refresh);
+    connect(ui_svc, &PicsouUIService::notify_model_updated, this, &UserViewer::refresh);
     /* budget editor */
     connect(ui->add_budget, &QPushButton::clicked, this, &UserViewer::add_budget);
     connect(ui->action_add_budget, &QAction::triggered, this, &UserViewer::add_budget);
@@ -61,7 +61,10 @@ void UserViewer::refresh(const PicsouDBPtr db)
 {
     bool has_accounts, has_budgets;
     UserPtr user=db->find_user(mod_obj_id());
-
+    if(user.isNull()) {
+        LOG_WARNING("failed to find user!");
+        return;
+    }
     ui->accounts_list->clear();
     for(const auto &account : user->accounts(true)) {
         new PicsouListItem(account->name(), ui->accounts_list, account->id());
@@ -69,7 +72,8 @@ void UserViewer::refresh(const PicsouDBPtr db)
 
     ui->budgets_list->clear();
     for(const auto &budget : user->budgets(true)) {
-        new PicsouListItem(budget->name(), ui->budgets_list, budget->id());
+        new PicsouListItem(tr("%0 (%1)").arg(budget->name(), budget->amount().to_str(true)),
+                           ui->budgets_list, budget->id());
     }
 
     has_accounts=(ui->accounts_list->count()>0);

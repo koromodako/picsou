@@ -33,7 +33,7 @@ bool convert_110_200(QJsonDocument *doc, PicsouUIService *ui_svc)
         }
         QString wdat;
         QJsonDocument wdoc(user_wrapped);
-        if(!wctx.wrap(wdoc.toBinaryData(), wdat)) {
+        if(!wctx.wrap(wdoc.toJson(QJsonDocument::Compact), wdat)) {
             LOG_CRITICAL("CryptoCtx::wrap() operation failed.");
             LOG_BOOL_RETURN(false);
         }

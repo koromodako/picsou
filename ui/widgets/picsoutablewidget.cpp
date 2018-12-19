@@ -61,6 +61,7 @@ void PicsouTableWidget::refresh(OperationCollection ops)
     static const int alpha=32;
     static const QIcon debit_icon=QIcon(":/resources/material-design/svg/trending-down.svg"),
                        credit_icon=QIcon(":/resources/material-design/svg/trending-up.svg"),
+                       neutral_icon=QIcon(":/resources/material-design/svg/trending-neutral.svg"),
                        scheduled_icon=QIcon(":/resources/material-design/svg/calendar.svg");
     static const QColor debit_color=QColor(5, 5, 5, alpha),
                         credit_color=QColor(0, 255, 0, alpha);
@@ -76,6 +77,10 @@ void PicsouTableWidget::refresh(OperationCollection ops)
     for(const auto &op : ops.list()) {
         items.clear();
         switch (op->type()) {
+        case Operation::NEUTRAL:
+            icon=neutral_icon;
+            bgcolor=Qt::white;
+            break;
         case Operation::DEBIT:
             icon=debit_icon;
             bgcolor=debit_color;

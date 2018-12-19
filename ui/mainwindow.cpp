@@ -91,6 +91,7 @@ MainWindow::MainWindow(PicsouUIService *ui_svc, QWidget *parent) :
     connect(ui_svc, &PicsouUIService::db_opened, this, &MainWindow::db_opened);
     connect(ui_svc, &PicsouUIService::db_saved, this, &MainWindow::db_saved);
     connect(ui_svc, &PicsouUIService::db_modified, this, &MainWindow::db_modified);
+    connect(ui_svc, &PicsouUIService::db_unwrapped, this, &MainWindow::db_unwrapped);
     connect(ui_svc, &PicsouUIService::db_closed, this, &MainWindow::db_closed);
     connect(ui_svc, &PicsouUIService::svc_op_canceled, this, &MainWindow::op_canceled);
     connect(ui_svc, &PicsouUIService::svc_op_failed, this, &MainWindow::op_failed);
@@ -110,6 +111,13 @@ void MainWindow::db_modified()
 {
     LOG_IN_VOID();
     refresh(DB_MODIFIED);
+    LOG_VOID_RETURN();
+}
+
+void MainWindow::db_unwrapped()
+{
+    LOG_IN_VOID();
+    refresh(DB_UNWRAPPED);
     LOG_VOID_RETURN();
 }
 
@@ -331,6 +339,14 @@ void MainWindow::refresh(MainWindow::State state)
         refresh_tree();
         /* refresh search filters */
         refresh_user_cb();
+        break;
+    case DB_UNWRAPPED:
+        /* update tree widget */
+        refresh_tree();
+        /* refresh search filters */
+        refresh_user_cb();
+        /* update viewer */
+        p_update_viewer(ui->tree->topLevelItem(0), 0);
         break;
     case DB_SAVED:
         /* update menu actions */
