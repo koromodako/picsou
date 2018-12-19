@@ -98,7 +98,7 @@ QByteArray CryptoBuffer::random_ba(int size, CryptoBuffer::RandomLevel lvl)
 #define CHECK_LIB_INITIALIZATION() \
     do { \
         if(!lib_initialized()) { \
-            LOG_CRITICAL("CryptoCtx::lib_init() needs to be called first."); \
+            LOG_CRITICAL("underlying cryptographic library needs to be initialized first."); \
             LOG_BOOL_RETURN(false); \
         } \
     } while(0)
@@ -118,6 +118,10 @@ QByteArray CryptoBuffer::random_ba(int size, CryptoBuffer::RandomLevel lvl)
             LOG_BOOL_RETURN(false); \
         } \
     } while(0)
+
+#define LOG_CRITICAL_GCRYPT(message, err) \
+    LOG_CRITICAL(message); \
+    LOG_CRITICAL("libgcrypt error: "<<gcry_strerror(err))
 
 bool CryptoCtx::lib_init()
 {
@@ -271,12 +275,13 @@ bool CryptoCtx::derive(const QString &pswd, const QByteArray &salt, CryptoBuffer
     LOG_IN("pswd,key");
     CHECK_LIB_INITIALIZATION();
     QByteArray pswdba=pswd.toUtf8();
-    if(!gcry_kdf_derive(pswdba.data(), static_cast<size_t>(pswdba.size()),
-                        GCRY_KDF_PBKDF2, GCRY_MD_SHA1,
-                        salt.data(), static_cast<size_t>(salt.size()),
-                        CRYPTO_ITER_COUNT,
-                        static_cast<size_t>(key->size()), key->rwbuf())) {
-        LOG_CRITICAL("failed to derive key from given password.");
+    gcry_error_t err;
+    if((err=gcry_kdf_derive(pswdba.data(), static_cast<size_t>(pswdba.size()),
+                             GCRY_KDF_PBKDF2, GCRY_MD_SHA1,
+                             salt.data(), static_cast<size_t>(salt.size()),
+                             CRYPTO_ITER_COUNT,
+                             static_cast<size_t>(key->size()), key->rwbuf()))) {
+        LOG_CRITICAL_GCRYPT("failed to derive key from given password.", err);
         LOG_BOOL_RETURN(false);
     }
     LOG_BOOL_RETURN(true);
@@ -285,30 +290,43 @@ bool CryptoCtx::derive(const QString &pswd, const QByteArray &salt, CryptoBuffer
 bool cipher_prepare(gcry_cipher_hd_t *hd, const CryptoBufferShPtr &key, const QByteArray &iv)
 {
     LOG_IN("hd="<<hd<<",key,iv");
-    if(!gcry_cipher_open(hd, GCRY_CIPHER_AES, GCRY_CIPHER_MODE_GCM, GCRY_CIPHER_SECURE)) {
-        LOG_CRITICAL("failed to create encryption cipher.");
+    gcry_error_t err;
+    if((err=gcry_cipher_open(hd, GCRY_CIPHER_AES, GCRY_CIPHER_MODE_GCM, GCRY_CIPHER_SECURE))) {
+        LOG_CRITICAL_GCRYPT("failed to create encryption cipher.", err);
         LOG_BOOL_RETURN(false);
     }
     /* set key */
-    if(!gcry_cipher_setkey(*hd, key->rbuf(), static_cast<size_t>(key->size()))) {
-        LOG_CRITICAL("failed to set cipher key.");
+    if((err=gcry_cipher_setkey(*hd, key->rbuf(), static_cast<size_t>(key->size())))) {
+        LOG_CRITICAL_GCRYPT("failed to set cipher key.", err);
         LOG_BOOL_RETURN(false);
     }
     /* set IV */
-    if(!gcry_cipher_setiv(*hd, iv.data(), static_cast<size_t>(iv.size()))) {
-        LOG_CRITICAL("failed to set cipher IV.");
+    if((err=gcry_cipher_setiv(*hd, iv.data(), static_cast<size_t>(iv.size())))) {
+        LOG_CRITICAL_GCRYPT("failed to set cipher IV.", err);
         LOG_BOOL_RETURN(false);
     }
     LOG_BOOL_RETURN(true);
 }
 
-QByteArray cipher_gettag(gcry_cipher_hd_t *hd) {
+QByteArray cipher_gettag(gcry_cipher_hd_t *hd)
+{
     QByteArray tag(CRYPTO_TAG_SIZE, 0);
-    if(!gcry_cipher_gettag(*hd, tag.data(), static_cast<size_t>(tag.size()))) {
-        LOG_CRITICAL("failed to get cipher tag.");
+    gcry_error_t err;
+    if((err=gcry_cipher_gettag(*hd, tag.data(), static_cast<size_t>(tag.size())))) {
+        LOG_CRITICAL_GCRYPT("failed to get cipher tag.", err);
         return QByteArray();
     }
     return tag;
+}
+
+bool cipher_checktag(gcry_cipher_hd_t *hd, const QByteArray &tag)
+{
+    gcry_error_t err;
+    if((err=gcry_cipher_checktag(*hd, tag.data(), static_cast<size_t>(tag.size())))) {
+        LOG_CRITICAL_GCRYPT("failed to get cipher tag.", err);
+        return false;
+    }
+    return true;
 }
 
 bool CryptoCtx::encrypt(const CryptoBufferShPtr &key, const QByteArray &in, QString &out) const
@@ -331,8 +349,9 @@ bool CryptoCtx::encrypt(const CryptoBufferShPtr &key, const QByteArray &in, QStr
     encbuf.append(pad, static_cast<char>(pad));
     size_t padded_cdata_sz=static_cast<size_t>(encbuf.size());
     /* encrypt buffer */
-    if(!gcry_cipher_encrypt(hd, encbuf.data(), padded_cdata_sz, nullptr, 0)) {
-        LOG_CRITICAL("failed to encrypt data.");
+    gcry_error_t err;
+    if((err=gcry_cipher_encrypt(hd, encbuf.data(), padded_cdata_sz, nullptr, 0))) {
+        LOG_CRITICAL_GCRYPT("failed to encrypt data.", err);
         gcry_cipher_close(hd);
         LOG_BOOL_RETURN(false);
     }
@@ -370,8 +389,9 @@ bool CryptoCtx::encrypt(const CryptoBufferShPtr &key, const CryptoBufferShPtr &i
     memset(encbuf->rwbuf(), pad, static_cast<size_t>(encbuf->size()));
     memcpy(encbuf->rwbuf(), in->rbuf(), static_cast<size_t>(in->size()));
     /* encrypt buffer */
-    if(!gcry_cipher_encrypt(hd, encbuf->rwbuf(), static_cast<size_t>(encbuf->size()), nullptr, 0)) {
-        LOG_CRITICAL("failed to encrypt data.");
+    gcry_error_t err;
+    if((err=gcry_cipher_encrypt(hd, encbuf->rwbuf(), static_cast<size_t>(encbuf->size()), nullptr, 0))) {
+        LOG_CRITICAL_GCRYPT("failed to encrypt data.", err);
         gcry_cipher_close(hd);
         LOG_BOOL_RETURN(false);
     }
@@ -408,16 +428,17 @@ bool CryptoCtx::decrypt(const CryptoBufferShPtr &key, const QString &in, QByteAr
         LOG_BOOL_RETURN(false);
     }
     /* decrypt buffer */
-    if(!gcry_cipher_decrypt(hd, decbuf.data(), static_cast<size_t>(decbuf.size()), nullptr, 0)) {
-        LOG_CRITICAL("failed to get cipher tag.");
+    gcry_error_t err;
+    if((err=gcry_cipher_decrypt(hd, decbuf.data(), static_cast<size_t>(decbuf.size()), nullptr, 0))) {
+        LOG_CRITICAL_GCRYPT("failed to get cipher tag.", err);
         gcry_cipher_close(hd);
         LOG_BOOL_RETURN(false);
     }
     /* remove padding */
     decbuf.chop(decbuf.back());
     /* finalize cipher */
-    if(!gcry_cipher_checktag(hd, tag.data(), static_cast<size_t>(tag.size()))) {
-        LOG_CRITICAL("failed to get cipher tag.");
+    if(!cipher_checktag(&hd, tag)) {
+        LOG_CRITICAL("cipher tag check failed.");
         gcry_cipher_close(hd);
         LOG_BOOL_RETURN(false);
     }
@@ -443,10 +464,11 @@ bool CryptoCtx::decrypt(const CryptoBufferShPtr &key, const QString &in, CryptoB
         LOG_BOOL_RETURN(false);
     }
     /* decrypt buffer */
+    gcry_error_t err;
     CryptoBufferShPtr decbuf=CryptoBuffer::malloc(encbuf.size());
     memcpy(decbuf->rwbuf(), encbuf, static_cast<size_t>(decbuf->size()));
-    if(!gcry_cipher_decrypt(hd, decbuf->rwbuf(), static_cast<size_t>(decbuf->size()), nullptr, 0)) {
-        LOG_CRITICAL("failed to get cipher tag.");
+    if((err=gcry_cipher_decrypt(hd, decbuf->rwbuf(), static_cast<size_t>(decbuf->size()), nullptr, 0))) {
+        LOG_CRITICAL_GCRYPT("failed to get cipher tag.", err);
         gcry_cipher_close(hd);
         LOG_BOOL_RETURN(false);
     }
@@ -455,8 +477,8 @@ bool CryptoCtx::decrypt(const CryptoBufferShPtr &key, const QString &in, CryptoB
     CryptoBufferShPtr unpadded=CryptoBuffer::malloc(decbuf->size()-pad);
     memcpy(unpadded->rwbuf(), decbuf->rbuf(), static_cast<size_t>(decbuf->size()-pad));
     /* finalize cipher */
-    if(!gcry_cipher_checktag(hd, tag.data(), static_cast<size_t>(tag.size()))) {
-        LOG_CRITICAL("failed to get cipher tag.");
+    if(!cipher_checktag(&hd, tag)) {
+        LOG_CRITICAL("cipher tag check failed.");
         gcry_cipher_close(hd);
         LOG_BOOL_RETURN(false);
     }
