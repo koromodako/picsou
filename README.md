@@ -13,9 +13,9 @@ Releases can be found [here](https://github.com/koromodako/picsou/releases).
 
 Successfully built using the following configuration :
 
- + Ubuntu 18.04 LTS
+ + Ubuntu 18.10 LTS
  + Clang 6.0.0
- + Qt 5.10.1
+ + Qt 5.12.0
  + libgcrypt 1.8.1
  
 ### Windows

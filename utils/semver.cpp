@@ -80,6 +80,7 @@ QString SemVer::to_str(SemVer::Format fmt) const
     case SemVer::MM_FORMAT: return QString("%0.%1").arg(m_major).arg(m_minor);
     case SemVer::MMP_FORMAT: return QString("%0.%1.%2").arg(m_major).arg(m_minor).arg(m_patch);
     }
+    return QString();
 }
 
 
