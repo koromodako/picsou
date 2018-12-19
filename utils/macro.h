@@ -36,8 +36,8 @@ static const QString LOG_CLR_ERR="31";
 #define IS_FLAG_SET(field, flag) (((field)&(flag))==(flag))
 
 #ifdef COLORIZE
-#    define LOG(log_func, lvl, color, ...) \
-    { \
+#   define LOG(log_func, lvl, color, ...) \
+    do { \
         QDebug debug=log_func(); \
         debug.nospace(); \
         debug.noquote(); \
@@ -49,10 +49,10 @@ static const QString LOG_CLR_ERR="31";
         debug.quote(); \
         debug<<__VA_ARGS__ \
              <<"\x1b[0m"; \
-    }
+    } while(0)
 #else /* COLORIZE */
-#    define LOG(log_func, lvl, color, ...) \
-    { \
+#   define LOG(log_func, lvl, color, ...) \
+    do { \
         QDebug debug=log_func(); \
         debug.nospace(); \
         debug.noquote(); \
@@ -62,7 +62,7 @@ static const QString LOG_CLR_ERR="31";
              <<(__func__)<<") - "; \
         debug.quote(); \
         debug<<__VA_ARGS__; \
-    }
+    } while(0)
 #endif /* COLORIZE */
 
 #ifdef QT_DEBUG
@@ -79,13 +79,13 @@ static const QString LOG_CLR_ERR="31";
 #define LOG_IN_VOID(...)    LOG_DEBUG("<- (void)")
 
 #define LOG_BOOL_RETURN(bool_expr) \
-    { \
+    do { \
         bool result=(bool_expr); \
-        LOG_DEBUG("-> "<<BOOL2STR(result)) \
+        LOG_DEBUG("-> "<<BOOL2STR(result)); \
         return result; \
-    }
+    } while(0)
 #define LOG_VOID_RETURN(...) \
-    LOG_DEBUG("-> (void)") \
+    LOG_DEBUG("-> (void)"); \
     return
 
 #endif // MACRO_H

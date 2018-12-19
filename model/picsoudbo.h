@@ -18,6 +18,8 @@
 #ifndef PICSOUDBO_H
 #define PICSOUDBO_H
 
+#include "utils/crypto_ctx.h"
+
 #include <QUuid>
 #include <QObject>
 #include <QJsonArray>
@@ -28,14 +30,16 @@ class PicsouDBO : public QObject
 {
     Q_OBJECT
 public:
-    static const QString KW_WKEY;
     static const QString KW_WDAT;
+    static const QString KW_WKEY;
+    static const QString KW_WSALT;
+
 
     PicsouDBO(bool valid, PicsouDBO *parent);
 
     inline QUuid id() const { return m_id; }
     inline bool valid() const { return m_valid; }
-    inline bool wrapped() const { return m_wrapped; }
+    inline bool wrapped() const { return !m_wctx.dpk_cached(); }
 
     inline void set_parent(PicsouDBO *parent) { m_parent=parent; }
 
@@ -60,10 +64,8 @@ protected:
 private:
     QUuid m_id;
     bool m_valid;
-    bool m_wrapped;
-    QString m_wkey;
     QString m_wdat;
-    QString m_pswd;
+    CryptoCtx m_wctx;
     PicsouDBO *m_parent;
 };
 
@@ -75,17 +77,17 @@ private:
     typedef QList<ClassShPtr> ClassShPtrList
 
 #define DELETE_HASH_CONTENT(Class, hash) \
-    { \
+    do { \
         QHash<QUuid, Class>::iterator it__=(hash).begin(); \
         while(it__!=(hash).end()) { \
             delete it__.value(); \
             it__++; \
         } \
         (hash).clear(); \
-    }
+    } while(0)
 
 #define JSON_CHECK_KEYS(list) \
-    { \
+    do { \
         QStringList keys__=(list); \
         for(auto i__ : keys__) { \
             if(!json.contains(i__)) { \
@@ -93,10 +95,10 @@ private:
                 LOG_BOOL_RETURN(false); \
             } \
         } \
-    }
+    } while(0)
 
 #define JSON_READ_LIST(json, name, member, Class, parent) \
-    { \
+    do { \
         Class *obj__; \
         QJsonArray array__=(json)[(name)].toArray(); \
         for(int i__=0; i__<array__.size(); ++i__) { \
@@ -108,10 +110,10 @@ private:
             } \
             (member).insert(obj__->id(), QPointer<Class>(obj__)); \
         } \
-    }
+    } while(0)
 
 #define JSON_WRITE_LIST(json, name, list) \
-    { \
+    do { \
         QJsonObject obj__; \
         QJsonArray array__; \
         for(int i__=0; i__<(list).size(); ++i__) { \
@@ -123,6 +125,6 @@ private:
             array__.append(obj__); \
         } \
         (json)[(name)]=array__; \
-    }
+    } while(0)
 
 #endif // PICSOUDBO_H

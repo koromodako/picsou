@@ -97,7 +97,7 @@ bool ScheduledOperation::read(const QJsonObject &json)
 
 bool ScheduledOperation::write(QJsonObject &json) const
 {
-    LOG_IN("<QJsonObject>")
+    LOG_IN("<QJsonObject>");
     json[KW_NAME]=m_name;
     json[Schedule::KW_FROM_YEAR]=m_schedule.from().year();
     json[Schedule::KW_FROM_MONTH]=m_schedule.from().month();
