@@ -108,14 +108,16 @@ OperationCollection PicsouDB::ops(QUuid account_id,
         return selected_ops;
     }
     for(const auto &sop : account->scheduled_ops()) {
+        LOG_DEBUG("sop->name="<<sop->name());
         for(const auto &date : sop->schedule().dates(year, month)) {
+            LOG_DEBUG("generated date="<<date);
             Operation *op=new Operation(sop->amount(),
                                         date,
                                         sop->budget(),
                                         sop->recipient(),
                                         sop->description(),
                                         sop->payment_method(),
-                                        account.data());
+                                        account);
             op->mark_scheduled();
             selected_ops.append(OperationShPtr(op));
         }

@@ -175,6 +175,7 @@ bool CryptoCtx::init(const QString &pswd)
 {
     LOG_IN("pswd");
     CHECK_LIB_INITIALIZATION();
+    /* if salt is already cached something is wrong */
     if(salt_cached()) {
         LOG_CRITICAL("crypto context has been initialized already.");
         LOG_BOOL_RETURN(false);
@@ -204,6 +205,7 @@ bool CryptoCtx::wrap(const QByteArray &cdata, QString &wdata) const
     CHECK_LIB_INITIALIZATION();
     CHECK_SALT_CACHED();
     CHECK_DPK_CACHED();
+    /* encrypt given data */
     if(!encrypt(m_dpk, cdata, wdata)) {
         LOG_CRITICAL("data encryption failed.");
         LOG_BOOL_RETURN(false);
@@ -216,24 +218,29 @@ bool CryptoCtx::unwrap(const QString &pswd, const QString &wdata, QByteArray &cd
     LOG_IN("pswd,wdata,cdata");
     CHECK_LIB_INITIALIZATION();
     CHECK_SALT_CACHED();
+    /* if DPK is already cached something is wrong */
     if(dpk_cached()) {
         LOG_CRITICAL("dpk is already cached meaning the object has been unwrapped already.");
         LOG_BOOL_RETURN(false);
     }
+    /* retrieve MK */
     CryptoBufferShPtr mk=CryptoBuffer::malloc(CRYPTO_KEY_SIZE);
     if(!derive(pswd, m_salt, mk)) {
         LOG_CRITICAL("key derivation failed.");
         LOG_BOOL_RETURN(false);
     }
-    m_dpk=CryptoBuffer::malloc(CRYPTO_KEY_SIZE);
-    if(!decrypt(mk, m_wkey, m_dpk)) {
+    /* decrypt DPK with MK */
+    CryptoBufferShPtr dpk=CryptoBuffer::malloc(CRYPTO_KEY_SIZE);
+    if(!decrypt(mk, m_wkey, dpk)) {
         LOG_CRITICAL("invalid user password.");
         LOG_BOOL_RETURN(false);
     }
-    if(!decrypt(m_dpk, wdata, cdata)) {
+    /* decrypt data with DPK */
+    if(!decrypt(dpk, wdata, cdata)) {
         LOG_CRITICAL("failed to decrypt data.");
         LOG_BOOL_RETURN(false);
     }
+    m_dpk=dpk;
     LOG_BOOL_RETURN(true);
 }
 
@@ -242,21 +249,25 @@ bool CryptoCtx::rewrap(const QString &prev_pswd, const QString &next_pswd)
     LOG_IN("prev_pswd,next_pswd");
     CHECK_LIB_INITIALIZATION();
     CHECK_SALT_CACHED();
+    /* compute current MK */
     CryptoBufferShPtr prev_mk=CryptoBuffer::malloc(CRYPTO_KEY_SIZE);
     if(!derive(prev_pswd, m_salt, prev_mk)) {
         LOG_CRITICAL("prev key derivation failed.");
         LOG_BOOL_RETURN(false);
     }
+    /* decrypt DPK using current MK */
     CryptoBufferShPtr dpk=CryptoBuffer::malloc(CRYPTO_KEY_SIZE);
     if(!decrypt(prev_mk, m_wkey, dpk)) {
         LOG_CRITICAL("invalid user password.");
         LOG_BOOL_RETURN(false);
     }
+    /* compute next MK */
     CryptoBufferShPtr next_mk=CryptoBuffer::malloc(CRYPTO_KEY_SIZE);
     if(!derive(next_pswd, m_salt, next_mk)) {
         LOG_CRITICAL("next key derivation failed.");
         LOG_BOOL_RETURN(false);
     }
+    /* encrypt DPK with next MK */
     if(!encrypt(next_mk, dpk, m_wkey)) {
         LOG_CRITICAL("failed to wrap DPK.");
         LOG_BOOL_RETURN(false);
@@ -291,6 +302,7 @@ bool cipher_prepare(gcry_cipher_hd_t *hd, const CryptoBufferShPtr &key, const QB
 {
     LOG_IN("hd="<<hd<<",key,iv");
     gcry_error_t err;
+    /* open a new cipher */
     if((err=gcry_cipher_open(hd, GCRY_CIPHER_AES, GCRY_CIPHER_MODE_GCM, GCRY_CIPHER_SECURE))) {
         LOG_CRITICAL_GCRYPT("failed to create encryption cipher.", err);
         LOG_BOOL_RETURN(false);
@@ -312,6 +324,7 @@ QByteArray cipher_gettag(gcry_cipher_hd_t *hd)
 {
     QByteArray tag(CRYPTO_TAG_SIZE, 0);
     gcry_error_t err;
+    /* retrieve tag from cipher */
     if((err=gcry_cipher_gettag(*hd, tag.data(), static_cast<size_t>(tag.size())))) {
         LOG_CRITICAL_GCRYPT("failed to get cipher tag.", err);
         return QByteArray();
@@ -322,6 +335,7 @@ QByteArray cipher_gettag(gcry_cipher_hd_t *hd)
 bool cipher_checktag(gcry_cipher_hd_t *hd, const QByteArray &tag)
 {
     gcry_error_t err;
+    /* check previous tag with current cipher tag */
     if((err=gcry_cipher_checktag(*hd, tag.data(), static_cast<size_t>(tag.size())))) {
         LOG_CRITICAL_GCRYPT("failed to get cipher tag.", err);
         return false;
@@ -345,6 +359,7 @@ bool CryptoCtx::encrypt(const CryptoBufferShPtr &key, const QByteArray &in, QStr
     if(pad==0) {
         pad=CRYPTO_BLK_SIZE;
     }
+    /* perform padding */
     QByteArray encbuf=in;
     encbuf.append(pad, static_cast<char>(pad));
     size_t padded_cdata_sz=static_cast<size_t>(encbuf.size());
@@ -380,7 +395,7 @@ bool CryptoCtx::encrypt(const CryptoBufferShPtr &key, const CryptoBufferShPtr &i
         gcry_cipher_close(hd);
         LOG_BOOL_RETURN(false);
     }
-    /* compute and apply padding */
+    /* perform padding */
     int pad=in->size()%CRYPTO_BLK_SIZE;
     if(pad==0) {
         pad=CRYPTO_BLK_SIZE;
@@ -474,8 +489,14 @@ bool CryptoCtx::decrypt(const CryptoBufferShPtr &key, const QString &in, CryptoB
     }
     /* remove padding */
     int pad=decbuf->rbuf()[decbuf->size()-1];
-    CryptoBufferShPtr unpadded=CryptoBuffer::malloc(decbuf->size()-pad);
-    memcpy(unpadded->rwbuf(), decbuf->rbuf(), static_cast<size_t>(decbuf->size()-pad));
+    int unpadded_sz=decbuf->size()-pad;
+    if(unpadded_sz<=0) {
+        LOG_CRITICAL("invalid unpadded size.");
+        gcry_cipher_close(hd);
+        LOG_BOOL_RETURN(false);
+    }
+    CryptoBufferShPtr unpadded=CryptoBuffer::malloc(unpadded_sz);
+    memcpy(unpadded->rwbuf(), decbuf->rbuf(), static_cast<size_t>(unpadded_sz));
     /* finalize cipher */
     if(!cipher_checktag(&hd, tag)) {
         LOG_CRITICAL("cipher tag check failed.");

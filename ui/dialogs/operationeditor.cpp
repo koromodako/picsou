@@ -28,19 +28,19 @@ OperationEditor::OperationEditor(QWidget *parent,
                                  int month,
                                  const QDate &date,
                                  const Amount &amount,
-                                 const QString &payment_method,
                                  const QString &budget,
                                  const QString &recipient,
-                                 const QString &description) :
+                                 const QString &description,
+                                 const QString &payment_method) :
     QDialog(parent),
+    m_year(year),
+    m_month(month),
     m_date(date),
     m_amount(amount),
-    m_payment_method(payment_method),
     m_budget(budget),
     m_recipient(recipient),
     m_description(description),
-    m_year(year),
-    m_month(month),
+    m_payment_method(payment_method),
     ui(new Ui::OperationEditor)
 {
 
