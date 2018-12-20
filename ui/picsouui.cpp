@@ -22,7 +22,7 @@ PicsouUI::~PicsouUI()
     /* do not delete m_ui_svc here, this class does not have the ownership */
 }
 
-PicsouUI::PicsouUI(PicsouUIService *ui_svc) :
+PicsouUI::PicsouUI(PicsouUIServicePtr ui_svc) :
     m_ui_svc(ui_svc)
 {
 

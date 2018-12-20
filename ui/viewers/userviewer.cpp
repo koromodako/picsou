@@ -26,7 +26,7 @@ UserViewer::~UserViewer()
     delete ui;
 }
 
-UserViewer::UserViewer(PicsouUIService *ui_svc,
+UserViewer::UserViewer(PicsouUIServicePtr ui_svc,
                        QUuid uuid,
                        QWidget *parent) :
     PicsouUIViewer(ui_svc, uuid, parent),

@@ -19,10 +19,10 @@
 #define PICSOUAPPLICATION_H
 
 #include <QObject>
+#include <QPointer>
 
-class PicsouUIService;
-class PicsouModelService;
-class PicsouConsoleService;
+#include "app/picsouuiservice.h"
+#include "app/picsoumodelservice.h"
 
 class PicsouApplication : public QObject
 {
@@ -33,9 +33,8 @@ public:
 
     bool initialize();
 
-    inline PicsouUIService *ui_svc() { return m_ui_svc; }
-    inline PicsouModelService *model_svc() { return m_model_svc; }
-    inline PicsouConsoleService *console_svc() { return m_console_svc; }
+    inline PicsouUIServicePtr ui_svc() { return PicsouUIServicePtr(m_ui_svc); }
+    inline PicsouModelServicePtr model_svc() { return PicsouModelServicePtr(m_model_svc); }
 
 public slots:
     void terminate();
@@ -43,7 +42,6 @@ public slots:
 private:
     PicsouUIService *m_ui_svc;
     PicsouModelService *m_model_svc;
-    PicsouConsoleService *m_console_svc;
 };
 
 #endif // PICSOUAPPLICATION_H

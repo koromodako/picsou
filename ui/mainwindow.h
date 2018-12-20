@@ -21,6 +21,7 @@
 #include <QMainWindow>
 
 #include "picsouui.h"
+#include "ui/widgets/searchfilterform.h"
 #include "ui/widgets/picsoutablewidget.h"
 #include "ui/widgets/operationstatistics.h"
 
@@ -44,7 +45,7 @@ public:
     };
 
     virtual ~MainWindow();
-    explicit MainWindow(PicsouUIService *ui_svc, QWidget *parent=nullptr);
+    explicit MainWindow(PicsouUIServicePtr ui_svc, QWidget *parent=nullptr);
 
 
 public slots:
@@ -55,18 +56,14 @@ public slots:
     void db_closed();
 
     void op_canceled();
-    void op_failed(QString error);
+    void op_failed(const QString &error);
+    void show_status(const QString &message);
 
     void update_viewer();
+    void update_search();
 
     bool close();
 
-    void update_search();
-
-    void refresh_user_cb();
-    void refresh_pms_list(const QString &account_name);
-    void refresh_account_cb(const QString &username);
-    void refresh_budgets_list(const QString &username);
 
 protected:
     void p_update_viewer(QTreeWidgetItem *item, int column);
@@ -78,6 +75,7 @@ private:
 private:
     State m_state;
     QWidget *m_details_widget;
+    SearchFilterForm *m_search_form;
     PicsouTableWidget *m_search_table;
     OperationStatistics *m_search_ops_stats;
     Ui::MainWindow *ui;

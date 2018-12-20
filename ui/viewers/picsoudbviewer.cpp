@@ -28,7 +28,7 @@ PicsouDBViewer::~PicsouDBViewer()
     delete ui;
 }
 
-PicsouDBViewer::PicsouDBViewer(PicsouUIService *ui_svc,
+PicsouDBViewer::PicsouDBViewer(PicsouUIServicePtr ui_svc,
                                QUuid uuid,
                                QWidget *parent) :
     PicsouUIViewer(ui_svc, uuid, parent),

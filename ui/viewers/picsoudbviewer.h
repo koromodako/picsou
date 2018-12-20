@@ -32,7 +32,7 @@ class PicsouDBViewer : public PicsouUIViewer
     Q_OBJECT
 public:
     virtual ~PicsouDBViewer();
-    explicit PicsouDBViewer(PicsouUIService *ui_svc,
+    explicit PicsouDBViewer(PicsouUIServicePtr ui_svc,
                             QUuid uuid,
                             QWidget *parent=nullptr);
 

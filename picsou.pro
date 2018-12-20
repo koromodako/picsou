@@ -53,7 +53,6 @@ SOURCES += \
     app/picsouapplication.cpp \
     app/picsoumodelservice.cpp \
     app/picsouuiservice.cpp \
-    app/picsouconsoleservice.cpp \
     app/picsouabstractservice.cpp \
     ui/mainwindow.cpp \
     ui/dialogs/paymentmethodeditor.cpp \
@@ -81,7 +80,8 @@ SOURCES += \
     model/converter/converter_100_110.cpp \
     model/converter/converter_110_200.cpp \
     utils/crypto_ctx.cpp \
-    ui/viewers/lockedobjectviewer.cpp
+    ui/viewers/lockedobjectviewer.cpp \
+    ui/widgets/searchfilterform.cpp
 
 HEADERS += \
     picsou.h \
@@ -104,7 +104,6 @@ HEADERS += \
     app/picsouapplication.h \
     app/picsoumodelservice.h \
     app/picsouuiservice.h \
-    app/picsouconsoleservice.h \
     app/picsouabstractservice.h \
     ui/dialogs/scheduledoperationeditor.h \
     ui/dialogs/paymentmethodeditor.h \
@@ -130,7 +129,8 @@ HEADERS += \
     ui/widgets/operationstatistics.h \
     model/converter/converters.h \
     utils/crypto_ctx.h \
-    ui/viewers/lockedobjectviewer.h
+    ui/viewers/lockedobjectviewer.h \
+    ui/widgets/searchfilterform.h
 
 FORMS += \
     ui/mainwindow.ui \
@@ -148,7 +148,8 @@ FORMS += \
     ui/viewers/accountviewer.ui \
     ui/viewers/userviewer.ui \
     ui/widgets/operationstatistics.ui \
-    ui/viewers/lockedobjectviewer.ui
+    ui/viewers/lockedobjectviewer.ui \
+    ui/widgets/searchfilterform.ui
 
 RESOURCES += \
     picsou.qrc

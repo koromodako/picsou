@@ -13,7 +13,7 @@ class LockedObjectViewer : public PicsouUIViewer
 
 public:
     virtual ~LockedObjectViewer();
-    explicit LockedObjectViewer(PicsouUIService *ui_svc,
+    explicit LockedObjectViewer(PicsouUIServicePtr ui_svc,
                                 QUuid uuid,
                                 QWidget *parent=nullptr);
 

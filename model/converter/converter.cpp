@@ -26,7 +26,7 @@
 #define makeConverterPair(version, converter) \
     QPair<SemVer, db_converter_t>((version), (converter))
 
-bool Converter::convert(QJsonDocument *doc, SemVer from, PicsouUIService *ui_svc)
+bool Converter::convert(QJsonDocument *doc, SemVer from, PicsouUIServicePtr ui_svc)
 {
     LOG_IN("doc="<<doc<<",from="<<from<<",ui_svc="<<ui_svc);
     /* initialize convesion list */
