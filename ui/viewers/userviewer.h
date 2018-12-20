@@ -31,7 +31,7 @@ class UserViewer : public PicsouUIViewer
 
 public:
     virtual ~UserViewer();
-    explicit UserViewer(PicsouUIService *ui_svc,
+    explicit UserViewer(PicsouUIServicePtr ui_svc,
                         QUuid uuid,
                         QWidget *parent=nullptr);
 

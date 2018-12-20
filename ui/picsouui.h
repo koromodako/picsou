@@ -18,7 +18,10 @@
 #ifndef PICSOUUI_H
 #define PICSOUUI_H
 
+#include <QPointer>
+
 class PicsouUIService;
+typedef QPointer<PicsouUIService> PicsouUIServicePtr;
 
 class PicsouUI
 {
@@ -26,12 +29,12 @@ public:
     virtual ~PicsouUI();
 
 protected:
-    explicit PicsouUI(PicsouUIService *ui_svc);
+    explicit PicsouUI(PicsouUIServicePtr ui_svc);
 
-    inline PicsouUIService *ui_svc() { return m_ui_svc; }
+    inline PicsouUIServicePtr ui_svc() { return m_ui_svc; }
 
 private:
-    PicsouUIService *m_ui_svc;
+    PicsouUIServicePtr m_ui_svc;
 };
 
 #endif // PICSOUUI_H

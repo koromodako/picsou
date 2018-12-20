@@ -85,4 +85,6 @@ private:
 
 };
 
+typedef QPointer<PicsouModelService> PicsouModelServicePtr;
+
 #endif // PICSOUMODELSERVICE_H

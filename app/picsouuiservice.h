@@ -150,4 +150,6 @@ private:
     MainWindow *m_mw;
 };
 
+typedef QPointer<PicsouUIService> PicsouUIServicePtr;
+
 #endif // PICSOUUISERVICE_H

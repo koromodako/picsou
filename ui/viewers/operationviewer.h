@@ -36,7 +36,7 @@ public:
     };
 
     virtual ~OperationViewer();
-    explicit OperationViewer(PicsouUIService *ui_svc,
+    explicit OperationViewer(PicsouUIServicePtr ui_svc,
                              QUuid user_id,
                              QUuid account_id,
                              ViewerScale scale,

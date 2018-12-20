@@ -5,7 +5,7 @@
 
 #include <QSvgWidget>
 
-LockedObjectViewer::LockedObjectViewer(PicsouUIService *ui_svc,
+LockedObjectViewer::LockedObjectViewer(PicsouUIServicePtr ui_svc,
                                        QUuid uuid,
                                        QWidget *parent) :
     PicsouUIViewer(ui_svc, uuid, parent),

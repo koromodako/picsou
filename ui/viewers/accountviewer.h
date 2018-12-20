@@ -32,7 +32,7 @@ class AccountViewer : public PicsouUIViewer
 
 public:
     virtual ~AccountViewer();
-    explicit AccountViewer(PicsouUIService *ui_svc,
+    explicit AccountViewer(PicsouUIServicePtr ui_svc,
                            QUuid user_uuid,
                            QUuid account_uuid,
                            QWidget *parent=nullptr);

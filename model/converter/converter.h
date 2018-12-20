@@ -19,14 +19,13 @@
 #define CONVERTER_H
 
 #include "utils/semver.h"
+#include "app/picsouuiservice.h"
 #include <QJsonDocument>
-
-class PicsouUIService;
 
 class Converter
 {
 public:
-    static bool convert(QJsonDocument *doc, SemVer db_version, PicsouUIService *ui_svc);
+    static bool convert(QJsonDocument *doc, SemVer db_version, PicsouUIServicePtr ui_svc);
 
 private:
     Converter();

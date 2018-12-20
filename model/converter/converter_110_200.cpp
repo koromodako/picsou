@@ -7,7 +7,7 @@
 #include <QJsonArray>
 #include <QJsonObject>
 
-bool convert_110_200(QJsonDocument *doc, PicsouUIService *ui_svc)
+bool convert_110_200(QJsonDocument *doc, PicsouUIServicePtr ui_svc)
 {
     LOG_IN("doc="<<doc);
     QJsonObject db=doc->object();

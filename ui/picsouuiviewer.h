@@ -34,7 +34,7 @@ public slots:
     virtual void refresh(const PicsouDBPtr db)=0;
 
 protected:
-    PicsouUIViewer(PicsouUIService *ui_svc,
+    PicsouUIViewer(PicsouUIServicePtr ui_svc,
                    QUuid uuid, QWidget *parent=nullptr);
 
     inline QUuid mod_obj_id() const { return m_uuid; }

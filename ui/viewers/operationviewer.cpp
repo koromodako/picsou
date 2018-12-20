@@ -28,7 +28,7 @@ OperationViewer::~OperationViewer()
     delete ui;
 }
 
-OperationViewer::OperationViewer(PicsouUIService *ui_svc,
+OperationViewer::OperationViewer(PicsouUIServicePtr ui_svc,
                                  QUuid user_id,
                                  QUuid account_id,
                                  ViewerScale scale,

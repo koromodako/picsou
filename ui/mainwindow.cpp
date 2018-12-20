@@ -18,7 +18,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "utils/macro.h"
-#include "model/searchquery.h"
 #include "ui/picsouuiviewer.h"
 #include "app/picsouuiservice.h"
 
@@ -39,7 +38,7 @@ MainWindow::~MainWindow()
     LOG_VOID_RETURN();
 }
 
-MainWindow::MainWindow(PicsouUIService *ui_svc, QWidget *parent) :
+MainWindow::MainWindow(PicsouUIServicePtr ui_svc, QWidget *parent) :
     QMainWindow(parent),
     PicsouUI(ui_svc),
     m_state(DB_CLOSED),
@@ -51,19 +50,14 @@ MainWindow::MainWindow(PicsouUIService *ui_svc, QWidget *parent) :
     m_details_widget=nullptr;
     ui->details_tab->setLayout(new QVBoxLayout);
 
+    m_search_form=new SearchFilterForm(ui_svc);
+    ui->search_tab->layout()->addWidget(m_search_form); /* ownership transfer */
+
     m_search_table=new PicsouTableWidget;
-    ui->search_tab->layout()->addWidget(m_search_table);
+    ui->search_tab->layout()->addWidget(m_search_table); /* ownership transfer */
 
     m_search_ops_stats=new OperationStatistics;
-    ui->search_tab->layout()->addWidget(m_search_ops_stats);
-
-    ui->min_sb->setPrefix(tr("$"));
-    ui->min_sb->setSuffix(tr(" "));
-
-    ui->max_sb->setPrefix(tr("$"));
-    ui->max_sb->setSuffix(tr(" "));
-
-    ui->to_date->setDate(QDate::currentDate());
+    ui->search_tab->layout()->addWidget(m_search_ops_stats); /* ownership transfer */
     /* initialize window attributes */
     setWindowIcon(QIcon());
     setWindowTitle("Picsou");
@@ -82,11 +76,9 @@ MainWindow::MainWindow(PicsouUIService *ui_svc, QWidget *parent) :
     connect(ui->action_license, &QAction::triggered, ui_svc, &PicsouUIService::show_license);
     /* database tree */
     connect(ui->tree, &QTreeWidget::itemSelectionChanged, this, &MainWindow::update_viewer);
-    /* search-related */
-    connect(ui->search_btn, &QPushButton::clicked, this, &MainWindow::update_search);
-    connect(ui->user_cb, &QComboBox::currentTextChanged, this, &MainWindow::refresh_account_cb);
-    connect(ui->user_cb, &QComboBox::currentTextChanged, this, &MainWindow::refresh_budgets_list);
-    connect(ui->account_cb, &QComboBox::currentTextChanged, this, &MainWindow::refresh_pms_list);
+    /* search */
+    connect(m_search_form, &SearchFilterForm::search_request, this, &MainWindow::update_search);
+    connect(m_search_form, &SearchFilterForm::search_update_failed, this, &MainWindow::show_status);
     /* signal handlers */
     connect(ui_svc, &PicsouUIService::db_opened, this, &MainWindow::db_opened);
     connect(ui_svc, &PicsouUIService::db_saved, this, &MainWindow::db_saved);
@@ -143,7 +135,7 @@ void MainWindow::op_canceled()
     LOG_VOID_RETURN();
 }
 
-void MainWindow::op_failed(QString error)
+void MainWindow::op_failed(const QString &error)
 {
     LOG_IN("error="<<error);
     LOG_CRITICAL("Operation failed.");
@@ -153,6 +145,13 @@ void MainWindow::op_failed(QString error)
                           error,
                           QMessageBox::Ok,
                           QMessageBox::Ok);
+    LOG_VOID_RETURN();
+}
+
+void MainWindow::show_status(const QString &message)
+{
+    LOG_IN("message="<<message);
+    ui->statusbar->showMessage(message, TIMEOUT);
     LOG_VOID_RETURN();
 }
 
@@ -167,35 +166,11 @@ void MainWindow::update_viewer()
     LOG_VOID_RETURN();
 }
 
-bool MainWindow::close()
-{
-    LOG_IN_VOID();
-    ui_svc()->db_close();
-    LOG_BOOL_RETURN(QWidget::close());
-}
-
 void MainWindow::update_search()
 {
     LOG_IN_VOID();
-    OperationCollection ops;
-    QStringList selected_budgets, selected_pms;
-    for(auto *item : ui->budgets->selectedItems()) {
-        selected_budgets<<item->text();
-    }
-    for(auto *item : ui->pms->selectedItems()) {
-        selected_pms<<item->text();
-    }
     m_search_table->clear();
-    ops=ui_svc()->search_operations(SearchQuery(ui->user_cb->currentText(),
-                                                ui->account_cb->currentText(),
-                                                ui->from_date->date(),
-                                                ui->to_date->date(),
-                                                ui->min_sb->value(),
-                                                ui->max_sb->value(),
-                                                ui->description_le->text(),
-                                                ui->recipient_le->text(),
-                                                selected_budgets,
-                                                selected_pms));
+    OperationCollection ops=ui_svc()->search_operations(m_search_form->query());
     if(ops.length()>0) {
         m_search_table->refresh(ops);
         m_search_ops_stats->refresh(ops);
@@ -203,79 +178,11 @@ void MainWindow::update_search()
     LOG_VOID_RETURN();
 }
 
-void MainWindow::refresh_user_cb()
+bool MainWindow::close()
 {
     LOG_IN_VOID();
-    ui->user_cb->clear();
-    if(!ui_svc()->populate_user_cb(ui->user_cb)) {
-        ui->user_cb->clear();
-        ui->search_btn->setEnabled(false);
-        LOG_CRITICAL("Failed to update user combo box.");
-        ui->statusbar->showMessage(tr("Failed to update user combo box."), TIMEOUT);
-    }
-    LOG_VOID_RETURN();
-}
-
-void MainWindow::refresh_account_cb(const QString &username)
-{
-    LOG_IN("username="<<username);
-    if(username.isEmpty()) {
-        LOG_VOID_RETURN();
-    }
-    ui->account_cb->clear();
-    if(!ui_svc()->populate_account_cb(username,
-                                      ui->account_cb)) {
-        ui->account_cb->clear();
-        ui->search_btn->setEnabled(false);
-        LOG_CRITICAL("Failed to update account combo box.");
-        ui->statusbar->showMessage(tr("Failed to update account combo box."), TIMEOUT);
-    }
-    LOG_VOID_RETURN();
-}
-
-void MainWindow::refresh_budgets_list(const QString &username)
-{
-    LOG_IN("username="<<username);
-    if(username.isEmpty()) {
-        LOG_VOID_RETURN();
-    }
-    ui->budgets->clear();
-    if(!ui_svc()->populate_budgets_list(username,
-                                        ui->budgets)) {
-        ui->budgets->clear();
-        ui->search_btn->setEnabled(false);
-        LOG_CRITICAL("Failed to update budgets list.");
-        ui->statusbar->showMessage(tr("Failed to update budgets list."), TIMEOUT);
-    }
-    if(ui->budgets->count()==0) {
-        ui->search_btn->setEnabled(false);
-    }
-    ui->budgets->selectAll();
-    LOG_VOID_RETURN();
-}
-
-void MainWindow::refresh_pms_list(const QString &account_name)
-{
-    LOG_IN("account_name="<<account_name);
-    if(account_name.isEmpty()) {
-        LOG_VOID_RETURN();
-    }
-    ui->pms->clear();
-    if(!ui_svc()->populate_pms_list(ui->user_cb->currentText(),
-                                    account_name,
-                                    ui->pms)) {
-        ui->pms->clear();
-        ui->search_btn->setEnabled(false);
-        LOG_CRITICAL("Failed to update payment methods list.");
-        ui->statusbar->showMessage(tr("Failed to update payment methods list."), TIMEOUT);
-    }
-    if(ui->pms->count()==0) {
-        ui->search_btn->setEnabled(false);
-    } else {
-        ui->search_btn->setEnabled(true);
-    }
-    ui->pms->selectAll();
-    LOG_VOID_RETURN();
+    ui_svc()->db_close();
+    LOG_BOOL_RETURN(QWidget::close());
 }
 
 void MainWindow::p_update_viewer(QTreeWidgetItem *item, int)
@@ -329,7 +236,7 @@ void MainWindow::refresh(MainWindow::State state)
         ui->tree_dock->setVisible(true);
         ui->tab_widget->setVisible(true);
         /* refresh search filters */
-        refresh_user_cb();
+        m_search_form->refresh_user_cb();
         /* update viewer */
         p_update_viewer(ui->tree->topLevelItem(0), 0);
         break;
@@ -339,13 +246,13 @@ void MainWindow::refresh(MainWindow::State state)
         /* update tree widget */
         refresh_tree();
         /* refresh search filters */
-        refresh_user_cb();
+        m_search_form->refresh_user_cb();
         break;
     case DB_UNWRAPPED:
         /* update tree widget */
         refresh_tree();
         /* refresh search filters */
-        refresh_user_cb();
+        m_search_form->refresh_user_cb();
         /* update viewer */
         p_update_viewer(ui->tree->topLevelItem(0), 0);
         break;

@@ -31,7 +31,7 @@ AccountViewer::~AccountViewer()
     delete ui;
 }
 
-AccountViewer::AccountViewer(PicsouUIService *ui_svc,
+AccountViewer::AccountViewer(PicsouUIServicePtr ui_svc,
                              QUuid user_uuid,
                              QUuid account_uuid,
                              QWidget *parent) :
