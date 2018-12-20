@@ -18,7 +18,7 @@
 #ifndef PICSOUDBO_H
 #define PICSOUDBO_H
 
-#include "utils/crypto_ctx.h"
+#include "utils/crypto/cryptoctx.h"
 
 #include <QUuid>
 #include <QObject>

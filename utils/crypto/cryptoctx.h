@@ -18,47 +18,14 @@
 #ifndef CRYPTO_CTX_H
 #define CRYPTO_CTX_H
 
-#include <QString>
-#include <QSharedPointer>
-
-class CryptoBuffer;
-typedef QSharedPointer<CryptoBuffer> CryptoBufferShPtr;
-
-class CryptoBuffer
-{
-public:
-    enum RandomLevel {
-        RANDOM_WEAK,
-        RANDOM_STRONG,
-        RANDOM_VERY_STRONG
-    };
-
-    virtual ~CryptoBuffer();
-    CryptoBuffer(char *buf=nullptr, int size=0);
-
-    static CryptoBufferShPtr malloc(int size);
-    static CryptoBufferShPtr calloc(int mem_size, int mem_cnt);
-    static CryptoBufferShPtr random(int size, RandomLevel lvl);
-    static QByteArray random_ba(int size, RandomLevel lvl);
-
-    inline bool null() const { return m_buf==nullptr; }
-    inline int size() const { return m_size; }
-
-    inline char *rwbuf() { return m_buf; }
-    inline const char *rbuf() const { return m_buf; }
-
-protected:
-    Q_DISABLE_COPY(CryptoBuffer)
-
-private:
-    char *m_buf;
-    int m_size;
-};
+#include "utils/crypto/cryptobuffer.h"
 
 class CryptoCtx
 {
 public:
     static bool lib_init();
+    static QString lib_name();
+    static QString lib_version();
 
     /**
      * @brief Creates a new CryptoCtx caching wkey, wdat and wsalt

@@ -17,6 +17,7 @@
  */
 #include "aboutpicsou.h"
 #include "ui_aboutpicsou.h"
+#include "utils/crypto/cryptoctx.h"
 
 #include "picsou.h"
 
@@ -35,6 +36,7 @@ AboutPicsou::AboutPicsou(QWidget *parent) :
 
     ui->version->setText(PICSOU_VERSION);
     ui->build->setText(PICSOU_COMMIT);
+    ui->libcrypto->setText(QString("%0 v%1").arg(CryptoCtx::lib_name(), CryptoCtx::lib_version()));
 
     /* initialize connections */
     connect(ui->buttons, &QDialogButtonBox::accepted, this, &QWidget::close);

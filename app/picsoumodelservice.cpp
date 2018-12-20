@@ -25,7 +25,7 @@
 #include <QXmlStreamWriter>
 
 #include "picsou.h"
-#include "utils/crypto_ctx.h"
+#include "utils/crypto/cryptoctx.h"
 #include "app/picsouapplication.h"
 #include "model/object/picsoudb.h"
 #include "model/converter/converter.h"

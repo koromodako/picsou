@@ -50,6 +50,9 @@ SOURCES += \
     model/searchquery.cpp \
     model/operationcollection.cpp \
     model/converter/converter.cpp \
+    model/picsoudbo.cpp \
+    model/converter/converter_100_110.cpp \
+    model/converter/converter_110_200.cpp \
     app/picsouapplication.cpp \
     app/picsoumodelservice.cpp \
     app/picsouuiservice.cpp \
@@ -76,17 +79,16 @@ SOURCES += \
     ui/items/picsoutableitem.cpp \
     ui/widgets/picsoutablewidget.cpp \
     ui/widgets/operationstatistics.cpp \
-    model/picsoudbo.cpp \
-    model/converter/converter_100_110.cpp \
-    model/converter/converter_110_200.cpp \
-    utils/crypto_ctx.cpp \
     ui/viewers/lockedobjectviewer.cpp \
-    ui/widgets/searchfilterform.cpp
+    ui/widgets/searchfilterform.cpp \
+    utils/crypto/cryptobuffer.cpp \
+    utils/crypto/cryptoctx.cpp
 
 HEADERS += \
     picsou.h \
     picsou.h.dist \
     model/converter/converter.h \
+    model/converter/converters.h \
     model/object/account.h \
     model/object/budget.h \
     model/object/operation.h \
@@ -127,10 +129,10 @@ HEADERS += \
     ui/items/picsoutableitem.h \
     ui/widgets/picsoutablewidget.h \
     ui/widgets/operationstatistics.h \
-    model/converter/converters.h \
-    utils/crypto_ctx.h \
     ui/viewers/lockedobjectviewer.h \
-    ui/widgets/searchfilterform.h
+    ui/widgets/searchfilterform.h \
+    utils/crypto/cryptobuffer.h \
+    utils/crypto/cryptoctx.h
 
 FORMS += \
     ui/mainwindow.ui \
