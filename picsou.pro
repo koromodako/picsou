@@ -9,28 +9,31 @@ TEMPLATE = app
 QT += core svg widgets concurrent
 CONFIG += c++14
 # Run prebuild script
-system(./prebuild)
-# Force qmake to run
-qmakeforce.target=dummy
-qmakeforce.commands=rm -f Makefile ##to force rerun of qmake
-qmakeforce.depends=FORCE
-PRE_TARGETDEPS += $$qmakeforce.target
-QMAKE_EXTRA_TARGETS += qmakeforce
+win32 {
+  system("python.exe prebuild")
+} else {
+  system("./prebuild")
+}
+
 # The following define makes your compiler emit warnings if you use
 # any feature of Qt which as been marked as deprecated (the exact warnings
 # depend on your compiler). Please consult the documentation of the
 # deprecated API in order to know how to port your code away from it.
 DEFINES += QT_DEPRECATED_WARNINGS
+
 # You can also make your code fail to compile if you use deprecated APIs.
 # In order to do so, uncomment the following line.
 # You can also select to disable deprecated APIs only up to a certain version of Qt.
 DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
-DEFINES += COLORIZE
-DEFINES += GCRYPT_NO_DEPRECATED
+# Specific Picsou definitions
+DEFINES += COLORIZE \
+           GCRYPT_NO_DEPRECATED
 
+# Link with libgcrypt
 LIBS += -lgcrypt
 
+# Specific Picsou compiler flags
 QMAKE_CXXFLAGS += -Wall \
                   -Werror \
                   -pedantic-errors
