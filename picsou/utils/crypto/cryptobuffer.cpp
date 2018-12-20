@@ -17,7 +17,7 @@
  */
 #include "cryptobuffer.h"
 #include "utils/macro.h"
-#include <gcrypt.h>
+#include "third-party/build/include/gcrypt.h"
 
 CryptoBuffer::~CryptoBuffer()
 {

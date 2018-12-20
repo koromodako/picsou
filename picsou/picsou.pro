@@ -5,38 +5,33 @@
 #-------------------------------------------------
 TARGET = picsou
 TEMPLATE = app
-
-QT += core svg widgets concurrent
 CONFIG += c++14
-# Run prebuild script
-win32 {
-  system("python.exe prebuild")
-} else {
-  system("./prebuild")
-}
-
+QT += core svg widgets concurrent
 # The following define makes your compiler emit warnings if you use
 # any feature of Qt which as been marked as deprecated (the exact warnings
 # depend on your compiler). Please consult the documentation of the
 # deprecated API in order to know how to port your code away from it.
 DEFINES += QT_DEPRECATED_WARNINGS
-
 # You can also make your code fail to compile if you use deprecated APIs.
 # In order to do so, uncomment the following line.
 # You can also select to disable deprecated APIs only up to a certain version of Qt.
 DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
-
 # Specific Picsou definitions
 DEFINES += COLORIZE \
            GCRYPT_NO_DEPRECATED
-
-# Link with libgcrypt
-LIBS += -lgcrypt
-
 # Specific Picsou compiler flags
 QMAKE_CXXFLAGS += -Wall \
                   -Werror \
                   -pedantic-errors
+# Run prebuild script
+win32 {
+    system("python.exe prebuild")
+    LIBS += -L$$PWD\third-party\build\lib -lgcrypt
+} else {
+    system("./prebuild")
+    LIBS += -L$$PWD/third-party/build/lib -lgcrypt
+}
+# Link with libgcrypt
 
 SOURCES += \
     main.cpp \
@@ -166,7 +161,8 @@ DISTFILES += \
     tests/data/input.xml \
     tests/data/input.csv \
     prebuild \
-    tests/notes.md
+    tests/notes.md \
+    third-party/build.sh
 
 TRANSLATIONS += \
     translation/picsou_fr_FR.ts

@@ -17,7 +17,7 @@
  */
 #include "cryptoctx.h"
 #include "utils/macro.h"
-#include <gcrypt.h>
+#include "third-party/build/include/gcrypt.h"
 
 /*
  * Warning:
