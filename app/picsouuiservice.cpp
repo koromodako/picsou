@@ -195,7 +195,9 @@ bool PicsouUIService::populate_user_cb(QComboBox * const cb)
     }
     UserPtrList users=papp()->model_svc()->db()->users();
     for(const auto &user : users) {
-        cb->addItem(user->name());
+        if(!user->wrapped()) {
+            cb->addItem(user->name());
+        }
     }
     LOG_BOOL_RETURN(true);
 }
@@ -757,10 +759,10 @@ void PicsouUIService::sop_add(QUuid user_id, QUuid account_id)
         LOG_VOID_RETURN();
     }
     account->add_scheduled_operation(editor.amount(),
-                                     editor.payment_method(),
                                      editor.budget(),
                                      editor.recipient(),
                                      editor.description(),
+                                     editor.payment_method(),
                                      editor.name(),
                                      editor.schedule());
     emit sop_added();

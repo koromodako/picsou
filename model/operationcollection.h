@@ -35,7 +35,7 @@ public:
     void append(const OperationPtr &op);
     void append(const OperationShPtr &sh_op);
 
-    inline int length() const { return m_ops.length(); }
+    inline int length() const { return list(false).length(); }
     inline Amount balance() const { return m_balance; }
     inline Amount total_debit() const { return m_total_debit; }
     inline Amount total_credit() const { return m_total_credit; }

@@ -66,14 +66,14 @@ void PicsouTableWidget::refresh(OperationCollection ops)
     static const QColor debit_color=QColor(5, 5, 5, alpha),
                         credit_color=QColor(0, 255, 0, alpha);
 
-    int r=0, c;
-    QIcon icon;
-    QColor bgcolor;
-    QList<QTableWidgetItem *> items;
 
     clear();
     setRowCount(ops.length());
 
+    int r=0, c;
+    QIcon icon;
+    QColor bgcolor;
+    QList<QTableWidgetItem*> items;
     for(const auto &op : ops.list()) {
         items.clear();
         switch (op->type()) {

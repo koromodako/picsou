@@ -36,33 +36,33 @@ public:
                              int month=-1,
                              const QDate &date = QDate(),
                              const Amount &amount = Amount(),
-                             const QString &payment_method = QString(),
                              const QString &budget = QString(),
                              const QString &recipient = QString(),
-                             const QString &description = QString());
+                             const QString &description = QString(),
+                             const QString &payment_method = QString());
 
     void set_budgets(const QStringList &budgets);
     void set_payment_methods(const QStringList &payment_methods);
 
     inline QDate date() const { return m_date; }
     inline Amount amount() const { return m_amount; }
-    inline QString payment_method() const { return m_payment_method; }
     inline QString budget() const { return m_budget; }
     inline QString recipient() const { return m_recipient; }
     inline QString description() const { return m_description; }
+    inline QString payment_method() const { return m_payment_method; }
 
 public slots:
     void accept();
 
 private:
+    int m_year;
+    int m_month;
     QDate m_date;
     Amount m_amount;
-    QString m_payment_method;
     QString m_budget;
     QString m_recipient;
     QString m_description;
-    int m_year;
-    int m_month;
+    QString m_payment_method;
     Ui::OperationEditor *ui;
 };
 
