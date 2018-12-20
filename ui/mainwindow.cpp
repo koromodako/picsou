@@ -296,6 +296,7 @@ void MainWindow::p_update_viewer(QTreeWidgetItem *item, int)
             ui->toolbar->addActions(m_details_widget->actions());
         }
     }
+    ui->tab_widget->setCurrentIndex(0);
     LOG_VOID_RETURN();
 }
 
