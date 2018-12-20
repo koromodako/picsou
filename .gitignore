@@ -2,5 +2,6 @@
 *.qm
 picsou.h
 *.o
+third-party/build/
 third-party/libgcrypt-*/
 third-party/libgpg-error-*/
