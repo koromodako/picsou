@@ -15,7 +15,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-#include "crypto_ctx.h"
+#include "cryptoctx.h"
 #include "utils/macro.h"
 #include <gcrypt.h>
 
@@ -31,69 +31,6 @@ static const int CRYPTO_TAG_SIZE=16;
 static const int CRYPTO_KEY_SIZE=16;
 static const int CRYPTO_SALT_SIZE=32;
 static const unsigned long CRYPTO_ITER_COUNT=1000;
-
-CryptoBuffer::~CryptoBuffer()
-{
-    if(m_buf!=nullptr) {
-        gcry_free(m_buf);
-    }
-}
-
-CryptoBuffer::CryptoBuffer(char *buf, int size) :
-    m_buf(buf),
-    m_size(size)
-{
-
-}
-
-CryptoBufferShPtr CryptoBuffer::malloc(int size)
-{
-    char *buf=static_cast<char*>(gcry_malloc_secure(static_cast<size_t>(size)));
-    if(buf==nullptr) {
-        LOG_CRITICAL("failed to allocate secure memory.");
-        return CryptoBufferShPtr();
-    }
-    return CryptoBufferShPtr(new CryptoBuffer(buf, size));
-}
-
-CryptoBufferShPtr CryptoBuffer::calloc(int mem_size, int mem_cnt)
-{
-    char *buf=static_cast<char*>(gcry_calloc_secure(static_cast<size_t>(mem_cnt),
-                                                    static_cast<size_t>(mem_size)));
-    if(buf==nullptr) {
-        LOG_CRITICAL("failed to allocate secure memory.");
-        return CryptoBufferShPtr();
-    }
-    return CryptoBufferShPtr(new CryptoBuffer(buf, mem_cnt*mem_size));
-}
-
-CryptoBufferShPtr CryptoBuffer::random(int size, RandomLevel lvl)
-{
-    gcry_random_level_t level;
-    switch (lvl) {
-    case RANDOM_WEAK:
-        level=GCRY_WEAK_RANDOM;
-        break;
-    case RANDOM_STRONG:
-        level=GCRY_STRONG_RANDOM;
-        break;
-    case RANDOM_VERY_STRONG:
-        level=GCRY_VERY_STRONG_RANDOM;
-        break;
-    }
-    char *buf=static_cast<char*>(gcry_random_bytes_secure(static_cast<size_t>(size), level));
-    if(buf==nullptr) {
-        LOG_CRITICAL("failed to allocate secure memory.");
-        return CryptoBufferShPtr();
-    }
-    return CryptoBufferShPtr(new CryptoBuffer(buf, size));
-}
-
-QByteArray CryptoBuffer::random_ba(int size, CryptoBuffer::RandomLevel lvl)
-{
-    CryptoBufferShPtr rand=random(size, lvl);
-    return QByteArray(rand->rbuf(), size);
-}
 
 #define CHECK_LIB_INITIALIZATION() \
     do { \
@@ -158,6 +95,16 @@ bool CryptoCtx::lib_init()
     /* Tell Libgcrypt that initialization has completed. */
     gcry_control(GCRYCTL_INITIALIZATION_FINISHED, 0);
     LOG_BOOL_RETURN(true);
+}
+
+QString CryptoCtx::lib_name()
+{
+    return "libgcrypt";
+}
+
+QString CryptoCtx::lib_version()
+{
+    return GCRYPT_VERSION;
 }
 
 CryptoCtx::CryptoCtx(const QString &wkey,
