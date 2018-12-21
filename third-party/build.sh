@@ -8,6 +8,7 @@ CWD="$(pwd)"
 # Variables
 #
 BOTAN="botan-2.8.0"
+SRC_DIR="${CWD}/../picsou"
 BUILD_DIR="${CWD}/build"
 #
 # Script
@@ -22,4 +23,5 @@ cd ${BOTAN}
 make -j4
 make install
 cd ${CWD}
+ln -sf ${CWD} ${SRC_DIR}
 echo "Done."
