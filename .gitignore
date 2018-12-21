@@ -3,5 +3,6 @@
 picsou.h
 *.o
 *.autosave
+picsou/third-party
 third-party/build/
 third-party/botan-*/
