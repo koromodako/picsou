@@ -20,8 +20,8 @@ DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs depr
 win32 {
     message("building for windows target")
     system("python.exe prebuild")
-    LIBS += $$PWD\third-party\build\lib\botan-2.lib
-    INCLUDEPATH += $$PWD\third-party\build\include\botan-2
+    LIBS += $$PWD/third-party/build/lib/botan-2.lib
+    INCLUDEPATH += $$PWD/third-party/build/include/botan-2
     QMAKE_POST_LINK += "windeployqt.exe $$PWD/build/debug/picsou.exe"
 } else {
     message("building for linux target")
