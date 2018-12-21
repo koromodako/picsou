@@ -19,4 +19,3 @@ cd ${BOTAN}
 make -j4
 make install
 cd ${CWD}
-ln -sf ${CWD} ${SRC_DIR}
