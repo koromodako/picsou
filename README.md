@@ -23,20 +23,64 @@ I tried to conform to *Option 2a (Figure 3)* of [NIST publication 800-132](https
 
 ## Build
 
-### Linux 
+You can build Picsou following two steps. These steps are platform-independent as long as you're using one 
+ 1. Build Botan
+ 2. Build Picsou
 
-Successfully built using the following configuration :
+Build process does not cover dependencies installation.
+
+### Linux
+
+Successfully built using the following configuration:
 
  + Ubuntu 18.10 LTS
  + GCC 8
  + Qt 5.12.0
- + botan 2.8.0
+ + Botan 2.8.0
+
+
+**Process:**
+
+```bash
+git clone https://github.com/koromodako/picsou
+cd picsou
+# 1. Build Botan
+cd third-party
+./build.sh
+# 2. Build Picsou
+mkdir /tmp/build && cd /tmp/build
+/path/to/Qt/5.12.0/gcc_64/bin/qmake /path/to/picsou/picsou/picsou.pro
+make -j4
+```
+
+Picsou should be available in `/path/to/picsou/dist/release`.
+
+
+**Note:**
+
+It should build on any linux distribution providing appropriate packages are available.
  
 ### Windows
 
-It should be OK as long as Qt and botan are both cross-platform libraries. 
+Successfully built using the following configuration:
 
-**Currently working on it.**
+ + Windows 10
+ + MinGW 7.3.0
+ + Qt 5.12.0
+ + Botan 2.8.0
+
+
+**Process:**
+
+*Warning: Ensure that Qt's MinGW location is part of your PATH before building Botan !*
+
+ 1. Start a PowerShell command line go to `third-party/` and run `build.bat`.
+ 2. Open `picsou/picsou.pro` with QtCreator, configure the project and build.
+
+
+**Note:**
+
+I tried MSVC and the build process succeeded yet execution failed (`std::bad_alloc`) within Botan according to stacktrace... Strange.
 
 ## Contributions
 
