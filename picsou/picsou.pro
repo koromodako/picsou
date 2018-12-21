@@ -5,7 +5,7 @@
 #-------------------------------------------------
 TARGET = picsou
 TEMPLATE = app
-CONFIG += c++14
+CONFIG += c++14 lrelease
 QT += core svg widgets concurrent
 # The following define makes your compiler emit warnings if you use
 # any feature of Qt which as been marked as deprecated (the exact warnings
@@ -20,8 +20,9 @@ DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs depr
 win32 {
     message("building for windows target")
     system("python.exe prebuild")
-    LIBS += $$PWD\third-party\build\lib\libbotan-2.lib
+    LIBS += $$PWD\third-party\build\lib\botan-2.lib
     INCLUDEPATH += $$PWD\third-party\build\include\botan-2
+    QMAKE_POST_LINK += "windeployqt.exe $$PWD/build/debug/picsou.exe"
 } else {
     message("building for linux target")
     system("./prebuild")
@@ -30,8 +31,14 @@ win32 {
     QMAKE_CXXFLAGS += -Wall -Wextra -Wfatal-errors -pedantic-errors
     DEFINES += COLORIZE
 }
-message("link arguments: $$LIBS")
-message("include arguments: $$INCLUDEPATH")
+CONFIG(debug, debug|release) {
+    DESTDIR = $$PWD/build/debug
+} else {
+    DESTDIR = $$PWD/build/release
+}
+message("link arguments:        $$LIBS")
+message("include arguments:     $$INCLUDEPATH")
+message("destination directory: $$DESTDIR")
 
 SOURCES += \
     main.cpp \
