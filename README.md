@@ -28,14 +28,15 @@ I tried to conform to *Option 2a (Figure 3)* of [NIST publication 800-132](https
 Successfully built using the following configuration :
 
  + Ubuntu 18.10 LTS
- + Clang 7.0.0 and GCC 8
+ + GCC 8
  + Qt 5.12.0
- + libgcrypt 1.8.4
+ + botan 2.8.0
  
 ### Windows
 
-It should be OK as long as Qt and libgcrypt are both cross-platform libraries. 
-Currently working on it.
+It should be OK as long as Qt and botan are both cross-platform libraries. 
+
+**Currently working on it.**
 
 ## Contributions
 

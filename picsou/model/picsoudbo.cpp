@@ -17,7 +17,7 @@
  */
 #include "picsoudbo.h"
 #include "utils/macro.h"
-#include "utils/crypto/cryptoctx.h"
+#include "utils/cryptoctx.h"
 
 #include <QJsonDocument>
 

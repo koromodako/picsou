@@ -2,6 +2,6 @@
 *.qm
 picsou.h
 *.o
+*.autosave
 third-party/build/
-third-party/libgcrypt-*/
-third-party/libgpg-error-*/
+third-party/botan-*/

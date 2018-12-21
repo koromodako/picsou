@@ -17,21 +17,26 @@ DEFINES += QT_DEPRECATED_WARNINGS
 # You can also select to disable deprecated APIs only up to a certain version of Qt.
 DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 # Specific Picsou definitions
-DEFINES += COLORIZE \
-           GCRYPT_NO_DEPRECATED
+DEFINES += COLORIZE
 # Specific Picsou compiler flags
 QMAKE_CXXFLAGS += -Wall \
-                  -Werror \
+                  -Wextra \
+                  -Wfatal-errors \
                   -pedantic-errors
-# Run prebuild script
+# Run prebuild script and link botan
 win32 {
+    message("building for windows target")
     system("python.exe prebuild")
-    LIBS += -L$$PWD\third-party\build\lib -lgcrypt
+    LIBS += $$PWD\third-party\build\lib\libbotan-2.lib
+    INCLUDEPATH += $$PWD\third-party\build\include\botan-2
 } else {
+    message("building for linux target")
     system("./prebuild")
-    LIBS += -L$$PWD/third-party/build/lib -lgcrypt
+    LIBS += $$PWD/third-party/build/lib/libbotan-2.a
+    INCLUDEPATH += $$PWD/third-party/build/include/botan-2
 }
-# Link with libgcrypt
+message("link arguments: $$LIBS")
+message("include arguments: $$INCLUDEPATH")
 
 SOURCES += \
     main.cpp \
@@ -79,8 +84,7 @@ SOURCES += \
     ui/widgets/operationstatistics.cpp \
     ui/viewers/lockedobjectviewer.cpp \
     ui/widgets/searchfilterform.cpp \
-    utils/crypto/cryptobuffer.cpp \
-    utils/crypto/cryptoctx.cpp
+    utils/cryptoctx.cpp
 
 HEADERS += \
     picsou.h \
@@ -129,8 +133,7 @@ HEADERS += \
     ui/widgets/operationstatistics.h \
     ui/viewers/lockedobjectviewer.h \
     ui/widgets/searchfilterform.h \
-    utils/crypto/cryptobuffer.h \
-    utils/crypto/cryptoctx.h
+    utils/cryptoctx.h
 
 FORMS += \
     ui/mainwindow.ui \

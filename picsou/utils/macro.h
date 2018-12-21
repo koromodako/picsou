@@ -84,9 +84,14 @@ static const QString LOG_CLR_ERR="31";
         LOG_DEBUG("-> "<<BOOL2STR(result)); \
         return result; \
     } while(0)
-#define LOG_VOID_RETURN(...) \
+
+#define LOG_VOID_RETURN() \
     LOG_DEBUG("-> (void)"); \
     return
+
+#define LOG_CUST_RETURN(value, display) \
+    LOG_DEBUG("-> "<<display); \
+    return value
 
 #endif // MACRO_H
 

@@ -25,7 +25,7 @@
 #include <QXmlStreamWriter>
 
 #include "picsou.h"
-#include "utils/crypto/cryptoctx.h"
+#include "utils/cryptoctx.h"
 #include "app/picsouapplication.h"
 #include "model/object/picsoudb.h"
 #include "model/converter/converter.h"
@@ -60,7 +60,7 @@ PicsouModelService::PicsouModelService(PicsouApplication *papp) :
 bool PicsouModelService::initialize()
 {
     LOG_IN_VOID();
-    LOG_BOOL_RETURN(CryptoCtx::lib_init());
+    LOG_BOOL_RETURN(true);
 }
 
 void PicsouModelService::terminate()
