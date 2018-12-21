@@ -16,13 +16,6 @@ DEFINES += QT_DEPRECATED_WARNINGS
 # In order to do so, uncomment the following line.
 # You can also select to disable deprecated APIs only up to a certain version of Qt.
 DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
-# Specific Picsou definitions
-DEFINES += COLORIZE
-# Specific Picsou compiler flags
-QMAKE_CXXFLAGS += -Wall \
-                  -Wextra \
-                  -Wfatal-errors \
-                  -pedantic-errors
 # Run prebuild script and link botan
 win32 {
     message("building for windows target")
@@ -34,6 +27,8 @@ win32 {
     system("./prebuild")
     LIBS += $$PWD/third-party/build/lib/libbotan-2.a
     INCLUDEPATH += $$PWD/third-party/build/include/botan-2
+    QMAKE_CXXFLAGS += -Wall -Wextra -Wfatal-errors -pedantic-errors
+    DEFINES += COLORIZE
 }
 message("link arguments: $$LIBS")
 message("include arguments: $$INCLUDEPATH")
