@@ -12,7 +12,7 @@ DIST_DIR="${CWD}/../picsou/third-party/build"
 #
 # Script
 #
-mkdir ${DIST_DIR}
+mkdir -p ${DIST_DIR}
 tar xzvf ${BOTAN}.tar.gz
 cd ${BOTAN}
 ./configure.py --prefix=${DIST_DIR}
