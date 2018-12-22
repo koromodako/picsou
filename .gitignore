@@ -3,7 +3,8 @@
 picsou.h
 *.o
 *.autosave
-dist/
+dist*/
+build*/
 picsou/third-party
 third-party/build/
 third-party/botan-*/
