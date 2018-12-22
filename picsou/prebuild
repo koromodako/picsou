@@ -20,10 +20,18 @@
 
 from subprocess import getoutput
 
+LOCALES = [
+    'fr_FR'
+]
+
 def sanitize(s):
+    '''
+    '''
     return s.split('\n')[0].strip()
 
 def create_picsou_h():
+    '''
+    '''
     status=sanitize(getoutput('git status --porcelain'))
     status='clean' if len(status) == 0 else 'dirty'
 
@@ -43,8 +51,17 @@ def create_picsou_h():
     with open('picsou.h', 'w') as f:
         f.write(data)
 
+def release_translations():
+    '''
+    '''
+    for locale in LOCALES:
+        getoutput('lrelease translation/picsou_{0}.ts -qm translation/picsou_{0}.qm'.format(locale))        
+        
 def main():
+    '''
+    '''
     create_picsou_h()
+    release_translations()
 
 if __name__ == '__main__':
     main()
