@@ -1,12 +1,12 @@
-#
-# Variables
-#
+REM
+REM Variables
+REM
 set cwd=%cd%
 set botan=%cwd%\botan-2.8.0
 set distdir=%cwd%\..\picsou\third-party\build
-#
-# Script
-#
+REM
+REM Script
+REM
 mkdir %distdir%
 cd %botan%
 python.exe configure.py --cc=gcc --os=mingw --prefix=%distdir%
