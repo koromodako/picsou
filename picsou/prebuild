@@ -17,20 +17,40 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #
-
+import os
+from argparse import ArgumentParser
 from subprocess import getoutput
 
+DRY_RUN = False
+WINDOWS = (os.name == 'nt')
 LOCALES = [
     'fr_FR'
 ]
 
-def sanitize(s):
+def git(args):
+    '''Executes a git command depending on current OS
     '''
+    args.insert(0, 'git.exe' if WINDOWS else 'git')
+    cmd = ' '.join(args)
+    return getoutput(cmd)
+
+def lrelease(args):
+    '''Executes a lrelease command depending on current OS
+    '''
+    args.insert(0, 'lrelease.exe' if WINDOWS else 'lrelease')
+    cmd = ' '.join(args)
+    if DRY_RUN:
+        print(cmd)
+    else:
+        getoutput(cmd)
+
+def sanitize(s):
+    '''Processes command output to keep the first line only and stripped
     '''
     return s.split('\n')[0].strip()
 
 def create_picsou_h():
-    '''
+    '''Creates ou updates picsou.h
     '''
     status=sanitize(getoutput('git status --porcelain'))
     status='clean' if len(status) == 0 else 'dirty'
@@ -48,20 +68,23 @@ def create_picsou_h():
     data=data.replace('%{COMMIT}%', commit)
     data=data.replace('%{VERSION}%', version)
 
-    with open('picsou.h', 'w') as f:
-        f.write(data)
+    if DRY_RUN:
+        print(data)
+    else:
+        with open('picsou.h', 'w') as f:
+            f.write(data)
 
 def release_translations():
-    '''
+    '''Releases picsou translations
     '''
     for locale in LOCALES:
-        getoutput('lrelease translation/picsou_{0}.ts -qm translation/picsou_{0}.qm'.format(locale))        
-        
-def main():
-    '''
-    '''
-    create_picsou_h()
-    release_translations()
+        basepath = f'translation/picsou_{locale}'
+        lrelease([f'{basepath}.ts', '-qm', f'{basepath}.qm'])
 
 if __name__ == '__main__':
-    main()
+    apr = ArgumentParser(description="Pre-build script for picsou")
+    apr.add_argument('--dry-run', action='store_true', help="Prints to stdout instead of writing picsou header.")
+    args = apr.parse_args()
+    DRY_RUN = args.dry_run
+    create_picsou_h()
+    release_translations()
