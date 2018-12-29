@@ -48,7 +48,7 @@ PicsouDBViewer::PicsouDBViewer(PicsouUIServicePtr ui_svc,
     addAction(ui->action_remove_user);
 }
 
-void PicsouDBViewer::refresh(const PicsouDBPtr db)
+void PicsouDBViewer::refresh(const PicsouDBShPtr db)
 {
     bool has_users=false;
 

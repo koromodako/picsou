@@ -55,15 +55,15 @@ public:
                   QString filename,
                   OperationCollection ops);
 
-    inline const PicsouDBPtr db() const { return m_db; }
+    inline const PicsouDBShPtr db() const { return m_db; }
     inline bool is_db_modified() const { return m_is_db_modified; }
 
-    UserPtr find_user(QUuid id) const;
-    AccountPtr find_account(QUuid id) const;
+    UserShPtr find_user(QUuid id) const;
+    AccountShPtr find_account(QUuid id) const;
 
 signals:
-    void updated(const PicsouDBPtr db);
-    void unwrapped(const PicsouDBPtr db);
+    void updated(const PicsouDBShPtr db);
+    void unwrapped(const PicsouDBShPtr db);
 
 public slots:
     void dbo_modified();
@@ -79,7 +79,7 @@ private:
     bool json_dump_ops(QFile &f, OperationCollection ops);
 
 private:
-    PicsouDBPtr m_db;
+    PicsouDBShPtr m_db;
     QString m_filename;
     bool m_is_db_modified;
 

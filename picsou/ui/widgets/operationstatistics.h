@@ -36,6 +36,7 @@ public:
     virtual ~OperationStatistics();
     explicit OperationStatistics(QWidget *parent=nullptr);
 
+    void clear();
     void refresh(const OperationCollection &ops);
 
     bool append_field(const QString &name, const QString &value);

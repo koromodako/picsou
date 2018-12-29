@@ -66,7 +66,7 @@ OperationViewer::OperationViewer(PicsouUIServicePtr ui_svc,
     addAction(ui->action_remove_op);
 }
 
-void OperationViewer::refresh(const PicsouDBPtr db)
+void OperationViewer::refresh(const PicsouDBShPtr db)
 {
     int year=-1, month=-1;
     OperationCollection ops;

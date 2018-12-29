@@ -27,13 +27,6 @@ const QString Account::KW_NOTES="notes";
 const QString Account::KW_PAYMENT_METHODS="payment_methods";
 const QString Account::KW_SCHEDULED_OPS="scheduled_ops";
 
-Account::~Account()
-{
-    DELETE_HASH_CONTENT(ScheduledOperationPtr, m_scheduled_ops);
-    DELETE_HASH_CONTENT(PaymentMethodPtr, m_payment_methods);
-    DELETE_HASH_CONTENT(OperationPtr, m_ops);
-}
-
 Account::Account(PicsouDBO *parent) :
     PicsouDBO(false, parent),
     m_name(QString()),
@@ -61,7 +54,7 @@ void Account::update(const QString &name, const QString &notes)
 
 void Account::add_payment_method(const QString &name)
 {
-    PaymentMethodPtr pm=PaymentMethodPtr(new PaymentMethod(name, this));
+    PaymentMethodShPtr pm=PaymentMethodShPtr(new PaymentMethod(name, this));
     m_payment_methods.insert(pm->id(), pm);
     emit modified();
 }
@@ -92,14 +85,14 @@ void Account::add_scheduled_operation(const Amount &amount,
                                       const QString &name,
                                       const Schedule &schedule)
 {
-    ScheduledOperationPtr sop=ScheduledOperationPtr(new ScheduledOperation(amount,
-                                                                           budget,
-                                                                           recipient,
-                                                                           description,
-                                                                           payment_method,
-                                                                           name,
-                                                                           schedule,
-                                                                           this));
+    ScheduledOperationShPtr sop=ScheduledOperationShPtr(new ScheduledOperation(amount,
+                                                                               budget,
+                                                                               recipient,
+                                                                               description,
+                                                                               payment_method,
+                                                                               name,
+                                                                               schedule,
+                                                                               this));
     m_scheduled_ops.insert(sop->id(), sop);
     emit modified();
 }
@@ -129,18 +122,18 @@ void Account::add_operation(const Amount &amount,
                             const QString &description,
                             const QString &payment_method)
 {
-    OperationPtr op=OperationPtr(new Operation(amount,
-                                               date,
-                                               budget,
-                                               recipient,
-                                               description,
-                                               payment_method,
-                                               this));
+    OperationShPtr op=OperationShPtr(new Operation(amount,
+                                                   date,
+                                                   budget,
+                                                   recipient,
+                                                   description,
+                                                   payment_method,
+                                                   this));
      m_ops.insert(op->id(), op);
      emit modified();
 }
 
-void Account::add_operations(const OperationPtrList &ops)
+void Account::add_operations(const OperationShPtrList &ops)
 {
     for(const auto &op : ops) {
         op->set_parent(this);
@@ -169,30 +162,30 @@ bool Account::remove_operation(QUuid id)
     return success;
 }
 
-PaymentMethodPtr Account::find_payment_method(QUuid id)
+PaymentMethodShPtr Account::find_payment_method(QUuid id)
 {
-    PaymentMethodPtr pm;
-    QHash<QUuid, PaymentMethodPtr>::const_iterator it=m_payment_methods.find(id);
+    PaymentMethodShPtr pm;
+    QHash<QUuid, PaymentMethodShPtr>::const_iterator it=m_payment_methods.find(id);
     if(it!=m_payment_methods.end()) {
         pm=*it;
     }
     return pm;
 }
 
-ScheduledOperationPtr Account::find_scheduled_operation(QUuid id)
+ScheduledOperationShPtr Account::find_scheduled_operation(QUuid id)
 {
-    ScheduledOperationPtr sop;
-    QHash<QUuid, ScheduledOperationPtr>::const_iterator it=m_scheduled_ops.find(id);
+    ScheduledOperationShPtr sop;
+    QHash<QUuid, ScheduledOperationShPtr>::const_iterator it=m_scheduled_ops.find(id);
     if(it!=m_scheduled_ops.end()) {
         sop=*it;
     }
     return sop;
 }
 
-OperationPtr Account::find_operation(QUuid id)
+OperationShPtr Account::find_operation(QUuid id)
 {
-    OperationPtr op;
-    QHash<QUuid, OperationPtr>::const_iterator it=m_ops.find(id);
+    OperationShPtr op;
+    QHash<QUuid, OperationShPtr>::const_iterator it=m_ops.find(id);
     if(it!=m_ops.end()) {
         op=*it;
     }
@@ -216,14 +209,14 @@ int Account::min_year() const
 
 #undef min
 
-bool pm_cmp(const PaymentMethodPtr &a, const PaymentMethodPtr &b)
+bool pm_cmp(const PaymentMethodShPtr &a, const PaymentMethodShPtr &b)
 {
     return a->name()<b->name();
 }
 
-PaymentMethodPtrList Account::payment_methods(bool sorted) const
+PaymentMethodShPtrList Account::payment_methods(bool sorted) const
 {
-    PaymentMethodPtrList p_methods=m_payment_methods.values();
+    PaymentMethodShPtrList p_methods=m_payment_methods.values();
     if(sorted) {
         std::sort(p_methods.begin(), p_methods.end(), pm_cmp);
     }
@@ -233,7 +226,7 @@ PaymentMethodPtrList Account::payment_methods(bool sorted) const
 QStringList Account::payment_methods_str(bool sorted) const
 {
     QStringList p_methods_str;
-    PaymentMethodPtrList p_methods=payment_methods(sorted);
+    PaymentMethodShPtrList p_methods=payment_methods(sorted);
     for(auto &pm : p_methods) {
         p_methods_str<<pm->name();
     }

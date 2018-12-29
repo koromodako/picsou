@@ -31,7 +31,7 @@ public:
     virtual ~PicsouUIViewer();
 
 public slots:
-    virtual void refresh(const PicsouDBPtr db)=0;
+    virtual void refresh(const PicsouDBShPtr db)=0;
 
 protected:
     PicsouUIViewer(PicsouUIServicePtr ui_svc,

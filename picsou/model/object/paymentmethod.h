@@ -44,10 +44,6 @@ private:
     QString m_name;
 };
 
-DECL_PICSOU_MOD_OBJ_PTR(PaymentMethod,
-                        PaymentMethodPtr,
-                        PaymentMethodShPtr,
-                        PaymentMethodPtrList,
-                        PaymentMethodShPtrList);
+DECL_PICSOU_MOD_OBJ_PTR(PaymentMethod, PaymentMethodShPtr, PaymentMethodShPtrList);
 
 #endif // PAYMENTMETHOD_H

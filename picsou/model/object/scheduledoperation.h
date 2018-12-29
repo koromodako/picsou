@@ -57,10 +57,6 @@ private:
     Schedule m_schedule;
 };
 
-DECL_PICSOU_MOD_OBJ_PTR(ScheduledOperation,
-                        ScheduledOperationPtr,
-                        ScheduledOperationShPtr,
-                        ScheduledOperationPtrList,
-                        ScheduledOperationShPtrList);
+DECL_PICSOU_MOD_OBJ_PTR(ScheduledOperation, ScheduledOperationShPtr, ScheduledOperationShPtrList);
 
 #endif // SCHEDULEDOPERATION_H

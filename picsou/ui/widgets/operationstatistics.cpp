@@ -35,6 +35,13 @@ OperationStatistics::OperationStatistics(QWidget *parent) :
     ui->setupUi(this);
 }
 
+void OperationStatistics::clear()
+{
+    ui->balance_val->setText("-");
+    ui->total_debit_val->setText("-");
+    ui->total_credit_val->setText("-");
+}
+
 bool budget_amount_cmp(const QPair<QString, Amount> &a, const QPair<QString, Amount> &b)
 {
     return a.second<b.second;

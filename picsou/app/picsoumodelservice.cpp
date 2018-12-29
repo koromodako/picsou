@@ -78,15 +78,15 @@ bool PicsouModelService::new_db(QString filename,
     if(is_db_opened()) {
         LOG_BOOL_RETURN(false);
     }
-    m_db=PicsouDBPtr(new PicsouDB(SemVer(PICSOU_DB_MAJOR,
+    m_db=PicsouDBShPtr(new PicsouDB(SemVer(PICSOU_DB_MAJOR,
                                         PICSOU_DB_MINOR,
                                         PICSOU_DB_PATCH),
                                  name,
                                  description));
     m_filename=filename;
     m_is_db_modified=true;
-    connect(m_db, &PicsouDB::modified, this, &PicsouModelService::dbo_modified);
-    connect(m_db, &PicsouDB::unwrapped, this, &PicsouModelService::dbo_unwrapped);
+    connect(m_db.data(), &PicsouDB::modified, this, &PicsouModelService::dbo_modified);
+    connect(m_db.data(), &PicsouDB::unwrapped, this, &PicsouModelService::dbo_unwrapped);
     LOG_BOOL_RETURN(true);
 }
 
@@ -115,7 +115,7 @@ bool PicsouModelService::open_db(QString filename)
         LOG_BOOL_RETURN(false);
     }
     SemVer db_version;
-    m_db=PicsouDBPtr(new PicsouDB);
+    m_db=PicsouDBShPtr(new PicsouDB);
     for(;;) {
         /* attempt to load objects from json */
         if(m_db->read(doc.object())) {
@@ -139,8 +139,8 @@ bool PicsouModelService::open_db(QString filename)
     }
     /* success */
     m_filename=filename;
-    connect(m_db, &PicsouDB::modified, this, &PicsouModelService::dbo_modified);
-    connect(m_db, &PicsouDB::unwrapped, this, &PicsouModelService::dbo_unwrapped);
+    connect(m_db.data(), &PicsouDB::modified, this, &PicsouModelService::dbo_modified);
+    connect(m_db.data(), &PicsouDB::unwrapped, this, &PicsouModelService::dbo_unwrapped);
     LOG_BOOL_RETURN(true);
 }
 
@@ -181,7 +181,7 @@ bool PicsouModelService::close_db()
     if(is_db_opened()) {
         m_filename.clear();
         m_is_db_modified=false;
-        delete m_db;
+        m_db.clear();
         LOG_BOOL_RETURN(true);
     }
     LOG_BOOL_RETURN(false);
@@ -232,18 +232,18 @@ bool PicsouModelService::dump_ops(ImportExportFormat fmt,
     LOG_BOOL_RETURN(success);
 }
 
-UserPtr PicsouModelService::find_user(QUuid id) const
+UserShPtr PicsouModelService::find_user(QUuid id) const
 {
     LOG_IN("id="<<id);
-    UserPtr user=m_db->find_user(id);
+    UserShPtr user=m_db->find_user(id);
     LOG_DEBUG("-> user="<<user);
     return user;
 }
 
-AccountPtr PicsouModelService::find_account(QUuid id) const
+AccountShPtr PicsouModelService::find_account(QUuid id) const
 {
     LOG_IN("id="<<id);
-    AccountPtr account=m_db->find_account(id);
+    AccountShPtr account=m_db->find_account(id);
     LOG_DEBUG("-> account="<<account);
     return account;
 }
@@ -270,7 +270,7 @@ OperationCollection PicsouModelService::xml_load_ops(QFile &f)
     int y,m,d;
     QDate date;
     double amount;
-    OperationPtr op;
+    OperationShPtr op;
     OperationCollection ops;
     QXmlStreamReader xml(&f);
     QXmlStreamAttributes attrs;
@@ -314,7 +314,7 @@ OperationCollection PicsouModelService::xml_load_ops(QFile &f)
                     ops.clear();
                     return ops;
                 }
-                op=OperationPtr(new Operation(amount,
+                op=OperationShPtr(new Operation(amount,
                                               QDate(y, m, d),
                                               attrs.value(XML_ATTR_BUDGET).toString(),
                                               attrs.value(XML_ATTR_RECIPIENT).toString(),
@@ -345,7 +345,7 @@ OperationCollection PicsouModelService::csv_load_ops(QFile &f)
     double amount=0.0;
     bool ok, instr;
     QByteArray line;
-    OperationPtr op;
+    OperationShPtr op;
     int y=0, m=0, d=0, idx;
     OperationCollection ops;
     QString buffer, budget, recipient, payment_method;
@@ -419,7 +419,7 @@ OperationCollection PicsouModelService::csv_load_ops(QFile &f)
                     ops.clear();
                     return ops;
                 }
-                op=OperationPtr(new Operation(amount,
+                op=OperationShPtr(new Operation(amount,
                                               QDate(y, m, d),
                                               budget,
                                               recipient,
@@ -439,7 +439,7 @@ OperationCollection PicsouModelService::json_load_ops(QFile &f)
 {
     LOG_IN("&f="<<&f);
     QByteArray line;
-    OperationPtr op;
+    OperationShPtr op;
     QJsonDocument doc;
     OperationCollection ops;
     while(!f.atEnd()) {
@@ -447,7 +447,7 @@ OperationCollection PicsouModelService::json_load_ops(QFile &f)
         if(line.length()>0) {
             doc=QJsonDocument::fromJson(line);
             if(!doc.isNull()) {
-                op=OperationPtr(new Operation(nullptr));
+                op=OperationShPtr(new Operation(nullptr));
                 ops.append(op);
                 if(!op->read(doc.object())) {
                     LOG_WARNING("JSON import parsing error: failed to read operation.");

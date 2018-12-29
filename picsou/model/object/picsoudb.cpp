@@ -25,11 +25,6 @@ const QString PicsouDB::KW_VERSION="version";
 const QString PicsouDB::KW_TIMESTAMP="timestamp";
 const QString PicsouDB::KW_DESCRIPTION="description";
 
-PicsouDB::~PicsouDB()
-{
-    DELETE_HASH_CONTENT(UserPtr, m_users);
-}
-
 PicsouDB::PicsouDB() :
     PicsouDBO(false, nullptr)
 {
@@ -50,7 +45,7 @@ PicsouDB::PicsouDB(SemVer version,
 
 void PicsouDB::add_user(const QString &username, const QString &pswd)
 {
-    UserPtr user=UserPtr(new User(username, pswd, this));
+    UserShPtr user=UserShPtr(new User(username, pswd, this));
     m_users.insert(user->id(), user);
     emit modified();
 }
@@ -73,24 +68,24 @@ bool PicsouDB::remove_user(QUuid id)
     return success;
 }
 
-bool user_cmp(const UserPtr &a, const UserPtr &b)
+bool user_cmp(const UserShPtr &a, const UserShPtr &b)
 {
     return a->name()<b->name();
 }
 
-UserPtrList PicsouDB::users(bool sorted) const
+UserShPtrList PicsouDB::users(bool sorted) const
 {
-    UserPtrList users=m_users.values();
+    UserShPtrList users=m_users.values();
     if(sorted) {
         std::sort(users.begin(), users.end(), user_cmp);
     }
     return users;
 }
 
-UserPtr PicsouDB::find_user(QUuid id) const
+UserShPtr PicsouDB::find_user(QUuid id) const
 {
-    UserPtr user;
-    QHash<QUuid, UserPtr>::const_iterator it=m_users.find(id);
+    UserShPtr user;
+    QHash<QUuid, UserShPtr>::const_iterator it=m_users.find(id);
     if(it!=m_users.end()) {
         user=*it;
     }
@@ -102,7 +97,7 @@ OperationCollection PicsouDB::ops(QUuid account_id,
                                   int month) const
 {
     OperationCollection selected_ops;
-    AccountPtr account=find_account(account_id);
+    AccountShPtr account=find_account(account_id);
     if(account.isNull()) {
         LOG_WARNING("failed to find account.");
         return selected_ops;
@@ -117,7 +112,7 @@ OperationCollection PicsouDB::ops(QUuid account_id,
                                         sop->recipient(),
                                         sop->description(),
                                         sop->payment_method(),
-                                        account);
+                                        account.data());
             op->mark_scheduled();
             selected_ops.append(OperationShPtr(op));
         }
@@ -134,9 +129,9 @@ OperationCollection PicsouDB::ops(QUuid account_id,
     return selected_ops;
 }
 
-AccountPtr PicsouDB::find_account(QUuid id) const
+AccountShPtr PicsouDB::find_account(QUuid id) const
 {
-    AccountPtr account;
+    AccountShPtr account;
     for(const auto &user : m_users.values()) {
         account=user->find_account(id);
         if(account.isNull()) {

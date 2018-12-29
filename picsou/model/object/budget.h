@@ -54,10 +54,6 @@ private:
     QString m_description;
 };
 
-DECL_PICSOU_MOD_OBJ_PTR(Budget,
-                        BudgetPtr,
-                        BudgetShPtr,
-                        BudgetPtrList,
-                        BudgetPtrShList);
+DECL_PICSOU_MOD_OBJ_PTR(Budget, BudgetShPtr, BudgetShPtrList);
 
 #endif // BUDGET_H

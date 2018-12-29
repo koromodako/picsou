@@ -16,7 +16,13 @@
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 #include "schedule.h"
-#include <QObject>
+#include <QCoreApplication>
+
+const QStringList Schedule::FREQUENCY_UNITS=(QStringList()<<"YEAR"<<"MONTH"<<"WEEK"<<"DAY");
+const QStringList Schedule::TR_FREQUENCY_UNITS=(QStringList()<<Schedule::tr("year")
+                                                             <<Schedule::tr("month")
+                                                             <<Schedule::tr("week")
+                                                             <<Schedule::tr("day"));
 
 const QString Schedule::KW_FROM_YEAR="starty";
 const QString Schedule::KW_FROM_MONTH="startm";
@@ -27,11 +33,6 @@ const QString Schedule::KW_UNTIL_DAY="stopd";
 const QString Schedule::KW_ENDLESS="endless";
 const QString Schedule::KW_FREQ_VALUE="freq_value";
 const QString Schedule::KW_FREQ_UNIT="freq_unit";
-
-static const QStringList FREQUENCY_UNITS=(QStringList()<<"YEAR"
-                                                       <<"MONTH"
-                                                       <<"WEEK"
-                                                       <<"DAY");
 
 Schedule::Schedule(const QDate &from,
                    const QDate &until,
@@ -47,24 +48,9 @@ Schedule::Schedule(const QDate &from,
 
 }
 
-QString Schedule::freq_unit2str(FrequencyUnit freq_unit)
+QString Schedule::freq_unit2str(Schedule::FrequencyUnit freq_unit)
 {
     return FREQUENCY_UNITS.at(freq_unit);
-}
-
-QString Schedule::freq_unit2trstr(FrequencyUnit freq_unit)
-{
-    switch (freq_unit) {
-        case YEAR:
-            return QObject::tr("year");
-        case MONTH:
-            return QObject::tr("month");
-        case WEEK:
-            return QObject::tr("week");
-        case DAY:
-            return QObject::tr("day");
-    }
-    return QObject::tr("undefined");
 }
 
 Schedule::FrequencyUnit Schedule::str2freq_unit(const QString &freq_unit)
@@ -72,10 +58,16 @@ Schedule::FrequencyUnit Schedule::str2freq_unit(const QString &freq_unit)
     return FrequencyUnit(FREQUENCY_UNITS.indexOf(freq_unit));
 }
 
-QStringList Schedule::frequency_units()
+QString Schedule::freq_unit2trstr(Schedule::FrequencyUnit freq_unit)
 {
-    return FREQUENCY_UNITS;
+    return TR_FREQUENCY_UNITS.at(freq_unit);
 }
+
+Schedule::FrequencyUnit Schedule::trstr2freq_unit(const QString &freq_unit)
+{
+    return Schedule::FrequencyUnit(TR_FREQUENCY_UNITS.indexOf(freq_unit));
+}
+
 
 bool Schedule::valid() const
 {

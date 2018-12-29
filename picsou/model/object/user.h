@@ -31,7 +31,6 @@ public:
     static const QString KW_BUDGETS;
     static const QString KW_ACCOUNTS;
 
-    virtual ~User();
     User(PicsouDBO *parent);
     User(const QString &name,
          const QString &pswd,
@@ -51,12 +50,12 @@ public:
     bool remove_account(QUuid id);
 
     inline QString name() const { return m_name; }
-    BudgetPtrList budgets(bool sorted=false) const;
+    BudgetShPtrList budgets(bool sorted=false) const;
     QStringList budgets_str(bool sorted=false) const;
-    AccountPtrList accounts(bool sorted=false) const;
+    AccountShPtrList accounts(bool sorted=false) const;
 
-    BudgetPtr find_budget(QUuid id) const;
-    AccountPtr find_account(QUuid id) const;
+    BudgetShPtr find_budget(QUuid id) const;
+    AccountShPtr find_account(QUuid id) const;
 
     bool read(const QJsonObject &json);
     bool write(QJsonObject &json) const;
@@ -67,14 +66,10 @@ public:
 
 private:
     QString m_name;
-    QHash<QUuid, BudgetPtr> m_budgets;
-    QHash<QUuid, AccountPtr> m_accounts;
+    QHash<QUuid, BudgetShPtr> m_budgets;
+    QHash<QUuid, AccountShPtr> m_accounts;
 };
 
-DECL_PICSOU_MOD_OBJ_PTR(User,
-                        UserPtr,
-                        UserShPtr,
-                        UserPtrList,
-                        UserShPtrList);
+DECL_PICSOU_MOD_OBJ_PTR(User, UserShPtr, UserShPtrList);
 
 #endif // USER_H

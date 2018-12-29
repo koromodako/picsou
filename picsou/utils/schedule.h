@@ -20,9 +20,12 @@
 
 #include <QDate>
 #include <QStringList>
+#include <QCoreApplication>
 
 class Schedule
 {
+    Q_DECLARE_TR_FUNCTIONS(Schedule)
+
 public:
     enum FrequencyUnit {
         YEAR,
@@ -30,6 +33,9 @@ public:
         WEEK,
         DAY
     };
+
+    static const QStringList FREQUENCY_UNITS;
+    static const QStringList TR_FREQUENCY_UNITS;
 
     static const QString KW_FROM_YEAR;
     static const QString KW_FROM_MONTH;
@@ -47,16 +53,17 @@ public:
              int freq_value=0,
              FrequencyUnit freq_unit=YEAR);
 
-    static QString freq_unit2str(FrequencyUnit freq_unit);
-    static QString freq_unit2trstr(FrequencyUnit freq_unit);
-    static FrequencyUnit str2freq_unit(const QString &freq_unit);
-    static QStringList frequency_units();
-
     inline QDate from() const { return m_from; }
     inline QDate until() const { return m_until; }
     inline bool endless() const { return m_endless; }
     inline int freq_value() const { return m_freq_value; }
     inline FrequencyUnit freq_unit() const { return m_freq_unit; }
+
+    static QString freq_unit2str(FrequencyUnit freq_unit);
+    static FrequencyUnit str2freq_unit(const QString &freq_unit);
+
+    static QString freq_unit2trstr(FrequencyUnit freq_unit);
+    static FrequencyUnit trstr2freq_unit(const QString &freq_unit);
 
     bool valid() const;
     bool contains(const QDate &date) const;

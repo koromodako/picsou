@@ -23,12 +23,6 @@ const QString User::KW_NAME="name";
 const QString User::KW_BUDGETS="budgets";
 const QString User::KW_ACCOUNTS="accounts";
 
-User::~User()
-{
-    DELETE_HASH_CONTENT(BudgetPtr, m_budgets);
-    DELETE_HASH_CONTENT(AccountPtr, m_accounts);
-}
-
 User::User(PicsouDBO *parent) :
     PicsouDBO(false, parent)
 {
@@ -68,7 +62,7 @@ void User::add_budget(const Amount &amount,
                       const QString &name,
                       const QString &description)
 {
-    BudgetPtr budget=BudgetPtr(new Budget(amount, name, description, this));
+    BudgetShPtr budget=BudgetShPtr(new Budget(amount, name, description, this));
     m_budgets.insert(budget->id(), budget);
     emit modified();
 }
@@ -94,7 +88,7 @@ bool User::remove_budget(QUuid id)
 void User::add_account(const QString &name,
                        const QString &notes)
 {
-    AccountPtr account=AccountPtr(new Account(name, notes, this));
+    AccountShPtr account=AccountShPtr(new Account(name, notes, this));
     m_accounts.insert(account->id(), account);
     emit modified();
 }
@@ -117,14 +111,14 @@ bool User::remove_account(QUuid id)
     return success;
 }
 
-bool budget_cmp(const BudgetPtr &a, const BudgetPtr &b)
+bool budget_cmp(const BudgetShPtr &a, const BudgetShPtr &b)
 {
     return a->name()<b->name();
 }
 
-BudgetPtrList User::budgets(bool sorted) const
+BudgetShPtrList User::budgets(bool sorted) const
 {
-    BudgetPtrList budgets=m_budgets.values();
+    BudgetShPtrList budgets=m_budgets.values();
     if(sorted) {
         std::sort(budgets.begin(), budgets.end(), budget_cmp);
     }
@@ -134,7 +128,7 @@ BudgetPtrList User::budgets(bool sorted) const
 QStringList User::budgets_str(bool sorted) const
 {
     QStringList budgets_str;
-    BudgetPtrList budget_list=budgets(sorted);
+    BudgetShPtrList budget_list=budgets(sorted);
     for(auto &budget : budget_list) {
         budgets_str<<budget->name();
     }
@@ -142,34 +136,34 @@ QStringList User::budgets_str(bool sorted) const
     return budgets_str;
 }
 
-bool account_cmp(const AccountPtr &a, const AccountPtr &b)
+bool account_cmp(const AccountShPtr &a, const AccountShPtr &b)
 {
     return a->name()<b->name();
 }
 
-AccountPtrList User::accounts(bool sorted) const
+AccountShPtrList User::accounts(bool sorted) const
 {
-    AccountPtrList accounts=m_accounts.values();
+    AccountShPtrList accounts=m_accounts.values();
     if(sorted) {
         std::sort(accounts.begin(), accounts.end(), account_cmp);
     }
     return accounts;
 }
 
-BudgetPtr User::find_budget(QUuid id) const
+BudgetShPtr User::find_budget(QUuid id) const
 {
-    BudgetPtr budget;
-    QHash<QUuid, BudgetPtr>::const_iterator it=m_budgets.find(id);
+    BudgetShPtr budget;
+    QHash<QUuid, BudgetShPtr>::const_iterator it=m_budgets.find(id);
     if(it!=m_budgets.end()) {
         budget=*it;
     }
     return budget;
 }
 
-AccountPtr User::find_account(QUuid id) const
+AccountShPtr User::find_account(QUuid id) const
 {
-    AccountPtr account;
-    QHash<QUuid, AccountPtr>::const_iterator it=m_accounts.find(id);
+    AccountShPtr account;
+    QHash<QUuid, AccountShPtr>::const_iterator it=m_accounts.find(id);
     if(it!=m_accounts.end()) {
         account=*it;
     }

@@ -83,21 +83,21 @@
        <item>
         <widget class="QLabel" name="version">
          <property name="text">
-          <string>&lt;version&gt;</string>
+          <string>-</string>
          </property>
         </widget>
        </item>
        <item>
         <widget class="QLabel" name="build">
          <property name="text">
-          <string>&lt;build&gt;</string>
+          <string>-</string>
          </property>
         </widget>
        </item>
        <item>
         <widget class="QLabel" name="libcrypto">
          <property name="text">
-          <string>&lt;name_and_version&gt;</string>
+          <string>-</string>
          </property>
         </widget>
        </item>

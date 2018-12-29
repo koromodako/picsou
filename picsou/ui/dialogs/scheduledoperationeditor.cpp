@@ -65,6 +65,10 @@ ScheduledOperationEditor::ScheduledOperationEditor(QWidget *parent,
         ui->description->setPlainText(m_description);
     }
 
+    ui->freq_unit->clear();
+    ui->freq_unit->addItems(Schedule::TR_FREQUENCY_UNITS);
+    ui->freq_unit->setCurrentText(Schedule::freq_unit2trstr(m_schedule.freq_unit()));
+
     ui->from->setDate(m_schedule.from());
     ui->until->setDate(m_schedule.until());
     ui->endless->setChecked(m_schedule.endless());
@@ -90,13 +94,6 @@ void ScheduledOperationEditor::set_budgets(const QStringList &budgets)
     }
 }
 
-void ScheduledOperationEditor::set_frequency_units(const QStringList &frequency_units)
-{
-    ui->freq_unit->clear();
-    ui->freq_unit->addItems(frequency_units);
-    ui->freq_unit->setCurrentText(Schedule::freq_unit2str(m_schedule.freq_unit()));
-}
-
 void ScheduledOperationEditor::set_payment_methods(const QStringList &payment_methods)
 {
     ui->payment_method->clear();
@@ -114,7 +111,7 @@ void ScheduledOperationEditor::endless(bool checked)
 void ScheduledOperationEditor::limit_freq(const QString &freq_unit)
 {
     int max;
-    switch (Schedule::str2freq_unit(freq_unit)) {
+    switch (Schedule::trstr2freq_unit(freq_unit)) {
         case Schedule::DAY:
             max=364;
             break;
@@ -148,6 +145,6 @@ void ScheduledOperationEditor::accept()
                        ui->until->date(),
                        ui->endless->isChecked(),
                        ui->freq_value->value(),
-                       Schedule::str2freq_unit(ui->freq_unit->currentText()));
+                       Schedule::trstr2freq_unit(ui->freq_unit->currentText()));
     QDialog::accept();
 }

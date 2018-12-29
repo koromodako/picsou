@@ -27,13 +27,11 @@
 class OperationCollection
 {
 public:
-    virtual ~OperationCollection();
     OperationCollection();
-    OperationCollection(const OperationPtrList &ops);
+    OperationCollection(const OperationShPtrList &ops);
 
     void clear();
-    void append(const OperationPtr &op);
-    void append(const OperationShPtr &sh_op);
+    void append(const OperationShPtr &op);
 
     inline int length() const { return list(false).length(); }
     inline Amount balance() const { return m_balance; }
@@ -43,7 +41,7 @@ public:
 
     Amount expense_per_ym(int year, int month=0);
     Amount total_in_range(const QDate &from, const QDate &to);
-    OperationPtrList list(bool sorted=true) const;
+    OperationShPtrList list(bool sorted=true) const;
 
 protected:
     void aggregate(const Operation *op);
@@ -56,8 +54,7 @@ private:
     QHash<QString, Amount> m_expense_per_budget;
     QHash<int, QHash<int, Amount>> m_expense_per_ym;
     /* pointer storage members */
-    OperationPtrList m_ops;
-    OperationShPtrList m_sh_ops;
+    OperationShPtrList m_ops;
 
 };
 

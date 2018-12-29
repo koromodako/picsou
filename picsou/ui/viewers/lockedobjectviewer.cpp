@@ -27,7 +27,7 @@ LockedObjectViewer::~LockedObjectViewer()
     delete ui;
 }
 
-void LockedObjectViewer::refresh(const PicsouDBPtr)
+void LockedObjectViewer::refresh(const PicsouDBShPtr)
 {
 
 }

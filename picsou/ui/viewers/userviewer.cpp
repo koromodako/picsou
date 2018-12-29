@@ -57,10 +57,10 @@ UserViewer::UserViewer(PicsouUIServicePtr ui_svc,
     addAction(ui->action_remove_account);
 }
 
-void UserViewer::refresh(const PicsouDBPtr db)
+void UserViewer::refresh(const PicsouDBShPtr db)
 {
     bool has_accounts, has_budgets;
-    UserPtr user=db->find_user(mod_obj_id());
+    UserShPtr user=db->find_user(mod_obj_id());
     if(user.isNull()) {
         LOG_WARNING("failed to find user!");
         return;

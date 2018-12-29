@@ -16,18 +16,14 @@
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 #include "operationcollection.h"
-
-OperationCollection::~OperationCollection()
-{
-
-}
+#include "utils/macro.h"
 
 OperationCollection::OperationCollection()
 {
     clear();
 }
 
-OperationCollection::OperationCollection(const OperationPtrList &ops)
+OperationCollection::OperationCollection(const OperationShPtrList &ops)
 {
     for(auto &op : ops) {
         append(op);
@@ -36,9 +32,6 @@ OperationCollection::OperationCollection(const OperationPtrList &ops)
 
 void OperationCollection::clear()
 {
-    for(auto &op : m_ops) {
-        delete op;
-    }
     m_ops.clear();
     m_balance=0;
     m_total_debit=0;
@@ -46,16 +39,10 @@ void OperationCollection::clear()
     m_expense_per_budget.clear();
 }
 
-void OperationCollection::append(const OperationPtr &op)
+void OperationCollection::append(const OperationShPtr &op)
 {
     aggregate(op.data());
     m_ops.append(op);
-}
-
-void OperationCollection::append(const OperationShPtr &sh_op)
-{
-    aggregate(sh_op.data());
-    m_sh_ops.append(sh_op);
 }
 
 Amount OperationCollection::expense_per_ym(int year, int month)
@@ -91,17 +78,14 @@ Amount OperationCollection::total_in_range(const QDate &from, const QDate &to)
     return total;
 }
 
-bool op_cmp(const OperationPtr &a, const OperationPtr &b)
+bool op_cmp(const OperationShPtr &a, const OperationShPtr &b)
 {
     return a->date()<b->date();
 }
 
-OperationPtrList OperationCollection::list(bool sorted) const
+OperationShPtrList OperationCollection::list(bool sorted) const
 {
-    OperationPtrList ops=m_ops;
-    for(const auto &sh_op : m_sh_ops) {
-        ops.append(OperationPtr(sh_op.data()));
-    }
+    OperationShPtrList ops=m_ops;
     if(sorted) {
         std::sort(ops.begin(), ops.end(), op_cmp);
     }

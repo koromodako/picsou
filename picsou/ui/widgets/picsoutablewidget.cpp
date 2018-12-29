@@ -15,6 +15,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
+#include "utils/macro.h"
 #include "picsoutablewidget.h"
 #include "ui/items/picsoutableitem.h"
 #include <QHeaderView>
@@ -66,7 +67,6 @@ void PicsouTableWidget::refresh(OperationCollection ops)
     static const QColor debit_color=QColor(5, 5, 5, alpha),
                         credit_color=QColor(0, 255, 0, alpha);
 
-
     clear();
     setRowCount(ops.length());
 
@@ -74,7 +74,10 @@ void PicsouTableWidget::refresh(OperationCollection ops)
     QIcon icon;
     QColor bgcolor;
     QList<QTableWidgetItem*> items;
-    for(const auto &op : ops.list()) {
+    OperationShPtrList ops_list=ops.list();
+    LOG_DEBUG("adding operations...");
+    for(const auto &op : ops_list) {
+        LOG_DEBUG("adding op: "<<op);
         items.clear();
         switch (op->type()) {
         case Operation::NEUTRAL:

@@ -54,7 +54,7 @@ SearchQuery::SearchQuery(const QString &username,
     LOG_VOID_RETURN();
 }
 
-bool SearchQuery::accepts(const OperationPtr &op) const
+bool SearchQuery::accepts(const OperationShPtr &op) const
 {
     LOG_IN("op="<<op);
     QDate date=op->date();

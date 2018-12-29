@@ -174,6 +174,9 @@ void MainWindow::update_search()
     if(ops.length()>0) {
         m_search_table->refresh(ops);
         m_search_ops_stats->refresh(ops);
+    } else {
+        m_search_table->clear();
+        m_search_ops_stats->clear();
     }
     LOG_VOID_RETURN();
 }

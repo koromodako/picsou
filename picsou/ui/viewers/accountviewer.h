@@ -38,7 +38,7 @@ public:
                            QWidget *parent=nullptr);
 
 public slots:
-    void refresh(const PicsouDBPtr db);
+    void refresh(const PicsouDBShPtr db);
 
     /* payment methods */
     void add_pm();

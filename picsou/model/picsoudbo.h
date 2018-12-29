@@ -71,21 +71,9 @@ private:
 };
 
 #include <QPointer>
-#define DECL_PICSOU_MOD_OBJ_PTR(Class, ClassPtr, ClassShPtr, ClassPtrList, ClassShPtrList) \
-    typedef QPointer<Class> ClassPtr; \
+#define DECL_PICSOU_MOD_OBJ_PTR(Class, ClassShPtr, ClassShPtrList) \
     typedef QSharedPointer<Class> ClassShPtr; \
-    typedef QList<ClassPtr> ClassPtrList; \
     typedef QList<ClassShPtr> ClassShPtrList
-
-#define DELETE_HASH_CONTENT(Class, hash) \
-    do { \
-        QHash<QUuid, Class>::iterator it__=(hash).begin(); \
-        while(it__!=(hash).end()) { \
-            delete it__.value(); \
-            it__++; \
-        } \
-        (hash).clear(); \
-    } while(0)
 
 #define JSON_CHECK_KEYS(list) \
     do { \
@@ -109,7 +97,7 @@ private:
                 set_valid(false); \
                 LOG_BOOL_RETURN(false); \
             } \
-            (member).insert(obj__->id(), QPointer<Class>(obj__)); \
+            (member).insert(obj__->id(), QSharedPointer<Class>(obj__)); \
         } \
     } while(0)
 

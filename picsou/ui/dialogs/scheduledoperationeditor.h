@@ -43,7 +43,6 @@ public:
                                       const Schedule &schedule = Schedule());
 
     void set_budgets(const QStringList &budgets);
-    void set_frequency_units(const QStringList &frequency_units);
     void set_payment_methods(const QStringList &payment_methods);
 
     inline Amount amount() const { return m_amount; }

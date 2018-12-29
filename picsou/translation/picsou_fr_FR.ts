@@ -238,8 +238,12 @@
     </message>
     <message>
         <location filename="../ui/viewers/accountviewer.cpp" line="123"/>
-        <source>[%0] %1 from %2 to %3 each %4 %5</source>
+        <source>[%0] %1 from %2 to %3 every %4 %5</source>
         <translation>[%0] %1 du %2 au %3 tous les %4 %5</translation>
+    </message>
+    <message>
+        <source>[%0] %1 from %2 to %3 each %4 %5</source>
+        <translation type="vanished">[%0] %1 du %2 au %3 tous les %4 %5</translation>
     </message>
     <message>
         <location filename="../ui/viewers/accountviewer.cpp" line="203"/>
@@ -1016,241 +1020,241 @@
         <translation>Vous devez entrer la même phrase de passe dans les deux fenêtres, ou cliquer sur &apos;Annuler&apos;.</translation>
     </message>
     <message>
-        <location filename="../app/picsouuiservice.cpp" line="280"/>
+        <location filename="../app/picsouuiservice.cpp" line="268"/>
         <source>Searching among %0 operations...</source>
         <translation>Recherche parmis %0 opérations...</translation>
     </message>
     <message>
-        <location filename="../app/picsouuiservice.cpp" line="281"/>
+        <location filename="../app/picsouuiservice.cpp" line="269"/>
         <source>Abort search</source>
         <translation>Annuler la recherche</translation>
     </message>
     <message>
-        <location filename="../app/picsouuiservice.cpp" line="306"/>
+        <location filename="../app/picsouuiservice.cpp" line="294"/>
         <source>No result</source>
         <translation>Aucun résultat</translation>
     </message>
     <message>
-        <location filename="../app/picsouuiservice.cpp" line="306"/>
+        <location filename="../app/picsouuiservice.cpp" line="294"/>
         <source>No operation matched the search query.</source>
         <translation>Aucune opération satisfaisant les critères n&apos;a été trouvée.</translation>
     </message>
     <message>
-        <location filename="../app/picsouuiservice.cpp" line="394"/>
+        <location filename="../app/picsouuiservice.cpp" line="382"/>
         <source>Failed to find user.</source>
         <translation>Aucun utilisateur trouvé avec cet id.</translation>
     </message>
     <message>
-        <location filename="../app/picsouuiservice.cpp" line="403"/>
+        <location filename="../app/picsouuiservice.cpp" line="391"/>
         <source>Failed to unwrap user.</source>
         <translation>Echec du débloquage de l&apos;utilisateur.</translation>
     </message>
     <message>
-        <location filename="../app/picsouuiservice.cpp" line="423"/>
+        <location filename="../app/picsouuiservice.cpp" line="411"/>
         <source>Create file</source>
         <translation>Création d&apos;une base de données</translation>
     </message>
     <message>
-        <location filename="../app/picsouuiservice.cpp" line="423"/>
-        <location filename="../app/picsouuiservice.cpp" line="449"/>
-        <location filename="../app/picsouuiservice.cpp" line="497"/>
+        <location filename="../app/picsouuiservice.cpp" line="411"/>
+        <location filename="../app/picsouuiservice.cpp" line="437"/>
+        <location filename="../app/picsouuiservice.cpp" line="485"/>
         <source>Database (*.psdb)</source>
         <translation>Base de données (*.psdb)</translation>
     </message>
     <message>
-        <location filename="../app/picsouuiservice.cpp" line="437"/>
+        <location filename="../app/picsouuiservice.cpp" line="425"/>
         <source>Failed to create a new database.</source>
         <translation>Echec de création de la nouvelle base.</translation>
     </message>
     <message>
-        <location filename="../app/picsouuiservice.cpp" line="449"/>
-        <location filename="../app/picsouuiservice.cpp" line="497"/>
+        <location filename="../app/picsouuiservice.cpp" line="437"/>
+        <location filename="../app/picsouuiservice.cpp" line="485"/>
         <source>Open file</source>
         <translation>Sélection d&apos;une base de données</translation>
     </message>
     <message>
-        <location filename="../app/picsouuiservice.cpp" line="458"/>
+        <location filename="../app/picsouuiservice.cpp" line="446"/>
         <source>Failed to open an existing database.</source>
         <translation>Echec d&apos;ouverture d&apos;une base de données.</translation>
     </message>
     <message>
-        <location filename="../app/picsouuiservice.cpp" line="469"/>
+        <location filename="../app/picsouuiservice.cpp" line="457"/>
         <source>Save database</source>
         <translation>Sauvegarde d&apos;une base de données</translation>
     </message>
     <message>
-        <location filename="../app/picsouuiservice.cpp" line="469"/>
+        <location filename="../app/picsouuiservice.cpp" line="457"/>
         <source>Do you want to save the database before closing it?</source>
         <translation>Voulez-vous sauvegarder la base de données avant de la fermer ?</translation>
     </message>
     <message>
-        <location filename="../app/picsouuiservice.cpp" line="478"/>
+        <location filename="../app/picsouuiservice.cpp" line="466"/>
         <source>Failed to close the database properly.</source>
         <translation>Echec de fermeture de la base de données.</translation>
     </message>
     <message>
-        <location filename="../app/picsouuiservice.cpp" line="489"/>
+        <location filename="../app/picsouuiservice.cpp" line="477"/>
         <source>Failed to save the database properly.</source>
         <translation>Echec de la sauvegarde de la base de données.</translation>
     </message>
     <message>
-        <location filename="../app/picsouuiservice.cpp" line="507"/>
+        <location filename="../app/picsouuiservice.cpp" line="495"/>
         <source>Failed to save database in specified file.</source>
         <translation>Echec de la sauvegarde de la base de données dans le fichier spécifié.</translation>
     </message>
     <message>
-        <location filename="../app/picsouuiservice.cpp" line="529"/>
-        <location filename="../app/picsouuiservice.cpp" line="562"/>
-        <location filename="../app/picsouuiservice.cpp" line="580"/>
-        <location filename="../app/picsouuiservice.cpp" line="603"/>
-        <location filename="../app/picsouuiservice.cpp" line="637"/>
-        <location filename="../app/picsouuiservice.cpp" line="662"/>
-        <location filename="../app/picsouuiservice.cpp" line="735"/>
-        <location filename="../app/picsouuiservice.cpp" line="777"/>
-        <location filename="../app/picsouuiservice.cpp" line="847"/>
-        <location filename="../app/picsouuiservice.cpp" line="897"/>
+        <location filename="../app/picsouuiservice.cpp" line="517"/>
+        <location filename="../app/picsouuiservice.cpp" line="550"/>
+        <location filename="../app/picsouuiservice.cpp" line="568"/>
+        <location filename="../app/picsouuiservice.cpp" line="591"/>
+        <location filename="../app/picsouuiservice.cpp" line="625"/>
+        <location filename="../app/picsouuiservice.cpp" line="650"/>
+        <location filename="../app/picsouuiservice.cpp" line="723"/>
+        <location filename="../app/picsouuiservice.cpp" line="764"/>
+        <location filename="../app/picsouuiservice.cpp" line="833"/>
+        <location filename="../app/picsouuiservice.cpp" line="883"/>
         <source>Internal error: invalid user pointer.</source>
         <translation>Erreur interne : pointeur utilisateur invalide.</translation>
     </message>
     <message>
-        <location filename="../app/picsouuiservice.cpp" line="538"/>
+        <location filename="../app/picsouuiservice.cpp" line="526"/>
         <source>Internal error: failed to update.</source>
         <translation>Erreur interne : échec de la mise à jour de l&apos;utilisateur.</translation>
     </message>
     <message>
-        <location filename="../app/picsouuiservice.cpp" line="552"/>
+        <location filename="../app/picsouuiservice.cpp" line="540"/>
         <source>Failed to remove user from database.</source>
         <translation>Echec de la suppression d&apos;un utiliateur de la base de données.</translation>
     </message>
     <message>
-        <location filename="../app/picsouuiservice.cpp" line="585"/>
+        <location filename="../app/picsouuiservice.cpp" line="573"/>
         <source>Internal error: invalid budget pointer.</source>
         <translation>Erreur interne : pointeur de budget invalide.</translation>
     </message>
     <message>
-        <location filename="../app/picsouuiservice.cpp" line="610"/>
+        <location filename="../app/picsouuiservice.cpp" line="598"/>
         <source>Failed to remove budget from database.</source>
         <translation>Echec de la suppression d&apos;un budget de la base de données.</translation>
     </message>
     <message>
-        <location filename="../app/picsouuiservice.cpp" line="619"/>
-        <location filename="../app/picsouuiservice.cpp" line="642"/>
-        <location filename="../app/picsouuiservice.cpp" line="678"/>
-        <location filename="../app/picsouuiservice.cpp" line="696"/>
-        <location filename="../app/picsouuiservice.cpp" line="719"/>
-        <location filename="../app/picsouuiservice.cpp" line="740"/>
-        <location filename="../app/picsouuiservice.cpp" line="782"/>
-        <location filename="../app/picsouuiservice.cpp" line="831"/>
-        <location filename="../app/picsouuiservice.cpp" line="852"/>
-        <location filename="../app/picsouuiservice.cpp" line="887"/>
-        <location filename="../app/picsouuiservice.cpp" line="928"/>
-        <location filename="../app/picsouuiservice.cpp" line="944"/>
-        <location filename="../app/picsouuiservice.cpp" line="980"/>
+        <location filename="../app/picsouuiservice.cpp" line="607"/>
+        <location filename="../app/picsouuiservice.cpp" line="630"/>
+        <location filename="../app/picsouuiservice.cpp" line="666"/>
+        <location filename="../app/picsouuiservice.cpp" line="684"/>
+        <location filename="../app/picsouuiservice.cpp" line="707"/>
+        <location filename="../app/picsouuiservice.cpp" line="728"/>
+        <location filename="../app/picsouuiservice.cpp" line="769"/>
+        <location filename="../app/picsouuiservice.cpp" line="817"/>
+        <location filename="../app/picsouuiservice.cpp" line="838"/>
+        <location filename="../app/picsouuiservice.cpp" line="873"/>
+        <location filename="../app/picsouuiservice.cpp" line="914"/>
+        <location filename="../app/picsouuiservice.cpp" line="930"/>
+        <location filename="../app/picsouuiservice.cpp" line="966"/>
         <source>Internal error: invalid account pointer.</source>
         <translation>Erreur interne : pointeur de compte invalide.</translation>
     </message>
     <message>
-        <location filename="../app/picsouuiservice.cpp" line="669"/>
+        <location filename="../app/picsouuiservice.cpp" line="657"/>
         <source>Failed to remove account from database.</source>
         <translation>Echec de la suppression d&apos;un compte de la base de données.</translation>
     </message>
     <message>
-        <location filename="../app/picsouuiservice.cpp" line="701"/>
+        <location filename="../app/picsouuiservice.cpp" line="689"/>
         <source>Internal error: invalid payment method pointer.</source>
         <translation>Erreur interne : pointeur de méthode de paiement invalid.</translation>
     </message>
     <message>
-        <location filename="../app/picsouuiservice.cpp" line="726"/>
-        <location filename="../app/picsouuiservice.cpp" line="838"/>
+        <location filename="../app/picsouuiservice.cpp" line="714"/>
+        <location filename="../app/picsouuiservice.cpp" line="824"/>
         <source>Failed to remove payment method from database.</source>
         <translation>Echec de la suppression d&apos;une méthode de paiement de la base de données.</translation>
     </message>
     <message>
-        <location filename="../app/picsouuiservice.cpp" line="745"/>
-        <location filename="../app/picsouuiservice.cpp" line="787"/>
-        <location filename="../app/picsouuiservice.cpp" line="857"/>
+        <location filename="../app/picsouuiservice.cpp" line="733"/>
+        <location filename="../app/picsouuiservice.cpp" line="774"/>
+        <location filename="../app/picsouuiservice.cpp" line="843"/>
         <source>Logical error: make sure you have defined at least one budget before adding operations.</source>
         <translation>Erreur logique : Vous devez ajouter au moins un budget avant d&apos;ajouter des opérations.</translation>
     </message>
     <message>
-        <location filename="../app/picsouuiservice.cpp" line="750"/>
-        <location filename="../app/picsouuiservice.cpp" line="792"/>
-        <location filename="../app/picsouuiservice.cpp" line="862"/>
+        <location filename="../app/picsouuiservice.cpp" line="738"/>
+        <location filename="../app/picsouuiservice.cpp" line="779"/>
+        <location filename="../app/picsouuiservice.cpp" line="848"/>
         <source>Logical error: make sure you have defined at least one payment method before adding operations.</source>
         <translation>Erreur logique : Vous devez ajouter au moins une méthode de paiement avant d&apos;ajouter des opérations.</translation>
     </message>
     <message>
-        <location filename="../app/picsouuiservice.cpp" line="797"/>
+        <location filename="../app/picsouuiservice.cpp" line="784"/>
         <source>Internal error: invalid scheduled operation pointer.</source>
         <translation>Erreur interne : pointeur d&apos;opération programmée invalide.</translation>
     </message>
     <message>
-        <location filename="../app/picsouuiservice.cpp" line="892"/>
+        <location filename="../app/picsouuiservice.cpp" line="878"/>
         <source>Internal error: invalid op pointer.</source>
         <translation>Erreur interne : pointeur d&apos;opération invalide.</translation>
     </message>
     <message>
-        <location filename="../app/picsouuiservice.cpp" line="935"/>
+        <location filename="../app/picsouuiservice.cpp" line="921"/>
         <source>Failed to remove operation from database.</source>
         <translation>Echec de la suppression d&apos;une opération de la base de données.</translation>
     </message>
     <message>
-        <location filename="../app/picsouuiservice.cpp" line="947"/>
+        <location filename="../app/picsouuiservice.cpp" line="933"/>
         <source>Import file</source>
         <translation>Importer des opérations</translation>
     </message>
     <message>
-        <location filename="../app/picsouuiservice.cpp" line="947"/>
+        <location filename="../app/picsouuiservice.cpp" line="933"/>
         <source>Files (*.csv *.xml *.json)</source>
         <translation>Fichiers (*.csv *.xml *.json)</translation>
     </message>
     <message>
-        <location filename="../app/picsouuiservice.cpp" line="962"/>
+        <location filename="../app/picsouuiservice.cpp" line="948"/>
         <source>Empty import</source>
         <translation>Import vide</translation>
     </message>
     <message>
-        <location filename="../app/picsouuiservice.cpp" line="962"/>
+        <location filename="../app/picsouuiservice.cpp" line="948"/>
         <source>Import result is empty. Invalid or empty input file.</source>
         <translation>Aucune donnée importée. Le fichier d&apos;entrée est vide ou invalide.</translation>
     </message>
     <message>
-        <location filename="../app/picsouuiservice.cpp" line="988"/>
+        <location filename="../app/picsouuiservice.cpp" line="974"/>
         <source>Which format?</source>
         <translation>Quel format d&apos;export souhaitez-vous ?</translation>
     </message>
     <message>
-        <location filename="../app/picsouuiservice.cpp" line="988"/>
+        <location filename="../app/picsouuiservice.cpp" line="974"/>
         <source>Select output format</source>
         <translation>Sélection du format d&apos;export</translation>
     </message>
     <message>
-        <location filename="../app/picsouuiservice.cpp" line="993"/>
+        <location filename="../app/picsouuiservice.cpp" line="979"/>
         <source>Export file</source>
         <translation>Exporter les opérations</translation>
     </message>
     <message>
-        <location filename="../app/picsouuiservice.cpp" line="1001"/>
+        <location filename="../app/picsouuiservice.cpp" line="987"/>
         <source>Internal error: failed to export operations.</source>
         <translation>Erreur interne : échec de l&apos;export des opérations.</translation>
     </message>
     <message>
-        <location filename="../app/picsouuiservice.cpp" line="1004"/>
+        <location filename="../app/picsouuiservice.cpp" line="990"/>
         <source>Export successful</source>
         <translation>Export réussi</translation>
     </message>
     <message>
-        <location filename="../app/picsouuiservice.cpp" line="1005"/>
+        <location filename="../app/picsouuiservice.cpp" line="991"/>
         <source>Operation successfully exported to %0</source>
         <translation>Opérations exportées avec succès vers %0</translation>
     </message>
     <message>
-        <location filename="../app/picsouuiservice.cpp" line="1030"/>
+        <location filename="../app/picsouuiservice.cpp" line="1016"/>
         <source>Close database</source>
         <translation>Fermeture de la base de données</translation>
     </message>
     <message>
-        <location filename="../app/picsouuiservice.cpp" line="1031"/>
+        <location filename="../app/picsouuiservice.cpp" line="1017"/>
         <source>Only one database can be opened at once, do you want to close current database?</source>
         <translation>Une seule base de données peut être ouverte à la fois, voulez-vous fermer la base de données actuellement ouverte ?</translation>
     </message>
@@ -1263,29 +1267,67 @@
         <translation>%0€</translation>
     </message>
     <message>
-        <location filename="../utils/schedule.cpp" line="59"/>
+        <source>year</source>
+        <translation type="vanished">an</translation>
+    </message>
+    <message>
+        <source>month</source>
+        <translation type="vanished">mois</translation>
+    </message>
+    <message>
+        <source>week</source>
+        <translation type="vanished">semaine</translation>
+    </message>
+    <message>
+        <source>day</source>
+        <translation type="vanished">jour</translation>
+    </message>
+    <message>
+        <source>undefined</source>
+        <translation type="vanished">indéfini</translation>
+    </message>
+</context>
+<context>
+    <name>Schedule</name>
+    <message>
+        <source>Schedule</source>
+        <comment>year</comment>
+        <translation type="obsolete">Planification</translation>
+    </message>
+    <message>
+        <source>Schedule</source>
+        <comment>month</comment>
+        <translation type="obsolete">Planification</translation>
+    </message>
+    <message>
+        <source>Schedule</source>
+        <comment>week</comment>
+        <translation type="obsolete">Planification</translation>
+    </message>
+    <message>
+        <source>Schedule</source>
+        <comment>day</comment>
+        <translation type="obsolete">Planification</translation>
+    </message>
+    <message>
+        <location filename="../utils/schedule.cpp" line="22"/>
         <source>year</source>
         <translation>an</translation>
     </message>
     <message>
-        <location filename="../utils/schedule.cpp" line="61"/>
+        <location filename="../utils/schedule.cpp" line="23"/>
         <source>month</source>
         <translation>mois</translation>
     </message>
     <message>
-        <location filename="../utils/schedule.cpp" line="63"/>
+        <location filename="../utils/schedule.cpp" line="24"/>
         <source>week</source>
         <translation>semaine</translation>
     </message>
     <message>
-        <location filename="../utils/schedule.cpp" line="65"/>
+        <location filename="../utils/schedule.cpp" line="25"/>
         <source>day</source>
         <translation>jour</translation>
-    </message>
-    <message>
-        <location filename="../utils/schedule.cpp" line="67"/>
-        <source>undefined</source>
-        <translation>indéfini</translation>
     </message>
 </context>
 <context>
@@ -1309,6 +1351,22 @@
         <location filename="../ui/dialogs/scheduledoperationeditor.ui" line="47"/>
         <source>Amount:</source>
         <translation>Montant :</translation>
+    </message>
+    <message>
+        <source>year</source>
+        <translation type="vanished">an</translation>
+    </message>
+    <message>
+        <source>month</source>
+        <translation type="vanished">mois</translation>
+    </message>
+    <message>
+        <source>week</source>
+        <translation type="vanished">semaine</translation>
+    </message>
+    <message>
+        <source>day</source>
+        <translation type="vanished">jour</translation>
     </message>
     <message>
         <location filename="../ui/dialogs/scheduledoperationeditor.cpp" line="54"/>

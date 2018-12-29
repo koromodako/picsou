@@ -45,7 +45,7 @@ public:
                              QWidget *parent=nullptr);
 
 public slots:
-    void refresh(const PicsouDBPtr db);
+    void refresh(const PicsouDBShPtr db);
 
     /* ops */
     void add_op();

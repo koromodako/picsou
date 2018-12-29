@@ -24,11 +24,7 @@
 #include <QDate>
 
 class PaymentMethod;
-DECL_PICSOU_MOD_OBJ_PTR(PaymentMethod,
-                        PaymentMethodPtr,
-                        PaymentMethodShPtr,
-                        PaymentMethodPtrList,
-                        PaymentMethodShPtrList);
+DECL_PICSOU_MOD_OBJ_PTR(PaymentMethod, PaymentMethodShPtr, PaymentMethodShPtrList);
 
 class Operation : public PicsouDBO
 {
@@ -91,10 +87,6 @@ private:
     bool m_scheduled=false;
 };
 
-DECL_PICSOU_MOD_OBJ_PTR(Operation,
-                        OperationPtr,
-                        OperationShPtr,
-                        OperationPtrList,
-                        OperationShPtrList);
+DECL_PICSOU_MOD_OBJ_PTR(Operation, OperationShPtr, OperationShPtrList);
 
 #endif // OPERATION_H

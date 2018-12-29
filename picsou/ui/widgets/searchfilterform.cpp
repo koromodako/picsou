@@ -37,6 +37,7 @@ SearchFilterForm::SearchFilterForm(PicsouUIServicePtr ui_svc, QWidget *parent) :
 
     ui->max_sb->setPrefix(tr("$"));
     ui->max_sb->setSuffix(tr(" "));
+    ui->max_sb->setValue(100);
 
     ui->to_date->setDate(QDate::currentDate());
     /* connections */

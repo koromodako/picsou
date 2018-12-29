@@ -34,7 +34,6 @@ public:
     static const QString KW_PAYMENT_METHODS;
     static const QString KW_SCHEDULED_OPS;
 
-    virtual ~Account();
     Account(PicsouDBO *parent);
     Account(const QString &name,
             const QString &notes,
@@ -61,21 +60,21 @@ public:
                        const QString &recipient,
                        const QString &description,
                        const QString &payment_method);
-    void add_operations(const OperationPtrList &ops);
+    void add_operations(const OperationShPtrList &ops);
     bool remove_operation(QUuid id);
 
-    PaymentMethodPtr find_payment_method(QUuid id);
-    ScheduledOperationPtr find_scheduled_operation(QUuid id);
-    OperationPtr find_operation(QUuid id);
+    PaymentMethodShPtr find_payment_method(QUuid id);
+    ScheduledOperationShPtr find_scheduled_operation(QUuid id);
+    OperationShPtr find_operation(QUuid id);
 
     inline QString name() const { return m_name; }
     inline QString notes() const { return m_notes; }
-    inline ScheduledOperationPtrList scheduled_ops() const { return m_scheduled_ops.values(); }
-    inline OperationPtrList ops() const { return m_ops.values(); }
+    inline ScheduledOperationShPtrList scheduled_ops() const { return m_scheduled_ops.values(); }
+    inline OperationShPtrList ops() const { return m_ops.values(); }
 
     int min_year() const;
     QStringList payment_methods_str(bool sorted=false) const;
-    PaymentMethodPtrList payment_methods(bool sorted=false) const;
+    PaymentMethodShPtrList payment_methods(bool sorted=false) const;
 
     bool read(const QJsonObject &json);
     bool write(QJsonObject &json) const;
@@ -85,15 +84,11 @@ public:
 private:
     QString m_name;
     QString m_notes;
-    QHash<QUuid, PaymentMethodPtr> m_payment_methods;
-    QHash<QUuid, ScheduledOperationPtr> m_scheduled_ops;
-    QHash<QUuid, OperationPtr> m_ops;
+    QHash<QUuid, PaymentMethodShPtr> m_payment_methods;
+    QHash<QUuid, ScheduledOperationShPtr> m_scheduled_ops;
+    QHash<QUuid, OperationShPtr> m_ops;
 };
 
-DECL_PICSOU_MOD_OBJ_PTR(Account,
-                        AccountPtr,
-                        AccountShPtr,
-                        AccountPtrList,
-                        AccountShPtrList);
+DECL_PICSOU_MOD_OBJ_PTR(Account, AccountShPtr, AccountShPtrList);
 
 #endif // ACCOUNT_H

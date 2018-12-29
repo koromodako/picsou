@@ -35,7 +35,7 @@ public:
                 const QStringList &budgets,
                 const QStringList &pms);
 
-    bool accepts(const OperationPtr &op) const;
+    bool accepts(const OperationShPtr &op) const;
 
     inline QString username() const { return m_username; }
     inline QString account_name() const { return m_account_name; }
@@ -63,7 +63,7 @@ struct SearchQueryFilter
 
     typedef bool result_type;
 
-    bool operator()(const OperationPtr &op)
+    bool operator()(const OperationShPtr &op)
     {
         return m_query.accepts(op);
     }

@@ -97,10 +97,10 @@ AccountViewer::AccountViewer(PicsouUIServicePtr ui_svc,
     addAction(ui->action_export_ops);
 }
 
-void AccountViewer::refresh(const PicsouDBPtr db)
+void AccountViewer::refresh(const PicsouDBShPtr db)
 {
     OperationCollection ops;
-    AccountPtr account=db->find_account(mod_obj_id());
+    AccountShPtr account=db->find_account(mod_obj_id());
     if(account.isNull()) {
         LOG_WARNING("failed to find account!");
         return;
@@ -120,12 +120,12 @@ void AccountViewer::refresh(const PicsouDBPtr db)
     QString end;
     for(const auto &sop : account->scheduled_ops()) {
         end=(sop->schedule().endless()?tr("[endless]"):sop->schedule().until().toString(Qt::ISODate));
-        new PicsouListItem(tr("[%0] %1 from %2 to %3 each %4 %5").arg(sop->name(),
-                                                                      sop->amount().to_str(true),
-                                                                      sop->schedule().from().toString(Qt::ISODate),
-                                                                      end,
-                                                                      QString::number(sop->schedule().freq_value()),
-                                                                      Schedule::freq_unit2trstr(sop->schedule().freq_unit())),
+        new PicsouListItem(tr("[%0] %1 from %2 to %3 every %4 %5").arg(sop->name(),
+                                                                       sop->amount().to_str(true),
+                                                                       sop->schedule().from().toString(Qt::ISODate),
+                                                                       end,
+                                                                       QString::number(sop->schedule().freq_value()),
+                                                                       Schedule::freq_unit2trstr(sop->schedule().freq_unit())),
                            ui->sops,
                            sop->id());
     }

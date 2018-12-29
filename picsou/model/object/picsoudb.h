@@ -32,7 +32,6 @@ public:
     static const QString KW_TIMESTAMP;
     static const QString KW_DESCRIPTION;
 
-    virtual ~PicsouDB();
     PicsouDB();
     PicsouDB(SemVer version,
              const QString &name,
@@ -46,10 +45,10 @@ public:
     inline QString name() const { return m_name; }
     inline QString description() const { return m_description; }
 
-    UserPtr find_user(QUuid id) const;
-    UserPtrList users(bool sorted=false) const;
+    UserShPtr find_user(QUuid id) const;
+    UserShPtrList users(bool sorted=false) const;
 
-    AccountPtr find_account(QUuid id) const;
+    AccountShPtr find_account(QUuid id) const;
 
     OperationCollection ops(QUuid account_id,
                             int year=-1,
@@ -63,13 +62,9 @@ private:
     SemVer m_version;
     QString m_name;
     QString m_description;
-    QHash<QUuid, UserPtr> m_users;
+    QHash<QUuid, UserShPtr> m_users;
 };
 
-DECL_PICSOU_MOD_OBJ_PTR(PicsouDB,
-                        PicsouDBPtr,
-                        PicsouDBShPtr,
-                        PicsouDBPtrList,
-                        PicsouDBShPtrList);
+DECL_PICSOU_MOD_OBJ_PTR(PicsouDB, PicsouDBShPtr, PicsouDBShPtrList);
 
 #endif // PICSOUDB_H
