@@ -46,6 +46,7 @@ public:
     inline QString description() const { return m_description; }
 
     UserShPtr find_user(QUuid id) const;
+    UserShPtr find_user(const QString &name) const;
     UserShPtrList users(bool sorted=false) const;
 
     AccountShPtr find_account(QUuid id) const;

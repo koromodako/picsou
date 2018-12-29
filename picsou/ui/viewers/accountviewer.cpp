@@ -134,8 +134,12 @@ void AccountViewer::refresh(const PicsouDBShPtr db)
     ui->sop_remove->setEnabled(has_sops);
     /* ops */
     ops=db->ops(mod_obj_id());
+    QList<QStringList> budgets=ui_svc()->compute_budgets(ops, m_user_id);
     m_table->refresh(ops);
-    m_ops_stats->refresh(ops);
+    m_ops_stats->refresh(ops.balance().to_str(true),
+                         ops.total_debit().to_str(true),
+                         ops.total_credit().to_str(true),
+                         budgets);
     QDate today=QDate::currentDate();
     m_ops_stats->update_field(m_rolling_expense_lab,
                              ops.total_in_range(today.addDays(-30),

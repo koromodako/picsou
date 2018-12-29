@@ -82,8 +82,12 @@ void OperationViewer::refresh(const PicsouDBShPtr db)
     }
 
     ops=db->ops(mod_obj_id(), year, month);
+    QList<QStringList> budgets=ui_svc()->compute_budgets(ops, m_user_id);
     m_table->refresh(ops);
-    m_ops_stats->refresh(ops);
+    m_ops_stats->refresh(ops.balance().to_str(true),
+                         ops.total_debit().to_str(true),
+                         ops.total_credit().to_str(true),
+                         budgets);
 }
 
 void OperationViewer::add_op()

@@ -172,8 +172,12 @@ void MainWindow::update_search()
     m_search_table->clear();
     OperationCollection ops=ui_svc()->search_operations(m_search_form->query());
     if(ops.length()>0) {
+       QList<QStringList> budgets=ui_svc()->compute_budgets(ops, m_search_form->query().username());
         m_search_table->refresh(ops);
-        m_search_ops_stats->refresh(ops);
+        m_search_ops_stats->refresh(ops.balance().to_str(true),
+                                    ops.total_debit().to_str(true),
+                                    ops.total_credit().to_str(true),
+                                    budgets);
     } else {
         m_search_table->clear();
         m_search_ops_stats->clear();

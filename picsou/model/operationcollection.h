@@ -34,6 +34,7 @@ public:
     void append(const OperationShPtr &op);
 
     inline int length() const { return list(false).length(); }
+    inline int months() const { return m_months.size(); }
     inline Amount balance() const { return m_balance; }
     inline Amount total_debit() const { return m_total_debit; }
     inline Amount total_credit() const { return m_total_credit; }
@@ -51,6 +52,7 @@ private:
     Amount m_total_debit;
     Amount m_total_credit;
     Amount m_balance;
+    QSet<int> m_months;
     QHash<QString, Amount> m_expense_per_budget;
     QHash<int, QHash<int, Amount>> m_expense_per_ym;
     /* pointer storage members */

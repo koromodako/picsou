@@ -20,6 +20,7 @@
 
 #include <QWidget>
 
+#include "model/object/user.h"
 #include "model/operationcollection.h"
 
 class QLabel; /* predecl */
@@ -37,7 +38,10 @@ public:
     explicit OperationStatistics(QWidget *parent=nullptr);
 
     void clear();
-    void refresh(const OperationCollection &ops);
+    void refresh(const QString &balance,
+                 const QString &total_debit,
+                 const QString &total_credit,
+                 const QList<QStringList> &budgets);
 
     bool append_field(const QString &name, const QString &value);
     bool update_field(const QString &name, const QString &value);

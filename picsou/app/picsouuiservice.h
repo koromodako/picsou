@@ -26,6 +26,7 @@ class QComboBox;
 class MainWindow;
 class QListWidget;
 class QTreeWidget;
+class QTableWidget;
 class PicsouUIViewer;
 class QTreeWidgetItem;
 
@@ -45,15 +46,13 @@ public:
 
     bool populate_db_tree(QTreeWidget* const tree);
     bool populate_user_cb(QComboBox * const cb);
-    bool populate_account_cb(const QString &username,
-                             QComboBox* const cb);
-    bool populate_budgets_list(const QString &username,
-                               QListWidget* const list);
-    bool populate_pms_list(const QString &username,
-                           const QString &account_name,
-                           QListWidget* const list);
+    bool populate_account_cb(const QString &username, QComboBox* const cb);
+    bool populate_budgets_list(const QString &username, QListWidget* const list);
+    bool populate_pms_list(const QString &username, const QString &account_name, QListWidget* const list);
 
     OperationCollection search_operations(const SearchQuery &query);
+    QList<QStringList> compute_budgets(const OperationCollection &ops, QUuid user_id);
+    QList<QStringList> compute_budgets(const OperationCollection &ops, const QString &username);
 
     PicsouUIViewer *viewer_from_item(QTreeWidgetItem *item);
 

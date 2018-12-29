@@ -42,35 +42,32 @@ void OperationStatistics::clear()
     ui->total_credit_val->setText("-");
 }
 
-bool budget_amount_cmp(const QPair<QString, Amount> &a, const QPair<QString, Amount> &b)
+void OperationStatistics::refresh(const QString &balance,
+                                  const QString &total_debit,
+                                  const QString &total_credit,
+                                  const QList<QStringList> &budgets)
 {
-    return a.second<b.second;
-}
-
-void OperationStatistics::refresh(const OperationCollection &ops)
-{
-    ui->balance_val->setText(ops.balance().to_str(true));
-    ui->total_debit_val->setText(ops.total_debit().to_str(true));
-    ui->total_credit_val->setText(ops.total_credit().to_str(true));
-
-    QHash<QString,Amount> hash=ops.expense_per_budget();
+    ui->balance_val->setText(balance);
+    ui->total_debit_val->setText(total_debit);
+    ui->total_credit_val->setText(total_credit);
+    /* clear previous table */
     ui->expense_per_budget_table->clear();
-    ui->expense_per_budget_table->setRowCount(hash.count());
-    ui->expense_per_budget_table->setColumnCount(2);
-    ui->expense_per_budget_table->horizontalHeader()->setSectionResizeMode(0, QHeaderView::Stretch);
-    ui->expense_per_budget_table->horizontalHeader()->setSectionResizeMode(1, QHeaderView::Stretch);
-
-    QList<QPair<QString, Amount>> sorted_budgets;
-    for(QHash<QString,Amount>::const_iterator it=hash.begin();it!=hash.end();it++) {
-        sorted_budgets.append(qMakePair(it.key(), it.value()));
-    }
-
-    std::sort(sorted_budgets.begin(), sorted_budgets.end(), budget_amount_cmp);
-
+    /* set columns */
+    ui->expense_per_budget_table->setColumnCount(budgets.first().size());
+    int c=0;
+    do {
+        ui->expense_per_budget_table->horizontalHeader()->setSectionResizeMode(c, QHeaderView::Stretch);
+        c++;
+    } while(c<budgets.first().size());
+    /* fill rows */
+    ui->expense_per_budget_table->setRowCount(budgets.size());
     int r=0;
-    for(auto pair : sorted_budgets) {
-        ui->expense_per_budget_table->setItem(r, 0, new QTableWidgetItem(pair.first));
-        ui->expense_per_budget_table->setItem(r, 1, new QTableWidgetItem(pair.second.to_str(true)));
+    for(auto strlst : budgets) {
+        c=0;
+        do {
+            ui->expense_per_budget_table->setItem(r, c, new QTableWidgetItem(strlst.at(c)));
+            c++;
+        } while(c<strlst.size());
         r++;
     }
 }

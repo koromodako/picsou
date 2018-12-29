@@ -250,12 +250,12 @@
         <translation type="vanished">[%0] %1 du %2 au %3 tous les %4 %5</translation>
     </message>
     <message>
-        <location filename="../ui/viewers/accountviewer.cpp" line="203"/>
+        <location filename="../ui/viewers/accountviewer.cpp" line="207"/>
         <source>Logical error: you can&apos;t edit a scheduled operation from this view.</source>
         <translation>Erreur logique : vous ne pouvez pas modifier une opération planifiée depuis cette vue.</translation>
     </message>
     <message>
-        <location filename="../ui/viewers/accountviewer.cpp" line="216"/>
+        <location filename="../ui/viewers/accountviewer.cpp" line="220"/>
         <source>Logical error: you can&apos;t remove a scheduled operation from this view.</source>
         <translation>Erreur logique : vous ne pouvez pas supprimer une opération planifiée depuis cette vue.</translation>
     </message>
@@ -582,7 +582,7 @@
         <translation type="vanished">Echec de la mise à jour de la liste des méthodes de paiement.</translation>
     </message>
     <message>
-        <location filename="../ui/mainwindow.cpp" line="277"/>
+        <location filename="../ui/mainwindow.cpp" line="281"/>
         <source>Failed to update database tree.</source>
         <translation>Echec de la mise à jour de l&apos;arborescence de la base de données.</translation>
     </message>
@@ -758,12 +758,12 @@
         <translation>Supprimer l&apos;opération</translation>
     </message>
     <message>
-        <location filename="../ui/viewers/operationviewer.cpp" line="98"/>
+        <location filename="../ui/viewers/operationviewer.cpp" line="102"/>
         <source>Logical error: you can&apos;t edit a scheduled operation from this view.</source>
         <translation>Erreur logique : vous ne pouvez pas modifier une opération planifiée depuis cette vue.</translation>
     </message>
     <message>
-        <location filename="../ui/viewers/operationviewer.cpp" line="111"/>
+        <location filename="../ui/viewers/operationviewer.cpp" line="115"/>
         <source>Logical error: you can&apos;t remove a scheduled operation from this view.</source>
         <translation>Erreur logique : vous ne pouvez pas supprimer une opération planifiée depuis cette vue.</translation>
     </message>
@@ -1028,241 +1028,241 @@
         <translation>Vous devez entrer la même phrase de passe dans les deux fenêtres, ou cliquer sur &apos;Annuler&apos;.</translation>
     </message>
     <message>
-        <location filename="../app/picsouuiservice.cpp" line="268"/>
+        <location filename="../app/picsouuiservice.cpp" line="267"/>
         <source>Searching among %0 operations...</source>
         <translation>Recherche parmis %0 opérations...</translation>
     </message>
     <message>
-        <location filename="../app/picsouuiservice.cpp" line="269"/>
+        <location filename="../app/picsouuiservice.cpp" line="268"/>
         <source>Abort search</source>
         <translation>Annuler la recherche</translation>
     </message>
     <message>
-        <location filename="../app/picsouuiservice.cpp" line="293"/>
+        <location filename="../app/picsouuiservice.cpp" line="291"/>
         <source>No result</source>
         <translation>Aucun résultat</translation>
     </message>
     <message>
-        <location filename="../app/picsouuiservice.cpp" line="293"/>
+        <location filename="../app/picsouuiservice.cpp" line="291"/>
         <source>No operation matched the search query.</source>
         <translation>Aucune opération satisfaisant les critères n&apos;a été trouvée.</translation>
     </message>
     <message>
-        <location filename="../app/picsouuiservice.cpp" line="381"/>
+        <location filename="../app/picsouuiservice.cpp" line="422"/>
         <source>Failed to find user.</source>
         <translation>Aucun utilisateur trouvé avec cet id.</translation>
     </message>
     <message>
-        <location filename="../app/picsouuiservice.cpp" line="390"/>
+        <location filename="../app/picsouuiservice.cpp" line="431"/>
         <source>Failed to unwrap user.</source>
         <translation>Echec du débloquage de l&apos;utilisateur.</translation>
     </message>
     <message>
-        <location filename="../app/picsouuiservice.cpp" line="410"/>
+        <location filename="../app/picsouuiservice.cpp" line="451"/>
         <source>Create file</source>
         <translation>Création d&apos;une base de données</translation>
     </message>
     <message>
-        <location filename="../app/picsouuiservice.cpp" line="410"/>
-        <location filename="../app/picsouuiservice.cpp" line="436"/>
-        <location filename="../app/picsouuiservice.cpp" line="484"/>
+        <location filename="../app/picsouuiservice.cpp" line="451"/>
+        <location filename="../app/picsouuiservice.cpp" line="477"/>
+        <location filename="../app/picsouuiservice.cpp" line="525"/>
         <source>Database (*.psdb)</source>
         <translation>Base de données (*.psdb)</translation>
     </message>
     <message>
-        <location filename="../app/picsouuiservice.cpp" line="424"/>
+        <location filename="../app/picsouuiservice.cpp" line="465"/>
         <source>Failed to create a new database.</source>
         <translation>Echec de création de la nouvelle base.</translation>
     </message>
     <message>
-        <location filename="../app/picsouuiservice.cpp" line="436"/>
-        <location filename="../app/picsouuiservice.cpp" line="484"/>
+        <location filename="../app/picsouuiservice.cpp" line="477"/>
+        <location filename="../app/picsouuiservice.cpp" line="525"/>
         <source>Open file</source>
         <translation>Sélection d&apos;une base de données</translation>
     </message>
     <message>
-        <location filename="../app/picsouuiservice.cpp" line="445"/>
+        <location filename="../app/picsouuiservice.cpp" line="486"/>
         <source>Failed to open an existing database.</source>
         <translation>Echec d&apos;ouverture d&apos;une base de données.</translation>
     </message>
     <message>
-        <location filename="../app/picsouuiservice.cpp" line="456"/>
+        <location filename="../app/picsouuiservice.cpp" line="497"/>
         <source>Save database</source>
         <translation>Sauvegarde d&apos;une base de données</translation>
     </message>
     <message>
-        <location filename="../app/picsouuiservice.cpp" line="456"/>
+        <location filename="../app/picsouuiservice.cpp" line="497"/>
         <source>Do you want to save the database before closing it?</source>
         <translation>Voulez-vous sauvegarder la base de données avant de la fermer ?</translation>
     </message>
     <message>
-        <location filename="../app/picsouuiservice.cpp" line="465"/>
+        <location filename="../app/picsouuiservice.cpp" line="506"/>
         <source>Failed to close the database properly.</source>
         <translation>Echec de fermeture de la base de données.</translation>
     </message>
     <message>
-        <location filename="../app/picsouuiservice.cpp" line="476"/>
+        <location filename="../app/picsouuiservice.cpp" line="517"/>
         <source>Failed to save the database properly.</source>
         <translation>Echec de la sauvegarde de la base de données.</translation>
     </message>
     <message>
-        <location filename="../app/picsouuiservice.cpp" line="494"/>
+        <location filename="../app/picsouuiservice.cpp" line="535"/>
         <source>Failed to save database in specified file.</source>
         <translation>Echec de la sauvegarde de la base de données dans le fichier spécifié.</translation>
     </message>
     <message>
-        <location filename="../app/picsouuiservice.cpp" line="516"/>
-        <location filename="../app/picsouuiservice.cpp" line="549"/>
-        <location filename="../app/picsouuiservice.cpp" line="567"/>
+        <location filename="../app/picsouuiservice.cpp" line="557"/>
         <location filename="../app/picsouuiservice.cpp" line="590"/>
-        <location filename="../app/picsouuiservice.cpp" line="624"/>
-        <location filename="../app/picsouuiservice.cpp" line="649"/>
-        <location filename="../app/picsouuiservice.cpp" line="722"/>
+        <location filename="../app/picsouuiservice.cpp" line="608"/>
+        <location filename="../app/picsouuiservice.cpp" line="631"/>
+        <location filename="../app/picsouuiservice.cpp" line="665"/>
+        <location filename="../app/picsouuiservice.cpp" line="690"/>
         <location filename="../app/picsouuiservice.cpp" line="763"/>
-        <location filename="../app/picsouuiservice.cpp" line="832"/>
-        <location filename="../app/picsouuiservice.cpp" line="882"/>
+        <location filename="../app/picsouuiservice.cpp" line="804"/>
+        <location filename="../app/picsouuiservice.cpp" line="873"/>
+        <location filename="../app/picsouuiservice.cpp" line="923"/>
         <source>Internal error: invalid user pointer.</source>
         <translation>Erreur interne : pointeur utilisateur invalide.</translation>
     </message>
     <message>
-        <location filename="../app/picsouuiservice.cpp" line="525"/>
+        <location filename="../app/picsouuiservice.cpp" line="566"/>
         <source>Internal error: failed to update.</source>
         <translation>Erreur interne : échec de la mise à jour de l&apos;utilisateur.</translation>
     </message>
     <message>
-        <location filename="../app/picsouuiservice.cpp" line="539"/>
+        <location filename="../app/picsouuiservice.cpp" line="580"/>
         <source>Failed to remove user from database.</source>
         <translation>Echec de la suppression d&apos;un utiliateur de la base de données.</translation>
     </message>
     <message>
-        <location filename="../app/picsouuiservice.cpp" line="572"/>
+        <location filename="../app/picsouuiservice.cpp" line="613"/>
         <source>Internal error: invalid budget pointer.</source>
         <translation>Erreur interne : pointeur de budget invalide.</translation>
     </message>
     <message>
-        <location filename="../app/picsouuiservice.cpp" line="597"/>
+        <location filename="../app/picsouuiservice.cpp" line="638"/>
         <source>Failed to remove budget from database.</source>
         <translation>Echec de la suppression d&apos;un budget de la base de données.</translation>
     </message>
     <message>
-        <location filename="../app/picsouuiservice.cpp" line="606"/>
-        <location filename="../app/picsouuiservice.cpp" line="629"/>
-        <location filename="../app/picsouuiservice.cpp" line="665"/>
-        <location filename="../app/picsouuiservice.cpp" line="683"/>
+        <location filename="../app/picsouuiservice.cpp" line="647"/>
+        <location filename="../app/picsouuiservice.cpp" line="670"/>
         <location filename="../app/picsouuiservice.cpp" line="706"/>
-        <location filename="../app/picsouuiservice.cpp" line="727"/>
+        <location filename="../app/picsouuiservice.cpp" line="724"/>
+        <location filename="../app/picsouuiservice.cpp" line="747"/>
         <location filename="../app/picsouuiservice.cpp" line="768"/>
-        <location filename="../app/picsouuiservice.cpp" line="816"/>
-        <location filename="../app/picsouuiservice.cpp" line="837"/>
-        <location filename="../app/picsouuiservice.cpp" line="872"/>
+        <location filename="../app/picsouuiservice.cpp" line="809"/>
+        <location filename="../app/picsouuiservice.cpp" line="857"/>
+        <location filename="../app/picsouuiservice.cpp" line="878"/>
         <location filename="../app/picsouuiservice.cpp" line="913"/>
-        <location filename="../app/picsouuiservice.cpp" line="929"/>
-        <location filename="../app/picsouuiservice.cpp" line="965"/>
+        <location filename="../app/picsouuiservice.cpp" line="954"/>
+        <location filename="../app/picsouuiservice.cpp" line="970"/>
+        <location filename="../app/picsouuiservice.cpp" line="1006"/>
         <source>Internal error: invalid account pointer.</source>
         <translation>Erreur interne : pointeur de compte invalide.</translation>
     </message>
     <message>
-        <location filename="../app/picsouuiservice.cpp" line="656"/>
+        <location filename="../app/picsouuiservice.cpp" line="697"/>
         <source>Failed to remove account from database.</source>
         <translation>Echec de la suppression d&apos;un compte de la base de données.</translation>
     </message>
     <message>
-        <location filename="../app/picsouuiservice.cpp" line="688"/>
+        <location filename="../app/picsouuiservice.cpp" line="729"/>
         <source>Internal error: invalid payment method pointer.</source>
         <translation>Erreur interne : pointeur de méthode de paiement invalid.</translation>
     </message>
     <message>
-        <location filename="../app/picsouuiservice.cpp" line="713"/>
-        <location filename="../app/picsouuiservice.cpp" line="823"/>
+        <location filename="../app/picsouuiservice.cpp" line="754"/>
+        <location filename="../app/picsouuiservice.cpp" line="864"/>
         <source>Failed to remove payment method from database.</source>
         <translation>Echec de la suppression d&apos;une méthode de paiement de la base de données.</translation>
     </message>
     <message>
-        <location filename="../app/picsouuiservice.cpp" line="732"/>
         <location filename="../app/picsouuiservice.cpp" line="773"/>
-        <location filename="../app/picsouuiservice.cpp" line="842"/>
+        <location filename="../app/picsouuiservice.cpp" line="814"/>
+        <location filename="../app/picsouuiservice.cpp" line="883"/>
         <source>Logical error: make sure you have defined at least one budget before adding operations.</source>
         <translation>Erreur logique : Vous devez ajouter au moins un budget avant d&apos;ajouter des opérations.</translation>
     </message>
     <message>
-        <location filename="../app/picsouuiservice.cpp" line="737"/>
         <location filename="../app/picsouuiservice.cpp" line="778"/>
-        <location filename="../app/picsouuiservice.cpp" line="847"/>
+        <location filename="../app/picsouuiservice.cpp" line="819"/>
+        <location filename="../app/picsouuiservice.cpp" line="888"/>
         <source>Logical error: make sure you have defined at least one payment method before adding operations.</source>
         <translation>Erreur logique : Vous devez ajouter au moins une méthode de paiement avant d&apos;ajouter des opérations.</translation>
     </message>
     <message>
-        <location filename="../app/picsouuiservice.cpp" line="783"/>
+        <location filename="../app/picsouuiservice.cpp" line="824"/>
         <source>Internal error: invalid scheduled operation pointer.</source>
         <translation>Erreur interne : pointeur d&apos;opération programmée invalide.</translation>
     </message>
     <message>
-        <location filename="../app/picsouuiservice.cpp" line="877"/>
+        <location filename="../app/picsouuiservice.cpp" line="918"/>
         <source>Internal error: invalid op pointer.</source>
         <translation>Erreur interne : pointeur d&apos;opération invalide.</translation>
     </message>
     <message>
-        <location filename="../app/picsouuiservice.cpp" line="920"/>
+        <location filename="../app/picsouuiservice.cpp" line="961"/>
         <source>Failed to remove operation from database.</source>
         <translation>Echec de la suppression d&apos;une opération de la base de données.</translation>
     </message>
     <message>
-        <location filename="../app/picsouuiservice.cpp" line="932"/>
+        <location filename="../app/picsouuiservice.cpp" line="973"/>
         <source>Import file</source>
         <translation>Importer des opérations</translation>
     </message>
     <message>
-        <location filename="../app/picsouuiservice.cpp" line="932"/>
+        <location filename="../app/picsouuiservice.cpp" line="973"/>
         <source>Files (*.csv *.xml *.json)</source>
         <translation>Fichiers (*.csv *.xml *.json)</translation>
     </message>
     <message>
-        <location filename="../app/picsouuiservice.cpp" line="947"/>
+        <location filename="../app/picsouuiservice.cpp" line="988"/>
         <source>Empty import</source>
         <translation>Import vide</translation>
     </message>
     <message>
-        <location filename="../app/picsouuiservice.cpp" line="947"/>
+        <location filename="../app/picsouuiservice.cpp" line="988"/>
         <source>Import result is empty. Invalid or empty input file.</source>
         <translation>Aucune donnée importée. Le fichier d&apos;entrée est vide ou invalide.</translation>
     </message>
     <message>
-        <location filename="../app/picsouuiservice.cpp" line="973"/>
+        <location filename="../app/picsouuiservice.cpp" line="1014"/>
         <source>Which format?</source>
         <translation>Quel format d&apos;export souhaitez-vous ?</translation>
     </message>
     <message>
-        <location filename="../app/picsouuiservice.cpp" line="973"/>
+        <location filename="../app/picsouuiservice.cpp" line="1014"/>
         <source>Select output format</source>
         <translation>Sélection du format d&apos;export</translation>
     </message>
     <message>
-        <location filename="../app/picsouuiservice.cpp" line="978"/>
+        <location filename="../app/picsouuiservice.cpp" line="1019"/>
         <source>Export file</source>
         <translation>Exporter les opérations</translation>
     </message>
     <message>
-        <location filename="../app/picsouuiservice.cpp" line="986"/>
+        <location filename="../app/picsouuiservice.cpp" line="1027"/>
         <source>Internal error: failed to export operations.</source>
         <translation>Erreur interne : échec de l&apos;export des opérations.</translation>
     </message>
     <message>
-        <location filename="../app/picsouuiservice.cpp" line="989"/>
+        <location filename="../app/picsouuiservice.cpp" line="1030"/>
         <source>Export successful</source>
         <translation>Export réussi</translation>
     </message>
     <message>
-        <location filename="../app/picsouuiservice.cpp" line="990"/>
+        <location filename="../app/picsouuiservice.cpp" line="1031"/>
         <source>Operation successfully exported to %0</source>
         <translation>Opérations exportées avec succès vers %0</translation>
     </message>
     <message>
-        <location filename="../app/picsouuiservice.cpp" line="1015"/>
+        <location filename="../app/picsouuiservice.cpp" line="1056"/>
         <source>Close database</source>
         <translation>Fermeture de la base de données</translation>
     </message>
     <message>
-        <location filename="../app/picsouuiservice.cpp" line="1016"/>
+        <location filename="../app/picsouuiservice.cpp" line="1057"/>
         <source>Only one database can be opened at once, do you want to close current database?</source>
         <translation>Une seule base de données peut être ouverte à la fois, voulez-vous fermer la base de données actuellement ouverte ?</translation>
     </message>
@@ -1575,9 +1575,8 @@
 <context>
     <name>User</name>
     <message>
-        <location filename="../model/object/user.cpp" line="135"/>
         <source>OTHER</source>
-        <translation>AUTRE</translation>
+        <translation type="vanished">AUTRE</translation>
     </message>
 </context>
 <context>

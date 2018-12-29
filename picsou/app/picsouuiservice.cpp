@@ -252,40 +252,38 @@ OperationCollection PicsouUIService::search_operations(const SearchQuery &query)
     LOG_IN("query="<<&query);
     OperationCollection ops;
     QFuture<OperationShPtr> future;
-    UserShPtrList users=papp()->model_svc()->db()->users(true);
-    for(const auto &user : users) {
-        if(user->name()==query.username()&&!user->wrapped()) {
-            LOG_DEBUG("found username: "<<user->name());
-            for(const auto &account : user->accounts(true)) {
-                if(account->name()==query.account_name()) {
-                    LOG_DEBUG("found account: "<<account->name());
-                    OperationCollection ops_col=papp()->model_svc()->db()->ops(account->id());
-                    OperationShPtrList ops_list=ops_col.list(false);
-                    LOG_DEBUG("searching among "<<ops_list.length()<<" operations");
-                    future=QtConcurrent::filtered(ops_list.begin(), ops_list.end(), SearchQueryFilter(query));
-                    LOG_DEBUG("future min: "<<future.progressMinimum());
-                    LOG_DEBUG("future max: "<<future.progressMaximum());
-                    QProgressDialog progress(tr("Searching among %0 operations...").arg(ops_list.length()),
-                                             tr("Abort search"),
-                                             future.progressMinimum(),
-                                             future.progressMaximum(),
-                                             m_mw);
-                    progress.setWindowModality(Qt::WindowModal);
-                    while(!future.isFinished()) {
-                        LOG_DEBUG("searching the dataset...");
-                        progress.setValue(future.progressValue());
-                        if (progress.wasCanceled()) {
-                            future.cancel();
-                            LOG_WARNING("search cancelled.");
-                            return ops;
-                        }
-                        QThread::msleep(100);
-                    }
+    UserShPtr user=papp()->model_svc()->db()->find_user(query.username());
+    if(!user.isNull()&&!user->wrapped()) {
+        LOG_DEBUG("found username: "<<user->name());
+        for(const auto &account : user->accounts(true)) {
+            if(account->name()==query.account_name()) {
+                LOG_DEBUG("found account: "<<account->name());
+                OperationCollection ops_col=papp()->model_svc()->db()->ops(account->id());
+                OperationShPtrList ops_list=ops_col.list(false);
+                LOG_DEBUG("searching among "<<ops_list.length()<<" operations");
+                future=QtConcurrent::filtered(ops_list.begin(), ops_list.end(), SearchQueryFilter(query));
+                LOG_DEBUG("future min: "<<future.progressMinimum());
+                LOG_DEBUG("future max: "<<future.progressMaximum());
+                QProgressDialog progress(tr("Searching among %0 operations...").arg(ops_list.length()),
+                                         tr("Abort search"),
+                                         future.progressMinimum(),
+                                         future.progressMaximum(),
+                                         m_mw);
+                progress.setWindowModality(Qt::WindowModal);
+                while(!future.isFinished()) {
+                    LOG_DEBUG("searching the dataset...");
                     progress.setValue(future.progressValue());
-                    ops=future.results();
-                    LOG_DEBUG("search successful! (results count: "<<ops.length()<<")");
-                    break;
+                    if (progress.wasCanceled()) {
+                        future.cancel();
+                        LOG_WARNING("search cancelled.");
+                        return ops;
+                    }
+                    QThread::msleep(100);
                 }
+                progress.setValue(future.progressValue());
+                ops=future.results();
+                LOG_DEBUG("search successful! (results count: "<<ops.length()<<")");
+                break;
             }
         }
     }
@@ -294,6 +292,49 @@ OperationCollection PicsouUIService::search_operations(const SearchQuery &query)
     }
     LOG_DEBUG("-> ops.length="<<ops.length());
     return ops;
+}
+
+static bool budget_amount_cmp(const QPair<QString, Amount> &a, const QPair<QString, Amount> &b)
+{
+    return a.second<b.second;
+}
+
+QList<QStringList> PicsouUIService::compute_budgets(const OperationCollection &ops, QUuid user_id)
+{
+    QHash<QString, Amount> epb=ops.expense_per_budget();
+    QList<QPair<QString, Amount>> sorted_epb;
+    QHash<QString, Amount>::iterator epb_it=epb.begin();
+    while(epb_it!=epb.end()) {
+        sorted_epb.append(qMakePair(epb_it.key(), epb_it.value()));
+        epb_it++;
+    }
+
+    std::sort(sorted_epb.begin(), sorted_epb.end(), budget_amount_cmp);
+
+    UserShPtr user=papp()->model_svc()->db()->find_user(user_id);
+    QList<QStringList> budgets;
+    if(!user.isNull()&&!user->wrapped()) {
+        QHash<QString, Amount> user_budgets;
+        for(const auto &budget : user->budgets()) {
+            user_budgets.insert(budget->name(), budget->amount());
+        }
+        for(const auto &budget : sorted_epb) {
+            Amount allowed=user_budgets.value(budget.first)*ops.months();
+            Amount consumed=budget.second;
+            double percentage=100*abs(consumed.value()/allowed.value());
+            budgets.append(QStringList()<<budget.first
+                                        <<consumed.to_str(true)
+                                        <<QString("%0% (max: %1)").arg(QString::number(percentage, 'f', 2),
+                                                                       allowed.to_str(true)));
+        }
+    }
+    return budgets;
+}
+
+QList<QStringList> PicsouUIService::compute_budgets(const OperationCollection &ops, const QString &username)
+{
+    UserShPtr user=papp()->model_svc()->db()->find_user(username);
+    return compute_budgets(ops, user->id());
 }
 
 PicsouUIViewer *PicsouUIService::viewer_from_item(QTreeWidgetItem *item)

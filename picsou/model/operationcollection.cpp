@@ -103,6 +103,8 @@ void OperationCollection::aggregate(const Operation *op)
 
     m_balance+=amount;
 
+    m_months.insert(op->date().month());
+
     QHash<QString, Amount>::iterator it=m_expense_per_budget.find(op->budget());
     if(it!=m_expense_per_budget.end()) {
         it.value()+=amount;

@@ -82,6 +82,7 @@ UserShPtrList PicsouDB::users(bool sorted) const
     return users;
 }
 
+
 UserShPtr PicsouDB::find_user(QUuid id) const
 {
     UserShPtr user;
@@ -90,6 +91,16 @@ UserShPtr PicsouDB::find_user(QUuid id) const
         user=*it;
     }
     return user;
+}
+
+UserShPtr PicsouDB::find_user(const QString &name) const
+{
+    for(const auto &user : m_users.values()) {
+        if(user->name()==name) {
+            return user;
+        }
+    }
+    return UserShPtr();
 }
 
 OperationCollection PicsouDB::ops(QUuid account_id,
