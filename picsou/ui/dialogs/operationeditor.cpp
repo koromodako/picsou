@@ -26,6 +26,7 @@ OperationEditor::~OperationEditor()
 OperationEditor::OperationEditor(QWidget *parent,
                                  int year,
                                  int month,
+                                 bool verified,
                                  const QDate &date,
                                  const Amount &amount,
                                  const QString &budget,
@@ -35,6 +36,7 @@ OperationEditor::OperationEditor(QWidget *parent,
     QDialog(parent),
     m_year(year),
     m_month(month),
+    m_verified(verified),
     m_date(date),
     m_amount(amount),
     m_budget(budget),
@@ -51,6 +53,8 @@ OperationEditor::OperationEditor(QWidget *parent,
     ui->amount->setPrefix(tr("$"));
     ui->amount->setSuffix(tr(" "));
     ui->amount->setValue(m_amount.value());
+
+    ui->verified->setChecked(m_verified);
 
     if(!m_date.isNull()){
         ui->date->setDate(m_date);
@@ -105,8 +109,9 @@ void OperationEditor::set_payment_methods(const QStringList &payment_methods)
 
 void OperationEditor::accept()
 {
-    m_amount=ui->amount->value();
+    m_verified=ui->verified->isChecked();
     m_date=ui->date->date();
+    m_amount=ui->amount->value();
     m_payment_method=ui->payment_method->currentText();
     m_budget=ui->budget->currentText();
     m_recipient=ui->recipient->text();

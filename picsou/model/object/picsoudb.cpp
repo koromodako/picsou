@@ -117,7 +117,8 @@ OperationCollection PicsouDB::ops(QUuid account_id,
         LOG_DEBUG("sop->name="<<sop->name());
         for(const auto &date : sop->schedule().dates(year, month)) {
             LOG_DEBUG("generated date="<<date);
-            Operation *op=new Operation(sop->amount(),
+            Operation *op=new Operation(true,
+                                        sop->amount(),
                                         date,
                                         sop->budget(),
                                         sop->recipient(),

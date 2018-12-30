@@ -41,12 +41,14 @@ public:
     static const QString KW_MONTH;
     static const QString KW_YEAR;
     static const QString KW_BUDGET;
+    static const QString KW_VERIFIED;
     static const QString KW_RECIPIENT;
     static const QString KW_DESCRIPTION;
     static const QString KW_PAYMENT_METHOD;
 
     Operation(PicsouDBO *parent);
-    Operation(const Amount &amount,
+    Operation(bool verified,
+              const Amount &amount,
               const QDate &date,
               const QString &budget,
               const QString &recipient,
@@ -54,13 +56,15 @@ public:
               const QString &payment_method,
               PicsouDBO *parent);
 
-    void update(Amount amount,
+    void update(bool verified,
+                Amount amount,
                 const QDate &date,
                 const QString &budget,
                 const QString &recipient,
                 const QString &description,
                 const QString &payment_method);
 
+    void mark_verified() { m_verified=true; }
     void mark_scheduled() { m_scheduled=true; }
 
     inline Amount amount() const { return m_amount; }
@@ -69,7 +73,10 @@ public:
     inline QString recipient() const { return m_recipient; }
     inline QString description() const { return m_description; }
     inline QString payment_method() const { return m_payment_method; }
+
     inline Type type() const { return (m_amount==0.?NEUTRAL:(m_amount<0.?DEBIT:CREDIT)); }
+
+    inline bool verified() const { return m_verified; }
     inline bool scheduled() const { return m_scheduled; }
 
     bool read(const QJsonObject &json);
@@ -78,6 +85,7 @@ public:
     inline bool operator<(const Operation &other) { return m_date<other.m_date; }
 
 private:
+    bool m_verified;
     Amount m_amount;
     QDate m_date;
     QString m_budget;

@@ -667,7 +667,10 @@ void PicsouUIService::account_add(QUuid user_id)
         emit svc_op_canceled();
         LOG_VOID_RETURN();
     }
-    user->add_account(editor.name(), editor.notes());
+    user->add_account(editor.name(),
+                      editor.notes(),
+                      editor.archived(),
+                      editor.initial_amount());
     emit account_added();
     LOG_VOID_RETURN();
 }
@@ -685,14 +688,19 @@ void PicsouUIService::account_edit(QUuid user_id, QUuid account_id)
         emit svc_op_failed(tr("Internal error: invalid account pointer."));
         LOG_VOID_RETURN();
     }
-    QString name=account->name();
-    QString notes=account->notes();
-    AccountEditor editor(m_mw, account->name(), account->notes());
+    AccountEditor editor(m_mw,
+                         account->name(),
+                         account->notes(),
+                         account->archived(),
+                         account->initial_amount());
     if(editor.exec()==QDialog::Rejected) {
         emit svc_op_canceled();
         LOG_VOID_RETURN();
     }
-    account->update(editor.name(), editor.notes());
+    account->update(editor.name(),
+                    editor.notes(),
+                    editor.archived(),
+                    editor.initial_amount());
     emit account_edited();
     LOG_VOID_RETURN();
 }
@@ -726,7 +734,10 @@ void PicsouUIService::pm_add(QUuid account_id)
         emit svc_op_canceled();
         LOG_VOID_RETURN();
     }
-    account->add_payment_method(editor.name());
+    if(!account->add_payment_method(editor.name())) {
+        emit svc_op_failed(tr("Logical error: cannot modify an archived account."));
+        LOG_VOID_RETURN();
+    }
     emit pm_added();
     LOG_VOID_RETURN();
 }
@@ -800,13 +811,16 @@ void PicsouUIService::sop_add(QUuid user_id, QUuid account_id)
         emit svc_op_canceled();
         LOG_VOID_RETURN();
     }
-    account->add_scheduled_operation(editor.amount(),
-                                     editor.budget(),
-                                     editor.recipient(),
-                                     editor.description(),
-                                     editor.payment_method(),
-                                     editor.name(),
-                                     editor.schedule());
+    if(!account->add_scheduled_operation(editor.amount(),
+                                         editor.budget(),
+                                         editor.recipient(),
+                                         editor.description(),
+                                         editor.payment_method(),
+                                         editor.name(),
+                                         editor.schedule())) {
+        emit svc_op_failed(tr("Logical error: cannot modify an archived account."));
+        LOG_VOID_RETURN();
+    }
     emit sop_added();
     LOG_VOID_RETURN();
 }
@@ -910,12 +924,16 @@ void PicsouUIService::op_add(QUuid user_id, QUuid account_id, int year, int mont
         emit svc_op_canceled();
         LOG_VOID_RETURN();
     }
-    account->add_operation(editor.amount(),
-                           editor.date(),
-                           editor.budget(),
-                           editor.recipient(),
-                           editor.description(),
-                           editor.payment_method());
+    if(!account->add_operation(editor.verified(),
+                               editor.amount(),
+                               editor.date(),
+                               editor.budget(),
+                               editor.recipient(),
+                               editor.description(),
+                               editor.payment_method())) {
+        emit svc_op_failed(tr("Logical error: cannot modify an archived account."));
+        LOG_VOID_RETURN();
+    }
     emit op_added();
     LOG_VOID_RETURN();
 }
@@ -938,20 +956,24 @@ void PicsouUIService::op_edit(QUuid user_id, QUuid account_id, QUuid op_id, int 
         emit svc_op_failed(tr("Internal error: invalid user pointer."));
         LOG_VOID_RETURN();
     }
-    OperationEditor editor(m_mw, year, month,
+    OperationEditor editor(m_mw,
+                           year,
+                           month,
+                           op->verified(),
                            op->date(),
                            op->amount(),
-                           op->payment_method(),
                            op->budget(),
                            op->recipient(),
-                           op->description());
+                           op->description(),
+                           op->payment_method());
     editor.set_budgets(user->budgets_str(true));
     editor.set_payment_methods(account->payment_methods_str(true));
     if(editor.exec()==QDialog::Rejected) {
         emit svc_op_canceled();
         LOG_VOID_RETURN();
     }
-    op->update(editor.amount(),
+    op->update(editor.verified(),
+               editor.amount(),
                editor.date(),
                editor.budget(),
                editor.recipient(),
@@ -1008,7 +1030,10 @@ void PicsouUIService::ops_import(QUuid account_id)
         ops.clear();
         LOG_VOID_RETURN();
     }
-    account->add_operations(ops.list(false));
+    if(!account->add_operations(ops.list(false))) {
+        emit svc_op_failed(tr("Logical error: cannot modify an archived account."));
+        LOG_VOID_RETURN();
+    }
     emit ops_imported();
     LOG_VOID_RETURN();
 }

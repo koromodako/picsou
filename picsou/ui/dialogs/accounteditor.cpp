@@ -25,15 +25,25 @@ AccountEditor::~AccountEditor()
 
 AccountEditor::AccountEditor(QWidget *parent,
                              const QString &name,
-                             const QString &notes) :
+                             const QString &notes,
+                             bool archived,
+                             const Amount &initial_amount) :
     QDialog(parent),
     m_name(name),
     m_notes(notes),
+    m_archived(archived),
+    m_initial_amount(initial_amount),
     ui(new Ui::AccountEditor)
 {
     ui->setupUi(this);
 
     setWindowTitle(tr("Account Editor"));
+
+    ui->initial_amount->setPrefix(tr("$"));
+    ui->initial_amount->setSuffix(tr(" "));
+    ui->initial_amount->setValue(m_initial_amount.value());
+
+    ui->archived->setChecked(m_archived);
 
     if(!m_name.isNull()) {
         ui->name->setText(m_name);

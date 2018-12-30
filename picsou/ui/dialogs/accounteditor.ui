@@ -9,8 +9,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>389</width>
-    <height>218</height>
+    <width>536</width>
+    <height>412</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -38,6 +38,23 @@
     </widget>
    </item>
    <item>
+    <widget class="QLabel" name="initial_amount_label">
+     <property name="text">
+      <string>Initial amount:</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QDoubleSpinBox" name="initial_amount">
+     <property name="buttonSymbols">
+      <enum>QAbstractSpinBox::PlusMinus</enum>
+     </property>
+     <property name="maximum">
+      <double>101.989999999999995</double>
+     </property>
+    </widget>
+   </item>
+   <item>
     <widget class="QLabel" name="description_label">
      <property name="text">
       <string>Notes:</string>
@@ -48,6 +65,13 @@
     <widget class="QPlainTextEdit" name="description">
      <property name="placeholderText">
       <string>Account's notes goes here...</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QCheckBox" name="archived">
+     <property name="text">
+      <string>Archived</string>
      </property>
     </widget>
    </item>

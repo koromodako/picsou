@@ -46,7 +46,9 @@ public:
     bool remove_budget(QUuid id);
 
     void add_account(const QString &name,
-                     const QString &notes);
+                     const QString &notes,
+                     bool archived,
+                     const Amount &initial_amount);
     bool remove_account(QUuid id);
 
     inline QString name() const { return m_name; }

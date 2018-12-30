@@ -24,6 +24,8 @@
 const QString Account::KW_OPS="ops";
 const QString Account::KW_NAME="name";
 const QString Account::KW_NOTES="notes";
+const QString Account::KW_ARCHIVED="archived";
+const QString Account::KW_INITIAL_AMOUNT="init_amount";
 const QString Account::KW_PAYMENT_METHODS="payment_methods";
 const QString Account::KW_SCHEDULED_OPS="scheduled_ops";
 
@@ -37,30 +39,46 @@ Account::Account(PicsouDBO *parent) :
 
 Account::Account(const QString &name,
                  const QString &notes,
+                 bool archived,
+                 const Amount &intial_amount,
                  PicsouDBO *parent) :
     PicsouDBO(true, parent),
     m_name(name),
-    m_notes(notes)
+    m_notes(notes),
+    m_archived(archived),
+    m_initial_amount(intial_amount)
 {
 
 }
 
-void Account::update(const QString &name, const QString &notes)
+void Account::update(const QString &name,
+                     const QString &notes,
+                     bool archived,
+                     const Amount &initial_amount)
 {
     m_name=name;
     m_notes=notes;
+    m_archived=archived;
+    m_initial_amount=initial_amount;
     emit modified();
 }
 
-void Account::add_payment_method(const QString &name)
+bool Account::add_payment_method(const QString &name)
 {
+    if(m_archived) {
+        return false;
+    }
     PaymentMethodShPtr pm=PaymentMethodShPtr(new PaymentMethod(name, this));
     m_payment_methods.insert(pm->id(), pm);
     emit modified();
+    return true;
 }
 
 bool Account::remove_payment_method(QUuid id)
 {
+    if(m_archived) {
+        return false;
+    }
     bool success=false;
     switch (m_payment_methods.remove(id)) {
     case 0:
@@ -77,7 +95,7 @@ bool Account::remove_payment_method(QUuid id)
     return success;
 }
 
-void Account::add_scheduled_operation(const Amount &amount,
+bool Account::add_scheduled_operation(const Amount &amount,
                                       const QString &budget,
                                       const QString &recipient,
                                       const QString &description,
@@ -85,6 +103,9 @@ void Account::add_scheduled_operation(const Amount &amount,
                                       const QString &name,
                                       const Schedule &schedule)
 {
+    if(m_archived) {
+        return false;
+    }
     ScheduledOperationShPtr sop=ScheduledOperationShPtr(new ScheduledOperation(amount,
                                                                                budget,
                                                                                recipient,
@@ -95,10 +116,14 @@ void Account::add_scheduled_operation(const Amount &amount,
                                                                                this));
     m_scheduled_ops.insert(sop->id(), sop);
     emit modified();
+    return true;
 }
 
 bool Account::remove_scheduled_operation(QUuid id)
 {
+    if(m_archived) {
+        return false;
+    }
     bool success=false;
     switch (m_scheduled_ops.remove(id)) {
     case 0:
@@ -115,14 +140,19 @@ bool Account::remove_scheduled_operation(QUuid id)
     return success;
 }
 
-void Account::add_operation(const Amount &amount,
+bool Account::add_operation(bool verified,
+                            const Amount &amount,
                             const QDate &date,
                             const QString &budget,
                             const QString &recipient,
                             const QString &description,
                             const QString &payment_method)
 {
-    OperationShPtr op=OperationShPtr(new Operation(amount,
+    if(m_archived) {
+        return false;
+    }
+    OperationShPtr op=OperationShPtr(new Operation(verified,
+                                                   amount,
                                                    date,
                                                    budget,
                                                    recipient,
@@ -131,21 +161,31 @@ void Account::add_operation(const Amount &amount,
                                                    this));
      m_ops.insert(op->id(), op);
      emit modified();
+     return true;
 }
 
-void Account::add_operations(const OperationShPtrList &ops)
+bool Account::add_operations(const OperationShPtrList &ops)
 {
+    if(m_archived) {
+        return false;
+    }
+    bool success=false;
     for(const auto &op : ops) {
         op->set_parent(this);
         m_ops.insert(op->id(), op);
     }
     if(ops.length()>0) {
         emit modified();
+        success=true;
     }
+    return success;
 }
 
 bool Account::remove_operation(QUuid id)
 {
+    if(m_archived) {
+        return false;
+    }
     bool success=false;
     switch (m_ops.remove(id)) {
     case 0:
@@ -245,6 +285,12 @@ bool Account::read(const QJsonObject &json)
     /**/
     m_name=json[KW_NAME].toString();
     m_notes=json[KW_NOTES].toString();
+    if(json.contains(KW_ARCHIVED)) {
+        m_archived=json[KW_ARCHIVED].toBool();
+    }
+    if(json.contains(KW_INITIAL_AMOUNT)) {
+        m_initial_amount=json[KW_INITIAL_AMOUNT].toDouble();
+    }
     JSON_READ_LIST(json, KW_PAYMENT_METHODS,
                    m_payment_methods, PaymentMethod, this);
     JSON_READ_LIST(json, KW_SCHEDULED_OPS,
@@ -261,6 +307,8 @@ bool Account::write(QJsonObject &json) const
     LOG_IN("<QJsonObject>");
     json[KW_NAME]=m_name;
     json[KW_NOTES]=m_notes;
+    json[KW_ARCHIVED]=m_archived;
+    json[KW_INITIAL_AMOUNT]=m_initial_amount.value();
     JSON_WRITE_LIST(json, KW_PAYMENT_METHODS, m_payment_methods.values());
     JSON_WRITE_LIST(json, KW_SCHEDULED_OPS, m_scheduled_ops.values());
     JSON_WRITE_LIST(json, KW_OPS, m_ops.values());

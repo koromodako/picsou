@@ -24,6 +24,7 @@ const QString Operation::KW_DAY="day";
 const QString Operation::KW_MONTH="month";
 const QString Operation::KW_YEAR="year";
 const QString Operation::KW_BUDGET="budget";
+const QString Operation::KW_VERIFIED="verified";
 const QString Operation::KW_RECIPIENT="recipient";
 const QString Operation::KW_DESCRIPTION="description";
 const QString Operation::KW_PAYMENT_METHOD="paymentMethod";
@@ -34,7 +35,8 @@ Operation::Operation(PicsouDBO *parent) :
 
 }
 
-Operation::Operation(const Amount &amount,
+Operation::Operation(bool verified,
+                     const Amount &amount,
                      const QDate &date,
                      const QString &budget,
                      const QString &recipient,
@@ -42,6 +44,7 @@ Operation::Operation(const Amount &amount,
                      const QString &payment_method,
                      PicsouDBO *parent) :
     PicsouDBO(true, parent),
+    m_verified(verified),
     m_amount(amount),
     m_date(date),
     m_budget(budget),
@@ -52,13 +55,15 @@ Operation::Operation(const Amount &amount,
 
 }
 
-void Operation::update(Amount amount,
+void Operation::update(bool verified,
+                       Amount amount,
                        const QDate &date,
                        const QString &budget,
                        const QString &recipient,
                        const QString &description,
                        const QString &payment_method)
 {
+    m_verified=verified;
     m_amount=amount;
     m_date=date;
     m_budget=budget;
@@ -90,6 +95,9 @@ bool Operation::read(const QJsonObject &json)
     m_recipient=json[KW_RECIPIENT].toString();
     m_description=json[KW_DESCRIPTION].toString();
     m_payment_method=json[KW_PAYMENT_METHOD].toString();
+    if(json.contains(KW_VERIFIED)) {
+        m_verified=json[KW_VERIFIED].toBool();
+    }
     /**/
     set_valid();
     LOG_BOOL_RETURN(valid());
@@ -106,6 +114,7 @@ bool Operation::write(QJsonObject &json) const
     json[KW_RECIPIENT]=m_recipient;
     json[KW_DESCRIPTION]=m_description;
     json[KW_PAYMENT_METHOD]=m_payment_method;
+    json[KW_VERIFIED]=m_verified;
     /**/
     LOG_BOOL_RETURN(true);
 }

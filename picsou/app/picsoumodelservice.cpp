@@ -314,13 +314,14 @@ OperationCollection PicsouModelService::xml_load_ops(QFile &f)
                     ops.clear();
                     return ops;
                 }
-                op=OperationShPtr(new Operation(amount,
-                                              QDate(y, m, d),
-                                              attrs.value(XML_ATTR_BUDGET).toString(),
-                                              attrs.value(XML_ATTR_RECIPIENT).toString(),
-                                              attrs.value(XML_ATTR_DESCRIPTION).toString(),
-                                              attrs.value(XML_ATTR_PAYMENT_METHOD).toString(),
-                                              nullptr));
+                op=OperationShPtr(new Operation(false,
+                                                amount,
+                                                QDate(y, m, d),
+                                                attrs.value(XML_ATTR_BUDGET).toString(),
+                                                attrs.value(XML_ATTR_RECIPIENT).toString(),
+                                                attrs.value(XML_ATTR_DESCRIPTION).toString(),
+                                                attrs.value(XML_ATTR_PAYMENT_METHOD).toString(),
+                                                nullptr));
                 ops.append(op);
             }
             break;
@@ -419,13 +420,14 @@ OperationCollection PicsouModelService::csv_load_ops(QFile &f)
                     ops.clear();
                     return ops;
                 }
-                op=OperationShPtr(new Operation(amount,
-                                              QDate(y, m, d),
-                                              budget,
-                                              recipient,
-                                              buffer.replace(';', '\n'),
-                                              payment_method,
-                                              nullptr));
+                op=OperationShPtr(new Operation(false,
+                                                amount,
+                                                QDate(y, m, d),
+                                                budget,
+                                                recipient,
+                                                buffer.replace(';', '\n'),
+                                                payment_method,
+                                                nullptr));
                 ops.append(op);
                 buffer.clear();
             }

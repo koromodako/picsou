@@ -86,9 +86,11 @@ bool User::remove_budget(QUuid id)
 }
 
 void User::add_account(const QString &name,
-                       const QString &notes)
+                       const QString &notes,
+                       bool archived,
+                       const Amount &initial_amount)
 {
-    AccountShPtr account=AccountShPtr(new Account(name, notes, this));
+    AccountShPtr account=AccountShPtr(new Account(name, notes, archived, initial_amount, this));
     m_accounts.insert(account->id(), account);
     emit modified();
 }

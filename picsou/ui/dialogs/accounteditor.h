@@ -19,6 +19,7 @@
 #define ACCOUNTEDITOR_H
 
 #include <QDialog>
+#include "utils/amount.h"
 
 namespace Ui {
 class AccountEditor;
@@ -31,11 +32,15 @@ class AccountEditor : public QDialog
 public:
     virtual ~AccountEditor();
     explicit AccountEditor(QWidget *parent,
-                           const QString &name = QString(),
-                           const QString &notes = QString());
+                           const QString &name=QString(),
+                           const QString &notes=QString(),
+                           bool archived=false,
+                           const Amount &initial_amount=Amount());
 
     inline QString name() const { return m_name; }
     inline QString notes() const { return m_notes; }
+    inline bool archived() const { return m_archived; }
+    inline Amount initial_amount() const { return m_initial_amount; }
 
 public slots:
     void accept();
@@ -43,6 +48,8 @@ public slots:
 private:
     QString m_name;
     QString m_notes;
+    bool m_archived;
+    Amount m_initial_amount;
     Ui::AccountEditor *ui;
 };
 

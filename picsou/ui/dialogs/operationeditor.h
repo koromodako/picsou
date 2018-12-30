@@ -34,16 +34,18 @@ public:
     explicit OperationEditor(QWidget *parent,
                              int year=-1,
                              int month=-1,
-                             const QDate &date = QDate(),
-                             const Amount &amount = Amount(),
-                             const QString &budget = QString(),
-                             const QString &recipient = QString(),
-                             const QString &description = QString(),
-                             const QString &payment_method = QString());
+                             bool verified=false,
+                             const QDate &date=QDate(),
+                             const Amount &amount=Amount(),
+                             const QString &budget=QString(),
+                             const QString &recipient=QString(),
+                             const QString &description=QString(),
+                             const QString &payment_method=QString());
 
     void set_budgets(const QStringList &budgets);
     void set_payment_methods(const QStringList &payment_methods);
 
+    inline bool verified() const { return m_verified; }
     inline QDate date() const { return m_date; }
     inline Amount amount() const { return m_amount; }
     inline QString budget() const { return m_budget; }
@@ -57,6 +59,7 @@ public slots:
 private:
     int m_year;
     int m_month;
+    bool m_verified;
     QDate m_date;
     Amount m_amount;
     QString m_budget;

@@ -31,21 +31,27 @@ public:
     static const QString KW_OPS;
     static const QString KW_NAME;
     static const QString KW_NOTES;
+    static const QString KW_ARCHIVED;
+    static const QString KW_INITIAL_AMOUNT;
     static const QString KW_PAYMENT_METHODS;
     static const QString KW_SCHEDULED_OPS;
 
     Account(PicsouDBO *parent);
     Account(const QString &name,
             const QString &notes,
+            bool archived,
+            const Amount &intial_amount,
             PicsouDBO *parent);
 
     void update(const QString &name,
-                const QString &notes);
+                const QString &notes,
+                bool archived,
+                const Amount &initial_amount);
 
-    void add_payment_method(const QString &name);
+    bool add_payment_method(const QString &name);
     bool remove_payment_method(QUuid id);
 
-    void add_scheduled_operation(const Amount &amount,
+    bool add_scheduled_operation(const Amount &amount,
                                  const QString &budget,
                                  const QString &recipient,
                                  const QString &description,
@@ -54,21 +60,25 @@ public:
                                  const Schedule &schedule);
     bool remove_scheduled_operation(QUuid id);
 
-    void add_operation(const Amount &amount,
+    bool add_operation(bool verified,
+                       const Amount &amount,
                        const QDate &date,
                        const QString &budget,
                        const QString &recipient,
                        const QString &description,
                        const QString &payment_method);
-    void add_operations(const OperationShPtrList &ops);
+    bool add_operations(const OperationShPtrList &ops);
     bool remove_operation(QUuid id);
 
     PaymentMethodShPtr find_payment_method(QUuid id);
     ScheduledOperationShPtr find_scheduled_operation(QUuid id);
     OperationShPtr find_operation(QUuid id);
 
+
+    inline bool archived() const { return m_archived; }
     inline QString name() const { return m_name; }
     inline QString notes() const { return m_notes; }
+    inline Amount initial_amount() const { return m_initial_amount; }
     inline ScheduledOperationShPtrList scheduled_ops() const { return m_scheduled_ops.values(); }
     inline OperationShPtrList ops() const { return m_ops.values(); }
 
@@ -84,6 +94,8 @@ public:
 private:
     QString m_name;
     QString m_notes;
+    bool m_archived;
+    Amount m_initial_amount;
     QHash<QUuid, PaymentMethodShPtr> m_payment_methods;
     QHash<QUuid, ScheduledOperationShPtr> m_scheduled_ops;
     QHash<QUuid, OperationShPtr> m_ops;
