@@ -108,7 +108,8 @@ SOURCES += \
     ui/widgets/operationstatistics.cpp \
     ui/viewers/lockedobjectviewer.cpp \
     ui/widgets/searchfilterform.cpp \
-    utils/cryptoctx.cpp
+    utils/cryptoctx.cpp \
+    app/picsoucommandlineparser.cpp
 
 HEADERS += \
     picsou.h \
@@ -157,7 +158,8 @@ HEADERS += \
     ui/widgets/operationstatistics.h \
     ui/viewers/lockedobjectviewer.h \
     ui/widgets/searchfilterform.h \
-    utils/cryptoctx.h
+    utils/cryptoctx.h \
+    app/picsoucommandlineparser.h
 
 FORMS += \
     ui/mainwindow.ui \

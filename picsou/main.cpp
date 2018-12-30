@@ -15,21 +15,28 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
+#include "app/picsoucommandlineparser.h"
 #include "app/picsouapplication.h"
 #include "app/picsouuiservice.h"
 #include "ui/mainwindow.h"
 #include "utils/macro.h"
+#include "picsou.h"
 
 #include <QApplication>
 #include <QTranslator>
 #include <QLibraryInfo>
 #include <QStyleFactory>
+#include <QCommandLineParser>
 
 int main(int argc, char *argv[])
 {
     LOG_IN("argc="<<argc<<",argv="<<argv);
-    QApplication::setStyle(QStyleFactory::create("Fusion"));
+    /* configure application */
     QScopedPointer<QApplication> app(new QApplication(argc, argv));
+    app->setStyle(QStyleFactory::create("Fusion"));
+    app->setApplicationName(PICSOU_NAME);
+    app->setApplicationVersion(PICSOU_VERSION);
+    app->setApplicationDisplayName(PICSOU_NAME);
     /* install Qt library translator */
     QTranslator qtTranslator;
     qtTranslator.load("qt_" + QLocale::system().name(),
@@ -39,16 +46,23 @@ int main(int argc, char *argv[])
     QTranslator appTranslator;
     appTranslator.load("picsou_" + QLocale::system().name(), ":/translation");
     app->installTranslator(&appTranslator);
-    /* Construct Picsou application */
+    /* parse command line arguments */
+    PicsouCommandLineParser parser;
+    parser.process(app->arguments());
+    const QStringList args=parser.positionalArguments();
+    /* construct Picsou application */
     PicsouApplication papp(app.data());
-    /* Connect termination signal */
+    /* connect termination signal */
     QObject::connect(app.data(), &QCoreApplication::aboutToQuit, &papp, &PicsouApplication::terminate);
-    /* Initialize Picsou application */
+    /* initialize Picsou application */
     if(!papp.initialize()) {
         LOG_CRITICAL("failed to initialize application.");
         return 1;
     }
     papp.ui_svc()->show_mainwindow();
+    if(args.length()>0) {
+        papp.ui_svc()->db_open_file(args.at(0));
+    }
     int rcode=app->exec();
     LOG_DEBUG("-> rcode="<<rcode);
     return rcode;

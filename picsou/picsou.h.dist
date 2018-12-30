@@ -22,9 +22,10 @@
 #include "utils/semver.h"
 
 static const QString PICSOU_URL="https://github.com/koromodako/picsou";
-static const QString PICSOU_VERSION="%{VERSION}%";
+static const QString PICSOU_NAME="Picsou";
 static const QString PICSOU_COMMIT="%{COMMIT}%";
 static const QString PICSOU_STATUS="%{STATUS}%";
+static const QString PICSOU_VERSION="%{VERSION}%";
 static const QString PICSOU_LICENSE_URL="https://github.com/koromodako/picsou/blob/master/LICENSE";
 
 static const int PICSOU_DB_MAJOR=2;

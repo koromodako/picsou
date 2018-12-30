@@ -797,6 +797,19 @@
     </message>
 </context>
 <context>
+    <name>PicsouCommandLineParser</name>
+    <message>
+        <location filename="../app/picsoucommandlineparser.cpp" line="8"/>
+        <source>Keep in touch with your expenses.</source>
+        <translation>Gardez une trace de vos opérations.</translation>
+    </message>
+    <message>
+        <location filename="../app/picsoucommandlineparser.cpp" line="11"/>
+        <source>Database file.</source>
+        <translation>Fichier base de données.</translation>
+    </message>
+</context>
+<context>
     <name>PicsouDBEditor</name>
     <message>
         <location filename="../ui/dialogs/picsoudbeditor.ui" line="23"/>

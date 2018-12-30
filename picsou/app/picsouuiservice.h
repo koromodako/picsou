@@ -109,6 +109,7 @@ public slots:
     /* DB ops */
     void db_new();
     void db_open();
+    void db_open_file(const QString &filename);
     void db_close();
     void db_save();
     void db_save_as();

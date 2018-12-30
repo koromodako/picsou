@@ -469,12 +469,27 @@ void PicsouUIService::db_new()
 void PicsouUIService::db_open()
 {
     LOG_IN_VOID();
-    QString filename;
     if(!close_any_opened_db()) {
         emit svc_op_canceled();
         LOG_VOID_RETURN();
     }
-    filename=QFileDialog::getOpenFileName(m_mw, tr("Open file"), QString(), tr("Database (*.psdb)"));
+    QString filename=QFileDialog::getOpenFileName(m_mw, tr("Open file"), QString(), tr("Database (*.psdb)"));
+    if(filename.isNull()) {
+        emit svc_op_canceled();
+        LOG_VOID_RETURN();
+    }
+    db_open_file(filename);
+    /* db_open will emit whatever signal is relevant */
+    LOG_VOID_RETURN();
+}
+
+void PicsouUIService::db_open_file(const QString &filename)
+{
+    LOG_IN("filename="<<filename);
+    if(!close_any_opened_db()) {
+        emit svc_op_canceled();
+        LOG_VOID_RETURN();
+    }
     if(filename.isNull()) {
         emit svc_op_canceled();
         LOG_VOID_RETURN();
