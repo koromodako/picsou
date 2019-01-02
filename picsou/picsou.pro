@@ -111,7 +111,8 @@ SOURCES += \
     utils/cryptoctx.cpp \
     app/picsoucommandlineparser.cpp \
     ui/widgets/operationtablewidget.cpp \
-    utils/picsoumessagehandler.cpp
+    utils/picsoumessagehandler.cpp \
+    ui/dialogs/transferdialog.cpp
 
 HEADERS += \
     picsou.h \
@@ -162,7 +163,8 @@ HEADERS += \
     utils/cryptoctx.h \
     app/picsoucommandlineparser.h \
     ui/widgets/operationtablewidget.h \
-    utils/picsoumessagehandler.h
+    utils/picsoumessagehandler.h \
+    ui/dialogs/transferdialog.h
 
 FORMS += \
     ui/mainwindow.ui \
@@ -181,7 +183,8 @@ FORMS += \
     ui/viewers/userviewer.ui \
     ui/widgets/operationstatistics.ui \
     ui/viewers/lockedobjectviewer.ui \
-    ui/widgets/searchfilterform.ui
+    ui/widgets/searchfilterform.ui \
+    ui/dialogs/transferdialog.ui
 
 RESOURCES += \
     picsou.qrc

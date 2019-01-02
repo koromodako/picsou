@@ -117,6 +117,20 @@
         </item>
        </layout>
       </item>
+      <item>
+       <widget class="QPushButton" name="transfer">
+        <property name="text">
+         <string>Transfer</string>
+        </property>
+        <property name="icon">
+         <iconset resource="../../picsou.qrc">
+          <normaloff>:/resources/material-design/svg/swap-horizontal.svg</normaloff>:/resources/material-design/svg/swap-horizontal.svg</iconset>
+        </property>
+        <property name="flat">
+         <bool>false</bool>
+        </property>
+       </widget>
+      </item>
      </layout>
     </widget>
    </item>
@@ -128,6 +142,9 @@
    </property>
    <property name="text">
     <string>Add budget</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Shift+B</string>
    </property>
   </action>
   <action name="action_edit_budget">
@@ -156,6 +173,9 @@
    <property name="text">
     <string>Add account</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+Shift+A</string>
+   </property>
   </action>
   <action name="action_edit_account">
    <property name="icon">
@@ -173,6 +193,21 @@
    </property>
    <property name="text">
     <string>Remove account</string>
+   </property>
+  </action>
+  <action name="action_transfer">
+   <property name="icon">
+    <iconset resource="../../picsou.qrc">
+     <normaloff>:/resources/material-design/svg/swap-horizontal.svg</normaloff>:/resources/material-design/svg/swap-horizontal.svg</iconset>
+   </property>
+   <property name="text">
+    <string>Transfer</string>
+   </property>
+   <property name="toolTip">
+    <string>Transfer money between accounts</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Shift+T</string>
    </property>
   </action>
  </widget>

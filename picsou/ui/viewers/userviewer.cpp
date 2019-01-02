@@ -55,6 +55,10 @@ UserViewer::UserViewer(PicsouUIServicePtr ui_svc,
     connect(ui->remove_account, &QPushButton::clicked, this, &UserViewer::remove_account);
     connect(ui->action_remove_account, &QAction::triggered, this, &UserViewer::remove_account);
     addAction(ui->action_remove_account);
+    /* transfer */
+    connect(ui->transfer, &QPushButton::clicked, this, &UserViewer::transfer);
+    connect(ui->action_transfer, &QAction::triggered, this, &UserViewer::transfer);
+    addAction(ui->action_transfer);
 }
 
 void UserViewer::refresh(const PicsouDBShPtr db)
@@ -129,5 +133,10 @@ void UserViewer::remove_budget()
     if(item!=nullptr) {
         ui_svc()->budget_remove(mod_obj_id(), item->mod_obj_id());
     }
+}
+
+void UserViewer::transfer()
+{
+    ui_svc()->add_transfer(mod_obj_id());
 }
 

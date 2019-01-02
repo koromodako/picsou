@@ -65,8 +65,8 @@ ScheduledOperationEditor::ScheduledOperationEditor(QWidget *parent,
         ui->description->setPlainText(m_description);
     }
 
-    ui->freq_unit->clear();
     ui->freq_unit->addItems(Schedule::TR_FREQUENCY_UNITS);
+    ui->freq_unit->setEditable(false);
     ui->freq_unit->setCurrentText(Schedule::freq_unit2trstr(m_schedule.freq_unit()));
 
     ui->from->setDate(m_schedule.from());
@@ -75,7 +75,6 @@ ScheduledOperationEditor::ScheduledOperationEditor(QWidget *parent,
 
     ui->freq_value->setMinimum(1);
     ui->freq_value->setValue(m_schedule.freq_value());
-    ui->freq_unit->setEditable(false);
 
     connect(ui->from, &QDateEdit::dateChanged, this, &ScheduledOperationEditor::limit_until);
     connect(ui->endless, &QCheckBox::clicked, this, &ScheduledOperationEditor::endless);

@@ -46,6 +46,8 @@ public slots:
     void edit_budget();
     void remove_budget();
 
+    void transfer();
+
 private:
     Ui::UserViewer *ui;
 };
