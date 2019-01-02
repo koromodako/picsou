@@ -53,7 +53,8 @@ MainWindow::MainWindow(PicsouUIServicePtr ui_svc, QWidget *parent) :
     m_search_form=new SearchFilterForm(ui_svc);
     ui->search_tab->layout()->addWidget(m_search_form); /* ownership transfer */
 
-    m_search_table=new PicsouTableWidget;
+    m_search_table=new OperationTableWidget;
+    m_search_table->set_readonly(true);
     ui->search_tab->layout()->addWidget(m_search_table); /* ownership transfer */
 
     m_search_ops_stats=new OperationStatistics;
@@ -75,7 +76,7 @@ MainWindow::MainWindow(PicsouUIServicePtr ui_svc, QWidget *parent) :
     connect(ui->action_star_me_on_github, &QAction::triggered, ui_svc, &PicsouUIService::show_github_repo);
     connect(ui->action_license, &QAction::triggered, ui_svc, &PicsouUIService::show_license);
     /* database tree */
-    connect(ui->tree, &QTreeWidget::itemSelectionChanged, this, &MainWindow::update_viewer);
+    connect(ui->tree, &QTreeWidget::itemClicked, this, &MainWindow::update_viewer);
     /* search */
     connect(m_search_form, &SearchFilterForm::search_request, this, &MainWindow::update_search);
     connect(m_search_form, &SearchFilterForm::search_update_failed, this, &MainWindow::show_status);
@@ -155,11 +156,10 @@ void MainWindow::show_status(const QString &message)
     LOG_VOID_RETURN();
 }
 
-void MainWindow::update_viewer()
+void MainWindow::update_viewer(QTreeWidgetItem *, int)
 {
     LOG_IN_VOID();
-    QList<QTreeWidgetItem*> items;
-    items=ui->tree->selectedItems();
+    QList<QTreeWidgetItem*> items=ui->tree->selectedItems();
     if(items.length()>0) {
         p_update_viewer(items.first(), 0);
     }
@@ -172,12 +172,9 @@ void MainWindow::update_search()
     m_search_table->clear();
     OperationCollection ops=ui_svc()->search_operations(m_search_form->query());
     if(ops.length()>0) {
-       QList<QStringList> budgets=ui_svc()->compute_budgets(ops, m_search_form->query().username());
+        BudgetShPtrList budgets=ui_svc()->user_budgets(m_search_form->query().username());
         m_search_table->refresh(ops);
-        m_search_ops_stats->refresh(ops.balance().to_str(true),
-                                    ops.total_debit().to_str(true),
-                                    ops.total_credit().to_str(true),
-                                    budgets);
+        m_search_ops_stats->refresh(ops, budgets);
     } else {
         m_search_table->clear();
         m_search_ops_stats->clear();
@@ -195,16 +192,17 @@ bool MainWindow::close()
 void MainWindow::p_update_viewer(QTreeWidgetItem *item, int)
 {
     LOG_IN("item="<<item);
-    PicsouUIViewer *w;
     if(m_details_widget!=nullptr) {
         for(auto *action : m_details_widget->actions()) {
             ui->toolbar->removeAction(action);
         }
         ui->details_tab->layout()->removeWidget(m_details_widget);
-        delete m_details_widget; m_details_widget=nullptr;
+        delete m_details_widget;
+        m_details_widget=nullptr;
     }
     if(item!=nullptr) {
-        if((w=ui_svc()->viewer_from_item(item))!=nullptr) {
+        PicsouUIViewer *w=ui_svc()->viewer_from_item(item);
+        if(w!=nullptr) {
             m_details_widget=w;
             ui->details_tab->layout()->addWidget(m_details_widget);
             ui->toolbar->addActions(m_details_widget->actions());
@@ -280,7 +278,6 @@ void MainWindow::refresh_tree()
         LOG_CRITICAL("Failed to update database tree.");
         ui->statusbar->showMessage(tr("Failed to update database tree."), TIMEOUT);
     }
-    ui->tree->expandToDepth(1);
     LOG_VOID_RETURN();
 }
 

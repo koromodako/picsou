@@ -70,11 +70,6 @@ private:
     PicsouDBO *m_parent;
 };
 
-#include <QPointer>
-#define DECL_PICSOU_MOD_OBJ_PTR(Class, ClassShPtr, ClassShPtrList) \
-    typedef QSharedPointer<Class> ClassShPtr; \
-    typedef QList<ClassShPtr> ClassShPtrList
-
 #define JSON_CHECK_KEYS(list) \
     do { \
         QStringList keys__=(list); \

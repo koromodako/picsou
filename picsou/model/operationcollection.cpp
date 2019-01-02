@@ -18,13 +18,16 @@
 #include "operationcollection.h"
 #include "utils/macro.h"
 
-OperationCollection::OperationCollection()
+OperationCollection::OperationCollection(const Amount &initial_value) :
+    m_initial_value(initial_value)
 {
     clear();
 }
 
-OperationCollection::OperationCollection(const OperationShPtrList &ops)
+OperationCollection::OperationCollection(const OperationShPtrList &ops, const Amount &initial_value) :
+    m_initial_value(initial_value)
 {
+    clear();
     for(auto &op : ops) {
         append(op);
     }

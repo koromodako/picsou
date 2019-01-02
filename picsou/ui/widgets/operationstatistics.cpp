@@ -42,32 +42,55 @@ void OperationStatistics::clear()
     ui->total_credit_val->setText("-");
 }
 
-void OperationStatistics::refresh(const QString &balance,
-                                  const QString &total_debit,
-                                  const QString &total_credit,
-                                  const QList<QStringList> &budgets)
+static bool budget_amount_cmp(const QPair<QString, Amount> &a, const QPair<QString, Amount> &b)
 {
-    ui->balance_val->setText(balance);
-    ui->total_debit_val->setText(total_debit);
-    ui->total_credit_val->setText(total_credit);
-    /* clear previous table */
+    return a.second<b.second;
+}
+
+void OperationStatistics::refresh(const OperationCollection &ops, const BudgetShPtrList &user_budgets)
+{
+    QHash<QString, Amount> epb=ops.expense_per_budget();
+    QList<QPair<QString, Amount>> sorted_epb;
+    QHash<QString, Amount>::iterator epb_it=epb.begin();
+    while(epb_it!=epb.end()) {
+        sorted_epb.append(qMakePair(epb_it.key(), epb_it.value()));
+        epb_it++;
+    }
+
+    std::sort(sorted_epb.begin(), sorted_epb.end(), budget_amount_cmp);
+    QHash<QString, Amount> budget_hash;
+    for(const auto &budget : user_budgets) {
+        budget_hash.insert(budget->name(), budget->amount());
+    }
+
+    ui->balance_val->setText(ops.balance().to_str(true));
+    ui->total_debit_val->setText(ops.total_debit().to_str(true));
+    ui->total_credit_val->setText(ops.total_credit().to_str(true));
+    /* clear previous budget table */
     ui->expense_per_budget_table->clear();
-    /* set columns */
-    ui->expense_per_budget_table->setColumnCount(budgets.first().size());
-    int c=0;
-    do {
-        ui->expense_per_budget_table->horizontalHeader()->setSectionResizeMode(c, QHeaderView::Stretch);
-        c++;
-    } while(c<budgets.first().size());
-    /* fill rows */
-    ui->expense_per_budget_table->setRowCount(budgets.size());
+    /* fill table with new values */
+    static QStringList labels=QStringList()<<tr("Name")
+                                           <<tr("Current Debit")
+                                           <<tr("Maximum Debit")
+                                           <<tr("Available Debit");
+
+    ui->expense_per_budget_table->setColumnCount(4);
+    ui->expense_per_budget_table->setHorizontalHeaderLabels(labels);
+    ui->expense_per_budget_table->horizontalHeader()->setSectionResizeMode(0, QHeaderView::Stretch);
+    ui->expense_per_budget_table->horizontalHeader()->setSectionResizeMode(1, QHeaderView::Stretch);
+    ui->expense_per_budget_table->horizontalHeader()->setSectionResizeMode(2, QHeaderView::Stretch);
+    ui->expense_per_budget_table->horizontalHeader()->setSectionResizeMode(3, QHeaderView::Stretch);
+    ui->expense_per_budget_table->setRowCount(sorted_epb.length());
     int r=0;
-    for(auto strlst : budgets) {
-        c=0;
-        do {
-            ui->expense_per_budget_table->setItem(r, c, new QTableWidgetItem(strlst.at(c)));
-            c++;
-        } while(c<strlst.size());
+    for(const auto &budget : sorted_epb) {
+        Amount allowed=budget_hash.value(budget.first)*ops.months();
+        Amount consumed=budget.second;
+        double remaining=100*(allowed.value()-consumed.value())/allowed.value();
+        ui->expense_per_budget_table->setItem(r, 0, new QTableWidgetItem(budget.first));
+        ui->expense_per_budget_table->setItem(r, 1, new QTableWidgetItem(consumed.to_str(true)));
+        ui->expense_per_budget_table->setItem(r, 2, new QTableWidgetItem(allowed.to_str(true)));
+        ui->expense_per_budget_table->setItem(r, 3, new QTableWidgetItem(QString("%0 (%1%)").arg(Amount(remaining).to_str(true),
+                                                                                                 QString::number(remaining, 'f', 2))));
         r++;
     }
 }

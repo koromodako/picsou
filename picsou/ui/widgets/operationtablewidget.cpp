@@ -16,38 +16,38 @@
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 #include "utils/macro.h"
-#include "picsoutablewidget.h"
+#include "operationtablewidget.h"
 #include "ui/items/picsoutableitem.h"
 #include <QHeaderView>
 
-PicsouTableWidget::PicsouTableWidget(QWidget *parent) :
+OperationTableWidget::OperationTableWidget(QWidget *parent) :
     QTableWidget(parent)
 {
     setDragEnabled(false);
     setDragDropMode(QAbstractItemView::NoDragDrop);
-
     setEditTriggers(QAbstractItemView::NoEditTriggers);
-
     setSelectionMode(QAbstractItemView::SingleSelection);
     setSelectionBehavior(QAbstractItemView::SelectRows);
-
     setAlternatingRowColors(true);
-
     clear();
+
+    connect(this, &QTableWidget::itemClicked, this, &OperationTableWidget::verified_checked);
+    connect(this, &QTableWidget::cellDoubleClicked, this, &OperationTableWidget::op_edit_requested);
 }
 
-void PicsouTableWidget::clear()
+void OperationTableWidget::clear()
 {
     static QStringList labels=QStringList()<<tr("Date")
                                              <<tr("Description")
                                              <<tr("Recipient")
                                              <<tr("Payment Method")
                                              <<tr("Budget")
-                                             <<tr("Amount");
+                                             <<tr("Amount")
+                                             <<tr("Verified");
 
     QTableWidget::clear();
     verticalHeader()->hide();
-    setColumnCount(6);
+    setColumnCount(7);
     setHorizontalHeaderLabels(labels);
     horizontalHeader()->setSectionResizeMode(0, QHeaderView::ResizeToContents);
     horizontalHeader()->setSectionResizeMode(1, QHeaderView::Stretch);
@@ -55,9 +55,10 @@ void PicsouTableWidget::clear()
     horizontalHeader()->setSectionResizeMode(3, QHeaderView::ResizeToContents);
     horizontalHeader()->setSectionResizeMode(4, QHeaderView::ResizeToContents);
     horizontalHeader()->setSectionResizeMode(5, QHeaderView::ResizeToContents);
+    horizontalHeader()->setSectionResizeMode(6, QHeaderView::ResizeToContents);
 }
 
-void PicsouTableWidget::refresh(OperationCollection ops)
+void OperationTableWidget::refresh(OperationCollection ops)
 {
     static const int alpha=32;
     static const QIcon debit_icon=QIcon(":/resources/material-design/svg/trending-down.svg"),
@@ -94,17 +95,26 @@ void PicsouTableWidget::refresh(OperationCollection ops)
             break;
         }
         items.append(new PicsouTableItem(icon,
-                                         op->date().toString(Qt::DefaultLocaleShortDate),
-                                         op->id()));
-        if(op->scheduled()) {
-            items.append(new QTableWidgetItem(scheduled_icon, op->description(), SCHEDULED));
-        } else {
-            items.append(new QTableWidgetItem(op->description(), NORMAL));
-        }
+                                         op->date(),
+                                         op->id(),
+                                         op->scheduled()?PicsouTableItem::SCHEDULED:PicsouTableItem::NORMAL));
+        items.append(new QTableWidgetItem(op->description()));
         items.append(new QTableWidgetItem(op->recipient()));
         items.append(new QTableWidgetItem(op->payment_method()));
         items.append(new QTableWidgetItem(op->budget()));
         items.append(new QTableWidgetItem(op->amount().to_str(true)));
+        QTableWidgetItem *checkbox=new QTableWidgetItem(PicsouTableItem::CHECKABLE);
+        if(op->scheduled()) {
+            checkbox->setIcon(scheduled_icon);
+        } else {
+            Qt::ItemFlags flags=Qt::ItemIsUserCheckable;
+            if(!m_readonly) {
+                flags|=Qt::ItemIsEnabled;
+            }
+            checkbox->setFlags(flags);
+            checkbox->setCheckState(op->verified()?Qt::Checked:Qt::Unchecked);
+        }
+        items.append(checkbox);
         c=0;
         for(auto *item : items) {
             item->setBackground(QBrush(bgcolor, op->scheduled()?Qt::Dense5Pattern:Qt::SolidPattern));
@@ -114,17 +124,33 @@ void PicsouTableWidget::refresh(OperationCollection ops)
     }
 }
 
-bool PicsouTableWidget::is_current_op_scheduled() const
+bool OperationTableWidget::is_current_op_scheduled() const
 {
-    return item(currentRow(), 1)->type()==SCHEDULED;
+    QTableWidgetItem *itm=item(currentRow(), 0);
+    if(itm!=nullptr) {
+        return itm->type()==PicsouTableItem::SCHEDULED;
+    }
+    LOG_WARNING("invalid item returned!");
+    return false;
 }
 
-QUuid PicsouTableWidget::current_op() const
+QUuid OperationTableWidget::current_op(QTableWidgetItem *itm) const
 {
     QUuid uuid;
-    PicsouTableItem *it=static_cast<PicsouTableItem*>(item(currentRow(), 0));
+    int row=currentRow();
+    if(itm!=nullptr) {
+        row=itm->row();
+    }
+    PicsouTableItem *it=static_cast<PicsouTableItem*>(item(row, 0));
     if(it!=nullptr) {
         uuid=it->mod_obj_id();
     }
     return uuid;
+}
+
+void OperationTableWidget::verified_checked(QTableWidgetItem *item)
+{
+    if(item->type()==PicsouTableItem::CHECKABLE) {
+        emit op_verified_state_changed(current_op(item), item->checkState()==Qt::Checked);
+    }
 }

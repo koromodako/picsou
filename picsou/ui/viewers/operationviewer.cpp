@@ -31,37 +31,40 @@ OperationViewer::~OperationViewer()
 OperationViewer::OperationViewer(PicsouUIServicePtr ui_svc,
                                  QUuid user_id,
                                  QUuid account_id,
-                                 ViewerScale scale,
+                                 bool readonly,
+                                 TimeScale scale,
                                  int year,
                                  int month,
                                  QWidget *parent) :
     PicsouUIViewer(ui_svc, account_id, parent),
-    m_user_id(user_id),
     m_year(year),
     m_month(month),
+    m_readonly(readonly),
+    m_user_id(user_id),
     m_scale(scale),
     ui(new Ui::OperationViewer)
 {
     ui->setupUi(this);
     connect(ui_svc, &PicsouUIService::notify_model_updated, this, &OperationViewer::refresh);
 
-    m_table=new PicsouTableWidget;
+    m_table=new OperationTableWidget;
     ui->main_layout->insertWidget(0, m_table);
 
     m_ops_stats=new OperationStatistics;
     ui->main_layout->addWidget(m_ops_stats);
 
     /* ops */
-    connect(ui->add_op, &QPushButton::clicked, this, &OperationViewer::add_op);
+    connect(ui->op_add, &QPushButton::clicked, this, &OperationViewer::add_op);
     connect(ui->action_add_op, &QAction::triggered, this, &OperationViewer::add_op);
     addAction(ui->action_add_op);
 
-    connect(ui->edit_op, &QPushButton::clicked, this, &OperationViewer::edit_op);
+    connect(ui->op_edit, &QPushButton::clicked, this, &OperationViewer::edit_op);
     connect(ui->action_edit_op, &QAction::triggered, this, &OperationViewer::edit_op);
-    connect(m_table, &PicsouTableWidget::cellDoubleClicked, this, &OperationViewer::table_edit_op);
+    connect(m_table, &OperationTableWidget::op_edit_requested, this, &OperationViewer::table_edit_op);
+    connect(m_table, &OperationTableWidget::op_verified_state_changed, this, &OperationViewer::table_update_op_verified);
     addAction(ui->action_edit_op);
 
-    connect(ui->remove_op, &QPushButton::clicked, this, &OperationViewer::remove_op);
+    connect(ui->op_remove, &QPushButton::clicked, this, &OperationViewer::remove_op);
     connect(ui->action_remove_op, &QAction::triggered, this, &OperationViewer::remove_op);
     addAction(ui->action_remove_op);
 }
@@ -82,12 +85,20 @@ void OperationViewer::refresh(const PicsouDBShPtr db)
     }
 
     ops=db->ops(mod_obj_id(), year, month);
-    QList<QStringList> budgets=ui_svc()->compute_budgets(ops, m_user_id);
+    m_table->set_readonly(m_readonly);
     m_table->refresh(ops);
-    m_ops_stats->refresh(ops.balance().to_str(true),
-                         ops.total_debit().to_str(true),
-                         ops.total_credit().to_str(true),
-                         budgets);
+
+    UserShPtr user=db->find_user(m_user_id);
+    if(user.isNull()) {
+        LOG_WARNING("invalid user pointer");
+        return;
+    }
+    m_ops_stats->refresh(ops, user->budgets());
+
+    bool has_ops=ops.length()>0;
+    ui->op_add->setEnabled(!m_readonly);
+    ui->op_edit->setEnabled(has_ops&&!m_readonly);
+    ui->op_remove->setEnabled(has_ops&&!m_readonly);
 }
 
 void OperationViewer::add_op()
@@ -124,4 +135,11 @@ void OperationViewer::remove_op()
 void OperationViewer::table_edit_op(int, int)
 {
     edit_op();
+}
+
+void OperationViewer::table_update_op_verified(QUuid op_id, bool verified)
+{
+    if(!op_id.isNull()) {
+        ui_svc()->op_set_verified(mod_obj_id(), op_id, verified);
+    }
 }

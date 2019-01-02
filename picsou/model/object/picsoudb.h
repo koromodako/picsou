@@ -53,7 +53,9 @@ public:
 
     OperationCollection ops(QUuid account_id,
                             int year=-1,
-                            int month=-1) const;
+                            int month=-1,
+                            const QDate &until=QDate()) const;
+
 
     bool read(const QJsonObject &json);
     bool write(QJsonObject &json) const;
@@ -66,6 +68,6 @@ private:
     QHash<QUuid, UserShPtr> m_users;
 };
 
-DECL_PICSOU_MOD_OBJ_PTR(PicsouDB, PicsouDBShPtr, PicsouDBShPtrList);
+DECL_PICSOU_OBJ_PTR(PicsouDB, PicsouDBShPtr, PicsouDBShPtrList);
 
 #endif // PICSOUDB_H

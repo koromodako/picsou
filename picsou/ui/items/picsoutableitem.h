@@ -18,6 +18,7 @@
 #ifndef PICSOUTABLEITEM_H
 #define PICSOUTABLEITEM_H
 
+#include <QDate>
 #include <QTableWidgetItem>
 
 #include "ui/picsouitem.h"
@@ -25,10 +26,16 @@
 class PicsouTableItem : public QTableWidgetItem, public PicsouItem
 {
 public:
-    virtual ~PicsouTableItem();
+    enum Type {
+        NORMAL,
+        SCHEDULED,
+        CHECKABLE
+    };
+
     PicsouTableItem(const QIcon &icon,
-                    const QString &text,
-                    QUuid id);
+                    const QDate &date,
+                    QUuid id,
+                    Type type);
 };
 
 #endif // PICSOUTABLEITEM_H

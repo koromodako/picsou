@@ -19,7 +19,7 @@
 #define ACCOUNTVIEWER_H
 
 #include "ui/picsouuiviewer.h"
-#include "ui/widgets/picsoutablewidget.h"
+#include "ui/widgets/operationtablewidget.h"
 #include "ui/widgets/operationstatistics.h"
 
 namespace Ui {
@@ -33,13 +33,15 @@ class AccountViewer : public PicsouUIViewer
 public:
     virtual ~AccountViewer();
     explicit AccountViewer(PicsouUIServicePtr ui_svc,
-                           QUuid user_uuid,
-                           QUuid account_uuid,
+                           QUuid user_id,
+                           QUuid account_id,
+                           bool readonly,
                            QWidget *parent=nullptr);
 
 public slots:
     void refresh(const PicsouDBShPtr db);
 
+private slots:
     /* payment methods */
     void add_pm();
     void edit_pm();
@@ -56,11 +58,13 @@ public slots:
     void export_ops();
 
     void table_edit_op(int row, int col);
+    void table_update_op_verified(QUuid op_id, bool verified);
 
 private:
+    bool m_readonly;
     QUuid m_user_id;
     QString m_rolling_expense_lab;
-    PicsouTableWidget *m_table;
+    OperationTableWidget *m_table;
     OperationStatistics *m_ops_stats;
     Ui::AccountViewer *ui;
 };

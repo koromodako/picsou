@@ -22,7 +22,7 @@
 
 #include "picsouui.h"
 #include "ui/widgets/searchfilterform.h"
-#include "ui/widgets/picsoutablewidget.h"
+#include "ui/widgets/operationtablewidget.h"
 #include "ui/widgets/operationstatistics.h"
 
 namespace Ui {
@@ -47,8 +47,10 @@ public:
     virtual ~MainWindow();
     explicit MainWindow(PicsouUIServicePtr ui_svc, QWidget *parent=nullptr);
 
-
 public slots:
+    bool close();
+
+private slots:
     void db_opened();
     void db_saved();
     void db_modified();
@@ -59,10 +61,8 @@ public slots:
     void op_failed(const QString &error);
     void show_status(const QString &message);
 
-    void update_viewer();
+    void update_viewer(QTreeWidgetItem *, int);
     void update_search();
-
-    bool close();
 
 
 protected:
@@ -76,7 +76,7 @@ private:
     State m_state;
     QWidget *m_details_widget;
     SearchFilterForm *m_search_form;
-    PicsouTableWidget *m_search_table;
+    OperationTableWidget *m_search_table;
     OperationStatistics *m_search_ops_stats;
     Ui::MainWindow *ui;
 };

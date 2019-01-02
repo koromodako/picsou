@@ -32,18 +32,20 @@ AccountViewer::~AccountViewer()
 }
 
 AccountViewer::AccountViewer(PicsouUIServicePtr ui_svc,
-                             QUuid user_uuid,
-                             QUuid account_uuid,
+                             QUuid user_id,
+                             QUuid account_id,
+                             bool readonly,
                              QWidget *parent) :
-    PicsouUIViewer(ui_svc, account_uuid, parent),
-    m_user_id(user_uuid),
+    PicsouUIViewer(ui_svc, account_id, parent),
+    m_readonly(readonly),
+    m_user_id(user_id),
     m_rolling_expense_lab(tr("Rolling expense (30 days):")),
     ui(new Ui::AccountViewer)
 {
     ui->setupUi(this);
     connect(ui_svc, &PicsouUIService::notify_model_updated, this, &AccountViewer::refresh);
 
-    m_table=new PicsouTableWidget;
+    m_table=new OperationTableWidget;
     ui->ops_layout->insertWidget(0, m_table);
 
     m_ops_stats=new OperationStatistics;
@@ -75,24 +77,25 @@ AccountViewer::AccountViewer(PicsouUIServicePtr ui_svc,
     connect(ui->action_remove_sop, &QAction::triggered, this, &AccountViewer::remove_sop);
     addAction(ui->action_remove_sop);
     /* ops */
-    connect(ui->add_op, &QPushButton::clicked, this, &AccountViewer::add_op);
+    connect(ui->op_add, &QPushButton::clicked, this, &AccountViewer::add_op);
     connect(ui->action_add_op, &QAction::triggered, this, &AccountViewer::add_op);
     addAction(ui->action_add_op);
 
-    connect(ui->edit_op, &QPushButton::clicked, this, &AccountViewer::edit_op);
+    connect(ui->op_edit, &QPushButton::clicked, this, &AccountViewer::edit_op);
     connect(ui->action_edit_op, &QAction::triggered, this, &AccountViewer::edit_op);
-    connect(m_table, &PicsouTableWidget::cellDoubleClicked, this, &AccountViewer::table_edit_op);
+    connect(m_table, &OperationTableWidget::op_edit_requested, this, &AccountViewer::table_edit_op);
+    connect(m_table, &OperationTableWidget::op_verified_state_changed, this, &AccountViewer::table_update_op_verified);
     addAction(ui->action_edit_op);
 
-    connect(ui->remove_op, &QPushButton::clicked, this, &AccountViewer::remove_op);
+    connect(ui->op_remove, &QPushButton::clicked, this, &AccountViewer::remove_op);
     connect(ui->action_remove_op, &QAction::triggered, this, &AccountViewer::remove_op);
     addAction(ui->action_remove_op);
 
-    connect(ui->import_ops, &QPushButton::clicked, this, &AccountViewer::import_ops);
+    connect(ui->ops_import, &QPushButton::clicked, this, &AccountViewer::import_ops);
     connect(ui->action_import_ops, &QAction::triggered, this, &AccountViewer::import_ops);
     addAction(ui->action_import_ops);
 
-    connect(ui->export_ops, &QPushButton::clicked, this, &AccountViewer::export_ops);
+    connect(ui->ops_export, &QPushButton::clicked, this, &AccountViewer::export_ops);
     connect(ui->action_export_ops, &QAction::triggered, this, &AccountViewer::export_ops);
     addAction(ui->action_export_ops);
 }
@@ -111,8 +114,9 @@ void AccountViewer::refresh(const PicsouDBShPtr db)
         new PicsouListItem(pm->name(), ui->payment_methods, pm->id());
     }
     bool has_pm=(ui->payment_methods->count());
-    ui->pm_edit->setEnabled(has_pm);
-    ui->pm_remove->setEnabled(has_pm);
+    ui->pm_add->setEnabled(!m_readonly);
+    ui->pm_edit->setEnabled(has_pm&&!m_readonly);
+    ui->pm_remove->setEnabled(has_pm&&!m_readonly);
     /* notes */
     ui->notes->setPlainText(account->notes());
     /* scheduled ops */
@@ -130,23 +134,29 @@ void AccountViewer::refresh(const PicsouDBShPtr db)
                            sop->id());
     }
     bool has_sops=(ui->sops->count());
-    ui->sop_edit->setEnabled(has_sops);
-    ui->sop_remove->setEnabled(has_sops);
+    ui->sop_add->setEnabled(!m_readonly);
+    ui->sop_edit->setEnabled(has_sops&&!m_readonly);
+    ui->sop_remove->setEnabled(has_sops&&!m_readonly);
     /* ops */
     ops=db->ops(mod_obj_id());
-    QList<QStringList> budgets=ui_svc()->compute_budgets(ops, m_user_id);
+    m_table->set_readonly(m_readonly);
     m_table->refresh(ops);
-    m_ops_stats->refresh(ops.balance().to_str(true),
-                         ops.total_debit().to_str(true),
-                         ops.total_credit().to_str(true),
-                         budgets);
+    UserShPtr user=db->find_user(m_user_id);
+    if(user.isNull()) {
+        LOG_WARNING("failed to find user!");
+        return;
+    }
+    m_ops_stats->refresh(ops, user->budgets());
     QDate today=QDate::currentDate();
-    m_ops_stats->update_field(m_rolling_expense_lab,
-                             ops.total_in_range(today.addDays(-30),
-                                                today).to_str(true));
+    m_ops_stats->update_field(m_rolling_expense_lab, ops.total_in_range(today.addDays(-30), today).to_str(true));
     bool has_ops=(ops.length()>0);
-    ui->remove_op->setEnabled(has_ops);
-    ui->edit_op->setEnabled(has_ops);
+    /**/
+    ui->op_add->setEnabled(!m_readonly);
+    ui->op_remove->setEnabled(has_ops&&!m_readonly);
+    ui->op_edit->setEnabled(has_ops&&!m_readonly);
+    /**/
+    ui->ops_import->setEnabled(!m_readonly);
+    ui->ops_export->setEnabled(has_ops);
 }
 
 void AccountViewer::add_pm()
@@ -239,5 +249,12 @@ void AccountViewer::export_ops()
 void AccountViewer::table_edit_op(int, int)
 {
     edit_op();
+}
+
+void AccountViewer::table_update_op_verified(QUuid op_id, bool verified)
+{
+    if(!op_id.isNull()) {
+        ui_svc()->op_set_verified(mod_obj_id(), op_id, verified);
+    }
 }
 

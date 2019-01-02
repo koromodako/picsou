@@ -32,7 +32,9 @@ const QString Account::KW_SCHEDULED_OPS="scheduled_ops";
 Account::Account(PicsouDBO *parent) :
     PicsouDBO(false, parent),
     m_name(QString()),
-    m_notes(QString())
+    m_notes(QString()),
+    m_archived(false),
+    m_initial_amount(0.)
 {
 
 }

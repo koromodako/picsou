@@ -15,31 +15,36 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-#ifndef PICSOUTABLEWIDGET_H
-#define PICSOUTABLEWIDGET_H
+#ifndef OPERATIONTABLEWIDGET_H
+#define OPERATIONTABLEWIDGET_H
 
 #include <QTableWidget>
 
 #include "model/operationcollection.h"
 
-class PicsouTableWidget : public QTableWidget
+class OperationTableWidget : public QTableWidget
 {
     Q_OBJECT
 public:
-    enum OpType {
-        NORMAL,
-        SCHEDULED
-    };
-
-    PicsouTableWidget(QWidget *parent=nullptr);
+    OperationTableWidget(QWidget *parent=nullptr);
 
     void clear();
     void refresh(OperationCollection ops);
     bool is_current_op_scheduled() const;
-    QUuid current_op() const;
+    QUuid current_op(QTableWidgetItem *item=nullptr) const;
+
+    void set_readonly(bool ro) { m_readonly=ro; }
+
+signals:
+    void op_edit_requested(int row, int col);
+    void op_verified_state_changed(QUuid id, bool checked);
+
+public slots:
+    void verified_checked(QTableWidgetItem *item);
 
 private:
-    Q_DISABLE_COPY(PicsouTableWidget)
+    Q_DISABLE_COPY(OperationTableWidget)
+    bool m_readonly=false;
 };
 
-#endif // PICSOUTABLEWIDGET_H
+#endif // OPERATIONTABLEWIDGET_H

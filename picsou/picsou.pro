@@ -105,12 +105,13 @@ SOURCES += \
     ui/picsouui.cpp \
     ui/picsouitem.cpp \
     ui/items/picsoutableitem.cpp \
-    ui/widgets/picsoutablewidget.cpp \
     ui/widgets/operationstatistics.cpp \
     ui/viewers/lockedobjectviewer.cpp \
     ui/widgets/searchfilterform.cpp \
     utils/cryptoctx.cpp \
-    app/picsoucommandlineparser.cpp
+    app/picsoucommandlineparser.cpp \
+    ui/widgets/operationtablewidget.cpp \
+    utils/picsoumessagehandler.cpp
 
 HEADERS += \
     picsou.h \
@@ -155,12 +156,13 @@ HEADERS += \
     ui/picsouui.h \
     ui/picsouitem.h \
     ui/items/picsoutableitem.h \
-    ui/widgets/picsoutablewidget.h \
     ui/widgets/operationstatistics.h \
     ui/viewers/lockedobjectviewer.h \
     ui/widgets/searchfilterform.h \
     utils/cryptoctx.h \
-    app/picsoucommandlineparser.h
+    app/picsoucommandlineparser.h \
+    ui/widgets/operationtablewidget.h \
+    utils/picsoumessagehandler.h
 
 FORMS += \
     ui/mainwindow.ui \

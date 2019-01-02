@@ -140,36 +140,86 @@ bool PicsouUIService::populate_db_tree(QTreeWidget* const tree)
     QDate today=QDate::currentDate();
     int month_stop, today_y=today.year();
     const PicsouDBShPtr db=papp()->model_svc()->db();
-    QTreeWidgetItem *root_itm, *user_itm, *account_itm, *year_itm;
-    root_itm=new PicsouTreeItem(tree, PicsouTreeItem::T_ROOT, root_ico, db->name(), db->id());
+
+    QTreeWidgetItem *expand_itm=nullptr;
+
+    QTreeWidgetItem *root_itm=new PicsouTreeItem(tree, PicsouTreeItem::T_ROOT, root_ico, db->name(), db->id());
 
     for(const auto &user : db->users(true)) {
+        QTreeWidgetItem *user_itm;
 
         if(user->wrapped()) {
-            user_itm=new PicsouTreeItem(root_itm, PicsouTreeItem::T_USER, lock_ico, user->name(), user->id(), -1, -1, true);
+            user_itm=new PicsouTreeItem(root_itm,
+                                        PicsouTreeItem::T_USER,
+                                        lock_ico,
+                                        user->name(),
+                                        user->id(),
+                                        -1,
+                                        -1,
+                                        true);
             continue;
         } else {
-            user_itm=new PicsouTreeItem(root_itm, PicsouTreeItem::T_USER, unlock_ico, user->name(), user->id());
+            user_itm=new PicsouTreeItem(root_itm,
+                                        PicsouTreeItem::T_USER,
+                                        unlock_ico,
+                                        user->name(),
+                                        user->id());
+        }
+
+        if(m_prev_id==user->id())  {
+            expand_itm=user_itm;
         }
 
         AccountShPtrList accounts=user->accounts(true);
         for(const auto &account : accounts) {
-            account_itm=new PicsouTreeItem(user_itm, PicsouTreeItem::T_ACCOUNT, account_ico,
-                                           account->name(), account->id());
+            QTreeWidgetItem *account_itm=new PicsouTreeItem(user_itm,
+                                                            PicsouTreeItem::T_ACCOUNT,
+                                                            account_ico,
+                                                            account->name(),
+                                                            account->id());
+
+            if(m_prev_id==account->id()) {
+                expand_itm=account_itm;
+            }
 
             for(int year=account->min_year(); year<=today_y; ++year) {
-                year_itm=new PicsouTreeItem(account_itm, PicsouTreeItem::T_YEAR, calendar_ico,
-                                            QString("%0").arg(year), account->id(), year);
+                QTreeWidgetItem *year_itm=new PicsouTreeItem(account_itm,
+                                            PicsouTreeItem::T_YEAR,
+                                            calendar_ico,
+                                            QString::number(year),
+                                            account->id(),
+                                            year);
+
+                if(m_prev_id==account->id()&&m_prev_year==year) {
+                    expand_itm=year_itm;
+                }
+
                 if(year==today_y) {
                     month_stop=today.month();
                 } else {
                     month_stop=12;
                 }
                 for(int month=1; month<month_stop+1; month++) {
-                    new PicsouTreeItem(year_itm, PicsouTreeItem::T_MONTH, calendar_ico,
-                                       QDate(1,month,1).toString("MMMM"), account->id(), year, month);
+                    QTreeWidgetItem *month_itm=new PicsouTreeItem(year_itm,
+                                                                  PicsouTreeItem::T_MONTH,
+                                                                  calendar_ico,
+                                                                  QDate(1,month,1).toString("MMMM"),
+                                                                  account->id(),
+                                                                  year,
+                                                                  month);
+
+                    if(m_prev_id==account->id()&&m_prev_year==year&&m_prev_month==month) {
+                        expand_itm=month_itm;
+                    }
                 }
             }
+        }
+    }
+    /* expand tree to previous item if available */
+    if(expand_itm!=nullptr) {
+        tree->setCurrentItem(expand_itm);
+        while((expand_itm=expand_itm->parent())!=nullptr) {
+            tree->expandItem(expand_itm);
         }
     }
     LOG_BOOL_RETURN(true);
@@ -294,47 +344,14 @@ OperationCollection PicsouUIService::search_operations(const SearchQuery &query)
     return ops;
 }
 
-static bool budget_amount_cmp(const QPair<QString, Amount> &a, const QPair<QString, Amount> &b)
+BudgetShPtrList PicsouUIService::user_budgets(const QString &name)
 {
-    return a.second<b.second;
-}
-
-QList<QStringList> PicsouUIService::compute_budgets(const OperationCollection &ops, QUuid user_id)
-{
-    QHash<QString, Amount> epb=ops.expense_per_budget();
-    QList<QPair<QString, Amount>> sorted_epb;
-    QHash<QString, Amount>::iterator epb_it=epb.begin();
-    while(epb_it!=epb.end()) {
-        sorted_epb.append(qMakePair(epb_it.key(), epb_it.value()));
-        epb_it++;
+    UserShPtr user=papp()->model_svc()->find_user(name);
+    if(user.isNull()) {
+        LOG_WARNING("user not found!");
+        return BudgetShPtrList();
     }
-
-    std::sort(sorted_epb.begin(), sorted_epb.end(), budget_amount_cmp);
-
-    UserShPtr user=papp()->model_svc()->db()->find_user(user_id);
-    QList<QStringList> budgets;
-    if(!user.isNull()&&!user->wrapped()) {
-        QHash<QString, Amount> user_budgets;
-        for(const auto &budget : user->budgets()) {
-            user_budgets.insert(budget->name(), budget->amount());
-        }
-        for(const auto &budget : sorted_epb) {
-            Amount allowed=user_budgets.value(budget.first)*ops.months();
-            Amount consumed=budget.second;
-            double percentage=100*abs(consumed.value()/allowed.value());
-            budgets.append(QStringList()<<budget.first
-                                        <<consumed.to_str(true)
-                                        <<QString("%0% (max: %1)").arg(QString::number(percentage, 'f', 2),
-                                                                       allowed.to_str(true)));
-        }
-    }
-    return budgets;
-}
-
-QList<QStringList> PicsouUIService::compute_budgets(const OperationCollection &ops, const QString &username)
-{
-    UserShPtr user=papp()->model_svc()->db()->find_user(username);
-    return compute_budgets(ops, user->id());
+    return user->budgets();
 }
 
 PicsouUIViewer *PicsouUIService::viewer_from_item(QTreeWidgetItem *item)
@@ -346,9 +363,13 @@ PicsouUIViewer *PicsouUIService::viewer_from_item(QTreeWidgetItem *item)
         return w;
     }
     PicsouTreeItem *pitem=static_cast<PicsouTreeItem*>(item);
+    m_prev_id=pitem->mod_obj_id();
     if(pitem->wrapped()) {
+        /* item is locked */
         w=new LockedObjectViewer(this, pitem->mod_obj_id());
     } else {
+        /* select a viewer depending on which item is selected in database tree */
+        AccountShPtr account;
         switch (pitem->type()) {
         case PicsouTreeItem::T_ROOT:
             w=new PicsouDBViewer(this, pitem->mod_obj_id());
@@ -357,24 +378,45 @@ PicsouUIViewer *PicsouUIService::viewer_from_item(QTreeWidgetItem *item)
             w=new UserViewer(this, pitem->mod_obj_id());
             break;
         case PicsouTreeItem::T_ACCOUNT:
+            account=papp()->model_svc()->find_account(pitem->mod_obj_id());
+            if(account.isNull()) {
+                emit svc_op_failed(tr("Account viewer cannot be displayed: invalid account pointer!"));
+                break;
+            }
             w=new AccountViewer(this,
                                 pitem->parent()->mod_obj_id(),
-                                pitem->mod_obj_id());
+                                pitem->mod_obj_id(),
+                                account->archived());
             break;
         case PicsouTreeItem::T_YEAR:
+            account=papp()->model_svc()->find_account(pitem->parent()->mod_obj_id());
+            if(account.isNull()) {
+                emit svc_op_failed(tr("Operation viewer cannot be displayed: invalid account pointer!"));
+                break;
+            }
+            m_prev_year=pitem->year();
             w=new OperationViewer(this,
                                   pitem->parent()->parent()->mod_obj_id(),
                                   pitem->parent()->mod_obj_id(),
+                                  account->archived(),
                                   OperationViewer::VS_YEAR,
-                                  pitem->year());
+                                  m_prev_year);
             break;
         case PicsouTreeItem::T_MONTH:
+            account=papp()->model_svc()->find_account(pitem->parent()->mod_obj_id());
+            if(account.isNull()) {
+                emit svc_op_failed(tr("Operation viewer cannot be displayed: invalid account pointer!"));
+                break;
+            }
+            m_prev_year=pitem->year();
+            m_prev_month=pitem->month();
             w=new OperationViewer(this,
                                   pitem->parent()->parent()->parent()->mod_obj_id(),
                                   pitem->parent()->parent()->mod_obj_id(),
+                                  account->archived(),
                                   OperationViewer::VS_MONTH,
-                                  pitem->year(),
-                                  pitem->month());
+                                  m_prev_year,
+                                  m_prev_month);
             break;
         }
     }
@@ -996,6 +1038,24 @@ void PicsouUIService::op_remove(QUuid account_id, QUuid op_id)
         LOG_VOID_RETURN();
     }
     emit svc_op_failed(tr("Failed to remove operation from database."));
+    LOG_VOID_RETURN();
+}
+
+void PicsouUIService::op_set_verified(QUuid account_id, QUuid op_id, bool verified)
+{
+    LOG_IN("account_id="<<account_id<<",op_id="<<op_id<<",verified="<<verified);
+    AccountShPtr account=papp()->model_svc()->find_account(account_id);
+    if(account.isNull()) {
+        emit svc_op_failed(tr("Internal error: invalid account pointer."));
+        LOG_VOID_RETURN();
+    }
+    OperationShPtr op=account->find_operation(op_id);
+    if(op.isNull()) {
+        emit svc_op_failed(tr("Internal error: invalid op pointer."));
+        LOG_VOID_RETURN();
+    }
+    op->set_verified(verified);
+    emit op_verified_set();
     LOG_VOID_RETURN();
 }
 

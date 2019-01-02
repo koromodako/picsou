@@ -30,7 +30,8 @@ const QString Operation::KW_DESCRIPTION="description";
 const QString Operation::KW_PAYMENT_METHOD="paymentMethod";
 
 Operation::Operation(PicsouDBO *parent) :
-    PicsouDBO(false, parent)
+    PicsouDBO(false, parent),
+    m_verified(false)
 {
 
 }
@@ -71,6 +72,14 @@ void Operation::update(bool verified,
     m_description=description;
     m_payment_method=payment_method;
     emit modified();
+}
+
+void Operation::set_verified(bool verified)
+{
+    if(m_verified!=verified) {
+        m_verified=verified;
+        emit modified();
+    }
 }
 
 

@@ -19,7 +19,7 @@
 #define OPERATIONVIEWER_H
 
 #include "ui/picsouuiviewer.h"
-#include "ui/widgets/picsoutablewidget.h"
+#include "ui/widgets/operationtablewidget.h"
 #include "ui/widgets/operationstatistics.h"
 
 namespace Ui {
@@ -30,7 +30,7 @@ class OperationViewer : public PicsouUIViewer
 {
     Q_OBJECT
 public:
-    enum ViewerScale {
+    enum TimeScale {
         VS_YEAR,
         VS_MONTH
     };
@@ -39,7 +39,8 @@ public:
     explicit OperationViewer(PicsouUIServicePtr ui_svc,
                              QUuid user_id,
                              QUuid account_id,
-                             ViewerScale scale,
+                             bool readonly,
+                             TimeScale scale,
                              int year=-1,
                              int month=-1,
                              QWidget *parent=nullptr);
@@ -47,18 +48,21 @@ public:
 public slots:
     void refresh(const PicsouDBShPtr db);
 
+private slots:
     /* ops */
     void add_op();
     void edit_op();
     void remove_op();
     void table_edit_op(int row, int col);
+    void table_update_op_verified(QUuid op_id, bool verified);
 
 private:
-    QUuid m_user_id;
     int m_year;
     int m_month;
-    ViewerScale m_scale;
-    PicsouTableWidget *m_table;
+    bool m_readonly;
+    QUuid m_user_id;
+    TimeScale m_scale;
+    OperationTableWidget *m_table;
     OperationStatistics *m_ops_stats;
     Ui::OperationViewer *ui;
 };

@@ -18,13 +18,14 @@
 #ifndef OPERATION_H
 #define OPERATION_H
 
+#include "utils/macro.h"
 #include "utils/amount.h"
 #include "model/picsoudbo.h"
 
 #include <QDate>
 
 class PaymentMethod;
-DECL_PICSOU_MOD_OBJ_PTR(PaymentMethod, PaymentMethodShPtr, PaymentMethodShPtrList);
+DECL_PICSOU_OBJ_PTR(PaymentMethod, PaymentMethodShPtr, PaymentMethodShPtrList);
 
 class Operation : public PicsouDBO
 {
@@ -64,7 +65,6 @@ public:
                 const QString &description,
                 const QString &payment_method);
 
-    void mark_verified() { m_verified=true; }
     void mark_scheduled() { m_scheduled=true; }
 
     inline Amount amount() const { return m_amount; }
@@ -78,6 +78,8 @@ public:
 
     inline bool verified() const { return m_verified; }
     inline bool scheduled() const { return m_scheduled; }
+
+    void set_verified(bool verified=true);
 
     bool read(const QJsonObject &json);
     bool write(QJsonObject &json) const;
@@ -95,6 +97,6 @@ private:
     bool m_scheduled=false;
 };
 
-DECL_PICSOU_MOD_OBJ_PTR(Operation, OperationShPtr, OperationShPtrList);
+DECL_PICSOU_OBJ_PTR(Operation, OperationShPtr, OperationShPtrList);
 
 #endif // OPERATION_H

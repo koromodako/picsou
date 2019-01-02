@@ -105,18 +105,22 @@ UserShPtr PicsouDB::find_user(const QString &name) const
 
 OperationCollection PicsouDB::ops(QUuid account_id,
                                   int year,
-                                  int month) const
+                                  int month,
+                                  const QDate &until) const
 {
-    OperationCollection selected_ops;
     AccountShPtr account=find_account(account_id);
     if(account.isNull()) {
         LOG_WARNING("failed to find account.");
-        return selected_ops;
+        return OperationCollection();
     }
+    OperationCollection selected_ops(account->initial_amount());
     for(const auto &sop : account->scheduled_ops()) {
         LOG_DEBUG("sop->name="<<sop->name());
         for(const auto &date : sop->schedule().dates(year, month)) {
             LOG_DEBUG("generated date="<<date);
+            if(until.isValid()&&date>until) {
+                break;
+            }
             Operation *op=new Operation(true,
                                         sop->amount(),
                                         date,
@@ -130,6 +134,9 @@ OperationCollection PicsouDB::ops(QUuid account_id,
         }
     }
     for(const auto &op : account->ops()) {
+        if(until.isValid()&&op->date()>until) {
+            continue;
+        }
         if(year!=-1&&op->date().year()!=year) {
             continue;
         }

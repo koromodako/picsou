@@ -153,7 +153,7 @@
       <item>
        <layout class="QHBoxLayout" name="ops_buttons">
         <item>
-         <widget class="QPushButton" name="add_op">
+         <widget class="QPushButton" name="op_add">
           <property name="text">
            <string>Add</string>
           </property>
@@ -164,7 +164,7 @@
          </widget>
         </item>
         <item>
-         <widget class="QPushButton" name="edit_op">
+         <widget class="QPushButton" name="op_edit">
           <property name="text">
            <string>Edit</string>
           </property>
@@ -175,7 +175,7 @@
          </widget>
         </item>
         <item>
-         <widget class="QPushButton" name="remove_op">
+         <widget class="QPushButton" name="op_remove">
           <property name="text">
            <string>Remove</string>
           </property>
@@ -199,7 +199,7 @@
          </spacer>
         </item>
         <item>
-         <widget class="QPushButton" name="import_ops">
+         <widget class="QPushButton" name="ops_import">
           <property name="text">
            <string>Import</string>
           </property>
@@ -210,7 +210,7 @@
          </widget>
         </item>
         <item>
-         <widget class="QPushButton" name="export_ops">
+         <widget class="QPushButton" name="ops_export">
           <property name="text">
            <string>Export</string>
           </property>

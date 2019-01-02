@@ -51,8 +51,7 @@ public:
     bool populate_pms_list(const QString &username, const QString &account_name, QListWidget* const list);
 
     OperationCollection search_operations(const SearchQuery &query);
-    QList<QStringList> compute_budgets(const OperationCollection &ops, QUuid user_id);
-    QList<QStringList> compute_budgets(const OperationCollection &ops, const QString &username);
+    BudgetShPtrList user_budgets(const QString &name);
 
     PicsouUIViewer *viewer_from_item(QTreeWidgetItem *item);
 
@@ -94,17 +93,19 @@ signals:
     void op_added();
     void op_edited();
     void op_removed();
+    void op_verified_set();
+    /* Operation import/export */
     void ops_imported();
     void ops_exported();
 
 public slots:
-    /*  */
+    /* Misc */
     void show_mainwindow();
     void show_statistics();
     void show_about_picsou();
     void show_github_repo();
     void show_license();
-    /*  */
+    /* Encryption-related */
     void unlock(QUuid id);
     /* DB ops */
     void db_new();
@@ -137,9 +138,11 @@ public slots:
     void op_add(QUuid user_id, QUuid account_id, int year, int month);
     void op_edit(QUuid user_id, QUuid account_id, QUuid op_id, int year, int month);
     void op_remove(QUuid account_id, QUuid op_id);
+    void op_set_verified(QUuid account_id, QUuid op_id, bool verified);
+    /* Operation import/export */
     void ops_import(QUuid account_id);
     void ops_export(QUuid account_id);
-
+    /* Handle model notifications */
     void notified_model_updated(const PicsouDBShPtr db);
     void notified_model_unwrapped(const PicsouDBShPtr db);
 
@@ -147,9 +150,13 @@ private:
     bool close_any_opened_db();
 
 private:
+    int m_prev_year;
+    int m_prev_month;
+    QUuid m_prev_id;
     MainWindow *m_mw;
 };
 
+#include <QPointer>
 typedef QPointer<PicsouUIService> PicsouUIServicePtr;
 
 #endif // PICSOUUISERVICE_H

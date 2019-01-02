@@ -18,7 +18,8 @@
 #ifndef PAYMENTMETHOD_H
 #define PAYMENTMETHOD_H
 
-#include "../picsoudbo.h"
+#include "utils/macro.h"
+#include "model/picsoudbo.h"
 
 
 class PaymentMethod : public PicsouDBO
@@ -44,6 +45,6 @@ private:
     QString m_name;
 };
 
-DECL_PICSOU_MOD_OBJ_PTR(PaymentMethod, PaymentMethodShPtr, PaymentMethodShPtrList);
+DECL_PICSOU_OBJ_PTR(PaymentMethod, PaymentMethodShPtr, PaymentMethodShPtrList);
 
 #endif // PAYMENTMETHOD_H

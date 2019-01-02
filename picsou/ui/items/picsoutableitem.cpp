@@ -17,16 +17,13 @@
  */
 #include "picsoutableitem.h"
 
-PicsouTableItem::~PicsouTableItem()
-{
-
-}
-
 PicsouTableItem::PicsouTableItem(const QIcon &icon,
-                                 const QString &text,
-                                 QUuid id) :
-    QTableWidgetItem(icon, text),
+                                 const QDate &date,
+                                 QUuid id,
+                                 Type type) :
+    QTableWidgetItem(type),
     PicsouItem(id)
 {
-
+    setIcon(icon);
+    setText(date.toString(Qt::DefaultLocaleShortDate));
 }

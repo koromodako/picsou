@@ -18,6 +18,7 @@
 #ifndef BUDGET_H
 #define BUDGET_H
 
+#include "utils/macro.h"
 #include "utils/amount.h"
 #include "model/picsoudbo.h"
 
@@ -54,6 +55,6 @@ private:
     QString m_description;
 };
 
-DECL_PICSOU_MOD_OBJ_PTR(Budget, BudgetShPtr, BudgetShPtrList);
+DECL_PICSOU_OBJ_PTR(Budget, BudgetShPtr, BudgetShPtrList);
 
 #endif // BUDGET_H

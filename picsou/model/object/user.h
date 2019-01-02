@@ -72,6 +72,6 @@ private:
     QHash<QUuid, AccountShPtr> m_accounts;
 };
 
-DECL_PICSOU_MOD_OBJ_PTR(User, UserShPtr, UserShPtrList);
+DECL_PICSOU_OBJ_PTR(User, UserShPtr, UserShPtrList);
 
 #endif // USER_H

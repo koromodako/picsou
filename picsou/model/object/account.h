@@ -101,6 +101,6 @@ private:
     QHash<QUuid, OperationShPtr> m_ops;
 };
 
-DECL_PICSOU_MOD_OBJ_PTR(Account, AccountShPtr, AccountShPtrList);
+DECL_PICSOU_OBJ_PTR(Account, AccountShPtr, AccountShPtrList);
 
 #endif // ACCOUNT_H

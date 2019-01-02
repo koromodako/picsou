@@ -15,12 +15,13 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-#include "app/picsoucommandlineparser.h"
-#include "app/picsouapplication.h"
-#include "app/picsouuiservice.h"
-#include "ui/mainwindow.h"
-#include "utils/macro.h"
 #include "picsou.h"
+#include "ui/mainwindow.h"
+#include "app/picsouuiservice.h"
+#include "app/picsouapplication.h"
+#include "app/picsoucommandlineparser.h"
+#include "utils/macro.h"
+#include "utils/picsoumessagehandler.h"
 
 #include <QApplication>
 #include <QTranslator>
@@ -30,6 +31,9 @@
 
 int main(int argc, char *argv[])
 {
+    /* configure logging handler before everything else */
+    qInstallMessageHandler(picsou_message_handler);
+    /* start main function */
     LOG_IN("argc="<<argc<<",argv="<<argv);
     /* configure application */
     QScopedPointer<QApplication> app(new QApplication(argc, argv));

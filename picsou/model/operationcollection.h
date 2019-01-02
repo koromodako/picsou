@@ -27,15 +27,15 @@
 class OperationCollection
 {
 public:
-    OperationCollection();
-    OperationCollection(const OperationShPtrList &ops);
+    OperationCollection(const Amount &initial_value=0.);
+    OperationCollection(const OperationShPtrList &ops, const Amount &initial_value=0.);
 
     void clear();
     void append(const OperationShPtr &op);
 
     inline int length() const { return list(false).length(); }
     inline int months() const { return m_months.size(); }
-    inline Amount balance() const { return m_balance; }
+    inline Amount balance() const { return m_balance+m_initial_value; }
     inline Amount total_debit() const { return m_total_debit; }
     inline Amount total_credit() const { return m_total_credit; }
     inline QHash<QString, Amount> expense_per_budget() const { return m_expense_per_budget; }
@@ -49,6 +49,7 @@ protected:
 
 private:
     /* aggregation members */
+    Amount m_initial_value;
     Amount m_total_debit;
     Amount m_total_credit;
     Amount m_balance;

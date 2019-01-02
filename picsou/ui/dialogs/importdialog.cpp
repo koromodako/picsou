@@ -30,7 +30,8 @@ ImportDialog::ImportDialog(QWidget *parent, const OperationCollection &ops) :
 {
     ui->setupUi(this);
 
-    m_table=new PicsouTableWidget;
+    m_table=new OperationTableWidget;
+    m_table->set_readonly(true);
     ui->main_layout->insertWidget(0, m_table);
 
     m_table->refresh(ops);

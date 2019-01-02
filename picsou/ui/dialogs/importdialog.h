@@ -20,7 +20,7 @@
 
 #include <QDialog>
 
-#include "ui/widgets/picsoutablewidget.h"
+#include "ui/widgets/operationtablewidget.h"
 
 namespace Ui {
 class ImportDialog;
@@ -36,7 +36,7 @@ public:
                           const OperationCollection &ops);
 
 private:
-    PicsouTableWidget *m_table;
+    OperationTableWidget *m_table;
     Ui::ImportDialog *ui;
 };
 

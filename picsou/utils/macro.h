@@ -20,50 +20,21 @@
 
 #include <QDir>
 #include <QDebug>
-
-static const QString LOG_LVL_DBG="DBG";
-static const QString LOG_LVL_INF="INF";
-static const QString LOG_LVL_WRN="WRN";
-static const QString LOG_LVL_ERR="ERR";
-
-static const QString LOG_CLR_DBG="32";
-static const QString LOG_CLR_INF="34";
-static const QString LOG_CLR_WRN="33";
-static const QString LOG_CLR_ERR="31";
+#include <QSharedPointer>
 
 #define BOOL2STR(b)     ((b)?"true":"false")
-#define BASENAME(str)   (QDir(str).dirName())
 #define IS_FLAG_SET(field, flag) (((field)&(flag))==(flag))
 
-#ifdef COLORIZE
-#   define LOG(log_func, lvl, color, ...) \
+#define DECL_PICSOU_OBJ_PTR(Class, ClassShPtr, ClassShPtrList) \
+    typedef QSharedPointer<Class> ClassShPtr; \
+    typedef QList<ClassShPtr> ClassShPtrList
+
+#define LOG(log_func, lvl, color, ...) \
     do { \
         QDebug debug=log_func(); \
         debug.nospace(); \
-        debug.noquote(); \
-        debug<<"\x1b["<<(color)<<";1m" \
-             <<"["<<(lvl)<<"](" \
-             <<(__LINE__)<<"|" \
-             <<BASENAME(__FILE__)<<"|" \
-             <<(__func__)<<") - "; \
-        debug.quote(); \
-        debug<<__VA_ARGS__ \
-             <<"\x1b[0m"; \
-    } while(0)
-#else /* COLORIZE */
-#   define LOG(log_func, lvl, color, ...) \
-    do { \
-        QDebug debug=log_func(); \
-        debug.nospace(); \
-        debug.noquote(); \
-        debug<<"["<<(lvl)<<"](" \
-             <<(__LINE__)<<"|" \
-             <<BASENAME(__FILE__)<<"|" \
-             <<(__func__)<<") - "; \
-        debug.quote(); \
         debug<<__VA_ARGS__; \
     } while(0)
-#endif /* COLORIZE */
 
 #ifdef QT_DEBUG
 #   define LOG_DEBUG(...)   LOG(qDebug, LOG_LVL_DBG, LOG_CLR_DBG, __VA_ARGS__)
