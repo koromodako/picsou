@@ -29,6 +29,7 @@ win32 {
     #
     message("building for windows target")
     system("python.exe prebuild")
+    RC_ICONS = picsou.ico
     QMAKE_LFLAGS += -fstack-protector
     QMAKE_CXXFLAGS += -fstack-protector
 } else {
