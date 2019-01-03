@@ -194,13 +194,14 @@ bool PicsouModelService::is_db_opened()
 }
 
 OperationCollection PicsouModelService::load_ops(ImportExportFormat fmt,
-                                                 QString filename)
+                                                 QString filename,
+                                                 QString &error)
 {
     LOG_IN("fmt="<<fmt<<",filename="<<filename);
     QFile f(filename);
     OperationCollection ops;
     if(!f.open(QIODevice::ReadOnly)) {
-        LOG_WARNING("-> failed to open file "<<f);
+        error=tr("Failed to import operations: failed to open file.");
         return ops;
     }
     switch (fmt) {
@@ -215,11 +216,13 @@ OperationCollection PicsouModelService::load_ops(ImportExportFormat fmt,
 
 bool PicsouModelService::dump_ops(ImportExportFormat fmt,
                                   QString filename,
-                                  OperationCollection ops)
+                                  OperationCollection ops,
+                                  QString &error)
 {
     LOG_IN("fmt="<<fmt<<",filename="<<filename<<"ops.length="<<ops.length());
     QFile f(filename);
     if(!f.open(QIODevice::WriteOnly)) {
+        error=tr("Failed to export operations: failed to open file.");
         LOG_BOOL_RETURN(false);
     }
     bool success=false;

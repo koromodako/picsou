@@ -38,7 +38,7 @@ public:
              const QString &description);
 
     void add_user(const QString &username, const QString &pswd);
-    bool remove_user(QUuid id);
+    bool remove_user(QUuid id, QString &error);
 
     inline QDate timestamp() const { return m_timestamp; }
     inline SemVer version() const { return m_version; }

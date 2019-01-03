@@ -47,6 +47,9 @@ public slots:
     void refresh_account_cb(const QString &username);
     void refresh_budgets_list(const QString &username);
 
+private slots:
+    void limit_max_amount(double minimum);
+
 private:
     Ui::SearchFilterForm *ui;
 };

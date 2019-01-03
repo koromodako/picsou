@@ -50,10 +50,12 @@ public:
     bool is_db_opened();
 
     OperationCollection load_ops(ImportExportFormat fmt,
-                                 QString filename);
+                                 QString filename,
+                                 QString &error);
     bool dump_ops(ImportExportFormat fmt,
                   QString filename,
-                  OperationCollection ops);
+                  OperationCollection ops,
+                  QString &error);
 
     inline const PicsouDBShPtr db() const { return m_db; }
     inline bool is_db_modified() const { return m_is_db_modified; }

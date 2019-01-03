@@ -137,6 +137,6 @@ void UserViewer::remove_budget()
 
 void UserViewer::transfer()
 {
-    ui_svc()->add_transfer(mod_obj_id());
+    ui_svc()->transfer_add(mod_obj_id());
 }
 

@@ -39,6 +39,6 @@ AboutPicsou::AboutPicsou(QWidget *parent) :
     ui->libcrypto->setText(CryptoCtx::lib_description());
 
     /* initialize connections */
-    connect(ui->buttons, &QDialogButtonBox::accepted, this, &QWidget::close);
-    connect(ui->buttons, &QDialogButtonBox::rejected, this, &QWidget::close);
+    connect(ui->buttons, &QDialogButtonBox::accepted, &QWidget::close);
+    connect(ui->buttons, &QDialogButtonBox::rejected, &QWidget::close);
 }

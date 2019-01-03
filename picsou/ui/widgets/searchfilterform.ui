@@ -6,12 +6,12 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>636</width>
-    <height>353</height>
+    <width>638</width>
+    <height>382</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Form</string>
+   <string>Search Filter Form</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
@@ -29,17 +29,17 @@
       <item>
        <layout class="QHBoxLayout" name="horizontalLayout">
         <item>
-         <widget class="QLabel" name="user_account_lab">
+         <widget class="QLabel" name="user_account_label">
           <property name="text">
            <string>User/Account:</string>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="QComboBox" name="user_cb"/>
+         <widget class="QComboBox" name="user"/>
         </item>
         <item>
-         <widget class="QComboBox" name="account_cb"/>
+         <widget class="QComboBox" name="account"/>
         </item>
         <item>
          <spacer name="horizontalSpacer">
@@ -54,13 +54,6 @@
           </property>
          </spacer>
         </item>
-        <item>
-         <widget class="QPushButton" name="search_btn">
-          <property name="text">
-           <string>Search !</string>
-          </property>
-         </widget>
-        </item>
        </layout>
       </item>
       <item>
@@ -68,34 +61,34 @@
         <item>
          <layout class="QVBoxLayout" name="verticalLayout_5">
           <item>
-           <widget class="QLabel" name="from_lab">
+           <widget class="QLabel" name="from_label">
             <property name="text">
-             <string>From date:</string>
+             <string>From:</string>
             </property>
            </widget>
           </item>
           <item>
-           <widget class="QDateEdit" name="from_date"/>
+           <widget class="QDateEdit" name="from"/>
           </item>
           <item>
-           <widget class="QLabel" name="to_lab">
+           <widget class="QLabel" name="until_label">
             <property name="text">
-             <string>To date:</string>
+             <string>Until:</string>
             </property>
            </widget>
           </item>
           <item>
-           <widget class="QDateEdit" name="to_date"/>
+           <widget class="QDateEdit" name="until"/>
           </item>
           <item>
-           <widget class="QLabel" name="max_lab">
+           <widget class="QLabel" name="max_amount_label">
             <property name="text">
              <string>Max amount:</string>
             </property>
            </widget>
           </item>
           <item>
-           <widget class="QDoubleSpinBox" name="max_sb">
+           <widget class="QDoubleSpinBox" name="max_amount">
             <property name="buttonSymbols">
              <enum>QAbstractSpinBox::PlusMinus</enum>
             </property>
@@ -108,14 +101,14 @@
            </widget>
           </item>
           <item>
-           <widget class="QLabel" name="min_lab">
+           <widget class="QLabel" name="min_amount_label">
             <property name="text">
              <string>Min amount:</string>
             </property>
            </widget>
           </item>
           <item>
-           <widget class="QDoubleSpinBox" name="min_sb">
+           <widget class="QDoubleSpinBox" name="min_amount">
             <property name="buttonSymbols">
              <enum>QAbstractSpinBox::PlusMinus</enum>
             </property>
@@ -132,7 +125,7 @@
         <item>
          <layout class="QVBoxLayout" name="verticalLayout_4">
           <item>
-           <widget class="QLabel" name="budget_lab">
+           <widget class="QLabel" name="budget_label">
             <property name="text">
              <string>Budget:</string>
             </property>
@@ -153,7 +146,7 @@
         <item>
          <layout class="QVBoxLayout" name="verticalLayout_7">
           <item>
-           <widget class="QLabel" name="pm_lab">
+           <widget class="QLabel" name="pm_label">
             <property name="text">
              <string>Payment Method:</string>
             </property>
@@ -179,34 +172,34 @@
       <item>
        <layout class="QFormLayout" name="formLayout">
         <item row="0" column="0">
-         <widget class="QLabel" name="recipient_lab">
+         <widget class="QLabel" name="recipient_label">
           <property name="text">
            <string>Recipient:</string>
           </property>
          </widget>
         </item>
         <item row="0" column="1">
-         <widget class="QLineEdit" name="recipient_le">
+         <widget class="QLineEdit" name="recipient">
           <property name="text">
-           <string>\w*</string>
+           <string/>
           </property>
           <property name="placeholderText">
-           <string>Regular expression... (type &quot;\w*&quot; here if you don't know what it means)</string>
+           <string>Enter a text filter (this field supports wildcard matching)...</string>
           </property>
          </widget>
         </item>
         <item row="1" column="1">
-         <widget class="QLineEdit" name="description_le">
+         <widget class="QLineEdit" name="description">
           <property name="text">
-           <string>\w*</string>
+           <string/>
           </property>
           <property name="placeholderText">
-           <string>Regular expression... (type &quot;\w*&quot; here if you don't know what it means)</string>
+           <string>Enter a text filter (this field supports wildcard matching)...</string>
           </property>
          </widget>
         </item>
         <item row="1" column="0">
-         <widget class="QLabel" name="description_lab">
+         <widget class="QLabel" name="description_label">
           <property name="text">
            <string>Description:</string>
           </property>
@@ -215,6 +208,13 @@
        </layout>
       </item>
      </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QPushButton" name="search">
+     <property name="text">
+      <string>Search !</string>
+     </property>
     </widget>
    </item>
   </layout>

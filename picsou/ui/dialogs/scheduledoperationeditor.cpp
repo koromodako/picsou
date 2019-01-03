@@ -40,12 +40,14 @@ ScheduledOperationEditor::ScheduledOperationEditor(QWidget *parent,
     m_description(description),
     m_payment_method(payment_method),
     m_name(name),
-    m_schedule(schedule),
     ui(new Ui::ScheduledOperationEditor)
 {
     ui->setupUi(this);
 
     setWindowTitle(tr("Scheduled Operation Editor"));
+
+    m_schedule_form=new ScheduleForm(schedule);
+    ui->schedule_box->layout()->addWidget(m_schedule_form);
 
     if(!m_name.isNull()) {
         ui->name->setText(m_name);
@@ -64,21 +66,6 @@ ScheduledOperationEditor::ScheduledOperationEditor(QWidget *parent,
     if(!m_description.isNull()) {
         ui->description->setPlainText(m_description);
     }
-
-    ui->freq_unit->addItems(Schedule::TR_FREQUENCY_UNITS);
-    ui->freq_unit->setEditable(false);
-    ui->freq_unit->setCurrentText(Schedule::freq_unit2trstr(m_schedule.freq_unit()));
-
-    ui->from->setDate(m_schedule.from());
-    ui->until->setDate(m_schedule.until());
-    ui->endless->setChecked(m_schedule.endless());
-
-    ui->freq_value->setMinimum(1);
-    ui->freq_value->setValue(m_schedule.freq_value());
-
-    connect(ui->from, &QDateEdit::dateChanged, this, &ScheduledOperationEditor::limit_until);
-    connect(ui->endless, &QCheckBox::clicked, this, &ScheduledOperationEditor::endless);
-    connect(ui->freq_unit, &QComboBox::currentTextChanged, this, &ScheduledOperationEditor::limit_freq);
 
     connect(ui->save, &QPushButton::clicked, this, &ScheduledOperationEditor::accept);
     connect(ui->cancel, &QPushButton::clicked, this, &ScheduledOperationEditor::reject);
@@ -102,36 +89,6 @@ void ScheduledOperationEditor::set_payment_methods(const QStringList &payment_me
     }
 }
 
-void ScheduledOperationEditor::endless(bool checked)
-{
-    ui->until->setEnabled(!checked);
-}
-
-void ScheduledOperationEditor::limit_freq(const QString &freq_unit)
-{
-    int max;
-    switch (Schedule::trstr2freq_unit(freq_unit)) {
-        case Schedule::DAY:
-            max=364;
-            break;
-        case Schedule::WEEK:
-            max=52;
-            break;
-        case Schedule::MONTH:
-            max=11;
-            break;
-        case Schedule::YEAR:
-            max=INT_MAX;
-            break;
-    }
-    ui->freq_value->setMaximum(max);
-}
-
-void ScheduledOperationEditor::limit_until(const QDate &from)
-{
-    ui->until->setMinimumDate(from.addDays(1));
-}
-
 void ScheduledOperationEditor::accept()
 {
     m_amount=ui->amount->value();
@@ -140,10 +97,6 @@ void ScheduledOperationEditor::accept()
     m_recipient=ui->recipient->text();
     m_description=ui->description->toPlainText();
     m_name=ui->name->text();
-    m_schedule.update(ui->from->date(),
-                       ui->until->date(),
-                       ui->endless->isChecked(),
-                       ui->freq_value->value(),
-                       Schedule::trstr2freq_unit(ui->freq_unit->currentText()));
+    m_schedule=m_schedule_form->schedule();
     QDialog::accept();
 }

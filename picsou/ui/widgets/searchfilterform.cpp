@@ -32,19 +32,23 @@ SearchFilterForm::SearchFilterForm(PicsouUIServicePtr ui_svc, QWidget *parent) :
 {
     ui->setupUi(this);
     /* UI initialization */
-    ui->min_sb->setPrefix(tr("$"));
-    ui->min_sb->setSuffix(tr(" "));
+    ui->min_amount->setPrefix(tr("$"));
+    ui->min_amount->setSuffix(tr(" "));
+    ui->min_amount->setMinimum(0);
 
-    ui->max_sb->setPrefix(tr("$"));
-    ui->max_sb->setSuffix(tr(" "));
-    ui->max_sb->setValue(100);
+    ui->max_amount->setPrefix(tr("$"));
+    ui->max_amount->setSuffix(tr(" "));
+    ui->max_amount->setValue(100);
 
-    ui->to_date->setDate(QDate::currentDate());
+    ui->from->setDate(QDate::currentDate().addDays(-30));
+    ui->until->setDate(QDate::currentDate());
     /* connections */
-    connect(ui->search_btn, &QPushButton::clicked, this, &SearchFilterForm::search_request);
-    connect(ui->user_cb, &QComboBox::currentTextChanged, this, &SearchFilterForm::refresh_account_cb);
-    connect(ui->user_cb, &QComboBox::currentTextChanged, this, &SearchFilterForm::refresh_budgets_list);
-    connect(ui->account_cb, &QComboBox::currentTextChanged, this, &SearchFilterForm::refresh_pms_list);
+    connect(ui->search, &QPushButton::clicked, this, &SearchFilterForm::search_request);
+    connect(ui->user, &QComboBox::currentTextChanged, this, &SearchFilterForm::refresh_account_cb);
+    connect(ui->user, &QComboBox::currentTextChanged, this, &SearchFilterForm::refresh_budgets_list);
+    connect(ui->account, &QComboBox::currentTextChanged, this, &SearchFilterForm::refresh_pms_list);
+    connect(ui->min_amount, static_cast<void (QDoubleSpinBox::*)(double)>(&QDoubleSpinBox::valueChanged),
+            this, &SearchFilterForm::limit_max_amount);
 }
 
 SearchQuery SearchFilterForm::query() const
@@ -56,14 +60,14 @@ SearchQuery SearchFilterForm::query() const
     for(auto *item : ui->pms->selectedItems()) {
         selected_pms<<item->text();
     }
-    return SearchQuery(ui->user_cb->currentText(),
-                       ui->account_cb->currentText(),
-                       ui->from_date->date(),
-                       ui->to_date->date(),
-                       ui->min_sb->value(),
-                       ui->max_sb->value(),
-                       ui->description_le->text(),
-                       ui->recipient_le->text(),
+    return SearchQuery(ui->user->currentText(),
+                       ui->account->currentText(),
+                       ui->from->date(),
+                       ui->until->date(),
+                       ui->min_amount->value(),
+                       ui->max_amount->value(),
+                       ui->description->text(),
+                       ui->recipient->text(),
                        selected_budgets,
                        selected_pms);
 }
@@ -71,10 +75,10 @@ SearchQuery SearchFilterForm::query() const
 void SearchFilterForm::refresh_user_cb()
 {
     LOG_IN_VOID();
-    ui->user_cb->clear();
-    if(!ui_svc()->populate_user_cb(ui->user_cb)) {
-        ui->user_cb->clear();
-        ui->search_btn->setEnabled(false);
+    ui->user->clear();
+    if(!ui_svc()->populate_user_cb(ui->user)) {
+        ui->user->clear();
+        ui->search->setEnabled(false);
         LOG_CRITICAL("Failed to update user combo box.");
         emit search_update_failed(tr("Failed to update user combo box."));
     }
@@ -87,11 +91,10 @@ void SearchFilterForm::refresh_account_cb(const QString &username)
     if(username.isEmpty()) {
         LOG_VOID_RETURN();
     }
-    ui->account_cb->clear();
-    if(!ui_svc()->populate_account_cb(username,
-                                      ui->account_cb)) {
-        ui->account_cb->clear();
-        ui->search_btn->setEnabled(false);
+    ui->account->clear();
+    if(!ui_svc()->populate_account_cb(username, ui->account)) {
+        ui->account->clear();
+        ui->search->setEnabled(false);
         LOG_CRITICAL("Failed to update account combo box.");
         emit search_update_failed(tr("Failed to update account combo box."));
     }
@@ -105,18 +108,22 @@ void SearchFilterForm::refresh_budgets_list(const QString &username)
         LOG_VOID_RETURN();
     }
     ui->budgets->clear();
-    if(!ui_svc()->populate_budgets_list(username,
-                                        ui->budgets)) {
+    if(!ui_svc()->populate_budgets_list(username, ui->budgets)) {
         ui->budgets->clear();
-        ui->search_btn->setEnabled(false);
+        ui->search->setEnabled(false);
         LOG_CRITICAL("Failed to update budgets list.");
         emit search_update_failed(tr("Failed to update budgets list."));
     }
     if(ui->budgets->count()==0) {
-        ui->search_btn->setEnabled(false);
+        ui->search->setEnabled(false);
     }
     ui->budgets->selectAll();
     LOG_VOID_RETURN();
+}
+
+void SearchFilterForm::limit_max_amount(double minimum)
+{
+    ui->max_amount->setMinimum(minimum);
 }
 
 void SearchFilterForm::refresh_pms_list(const QString &account_name)
@@ -126,18 +133,16 @@ void SearchFilterForm::refresh_pms_list(const QString &account_name)
         LOG_VOID_RETURN();
     }
     ui->pms->clear();
-    if(!ui_svc()->populate_pms_list(ui->user_cb->currentText(),
-                                    account_name,
-                                    ui->pms)) {
+    if(!ui_svc()->populate_pms_list(ui->user->currentText(), account_name, ui->pms)) {
         ui->pms->clear();
-        ui->search_btn->setEnabled(false);
+        ui->search->setEnabled(false);
         LOG_CRITICAL("Failed to update payment methods list.");
         emit search_update_failed(tr("Failed to update payment methods list."));
     }
     if(ui->pms->count()==0) {
-        ui->search_btn->setEnabled(false);
+        ui->search->setEnabled(false);
     } else {
-        ui->search_btn->setEnabled(true);
+        ui->search->setEnabled(true);
     }
     ui->pms->selectAll();
     LOG_VOID_RETURN();

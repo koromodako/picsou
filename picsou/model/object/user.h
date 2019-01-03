@@ -38,17 +38,20 @@ public:
 
     bool update(const QString &name,
                 const QString &old_pswd,
-                const QString &new_pswd);
+                const QString &new_pswd,
+                QString &error);
 
-    void add_budget(const Amount &amount,
+    bool add_budget(const Amount &amount,
                     const QString &name,
-                    const QString &description);
+                    const QString &description,
+                    QString &error);
     bool remove_budget(QUuid id);
 
-    void add_account(const QString &name,
+    bool add_account(const QString &name,
                      const QString &notes,
                      bool archived,
-                     const Amount &initial_amount);
+                     const Amount &initial_amount,
+                     QString &error);
     bool remove_account(QUuid id);
 
     inline QString name() const { return m_name; }
@@ -57,7 +60,9 @@ public:
     AccountShPtrList accounts(bool sorted=false) const;
 
     BudgetShPtr find_budget(QUuid id) const;
+    BudgetShPtr find_budget(const QString &name) const;
     AccountShPtr find_account(QUuid id) const;
+    AccountShPtr find_account(const QString &name) const;
 
     bool read(const QJsonObject &json);
     bool write(QJsonObject &json) const;

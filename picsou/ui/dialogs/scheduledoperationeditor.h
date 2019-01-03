@@ -20,7 +20,7 @@
 
 #include <QDialog>
 #include "utils/amount.h"
-#include "utils/schedule.h"
+#include "ui/widgets/scheduleform.h"
 
 class Schedule;
 
@@ -56,11 +56,6 @@ public:
 public slots:
     void accept();
 
-private slots:
-    void endless(bool checked);
-    void limit_freq(const QString &freq_unit);
-    void limit_until(const QDate &from);
-
 private:
     Amount m_amount;
     QString m_budget;
@@ -69,6 +64,7 @@ private:
     QString m_payment_method;
     QString m_name;
     Schedule m_schedule;
+    ScheduleForm *m_schedule_form;
     Ui::ScheduledOperationEditor *ui;
 };
 

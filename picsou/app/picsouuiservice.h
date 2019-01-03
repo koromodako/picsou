@@ -97,6 +97,8 @@ signals:
     /* Operation import/export */
     void ops_imported();
     void ops_exported();
+    /* Transfer */
+    void transfer_added();
 
 public slots:
     /* Misc */
@@ -142,6 +144,8 @@ public slots:
     /* Operation import/export */
     void ops_import(QUuid account_id);
     void ops_export(QUuid account_id);
+    /* Transfer */
+    void transfer_add(QUuid user_id);
     /* Handle model notifications */
     void notified_model_updated(const PicsouDBShPtr db);
     void notified_model_unwrapped(const PicsouDBShPtr db);

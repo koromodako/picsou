@@ -11,11 +11,11 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>Picsou</string>
   </property>
   <property name="windowIcon">
    <iconset resource="../picsou.qrc">
-    <normaloff>:/resources/material-design/svg/currency-eur.svg</normaloff>:/resources/material-design/svg/currency-eur.svg</iconset>
+    <normaloff>:/resources/euro-money-80x80.png</normaloff>:/resources/euro-money-80x80.png</iconset>
   </property>
   <widget class="QWidget" name="centralWidget">
    <layout class="QGridLayout" name="gridLayout">

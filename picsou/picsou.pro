@@ -112,7 +112,8 @@ SOURCES += \
     app/picsoucommandlineparser.cpp \
     ui/widgets/operationtablewidget.cpp \
     utils/picsoumessagehandler.cpp \
-    ui/dialogs/transferdialog.cpp
+    ui/dialogs/transferdialog.cpp \
+    ui/widgets/scheduleform.cpp
 
 HEADERS += \
     picsou.h \
@@ -164,7 +165,8 @@ HEADERS += \
     app/picsoucommandlineparser.h \
     ui/widgets/operationtablewidget.h \
     utils/picsoumessagehandler.h \
-    ui/dialogs/transferdialog.h
+    ui/dialogs/transferdialog.h \
+    ui/widgets/scheduleform.h
 
 FORMS += \
     ui/mainwindow.ui \
@@ -184,7 +186,8 @@ FORMS += \
     ui/widgets/operationstatistics.ui \
     ui/viewers/lockedobjectviewer.ui \
     ui/widgets/searchfilterform.ui \
-    ui/dialogs/transferdialog.ui
+    ui/dialogs/transferdialog.ui \
+    ui/widgets/scheduleform.ui
 
 RESOURCES += \
     picsou.qrc

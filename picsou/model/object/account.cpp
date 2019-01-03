@@ -65,9 +65,15 @@ void Account::update(const QString &name,
     emit modified();
 }
 
-bool Account::add_payment_method(const QString &name)
+bool Account::add_payment_method(const QString &name, QString &error)
 {
     if(m_archived) {
+        error=tr("Cannot modify an archived account.");
+        return false;
+    }
+    PaymentMethodShPtr existing=find_payment_method(name);
+    if(!existing.isNull()) {
+        error=tr("A payment method having the same name already exist.");
         return false;
     }
     PaymentMethodShPtr pm=PaymentMethodShPtr(new PaymentMethod(name, this));
@@ -103,9 +109,11 @@ bool Account::add_scheduled_operation(const Amount &amount,
                                       const QString &description,
                                       const QString &payment_method,
                                       const QString &name,
-                                      const Schedule &schedule)
+                                      const Schedule &schedule,
+                                      QString &error)
 {
     if(m_archived) {
+        error=tr("Cannot modify an archived account.");
         return false;
     }
     ScheduledOperationShPtr sop=ScheduledOperationShPtr(new ScheduledOperation(amount,
@@ -121,22 +129,23 @@ bool Account::add_scheduled_operation(const Amount &amount,
     return true;
 }
 
-bool Account::remove_scheduled_operation(QUuid id)
+bool Account::remove_scheduled_operation(QUuid id, QString &error)
 {
     if(m_archived) {
+        error=tr("Cannot modify an archived account.");
         return false;
     }
     bool success=false;
     switch (m_scheduled_ops.remove(id)) {
     case 0:
-        /* TRACE */
+        error=tr("Failed to remove scheduled operation: not found.");
         break;
     case 1:
         success=true;
         emit modified();
         break;
     default:
-        /* TRACE */
+        error=tr("Failed to remove scheduled operation: doublons deleted.");
         break;
     }
     return success;
@@ -148,9 +157,11 @@ bool Account::add_operation(bool verified,
                             const QString &budget,
                             const QString &recipient,
                             const QString &description,
-                            const QString &payment_method)
+                            const QString &payment_method,
+                            QString &error)
 {
     if(m_archived) {
+        error=tr("Cannot modify an archived account.");
         return false;
     }
     OperationShPtr op=OperationShPtr(new Operation(verified,
@@ -166,9 +177,10 @@ bool Account::add_operation(bool verified,
      return true;
 }
 
-bool Account::add_operations(const OperationShPtrList &ops)
+bool Account::add_operations(const OperationShPtrList &ops, QString &error)
 {
     if(m_archived) {
+        error=tr("Cannot modify an archived account.");
         return false;
     }
     bool success=false;
@@ -183,22 +195,23 @@ bool Account::add_operations(const OperationShPtrList &ops)
     return success;
 }
 
-bool Account::remove_operation(QUuid id)
+bool Account::remove_operation(QUuid id, QString &error)
 {
     if(m_archived) {
+        error=tr("Cannot modify an archived account.");
         return false;
     }
     bool success=false;
     switch (m_ops.remove(id)) {
     case 0:
-        /* TRACE */
+        error=tr("Failed to remove operation: not found.");
         break;
     case 1:
         success=true;
         emit modified();
         break;
     default:
-        /* TRACE */
+        error=tr("Failed to remove operation: doublons deleted.");
         break;
     }
     return success;
@@ -212,6 +225,16 @@ PaymentMethodShPtr Account::find_payment_method(QUuid id)
         pm=*it;
     }
     return pm;
+}
+
+PaymentMethodShPtr Account::find_payment_method(const QString &name)
+{
+    for(const auto &pm : m_payment_methods) {
+        if(pm->name()==name) {
+            return pm;
+        }
+    }
+    return PaymentMethodShPtr();
 }
 
 ScheduledOperationShPtr Account::find_scheduled_operation(QUuid id)

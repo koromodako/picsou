@@ -29,24 +29,21 @@ User::User(PicsouDBO *parent) :
 
 }
 
-User::User(const QString &name,
-           const QString &pswd,
-           PicsouDBO *parent) :
+User::User(const QString &name, const QString &pswd, PicsouDBO *parent) :
     PicsouDBO(true, parent),
     m_name(name)
 {
     PicsouDBO::init_wkey(pswd);
 }
 
-bool User::update(const QString &name,
-                  const QString &old_pswd,
-                  const QString &new_pswd)
+bool User::update(const QString &name, const QString &old_pswd, const QString &new_pswd, QString &error)
 {
     LOG_IN("name="<<name<<"old_pswd,new_pswd");
     if(!old_pswd.isEmpty()&&!new_pswd.isEmpty()) {
         LOG_INFO("attemtping wkey rewraping.");
         if(!rewrap(old_pswd, new_pswd)) {
             LOG_CRITICAL("failed to rewrap.");
+            error=tr("Failed to update user: MK rewraping failed.");
             LOG_BOOL_RETURN(false);
         }
         LOG_INFO("rewraping succeeded.");
@@ -58,13 +55,17 @@ bool User::update(const QString &name,
     LOG_BOOL_RETURN(true);
 }
 
-void User::add_budget(const Amount &amount,
-                      const QString &name,
-                      const QString &description)
+bool User::add_budget(const Amount &amount, const QString &name, const QString &description, QString &error)
 {
+    BudgetShPtr existing=find_budget(name);
+    if(!existing.isNull()) {
+        error=tr("A budget having the same name already exist.");
+        return false;
+    }
     BudgetShPtr budget=BudgetShPtr(new Budget(amount, name, description, this));
     m_budgets.insert(budget->id(), budget);
     emit modified();
+    return true;
 }
 
 bool User::remove_budget(QUuid id)
@@ -85,14 +86,17 @@ bool User::remove_budget(QUuid id)
     return success;
 }
 
-void User::add_account(const QString &name,
-                       const QString &notes,
-                       bool archived,
-                       const Amount &initial_amount)
+bool User::add_account(const QString &name, const QString &notes, bool archived, const Amount &initial_amount, QString &error)
 {
+    AccountShPtr existing=find_account(name);
+    if(!existing.isNull()) {
+        error=tr("An account having the same name already exist.");
+        return false;
+    }
     AccountShPtr account=AccountShPtr(new Account(name, notes, archived, initial_amount, this));
     m_accounts.insert(account->id(), account);
     emit modified();
+    return true;
 }
 
 bool User::remove_account(QUuid id)
@@ -161,6 +165,16 @@ BudgetShPtr User::find_budget(QUuid id) const
     return budget;
 }
 
+BudgetShPtr User::find_budget(const QString &name) const
+{
+    for(const auto &budget : m_budgets) {
+        if(budget->name()==name) {
+            return budget;
+        }
+    }
+    return BudgetShPtr();
+}
+
 AccountShPtr User::find_account(QUuid id) const
 {
     AccountShPtr account;
@@ -169,6 +183,16 @@ AccountShPtr User::find_account(QUuid id) const
         account=*it;
     }
     return account;
+}
+
+AccountShPtr User::find_account(const QString &name) const
+{
+    for(const auto &account : m_accounts) {
+        if(account->name()==name) {
+            return account;
+        }
+    }
+    return AccountShPtr();
 }
 
 bool User::read(const QJsonObject &json)

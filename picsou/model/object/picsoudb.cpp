@@ -50,19 +50,19 @@ void PicsouDB::add_user(const QString &username, const QString &pswd)
     emit modified();
 }
 
-bool PicsouDB::remove_user(QUuid id)
+bool PicsouDB::remove_user(QUuid id, QString &error)
 {
     bool success=false;
     switch (m_users.remove(id)) {
     case 0:
-        /* TRACE */
+        error=tr("Failed to remove user from database: absent user.");
         break;
     case 1:
         success=true;
         emit modified();
         break;
     default:
-        /* TRACE */
+        error=tr("Failed to remove user from database: more than one user removed.");
         break;
     }
     return success;

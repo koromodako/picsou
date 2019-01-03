@@ -48,7 +48,7 @@ public:
                 bool archived,
                 const Amount &initial_amount);
 
-    bool add_payment_method(const QString &name);
+    bool add_payment_method(const QString &name, QString &error);
     bool remove_payment_method(QUuid id);
 
     bool add_scheduled_operation(const Amount &amount,
@@ -57,8 +57,9 @@ public:
                                  const QString &description,
                                  const QString &payment_method,
                                  const QString &name,
-                                 const Schedule &schedule);
-    bool remove_scheduled_operation(QUuid id);
+                                 const Schedule &schedule,
+                                 QString &error);
+    bool remove_scheduled_operation(QUuid id, QString &error);
 
     bool add_operation(bool verified,
                        const Amount &amount,
@@ -66,11 +67,13 @@ public:
                        const QString &budget,
                        const QString &recipient,
                        const QString &description,
-                       const QString &payment_method);
-    bool add_operations(const OperationShPtrList &ops);
-    bool remove_operation(QUuid id);
+                       const QString &payment_method,
+                       QString &error);
+    bool add_operations(const OperationShPtrList &ops, QString &error);
+    bool remove_operation(QUuid id, QString &error);
 
     PaymentMethodShPtr find_payment_method(QUuid id);
+    PaymentMethodShPtr find_payment_method(const QString &name);
     ScheduledOperationShPtr find_scheduled_operation(QUuid id);
     OperationShPtr find_operation(QUuid id);
 
