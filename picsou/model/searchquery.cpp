@@ -47,8 +47,8 @@ SearchQuery::SearchQuery(const QString &username,
            <<",recipient_filter="<<recipient_filter
            <<",budgets="<<budgets
            <<",pms="<<pms);
-    QString description_re=description_filter;
-    QString recipient_re=recipient_filter;
+    QString description_re=description_filter.isEmpty()?"*":description_filter;
+    QString recipient_re=recipient_filter.isEmpty()?"*":recipient_filter;
     m_budgets.append("");
     m_description_re=QRegularExpression(description_re.replace("*", "\\w*"),
                                         QRegularExpression::CaseInsensitiveOption);
