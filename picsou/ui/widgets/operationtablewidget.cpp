@@ -47,6 +47,7 @@ void OperationTableWidget::clear()
 
     QTableWidget::clear();
     verticalHeader()->hide();
+    setRowCount(0);
     setColumnCount(7);
     setHorizontalHeaderLabels(labels);
     horizontalHeader()->setSectionResizeMode(0, QHeaderView::ResizeToContents);

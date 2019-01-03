@@ -1183,7 +1183,7 @@ void PicsouUIService::transfer_add(QUuid user_id)
                                                 recipient_acc->name(),
                                                 dialog.description(),
                                                 tr("Transfer"),
-                                                tr("Tranfer to %0").arg(recipient_acc->name()),
+                                                tr("Transfer to %0").arg(recipient_acc->name()),
                                                 dialog.schedule(), error)) {
             emit svc_op_failed(error);
             LOG_VOID_RETURN();
@@ -1204,7 +1204,7 @@ void PicsouUIService::transfer_add(QUuid user_id)
                                       dialog.date(),
                                       QString(""),
                                       recipient_acc->name(),
-                                      tr("Tranfer to %0").arg(recipient_acc->name()),
+                                      tr("Transfer to %0").arg(recipient_acc->name()),
                                       tr("Transfer"), error)) {
             emit svc_op_failed(error);
             LOG_VOID_RETURN();
@@ -1214,7 +1214,7 @@ void PicsouUIService::transfer_add(QUuid user_id)
                                          dialog.date(),
                                          QString(""),
                                          sender_acc->name(),
-                                         tr("Tranfer from %0").arg(sender_acc->name()),
+                                         tr("Transfer from %0").arg(sender_acc->name()),
                                          tr("Transfer"), error)) {
             emit svc_op_failed(error);
             LOG_VOID_RETURN();

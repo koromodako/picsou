@@ -4,7 +4,7 @@
 #include <QFile>
 #include <QDateTime>
 #include <QTextStream>
-
+#include <QMutexLocker>
 
 static const QString COLOR_DBG="\x1b[32;1m";
 static const QString COLOR_INF="\x1b[34;1m";
@@ -20,6 +20,8 @@ static const QString PREFIX_ERR="[ERR] - ";
 static const QString PREFIX_FAT="[FAT] - ";
 
 static QFile LOG(QDir::temp().absoluteFilePath("picsou.log"));
+
+static QMutex LOG_MTX;
 
 void picsou_message_handler(QtMsgType type, const QMessageLogContext &ctx, const QString &msg)
 {
@@ -55,10 +57,13 @@ void picsou_message_handler(QtMsgType type, const QMessageLogContext &ctx, const
         prefix=PREFIX_FAT;
         break;
     }
+    QMutexLocker locker(&LOG_MTX);
+    /* critical section starts here */
 #ifdef COLORIZE
     err<<color<<timestamp<<prefix<<msg<<location<<COLOR_END<<endl;
 #else
     err<<timestamp<<prefix<<msg<<location<<endl;
 #endif
     log<<timestamp<<prefix<<msg<<location<<endl;
+    /* critical section ends here */
 }
