@@ -25,7 +25,7 @@
        <enum>QTabWidget::Rounded</enum>
       </property>
       <property name="currentIndex">
-       <number>2</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="details_tab">
        <attribute name="icon">
@@ -49,7 +49,7 @@
       <widget class="QWidget" name="graph_tab">
        <attribute name="icon">
         <iconset resource="../picsou.qrc">
-         <normaloff>:/resources/material-design/svg/chart-areaspline.svg</normaloff>:/resources/material-design/svg/chart-areaspline.svg</iconset>
+         <normaloff>:/resources/material-design/svg/finance.svg</normaloff>:/resources/material-design/svg/finance.svg</iconset>
        </attribute>
        <attribute name="title">
         <string>Charts</string>
@@ -111,10 +111,18 @@
     <addaction name="action_about_picsou"/>
     <addaction name="action_about_qt"/>
     <addaction name="separator"/>
+    <addaction name="action_report_an_issue"/>
     <addaction name="action_star_me_on_github"/>
     <addaction name="action_license"/>
    </widget>
+   <widget class="QMenu" name="settings_menu">
+    <property name="title">
+     <string>Settings</string>
+    </property>
+    <addaction name="action_preferences"/>
+   </widget>
    <addaction name="file_menu"/>
+   <addaction name="settings_menu"/>
    <addaction name="help_menu"/>
   </widget>
   <widget class="QToolBar" name="toolbar">
@@ -213,6 +221,9 @@
    <property name="text">
     <string>About Picsou...</string>
    </property>
+   <property name="shortcutVisibleInContextMenu">
+    <bool>false</bool>
+   </property>
   </action>
   <action name="action_about_qt">
    <property name="icon">
@@ -271,6 +282,24 @@
    </property>
    <property name="text">
     <string>License information...</string>
+   </property>
+  </action>
+  <action name="action_report_an_issue">
+   <property name="icon">
+    <iconset resource="../picsou.qrc">
+     <normaloff>:/resources/material-design/svg/bug.svg</normaloff>:/resources/material-design/svg/bug.svg</iconset>
+   </property>
+   <property name="text">
+    <string>Report an issue...</string>
+   </property>
+  </action>
+  <action name="action_preferences">
+   <property name="icon">
+    <iconset resource="../picsou.qrc">
+     <normaloff>:/resources/material-design/svg/settings.svg</normaloff>:/resources/material-design/svg/settings.svg</iconset>
+   </property>
+   <property name="text">
+    <string>Preferences...</string>
    </property>
   </action>
  </widget>

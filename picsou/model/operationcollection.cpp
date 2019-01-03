@@ -70,11 +70,14 @@ Amount OperationCollection::expense_per_ym(int year, int month)
     return amount;
 }
 
-Amount OperationCollection::total_in_range(const QDate &from, const QDate &to)
+Amount OperationCollection::total_in_range(const QDate &from, const QDate &to, bool debit_only)
 {
     Amount total=0;
     for(const auto &op : m_ops) {
         if(op->date()>=from&&op->date()<=to) {
+            if(debit_only&&op->amount()>0) {
+                continue;
+            }
             total+=op->amount();
         }
     }

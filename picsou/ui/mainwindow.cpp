@@ -70,9 +70,12 @@ MainWindow::MainWindow(PicsouUIServicePtr ui_svc, QWidget *parent) :
     connect(ui->action_save, &QAction::triggered, ui_svc, &PicsouUIService::db_save);
     connect(ui->action_save_as, &QAction::triggered, ui_svc, &PicsouUIService::db_save_as);
     connect(ui->action_quit, &QAction::triggered, this, &MainWindow::close);
+    /* settings menu */
+    connect(ui->action_preferences, &QAction::triggered, ui_svc, &PicsouUIService::show_preferences);
     /* help menu */
     connect(ui->action_about_qt, &QAction::triggered, qApp, &QApplication::aboutQt);
     connect(ui->action_about_picsou, &QAction::triggered, ui_svc, &PicsouUIService::show_about_picsou);
+    connect(ui->action_report_an_issue, &QAction::triggered, ui_svc, &PicsouUIService::show_report_an_issue);
     connect(ui->action_star_me_on_github, &QAction::triggered, ui_svc, &PicsouUIService::show_github_repo);
     connect(ui->action_license, &QAction::triggered, ui_svc, &PicsouUIService::show_license);
     /* database tree */

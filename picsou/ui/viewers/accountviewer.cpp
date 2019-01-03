@@ -148,7 +148,8 @@ void AccountViewer::refresh(const PicsouDBShPtr db)
     }
     m_ops_stats->refresh(ops, user->budgets());
     QDate today=QDate::currentDate();
-    m_ops_stats->update_field(m_rolling_expense_lab, ops.total_in_range(today.addDays(-30), today).to_str(true));
+    Amount rolling_expense=ops.total_in_range(today.addDays(-30), today, true);
+    m_ops_stats->update_field(m_rolling_expense_lab, rolling_expense.to_str(true));
     bool has_ops=(ops.length()>0);
     /**/
     ui->op_add->setEnabled(!m_readonly);

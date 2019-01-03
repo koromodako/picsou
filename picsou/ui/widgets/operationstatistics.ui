@@ -80,13 +80,16 @@
          <bool>true</bool>
         </property>
         <property name="selectionMode">
-         <enum>QAbstractItemView::NoSelection</enum>
+         <enum>QAbstractItemView::SingleSelection</enum>
+        </property>
+        <property name="selectionBehavior">
+         <enum>QAbstractItemView::SelectRows</enum>
         </property>
         <property name="sortingEnabled">
          <bool>false</bool>
         </property>
         <attribute name="horizontalHeaderVisible">
-         <bool>false</bool>
+         <bool>true</bool>
         </attribute>
         <attribute name="verticalHeaderVisible">
          <bool>false</bool>

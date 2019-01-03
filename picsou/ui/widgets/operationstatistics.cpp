@@ -85,12 +85,22 @@ void OperationStatistics::refresh(const OperationCollection &ops, const BudgetSh
     for(const auto &budget : sorted_epb) {
         Amount allowed=budget_hash.value(budget.first)*ops.months();
         Amount consumed=budget.second;
-        double remaining=100*(allowed.value()-consumed.value())/allowed.value();
-        ui->expense_per_budget_table->setItem(r, 0, new QTableWidgetItem(budget.first));
+        Amount remaining=allowed+consumed; /* consumed should be < 0 */
+        double remaining_pc=100*remaining.value()/allowed.value();
+        if(budget.first.isEmpty()) {
+            ui->expense_per_budget_table->setItem(r, 0, new QTableWidgetItem(tr("Unassigned budget")));
+        } else {
+            ui->expense_per_budget_table->setItem(r, 0, new QTableWidgetItem(budget.first));
+        }
         ui->expense_per_budget_table->setItem(r, 1, new QTableWidgetItem(consumed.to_str(true)));
-        ui->expense_per_budget_table->setItem(r, 2, new QTableWidgetItem(allowed.to_str(true)));
-        ui->expense_per_budget_table->setItem(r, 3, new QTableWidgetItem(QString("%0 (%1%)").arg(Amount(remaining).to_str(true),
-                                                                                                 QString::number(remaining, 'f', 2))));
+        if(allowed!=0) {
+            ui->expense_per_budget_table->setItem(r, 2, new QTableWidgetItem(allowed.to_str(true)));
+            ui->expense_per_budget_table->setItem(r, 3, new QTableWidgetItem(QString("%0 (%1%)").arg(remaining.to_str(true),
+                                                                                                     QString::number(remaining_pc, 'f', 2))));
+        } else {
+            ui->expense_per_budget_table->setItem(r, 2, new QTableWidgetItem("N/A"));
+            ui->expense_per_budget_table->setItem(r, 3, new QTableWidgetItem("N/A"));
+        }
         r++;
     }
 }

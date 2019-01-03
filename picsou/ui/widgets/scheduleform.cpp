@@ -19,6 +19,7 @@ ScheduleForm::ScheduleForm(const Schedule &schedule, QWidget *parent) :
     ui->from->setDate(schedule.from());
     ui->until->setDate(schedule.until());
     ui->endless->setChecked(schedule.endless());
+    ui->until->setEnabled(!schedule.endless());
 
     ui->freq_value->setMinimum(1);
     ui->freq_value->setValue(schedule.freq_value());

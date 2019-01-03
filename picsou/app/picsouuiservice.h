@@ -103,8 +103,9 @@ signals:
 public slots:
     /* Misc */
     void show_mainwindow();
-    void show_statistics();
     void show_about_picsou();
+    void show_preferences();
+    void show_report_an_issue();
     void show_github_repo();
     void show_license();
     /* Encryption-related */

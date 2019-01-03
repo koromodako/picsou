@@ -439,7 +439,21 @@ void PicsouUIService::show_about_picsou()
     LOG_IN_VOID();
     AboutPicsou *about=new AboutPicsou(m_mw);
     about->setAttribute(Qt::WA_DeleteOnClose);
-    about->show();
+    about->exec();
+    LOG_VOID_RETURN();
+}
+
+void PicsouUIService::show_preferences()
+{
+    LOG_IN_VOID();
+    QMessageBox::information(m_mw, tr("Coming soon!"), tr("Preferences will be available soon!"));
+    LOG_VOID_RETURN();
+}
+
+void PicsouUIService::show_report_an_issue()
+{
+    LOG_IN_VOID();
+    QDesktopServices::openUrl(QUrl(PICSOU_REPORT_URL, QUrl::StrictMode));
     LOG_VOID_RETURN();
 }
 
@@ -475,12 +489,6 @@ void PicsouUIService::unlock(QUuid id)
         LOG_VOID_RETURN();
     }
     emit unlocked();
-    LOG_VOID_RETURN();
-}
-
-void PicsouUIService::show_statistics()
-{
-    LOG_IN_VOID();
     LOG_VOID_RETURN();
 }
 
@@ -891,10 +899,6 @@ void PicsouUIService::sop_edit(QUuid user_id, QUuid account_id, QUuid sop_id)
         LOG_VOID_RETURN();
     }
     QStringList budgets=user->budgets_str(true);
-    if(budgets.empty()) {
-        emit svc_op_failed(tr("Logical error: make sure you have defined at least one budget before adding operations."));
-        LOG_VOID_RETURN();
-    }
     QStringList payment_methods=account->payment_methods_str(true);
     if(payment_methods.empty()) {
         emit svc_op_failed(tr("Logical error: make sure you have defined at least one payment method before adding operations."));
@@ -961,10 +965,6 @@ void PicsouUIService::op_add(QUuid user_id, QUuid account_id, int year, int mont
         LOG_VOID_RETURN();
     }
     QStringList budgets=user->budgets_str(true);
-    if(budgets.empty()) {
-        emit svc_op_failed(tr("Make sure you have defined at least one budget before adding operations."));
-        LOG_VOID_RETURN();
-    }
     QStringList payment_methods=account->payment_methods_str(true);
     if(payment_methods.empty()) {
         emit svc_op_failed(tr("Make sure you have defined at least one payment method before adding operations."));
@@ -1214,7 +1214,7 @@ void PicsouUIService::transfer_add(QUuid user_id)
                                          dialog.date(),
                                          QString(""),
                                          sender_acc->name(),
-                                         tr("Tranfer to %0").arg(sender_acc->name()),
+                                         tr("Tranfer from %0").arg(sender_acc->name()),
                                          tr("Transfer"), error)) {
             emit svc_op_failed(error);
             LOG_VOID_RETURN();

@@ -30,8 +30,8 @@ public:
                 const QString &account_name,
                 const QDate &from, const QDate &to,
                 const Amount &min, const Amount &max,
-                const QString &description_re,
-                const QString &recipient_re,
+                const QString &description_filter,
+                const QString &recipient_filter,
                 const QStringList &budgets,
                 const QStringList &pms);
 

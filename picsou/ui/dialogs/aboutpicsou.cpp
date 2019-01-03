@@ -32,13 +32,11 @@ AboutPicsou::AboutPicsou(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    setWindowTitle(tr("About Picsou"));
-
     ui->version->setText(PICSOU_VERSION);
     ui->build->setText(PICSOU_COMMIT);
     ui->libcrypto->setText(CryptoCtx::lib_description());
 
     /* initialize connections */
-    connect(ui->buttons, &QDialogButtonBox::accepted, &QWidget::close);
-    connect(ui->buttons, &QDialogButtonBox::rejected, &QWidget::close);
+    connect(ui->buttons, &QDialogButtonBox::accepted, this, &AboutPicsou::close);
+    connect(ui->buttons, &QDialogButtonBox::rejected, this, &AboutPicsou::close);
 }

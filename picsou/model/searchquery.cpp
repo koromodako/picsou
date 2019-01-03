@@ -24,8 +24,8 @@ SearchQuery::SearchQuery(const QString &username,
                          const QDate &to,
                          const Amount &min,
                          const Amount &max,
-                         const QString &description_re,
-                         const QString &recipient_re,
+                         const QString &description_filter,
+                         const QString &recipient_filter,
                          const QStringList &budgets,
                          const QStringList &pms) :
     m_username(username),
@@ -34,8 +34,6 @@ SearchQuery::SearchQuery(const QString &username,
     m_to(to),
     m_min(min),
     m_max(max),
-    m_description_re(description_re, QRegularExpression::CaseInsensitiveOption),
-    m_recipient_re(recipient_re, QRegularExpression::CaseInsensitiveOption),
     m_budgets(budgets),
     m_pms(pms)
 {
@@ -45,10 +43,17 @@ SearchQuery::SearchQuery(const QString &username,
            <<",to="<<to
            <<",min="<<min
            <<",max="<<max
-           <<",description_re="<<description_re
-           <<",recipient_re="<<recipient_re
+           <<",description_filter="<<description_filter
+           <<",recipient_filter="<<recipient_filter
            <<",budgets="<<budgets
            <<",pms="<<pms);
+    QString description_re=description_filter;
+    QString recipient_re=recipient_filter;
+    m_budgets.append("");
+    m_description_re=QRegularExpression(description_re.replace("*", "\\w*"),
+                                        QRegularExpression::CaseInsensitiveOption);
+    m_recipient_re=QRegularExpression(recipient_re.replace("*", "\\w*"),
+                                      QRegularExpression::CaseInsensitiveOption);
     m_description_re.optimize();
     m_recipient_re.optimize();
     LOG_VOID_RETURN();

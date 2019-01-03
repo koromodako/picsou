@@ -74,6 +74,7 @@ ScheduledOperationEditor::ScheduledOperationEditor(QWidget *parent,
 void ScheduledOperationEditor::set_budgets(const QStringList &budgets)
 {
     ui->budget->clear();
+    ui->budget->addItem("");
     ui->budget->addItems(budgets);
     if(!m_budget.isNull()) {
         ui->budget->setCurrentText(m_budget);
