@@ -287,22 +287,20 @@
         <translation>Exporter les opérations</translation>
     </message>
     <message>
-        <location filename="../ui/viewers/accountviewer.cpp" line="42"/>
         <source>Rolling expense (30 days):</source>
-        <translation>Total sur les 30 derniers jours :</translation>
+        <translation type="vanished">Total sur les 30 derniers jours :</translation>
     </message>
     <message>
-        <location filename="../ui/viewers/accountviewer.cpp" line="52"/>
         <source>unknown</source>
-        <translation>inconnu</translation>
+        <translation type="vanished">inconnu</translation>
     </message>
     <message>
-        <location filename="../ui/viewers/accountviewer.cpp" line="126"/>
+        <location filename="../ui/viewers/accountviewer.cpp" line="124"/>
         <source>[endless]</source>
         <translation>[sans fin]</translation>
     </message>
     <message>
-        <location filename="../ui/viewers/accountviewer.cpp" line="127"/>
+        <location filename="../ui/viewers/accountviewer.cpp" line="125"/>
         <source>[%0] %1 from %2 to %3 every %4 %5</source>
         <translation>[%0] %1 du %2 au %3 tous les %4 %5</translation>
     </message>
@@ -311,12 +309,12 @@
         <translation type="vanished">[%0] %1 du %2 au %3 tous les %4 %5</translation>
     </message>
     <message>
-        <location filename="../ui/viewers/accountviewer.cpp" line="218"/>
+        <location filename="../ui/viewers/accountviewer.cpp" line="213"/>
         <source>Logical error: you can&apos;t edit a scheduled operation from this view.</source>
         <translation>Erreur logique : vous ne pouvez pas modifier une opération planifiée depuis cette vue.</translation>
     </message>
     <message>
-        <location filename="../ui/viewers/accountviewer.cpp" line="231"/>
+        <location filename="../ui/viewers/accountviewer.cpp" line="226"/>
         <source>Logical error: you can&apos;t remove a scheduled operation from this view.</source>
         <translation>Erreur logique : vous ne pouvez pas supprimer une opération planifiée depuis cette vue.</translation>
     </message>
@@ -770,28 +768,33 @@
         <translation>Balance</translation>
     </message>
     <message>
-        <location filename="../ui/widgets/operationstatistics.ui" line="26"/>
+        <location filename="../ui/widgets/operationstatistics.ui" line="34"/>
         <source>Balance:</source>
         <translation>Balance :</translation>
     </message>
     <message>
-        <location filename="../ui/widgets/operationstatistics.ui" line="33"/>
-        <location filename="../ui/widgets/operationstatistics.ui" line="47"/>
-        <location filename="../ui/widgets/operationstatistics.ui" line="61"/>
+        <location filename="../ui/widgets/operationstatistics.ui" line="41"/>
+        <location filename="../ui/widgets/operationstatistics.ui" line="65"/>
+        <location filename="../ui/widgets/operationstatistics.ui" line="89"/>
         <source>-</source>
         <translation>-</translation>
+    </message>
+    <message>
+        <location filename="../ui/widgets/operationstatistics.ui" line="137"/>
+        <source>Expense per payment method</source>
+        <translation>Dépenses par méthode de paiement</translation>
     </message>
     <message>
         <source>&lt;balance&gt;</source>
         <translation type="vanished">&lt;balance&gt;</translation>
     </message>
     <message>
-        <location filename="../ui/widgets/operationstatistics.ui" line="40"/>
+        <location filename="../ui/widgets/operationstatistics.ui" line="82"/>
         <source>Total credit:</source>
         <translation>Crédit total :</translation>
     </message>
     <message>
-        <location filename="../ui/widgets/operationstatistics.ui" line="54"/>
+        <location filename="../ui/widgets/operationstatistics.ui" line="58"/>
         <source>Total debit:</source>
         <translation>Débit total :</translation>
     </message>
@@ -812,32 +815,42 @@
         <translation type="vanished">&lt;debit-total&gt;</translation>
     </message>
     <message>
-        <location filename="../ui/widgets/operationstatistics.ui" line="71"/>
+        <location filename="../ui/widgets/operationstatistics.ui" line="103"/>
         <source>Expense per budget</source>
-        <translation>Total des dépenses par budget</translation>
+        <translation>Dépenses par budget</translation>
     </message>
     <message>
-        <location filename="../ui/widgets/operationstatistics.cpp" line="72"/>
+        <location filename="../ui/widgets/operationstatistics.cpp" line="98"/>
+        <source>Payment Method</source>
+        <translation>Méthode de paiement</translation>
+    </message>
+    <message>
+        <location filename="../ui/widgets/operationstatistics.cpp" line="99"/>
+        <source>Total Amount</source>
+        <translation>Montant total</translation>
+    </message>
+    <message>
+        <location filename="../ui/widgets/operationstatistics.cpp" line="131"/>
         <source>Name</source>
         <translation>Nom</translation>
     </message>
     <message>
-        <location filename="../ui/widgets/operationstatistics.cpp" line="73"/>
+        <location filename="../ui/widgets/operationstatistics.cpp" line="132"/>
         <source>Current Debit</source>
         <translation>Débit actuel</translation>
     </message>
     <message>
-        <location filename="../ui/widgets/operationstatistics.cpp" line="74"/>
+        <location filename="../ui/widgets/operationstatistics.cpp" line="133"/>
         <source>Maximum Debit</source>
         <translation>Débit maximal autorisé</translation>
     </message>
     <message>
-        <location filename="../ui/widgets/operationstatistics.cpp" line="75"/>
+        <location filename="../ui/widgets/operationstatistics.cpp" line="134"/>
         <source>Available Debit</source>
         <translation>Débit encore disponible</translation>
     </message>
     <message>
-        <location filename="../ui/widgets/operationstatistics.cpp" line="91"/>
+        <location filename="../ui/widgets/operationstatistics.cpp" line="150"/>
         <source>Unassigned budget</source>
         <translation>Budget non assigné</translation>
     </message>
@@ -1393,6 +1406,12 @@
         <translation>Le résultat de l&apos;import est vide.</translation>
     </message>
     <message>
+        <location filename="../app/picsouuiservice.cpp" line="1186"/>
+        <location filename="../app/picsouuiservice.cpp" line="1207"/>
+        <source>Transfer to %0</source>
+        <translation>Virement vers %0</translation>
+    </message>
+    <message>
         <source>Internal error: invalid user pointer.</source>
         <translation type="vanished">Erreur interne : pointeur utilisateur invalide.</translation>
     </message>
@@ -1525,20 +1544,18 @@
         <translation>Virement</translation>
     </message>
     <message>
-        <location filename="../app/picsouuiservice.cpp" line="1186"/>
-        <location filename="../app/picsouuiservice.cpp" line="1207"/>
         <source>Tranfer to %0</source>
-        <translation>Virement vers %0</translation>
+        <translation type="vanished">Virement vers %0</translation>
     </message>
     <message>
         <location filename="../app/picsouuiservice.cpp" line="1196"/>
+        <location filename="../app/picsouuiservice.cpp" line="1217"/>
         <source>Transfer from %0</source>
         <translation>Virement depuis %0</translation>
     </message>
     <message>
-        <location filename="../app/picsouuiservice.cpp" line="1217"/>
         <source>Tranfer from %0</source>
-        <translation>Virement depuis %0</translation>
+        <translation type="vanished">Virement depuis %0</translation>
     </message>
     <message>
         <location filename="../app/picsouuiservice.cpp" line="1223"/>
