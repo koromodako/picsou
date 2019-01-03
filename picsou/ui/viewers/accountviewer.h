@@ -63,9 +63,8 @@ private slots:
 private:
     bool m_readonly;
     QUuid m_user_id;
-    QString m_rolling_expense_lab;
-    OperationTableWidget *m_table;
     OperationStatistics *m_ops_stats;
+    OperationTableWidget *m_table;
     Ui::AccountViewer *ui;
 };
 

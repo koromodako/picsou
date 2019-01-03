@@ -34,14 +34,14 @@ public:
     void append(const OperationShPtr &op);
 
     inline int length() const { return list(false).length(); }
-    inline int months() const { return m_months.size(); }
+    inline int year_cnt() const { return m_years.size(); }
+    inline int month_cnt() const { return m_months.size(); }
     inline Amount balance() const { return m_balance+m_initial_value; }
     inline Amount total_debit() const { return m_total_debit; }
     inline Amount total_credit() const { return m_total_credit; }
+    inline QHash<QString, Amount> expense_per_pm() const { return m_expense_per_pm; }
     inline QHash<QString, Amount> expense_per_budget() const { return m_expense_per_budget; }
 
-    Amount expense_per_ym(int year, int month=0);
-    Amount total_in_range(const QDate &from, const QDate &to, bool debit_only=false);
     OperationShPtrList list(bool sorted=true) const;
 
 protected:
@@ -49,13 +49,14 @@ protected:
 
 private:
     /* aggregation members */
-    Amount m_initial_value;
+    Amount m_balance;
     Amount m_total_debit;
     Amount m_total_credit;
-    Amount m_balance;
+    Amount m_initial_value;
+    QSet<int> m_years;
     QSet<int> m_months;
+    QHash<QString, Amount> m_expense_per_pm;
     QHash<QString, Amount> m_expense_per_budget;
-    QHash<int, QHash<int, Amount>> m_expense_per_ym;
     /* pointer storage members */
     OperationShPtrList m_ops;
 

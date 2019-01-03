@@ -48,42 +48,6 @@ void OperationCollection::append(const OperationShPtr &op)
     m_ops.append(op);
 }
 
-Amount OperationCollection::expense_per_ym(int year, int month)
-{
-    Amount amount=-1;
-    QHash<int, Amount>::iterator mit;
-    QHash<int, QHash<int, Amount>>::iterator yit;
-    yit=m_expense_per_ym.find(year);
-    if(yit!=m_expense_per_ym.end()) {
-        if(month<1||month>12) {
-            amount=0;
-            for(auto &val : yit.value().values()) {
-                amount+=val;
-            }
-        } else {
-            mit=yit.value().find(month);
-            if(mit!=yit.value().end()) {
-                amount=mit.value();
-            }
-        }
-    }
-    return amount;
-}
-
-Amount OperationCollection::total_in_range(const QDate &from, const QDate &to, bool debit_only)
-{
-    Amount total=0;
-    for(const auto &op : m_ops) {
-        if(op->date()>=from&&op->date()<=to) {
-            if(debit_only&&op->amount()>0) {
-                continue;
-            }
-            total+=op->amount();
-        }
-    }
-    return total;
-}
-
 bool op_cmp(const OperationShPtr &a, const OperationShPtr &b)
 {
     return a->date()<b->date();
@@ -101,37 +65,30 @@ OperationShPtrList OperationCollection::list(bool sorted) const
 void OperationCollection::aggregate(const Operation *op)
 {
     Amount amount=op->amount();
+    /* balance, total credit and total debit */
+    m_balance+=amount;
     if(op->type()==Operation::DEBIT) {
         m_total_debit+=amount;
     } else {
         m_total_credit+=amount;
     }
-
-    m_balance+=amount;
-
+    /* add op month to months set */
+    m_years.insert(op->date().year());
     m_months.insert(op->date().month());
-
-    QHash<QString, Amount>::iterator it=m_expense_per_budget.find(op->budget());
+    QHash<QString, Amount>::iterator it;
+    /* total expense per budget */
+    it=m_expense_per_budget.find(op->budget());
     if(it!=m_expense_per_budget.end()) {
         it.value()+=amount;
     } else {
         m_expense_per_budget.insert(op->budget(), amount);
     }
-
-    int year=op->date().year(),
-        month=op->date().month();
-
-    QHash<int, QHash<int, Amount>>::iterator yit=m_expense_per_ym.find(year);
-    if(yit!=m_expense_per_ym.end()) {
-        QHash<int, Amount>::iterator mit=yit.value().find(month);
-        if(mit!=yit.value().end()) {
-            mit.value()+=amount;
-        } else {
-            yit.value().insert(month, amount);
-        }
+    /* total expense per payment method */
+    it=m_expense_per_pm.find(op->payment_method());
+    if(it!=m_expense_per_pm.end()) {
+        it.value()+=amount;
     } else {
-        yit=m_expense_per_ym.insert(year, QHash<int, Amount>());
-        yit.value().insert(month, amount);
+        m_expense_per_pm.insert(op->payment_method(), amount);
     }
 }
 

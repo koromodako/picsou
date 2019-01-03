@@ -44,6 +44,11 @@ public:
     bool update_field(const QString &name, const QString &value);
     bool remove_field(const QString &name);
 
+protected:
+    void refresh_expense_per_pm_table(const OperationCollection &ops);
+    void refresh_expense_per_budget_table(const OperationCollection &ops,
+                                          const BudgetShPtrList &user_budgets);
+
 private:
     QHash<QString, QLabel*> m_extra_fields;
     Ui::OperationStatistics *ui;
