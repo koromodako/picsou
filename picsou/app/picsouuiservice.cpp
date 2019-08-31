@@ -1046,7 +1046,7 @@ void PicsouUIService::op_remove(QUuid account_id, QUuid op_id)
         LOG_VOID_RETURN();
     }
     QString error;
-    if(account->remove_operation(op_id, error)) {
+    if(!account->remove_operation(op_id, error)) {
         emit svc_op_failed(error);
         LOG_VOID_RETURN();
     }
