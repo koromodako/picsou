@@ -19,6 +19,7 @@
 #define SCHEDULEDOPERATIONEDITOR_H
 
 #include <QDialog>
+#include <QCompleter>
 #include "utils/amount.h"
 #include "ui/widgets/scheduleform.h"
 
@@ -34,6 +35,7 @@ class ScheduledOperationEditor : public QDialog
 public:
     virtual ~ScheduledOperationEditor();
     explicit ScheduledOperationEditor(QWidget *parent,
+                                      const QStringList &srcdst_candidates=QStringList(),
                                       const Amount &amount = Amount(),
                                       const QString &budget = QString(),
                                       const QString &srcdst = QString(),
@@ -65,6 +67,7 @@ private:
     QString m_payment_method;
     QString m_name;
     Schedule m_schedule;
+    QCompleter m_srcdst_comp;
     ScheduleForm *m_schedule_form;
     Ui::ScheduledOperationEditor *ui;
 };

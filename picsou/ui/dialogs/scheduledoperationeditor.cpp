@@ -26,6 +26,7 @@ ScheduledOperationEditor::~ScheduledOperationEditor()
 }
 
 ScheduledOperationEditor::ScheduledOperationEditor(QWidget *parent,
+                                                   const QStringList &srcdst_candidates,
                                                    const Amount &amount,
                                                    const QString &budget,
                                                    const QString &srcdst,
@@ -40,6 +41,7 @@ ScheduledOperationEditor::ScheduledOperationEditor(QWidget *parent,
     m_description(description),
     m_payment_method(payment_method),
     m_name(name),
+    m_srcdst_comp(srcdst_candidates),
     ui(new Ui::ScheduledOperationEditor)
 {
     ui->setupUi(this);
@@ -60,7 +62,7 @@ ScheduledOperationEditor::ScheduledOperationEditor(QWidget *parent,
     ui->amount->setValue(m_amount.absvalue());
 
     ui->debit_button->setText(tr("Debit"));
-    ui->debit_button->setChecked(m_amount.debit());
+    ui->debit_button->setChecked(!m_amount.credit());
     ui->credit_button->setText(tr("Credit"));
     ui->credit_button->setChecked(m_amount.credit());
     update(m_amount.credit());
@@ -71,6 +73,12 @@ ScheduledOperationEditor::ScheduledOperationEditor(QWidget *parent,
     if(!m_srcdst.isNull()) {
         ui->srcdst->setText(m_srcdst);
     }
+
+    m_srcdst_comp.setFilterMode(Qt::MatchStartsWith);
+    m_srcdst_comp.setModelSorting(QCompleter::CaseInsensitivelySortedModel);
+    m_srcdst_comp.setCompletionMode(QCompleter::PopupCompletion);
+    ui->srcdst->setCompleter(&m_srcdst_comp);
+
     if(!m_description.isNull()) {
         ui->description->setPlainText(m_description);
     }

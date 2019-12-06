@@ -26,6 +26,7 @@ OperationEditor::~OperationEditor()
 OperationEditor::OperationEditor(QWidget *parent,
                                  int year,
                                  int month,
+                                 const QStringList &srcdst_candidates,
                                  bool verified,
                                  const QDate &date,
                                  const Amount &amount,
@@ -43,6 +44,7 @@ OperationEditor::OperationEditor(QWidget *parent,
     m_srcdst(srcdst),
     m_description(description),
     m_payment_method(payment_method),
+    m_srcdst_comp(srcdst_candidates),
     ui(new Ui::OperationEditor)
 {
 
@@ -57,7 +59,7 @@ OperationEditor::OperationEditor(QWidget *parent,
     ui->amount->setValue(m_amount.absvalue());
 
     ui->debit_button->setText(tr("Debit"));
-    ui->debit_button->setChecked(m_amount.debit());
+    ui->debit_button->setChecked(!m_amount.credit());
     ui->credit_button->setText(tr("Credit"));
     ui->credit_button->setChecked(m_amount.credit());
     update(m_amount.credit());
@@ -89,6 +91,12 @@ OperationEditor::OperationEditor(QWidget *parent,
     if(!m_srcdst.isNull()){
         ui->srcdst->setText(m_srcdst);
     }
+
+    m_srcdst_comp.setFilterMode(Qt::MatchStartsWith);
+    m_srcdst_comp.setModelSorting(QCompleter::CaseInsensitivelySortedModel);
+    m_srcdst_comp.setCompletionMode(QCompleter::PopupCompletion);
+    ui->srcdst->setCompleter(&m_srcdst_comp);
+
     if(!m_description.isNull()){
         ui->description->setPlainText(m_description);
     }

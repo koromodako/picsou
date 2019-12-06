@@ -272,6 +272,18 @@ int Account::min_year() const
 
 }
 
+QStringList Account::srcdst() const
+{
+    QSet<QString> srcdst;
+    for(const auto &op : m_ops) {
+        srcdst.insert(op->srcdst());
+    }
+    for(const auto &sop : m_scheduled_ops) {
+        srcdst.insert(sop->srcdst());
+    }
+    return QStringList(srcdst.toList());
+}
+
 #undef min
 
 bool pm_cmp(const PaymentMethodShPtr &a, const PaymentMethodShPtr &b)

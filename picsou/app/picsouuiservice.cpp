@@ -863,7 +863,7 @@ void PicsouUIService::sop_add(QUuid user_id, QUuid account_id)
         emit svc_op_failed(tr("Make sure you have defined at least one payment method before adding operations."));
         LOG_VOID_RETURN()
     }
-    ScheduledOperationEditor editor(m_mw);
+    ScheduledOperationEditor editor(m_mw, account->srcdst());
     editor.set_budgets(budgets);
     editor.set_payment_methods(payment_methods);
     if(editor.exec()==QDialog::Rejected) {
@@ -910,6 +910,7 @@ void PicsouUIService::sop_edit(QUuid user_id, QUuid account_id, QUuid sop_id)
         LOG_VOID_RETURN()
     }
     ScheduledOperationEditor editor(m_mw,
+                                    account->srcdst(),
                                     sop->amount(),
                                     sop->budget(),
                                     sop->srcdst(),
@@ -970,7 +971,7 @@ void PicsouUIService::op_add(QUuid user_id, QUuid account_id, int year, int mont
         emit svc_op_failed(tr("Make sure you have defined at least one payment method before adding operations."));
         LOG_VOID_RETURN()
     }
-    OperationEditor editor(m_mw, year, month);
+    OperationEditor editor(m_mw, year, month, account->srcdst());
     editor.set_budgets(budgets);
     editor.set_payment_methods(payment_methods);
     if(editor.exec()==QDialog::Rejected) {
@@ -1013,6 +1014,7 @@ void PicsouUIService::op_edit(QUuid user_id, QUuid account_id, QUuid op_id, int 
     OperationEditor editor(m_mw,
                            year,
                            month,
+                           account->srcdst(),
                            op->verified(),
                            op->date(),
                            op->amount(),

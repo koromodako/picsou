@@ -20,6 +20,7 @@
 
 #include <QDate>
 #include <QDialog>
+#include <QCompleter>
 #include "utils/amount.h"
 
 namespace Ui {
@@ -34,6 +35,7 @@ public:
     explicit OperationEditor(QWidget *parent,
                              int year=-1,
                              int month=-1,
+                             const QStringList &srcdst_candidates=QStringList(),
                              bool verified=false,
                              const QDate &date=QDate(),
                              const Amount &amount=Amount(),
@@ -67,6 +69,7 @@ private:
     QString m_srcdst;
     QString m_description;
     QString m_payment_method;
+    QCompleter m_srcdst_comp;
     Ui::OperationEditor *ui;
 };
 

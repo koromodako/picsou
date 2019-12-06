@@ -86,6 +86,7 @@ public:
     inline OperationShPtrList ops() const { return m_ops.values(); }
 
     int min_year() const;
+    QStringList srcdst() const;
     QStringList payment_methods_str(bool sorted=false) const;
     PaymentMethodShPtrList payment_methods(bool sorted=false) const;
 
