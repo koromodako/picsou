@@ -685,17 +685,17 @@
         <translation>Montant :</translation>
     </message>
     <message>
-        <location filename="../ui/dialogs/operationeditor.cpp" line="53"/>
+        <location filename="../ui/dialogs/operationeditor.cpp" line="55"/>
         <source>$</source>
         <translation> </translation>
     </message>
     <message>
-        <location filename="../ui/dialogs/operationeditor.cpp" line="54"/>
+        <location filename="../ui/dialogs/operationeditor.cpp" line="56"/>
         <source> </source>
         <translation> €</translation>
     </message>
     <message>
-        <location filename="../ui/dialogs/operationeditor.cpp" line="134"/>
+        <location filename="../ui/dialogs/operationeditor.cpp" line="142"/>
         <source>Source:</source>
         <translation>Source :</translation>
     </message>
@@ -716,13 +716,13 @@
     </message>
     <message>
         <location filename="../ui/dialogs/operationeditor.ui" line="118"/>
-        <location filename="../ui/dialogs/operationeditor.cpp" line="59"/>
+        <location filename="../ui/dialogs/operationeditor.cpp" line="61"/>
         <source>Debit</source>
         <translation>Débit</translation>
     </message>
     <message>
         <location filename="../ui/dialogs/operationeditor.ui" line="125"/>
-        <location filename="../ui/dialogs/operationeditor.cpp" line="61"/>
+        <location filename="../ui/dialogs/operationeditor.cpp" line="63"/>
         <source>Credit</source>
         <translation>Crédit</translation>
     </message>
@@ -733,7 +733,7 @@
     </message>
     <message>
         <location filename="../ui/dialogs/operationeditor.ui" line="152"/>
-        <location filename="../ui/dialogs/operationeditor.cpp" line="134"/>
+        <location filename="../ui/dialogs/operationeditor.cpp" line="142"/>
         <source>Destination:</source>
         <translation>Destination :</translation>
     </message>
@@ -768,7 +768,7 @@
     </message>
     <message>
         <location filename="../ui/dialogs/operationeditor.ui" line="23"/>
-        <location filename="../ui/dialogs/operationeditor.cpp" line="51"/>
+        <location filename="../ui/dialogs/operationeditor.cpp" line="53"/>
         <source>Operation Editor</source>
         <translation>Editeur d&apos;opération</translation>
     </message>
@@ -1381,9 +1381,9 @@
         <location filename="../app/picsouuiservice.cpp" line="771"/>
         <location filename="../app/picsouuiservice.cpp" line="848"/>
         <location filename="../app/picsouuiservice.cpp" line="893"/>
-        <location filename="../app/picsouuiservice.cpp" line="959"/>
-        <location filename="../app/picsouuiservice.cpp" line="1010"/>
-        <location filename="../app/picsouuiservice.cpp" line="1160"/>
+        <location filename="../app/picsouuiservice.cpp" line="960"/>
+        <location filename="../app/picsouuiservice.cpp" line="1011"/>
+        <location filename="../app/picsouuiservice.cpp" line="1162"/>
         <source>Invalid user pointer.</source>
         <translation>Pointeur d&apos;utilisateur invalide.</translation>
     </message>
@@ -1400,13 +1400,13 @@
         <location filename="../app/picsouuiservice.cpp" line="832"/>
         <location filename="../app/picsouuiservice.cpp" line="853"/>
         <location filename="../app/picsouuiservice.cpp" line="898"/>
-        <location filename="../app/picsouuiservice.cpp" line="942"/>
-        <location filename="../app/picsouuiservice.cpp" line="964"/>
-        <location filename="../app/picsouuiservice.cpp" line="1000"/>
-        <location filename="../app/picsouuiservice.cpp" line="1045"/>
-        <location filename="../app/picsouuiservice.cpp" line="1062"/>
-        <location filename="../app/picsouuiservice.cpp" line="1080"/>
-        <location filename="../app/picsouuiservice.cpp" line="1124"/>
+        <location filename="../app/picsouuiservice.cpp" line="943"/>
+        <location filename="../app/picsouuiservice.cpp" line="965"/>
+        <location filename="../app/picsouuiservice.cpp" line="1001"/>
+        <location filename="../app/picsouuiservice.cpp" line="1047"/>
+        <location filename="../app/picsouuiservice.cpp" line="1064"/>
+        <location filename="../app/picsouuiservice.cpp" line="1082"/>
+        <location filename="../app/picsouuiservice.cpp" line="1126"/>
         <source>Invalid account pointer.</source>
         <translation>Pointeur de compte bancaire invalide.</translation>
     </message>
@@ -1421,19 +1421,19 @@
         <translation>Pointeur d&apos;opération programmée invalide.</translation>
     </message>
     <message>
-        <location filename="../app/picsouuiservice.cpp" line="1005"/>
-        <location filename="../app/picsouuiservice.cpp" line="1067"/>
+        <location filename="../app/picsouuiservice.cpp" line="1006"/>
+        <location filename="../app/picsouuiservice.cpp" line="1069"/>
         <source>Invalid op pointer.</source>
         <translation>Pointeur d&apos;opération invalide.</translation>
     </message>
     <message>
-        <location filename="../app/picsouuiservice.cpp" line="1100"/>
+        <location filename="../app/picsouuiservice.cpp" line="1102"/>
         <source>Import result is empty.</source>
         <translation>Le résultat de l&apos;import est vide.</translation>
     </message>
     <message>
-        <location filename="../app/picsouuiservice.cpp" line="1186"/>
-        <location filename="../app/picsouuiservice.cpp" line="1207"/>
+        <location filename="../app/picsouuiservice.cpp" line="1188"/>
+        <location filename="../app/picsouuiservice.cpp" line="1209"/>
         <source>Transfer to %0</source>
         <translation>Virement vers %0</translation>
     </message>
@@ -1483,7 +1483,7 @@
     </message>
     <message>
         <location filename="../app/picsouuiservice.cpp" line="863"/>
-        <location filename="../app/picsouuiservice.cpp" line="970"/>
+        <location filename="../app/picsouuiservice.cpp" line="971"/>
         <source>Make sure you have defined at least one payment method before adding operations.</source>
         <translation>Vous devez définir au moins une méthode de paiement avant d&apos;ajouter des opérations.</translation>
     </message>
@@ -1509,17 +1509,17 @@
         <translation type="vanished">Echec de la suppression d&apos;une opération de la base de données.</translation>
     </message>
     <message>
-        <location filename="../app/picsouuiservice.cpp" line="1083"/>
+        <location filename="../app/picsouuiservice.cpp" line="1085"/>
         <source>Import file</source>
         <translation>Importer des opérations</translation>
     </message>
     <message>
-        <location filename="../app/picsouuiservice.cpp" line="1083"/>
+        <location filename="../app/picsouuiservice.cpp" line="1085"/>
         <source>Files (*.csv *.xml *.json)</source>
         <translation>Fichiers (*.csv *.xml *.json)</translation>
     </message>
     <message>
-        <location filename="../app/picsouuiservice.cpp" line="1100"/>
+        <location filename="../app/picsouuiservice.cpp" line="1102"/>
         <source>Empty import</source>
         <translation>Import vide</translation>
     </message>
@@ -1528,17 +1528,17 @@
         <translation type="vanished">Aucune donnée importée. Le fichier d&apos;entrée est vide ou invalide.</translation>
     </message>
     <message>
-        <location filename="../app/picsouuiservice.cpp" line="1132"/>
+        <location filename="../app/picsouuiservice.cpp" line="1134"/>
         <source>Which format?</source>
         <translation>Quel format d&apos;export souhaitez-vous ?</translation>
     </message>
     <message>
-        <location filename="../app/picsouuiservice.cpp" line="1132"/>
+        <location filename="../app/picsouuiservice.cpp" line="1134"/>
         <source>Select output format</source>
         <translation>Sélection du format d&apos;export</translation>
     </message>
     <message>
-        <location filename="../app/picsouuiservice.cpp" line="1137"/>
+        <location filename="../app/picsouuiservice.cpp" line="1139"/>
         <source>Export file</source>
         <translation>Exporter les opérations</translation>
     </message>
@@ -1547,25 +1547,25 @@
         <translation type="vanished">Erreur interne : échec de l&apos;export des opérations.</translation>
     </message>
     <message>
-        <location filename="../app/picsouuiservice.cpp" line="1149"/>
+        <location filename="../app/picsouuiservice.cpp" line="1151"/>
         <source>Export successful</source>
         <translation>Export réussi</translation>
     </message>
     <message>
-        <location filename="../app/picsouuiservice.cpp" line="1150"/>
+        <location filename="../app/picsouuiservice.cpp" line="1152"/>
         <source>Operation successfully exported to %0</source>
         <translation>Opérations exportées avec succès vers %0</translation>
     </message>
     <message>
-        <location filename="../app/picsouuiservice.cpp" line="1176"/>
+        <location filename="../app/picsouuiservice.cpp" line="1178"/>
         <source>Invalid account pointer (sender and/or recipient).</source>
         <translation>Pointeur de compte bancaire invalide (émetteur et/ou destinataire).</translation>
     </message>
     <message>
-        <location filename="../app/picsouuiservice.cpp" line="1185"/>
-        <location filename="../app/picsouuiservice.cpp" line="1195"/>
-        <location filename="../app/picsouuiservice.cpp" line="1208"/>
-        <location filename="../app/picsouuiservice.cpp" line="1218"/>
+        <location filename="../app/picsouuiservice.cpp" line="1187"/>
+        <location filename="../app/picsouuiservice.cpp" line="1197"/>
+        <location filename="../app/picsouuiservice.cpp" line="1210"/>
+        <location filename="../app/picsouuiservice.cpp" line="1220"/>
         <source>Transfer</source>
         <translation>Virement</translation>
     </message>
@@ -1574,8 +1574,8 @@
         <translation type="vanished">Virement vers %0</translation>
     </message>
     <message>
-        <location filename="../app/picsouuiservice.cpp" line="1196"/>
-        <location filename="../app/picsouuiservice.cpp" line="1217"/>
+        <location filename="../app/picsouuiservice.cpp" line="1198"/>
+        <location filename="../app/picsouuiservice.cpp" line="1219"/>
         <source>Transfer from %0</source>
         <translation>Virement depuis %0</translation>
     </message>
@@ -1584,22 +1584,22 @@
         <translation type="vanished">Virement depuis %0</translation>
     </message>
     <message>
-        <location filename="../app/picsouuiservice.cpp" line="1223"/>
+        <location filename="../app/picsouuiservice.cpp" line="1225"/>
         <source>Transfer successful</source>
         <translation>Virement réussi</translation>
     </message>
     <message>
-        <location filename="../app/picsouuiservice.cpp" line="1224"/>
+        <location filename="../app/picsouuiservice.cpp" line="1226"/>
         <source>Transfer operations have been added to both accounts.</source>
         <translation>Les opérations correspondant à l&apos;ordre de virement ont été ajoutées aux différents comptes bancaires concernés.</translation>
     </message>
     <message>
-        <location filename="../app/picsouuiservice.cpp" line="1249"/>
+        <location filename="../app/picsouuiservice.cpp" line="1251"/>
         <source>Close database</source>
         <translation>Fermeture de la base de données</translation>
     </message>
     <message>
-        <location filename="../app/picsouuiservice.cpp" line="1250"/>
+        <location filename="../app/picsouuiservice.cpp" line="1252"/>
         <source>Only one database can be opened at once, do you want to close current database?</source>
         <translation>Une seule base de données peut être ouverte à la fois, voulez-vous fermer la base de données actuellement ouverte ?</translation>
     </message>
@@ -1750,17 +1750,17 @@
         <translation type="vanished">jour</translation>
     </message>
     <message>
-        <location filename="../ui/dialogs/scheduledoperationeditor.cpp" line="56"/>
+        <location filename="../ui/dialogs/scheduledoperationeditor.cpp" line="58"/>
         <source>$</source>
         <translation> </translation>
     </message>
     <message>
-        <location filename="../ui/dialogs/scheduledoperationeditor.cpp" line="57"/>
+        <location filename="../ui/dialogs/scheduledoperationeditor.cpp" line="59"/>
         <source> </source>
         <translation> €</translation>
     </message>
     <message>
-        <location filename="../ui/dialogs/scheduledoperationeditor.cpp" line="116"/>
+        <location filename="../ui/dialogs/scheduledoperationeditor.cpp" line="124"/>
         <source>Source:</source>
         <translation>Source :</translation>
     </message>
@@ -1778,13 +1778,13 @@
     </message>
     <message>
         <location filename="../ui/dialogs/scheduledoperationeditor.ui" line="78"/>
-        <location filename="../ui/dialogs/scheduledoperationeditor.cpp" line="62"/>
+        <location filename="../ui/dialogs/scheduledoperationeditor.cpp" line="64"/>
         <source>Debit</source>
         <translation>Débit</translation>
     </message>
     <message>
         <location filename="../ui/dialogs/scheduledoperationeditor.ui" line="85"/>
-        <location filename="../ui/dialogs/scheduledoperationeditor.cpp" line="64"/>
+        <location filename="../ui/dialogs/scheduledoperationeditor.cpp" line="66"/>
         <source>Credit</source>
         <translation>Crédit</translation>
     </message>
@@ -1800,7 +1800,7 @@
     </message>
     <message>
         <location filename="../ui/dialogs/scheduledoperationeditor.ui" line="126"/>
-        <location filename="../ui/dialogs/scheduledoperationeditor.cpp" line="116"/>
+        <location filename="../ui/dialogs/scheduledoperationeditor.cpp" line="124"/>
         <source>Destination:</source>
         <translation>Destination :</translation>
     </message>
@@ -1851,7 +1851,7 @@
     </message>
     <message>
         <location filename="../ui/dialogs/scheduledoperationeditor.ui" line="23"/>
-        <location filename="../ui/dialogs/scheduledoperationeditor.cpp" line="47"/>
+        <location filename="../ui/dialogs/scheduledoperationeditor.cpp" line="49"/>
         <source>Scheduled Operation Editor</source>
         <translation>Editeur d&apos;opération programmée</translation>
     </message>
@@ -1886,6 +1886,11 @@
         <location filename="../ui/widgets/searchfilterform.ui" line="76"/>
         <source>Until:</source>
         <translation>Au :</translation>
+    </message>
+    <message>
+        <location filename="../ui/widgets/searchfilterform.ui" line="177"/>
+        <source>Src/Dst:</source>
+        <translation>Src/Dst :</translation>
     </message>
     <message>
         <location filename="../ui/widgets/searchfilterform.ui" line="187"/>
@@ -1927,9 +1932,8 @@
         <translation>Méthode de paiement :</translation>
     </message>
     <message>
-        <location filename="../ui/widgets/searchfilterform.ui" line="177"/>
         <source>Recipient:</source>
-        <translation>Destinataire :</translation>
+        <translation type="vanished">Destinataire :</translation>
     </message>
     <message>
         <source>\w*</source>
