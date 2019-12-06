@@ -65,6 +65,7 @@ message("post link action: $$QMAKE_POST_LINK")
 #
 SOURCES += \
     main.cpp \
+    ui/widgets/chartsform.cpp \
     utils/amount.cpp \
     utils/schedule.cpp \
     utils/semver.cpp \
@@ -130,6 +131,7 @@ HEADERS += \
     model/operationcollection.h \
     model/picsoudbo.h \
     model/searchquery.h \
+    ui/widgets/chartsform.h \
     utils/amount.h \
     utils/macro.h \
     utils/schedule.h \
@@ -183,6 +185,7 @@ FORMS += \
     ui/viewers/picsoudbviewer.ui \
     ui/viewers/accountviewer.ui \
     ui/viewers/userviewer.ui \
+    ui/widgets/chartsform.ui \
     ui/widgets/operationstatistics.ui \
     ui/viewers/lockedobjectviewer.ui \
     ui/widgets/searchfilterform.ui \

@@ -59,6 +59,10 @@ MainWindow::MainWindow(PicsouUIServicePtr ui_svc, QWidget *parent) :
 
     m_search_ops_stats=new OperationStatistics;
     ui->search_tab->layout()->addWidget(m_search_ops_stats); /* ownership transfer */
+
+    m_charts_form=new ChartsForm;
+    ui->charts_tab->layout()->addWidget(m_charts_form);
+
     /* initialize window attributes */
     setWindowIcon(QIcon());
     setWindowTitle("Picsou");

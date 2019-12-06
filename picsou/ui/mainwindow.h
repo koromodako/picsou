@@ -21,6 +21,7 @@
 #include <QMainWindow>
 
 #include "picsouui.h"
+#include "ui/widgets/chartsform.h"
 #include "ui/widgets/searchfilterform.h"
 #include "ui/widgets/operationtablewidget.h"
 #include "ui/widgets/operationstatistics.h"
@@ -75,6 +76,7 @@ private:
 private:
     State m_state;
     QWidget *m_details_widget;
+    ChartsForm *m_charts_form;
     SearchFilterForm *m_search_form;
     OperationTableWidget *m_search_table;
     OperationStatistics *m_search_ops_stats;
