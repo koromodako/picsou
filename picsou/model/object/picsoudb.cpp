@@ -110,14 +110,14 @@ OperationCollection PicsouDB::ops(QUuid account_id,
 {
     AccountShPtr account=find_account(account_id);
     if(account.isNull()) {
-        LOG_WARNING("failed to find account.");
+        LOG_WARNING("failed to find account.")
         return OperationCollection();
     }
     OperationCollection selected_ops(account->initial_amount());
     for(const auto &sop : account->scheduled_ops()) {
-        LOG_DEBUG("sop->name="<<sop->name());
+        LOG_DEBUG("sop->name="<<sop->name())
         for(const auto &date : sop->schedule().dates(year, month)) {
-            LOG_DEBUG("generated date="<<date);
+            LOG_DEBUG("generated date="<<date)
             if(until.isValid()&&date>until) {
                 break;
             }
@@ -125,7 +125,7 @@ OperationCollection PicsouDB::ops(QUuid account_id,
                                         sop->amount(),
                                         date,
                                         sop->budget(),
-                                        sop->recipient(),
+                                        sop->srcdst(),
                                         sop->description(),
                                         sop->payment_method(),
                                         account.data());
@@ -165,27 +165,27 @@ AccountShPtr PicsouDB::find_account(QUuid id) const
 
 bool PicsouDB::read(const QJsonObject &json)
 {
-    LOG_IN("<QJsonObject>");
+    LOG_IN("<QJsonObject>")
     if(!json.contains(KW_VERSION)) {
-        LOG_CRITICAL("database file does not contain database version.");
+        LOG_CRITICAL("database file does not contain database version.")
         set_valid(false);
-        LOG_BOOL_RETURN(false);
+        LOG_BOOL_RETURN(false)
     }
     /**/
     if(json.contains(KW_TIMESTAMP)) {
         m_timestamp=QDate::fromString(json[KW_TIMESTAMP].toString(), Qt::ISODate);
         if(m_timestamp>QDate::currentDate()) {
-            LOG_CRITICAL("database file seems to have been saved in the future.");
+            LOG_CRITICAL("database file seems to have been saved in the future.")
             set_valid(false);
-            LOG_BOOL_RETURN(false);
+            LOG_BOOL_RETURN(false)
         }
     }
     /**/
     m_version=SemVer(json[KW_VERSION].toString());
     if(m_version<PICSOU_DB_VERSION) {
-        LOG_DEBUG("older version of the DB file format: "<<m_version.to_str());
+        LOG_DEBUG("older version of the DB file format: "<<m_version.to_str())
         set_valid(false);
-        LOG_BOOL_RETURN(false);
+        LOG_BOOL_RETURN(false)
     }
     /**/
     static const QStringList keys=(QStringList()<<KW_NAME
@@ -199,7 +199,7 @@ bool PicsouDB::read(const QJsonObject &json)
     JSON_READ_LIST(json, KW_USERS, m_users, User, this);
     /**/
     set_valid();
-    LOG_BOOL_RETURN(valid());
+    LOG_BOOL_RETURN(valid())
 }
 
 bool PicsouDB::write(QJsonObject &json) const
@@ -213,5 +213,5 @@ bool PicsouDB::write(QJsonObject &json) const
     json[KW_TIMESTAMP]=QDate::currentDate().toString(Qt::ISODate);
     JSON_WRITE_LIST(json, KW_USERS, m_users.values());
     /**/
-    LOG_BOOL_RETURN(true);
+    LOG_BOOL_RETURN(true)
 }

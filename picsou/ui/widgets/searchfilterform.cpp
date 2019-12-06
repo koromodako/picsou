@@ -74,51 +74,51 @@ SearchQuery SearchFilterForm::query() const
 
 void SearchFilterForm::refresh_user_cb()
 {
-    LOG_IN_VOID();
+    LOG_IN_VOID()
     ui->user->clear();
     if(!ui_svc()->populate_user_cb(ui->user)) {
         ui->user->clear();
         ui->search->setEnabled(false);
-        LOG_CRITICAL("Failed to update user combo box.");
+        LOG_CRITICAL("Failed to update user combo box.")
         emit search_update_failed(tr("Failed to update user combo box."));
     }
-    LOG_VOID_RETURN();
+    LOG_VOID_RETURN()
 }
 
 void SearchFilterForm::refresh_account_cb(const QString &username)
 {
-    LOG_IN("username="<<username);
+    LOG_IN("username="<<username)
     if(username.isEmpty()) {
-        LOG_VOID_RETURN();
+        LOG_VOID_RETURN()
     }
     ui->account->clear();
     if(!ui_svc()->populate_account_cb(username, ui->account)) {
         ui->account->clear();
         ui->search->setEnabled(false);
-        LOG_CRITICAL("Failed to update account combo box.");
+        LOG_CRITICAL("Failed to update account combo box.")
         emit search_update_failed(tr("Failed to update account combo box."));
     }
-    LOG_VOID_RETURN();
+    LOG_VOID_RETURN()
 }
 
 void SearchFilterForm::refresh_budgets_list(const QString &username)
 {
-    LOG_IN("username="<<username);
+    LOG_IN("username="<<username)
     if(username.isEmpty()) {
-        LOG_VOID_RETURN();
+        LOG_VOID_RETURN()
     }
     ui->budgets->clear();
     if(!ui_svc()->populate_budgets_list(username, ui->budgets)) {
         ui->budgets->clear();
         ui->search->setEnabled(false);
-        LOG_CRITICAL("Failed to update budgets list.");
+        LOG_CRITICAL("Failed to update budgets list.")
         emit search_update_failed(tr("Failed to update budgets list."));
     }
     if(ui->budgets->count()==0) {
         ui->search->setEnabled(false);
     }
     ui->budgets->selectAll();
-    LOG_VOID_RETURN();
+    LOG_VOID_RETURN()
 }
 
 void SearchFilterForm::limit_max_amount(double minimum)
@@ -128,15 +128,15 @@ void SearchFilterForm::limit_max_amount(double minimum)
 
 void SearchFilterForm::refresh_pms_list(const QString &account_name)
 {
-    LOG_IN("account_name="<<account_name);
+    LOG_IN("account_name="<<account_name)
     if(account_name.isEmpty()) {
-        LOG_VOID_RETURN();
+        LOG_VOID_RETURN()
     }
     ui->pms->clear();
     if(!ui_svc()->populate_pms_list(ui->user->currentText(), account_name, ui->pms)) {
         ui->pms->clear();
         ui->search->setEnabled(false);
-        LOG_CRITICAL("Failed to update payment methods list.");
+        LOG_CRITICAL("Failed to update payment methods list.")
         emit search_update_failed(tr("Failed to update payment methods list."));
     }
     if(ui->pms->count()==0) {
@@ -145,5 +145,5 @@ void SearchFilterForm::refresh_pms_list(const QString &account_name)
         ui->search->setEnabled(true);
     }
     ui->pms->selectAll();
-    LOG_VOID_RETURN();
+    LOG_VOID_RETURN()
 }

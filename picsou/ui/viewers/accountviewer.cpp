@@ -103,7 +103,7 @@ void AccountViewer::refresh(const PicsouDBShPtr db)
     OperationCollection ops;
     AccountShPtr account=db->find_account(mod_obj_id());
     if(account.isNull()) {
-        LOG_WARNING("failed to find account!");
+        LOG_WARNING("failed to find account!")
         return;
     }
     /* payment methods */
@@ -141,7 +141,7 @@ void AccountViewer::refresh(const PicsouDBShPtr db)
     m_table->refresh(ops);
     UserShPtr user=db->find_user(m_user_id);
     if(user.isNull()) {
-        LOG_WARNING("failed to find user!");
+        LOG_WARNING("failed to find user!")
         return;
     }
     m_ops_stats->refresh(ops, user->budgets());

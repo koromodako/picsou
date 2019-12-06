@@ -76,7 +76,7 @@ private:
         for(auto i__ : keys__) { \
             if(!json.contains(i__)) { \
                 set_valid(false); \
-                LOG_BOOL_RETURN(false); \
+                LOG_BOOL_RETURN(false) \
             } \
         } \
     } while(0)
@@ -90,7 +90,7 @@ private:
             if(!obj__->read(array__[i__].toObject())) { \
                 /* TRACE */ \
                 set_valid(false); \
-                LOG_BOOL_RETURN(false); \
+                LOG_BOOL_RETURN(false) \
             } \
             (member).insert(obj__->id(), QSharedPointer<Class>(obj__)); \
         } \
@@ -104,7 +104,7 @@ private:
             obj__=QJsonObject(); \
             if(!(list)[i__]->write(obj__)) { \
                 /* TRACE */ \
-                LOG_BOOL_RETURN(false); \
+                LOG_BOOL_RETURN(false) \
             } \
             array__.append(obj__); \
         } \

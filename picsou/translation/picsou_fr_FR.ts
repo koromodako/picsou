@@ -680,7 +680,7 @@
         <translation type="vanished">Editeur d&apos;opération bancaire</translation>
     </message>
     <message>
-        <location filename="../ui/dialogs/operationeditor.ui" line="33"/>
+        <location filename="../ui/dialogs/operationeditor.ui" line="87"/>
         <source>Amount:</source>
         <translation>Montant :</translation>
     </message>
@@ -695,52 +695,74 @@
         <translation> €</translation>
     </message>
     <message>
-        <location filename="../ui/dialogs/operationeditor.ui" line="66"/>
+        <location filename="../ui/dialogs/operationeditor.cpp" line="134"/>
+        <source>Source:</source>
+        <translation>Source :</translation>
+    </message>
+    <message>
+        <location filename="../ui/dialogs/operationeditor.ui" line="33"/>
         <source>Budget:</source>
         <translation>Budget :</translation>
     </message>
     <message>
-        <location filename="../ui/dialogs/operationeditor.ui" line="80"/>
+        <location filename="../ui/dialogs/operationeditor.ui" line="60"/>
         <source>Date:</source>
         <translation>Date :</translation>
     </message>
     <message>
-        <location filename="../ui/dialogs/operationeditor.ui" line="93"/>
+        <location filename="../ui/dialogs/operationeditor.ui" line="73"/>
         <source>dd/MM/yyyy</source>
         <translation>dd/MM/yyyy</translation>
     </message>
     <message>
-        <location filename="../ui/dialogs/operationeditor.ui" line="107"/>
+        <location filename="../ui/dialogs/operationeditor.ui" line="118"/>
+        <location filename="../ui/dialogs/operationeditor.cpp" line="59"/>
+        <source>Debit</source>
+        <translation>Débit</translation>
+    </message>
+    <message>
+        <location filename="../ui/dialogs/operationeditor.ui" line="125"/>
+        <location filename="../ui/dialogs/operationeditor.cpp" line="61"/>
+        <source>Credit</source>
+        <translation>Crédit</translation>
+    </message>
+    <message>
+        <location filename="../ui/dialogs/operationeditor.ui" line="138"/>
         <source>Payment method:</source>
         <translation>Méthode de paiement :</translation>
     </message>
     <message>
-        <location filename="../ui/dialogs/operationeditor.ui" line="121"/>
-        <source>Recipient:</source>
-        <translation>Destinataire :</translation>
+        <location filename="../ui/dialogs/operationeditor.ui" line="152"/>
+        <location filename="../ui/dialogs/operationeditor.cpp" line="134"/>
+        <source>Destination:</source>
+        <translation>Destination :</translation>
     </message>
     <message>
-        <location filename="../ui/dialogs/operationeditor.ui" line="131"/>
+        <source>Recipient:</source>
+        <translation type="vanished">Destinataire :</translation>
+    </message>
+    <message>
+        <location filename="../ui/dialogs/operationeditor.ui" line="162"/>
         <source>Description:</source>
         <translation>Description :</translation>
     </message>
     <message>
-        <location filename="../ui/dialogs/operationeditor.ui" line="138"/>
+        <location filename="../ui/dialogs/operationeditor.ui" line="169"/>
         <source>Operation&apos;s description goes here...</source>
         <translation>Entrez la description de l&apos;opération ici...</translation>
     </message>
     <message>
-        <location filename="../ui/dialogs/operationeditor.ui" line="145"/>
+        <location filename="../ui/dialogs/operationeditor.ui" line="176"/>
         <source>Verified</source>
         <translation>Vérifiée</translation>
     </message>
     <message>
-        <location filename="../ui/dialogs/operationeditor.ui" line="180"/>
+        <location filename="../ui/dialogs/operationeditor.ui" line="211"/>
         <source>Save</source>
         <translation>Sauvegarder</translation>
     </message>
     <message>
-        <location filename="../ui/dialogs/operationeditor.ui" line="191"/>
+        <location filename="../ui/dialogs/operationeditor.ui" line="222"/>
         <source>Cancel</source>
         <translation>Annuler</translation>
     </message>
@@ -868,9 +890,13 @@
         <translation>Description</translation>
     </message>
     <message>
-        <location filename="../ui/widgets/operationtablewidget.cpp" line="42"/>
         <source>Recipient</source>
-        <translation>Destinataire</translation>
+        <translation type="vanished">Destinataire</translation>
+    </message>
+    <message>
+        <location filename="../ui/widgets/operationtablewidget.cpp" line="42"/>
+        <source>Src/Dst</source>
+        <translation>Src/Dst</translation>
     </message>
     <message>
         <location filename="../ui/widgets/operationtablewidget.cpp" line="43"/>
@@ -1734,6 +1760,11 @@
         <translation> €</translation>
     </message>
     <message>
+        <location filename="../ui/dialogs/scheduledoperationeditor.cpp" line="116"/>
+        <source>Source:</source>
+        <translation>Source :</translation>
+    </message>
+    <message>
         <source>Frequency:</source>
         <translation type="vanished">Fréquence :</translation>
     </message>
@@ -1746,32 +1777,49 @@
         <translation type="vanished">dd/MM/yyyy</translation>
     </message>
     <message>
-        <location filename="../ui/dialogs/scheduledoperationeditor.ui" line="80"/>
+        <location filename="../ui/dialogs/scheduledoperationeditor.ui" line="78"/>
+        <location filename="../ui/dialogs/scheduledoperationeditor.cpp" line="62"/>
+        <source>Debit</source>
+        <translation>Débit</translation>
+    </message>
+    <message>
+        <location filename="../ui/dialogs/scheduledoperationeditor.ui" line="85"/>
+        <location filename="../ui/dialogs/scheduledoperationeditor.cpp" line="64"/>
+        <source>Credit</source>
+        <translation>Crédit</translation>
+    </message>
+    <message>
+        <location filename="../ui/dialogs/scheduledoperationeditor.ui" line="98"/>
         <source>Budget:</source>
         <translation>Budget :</translation>
     </message>
     <message>
-        <location filename="../ui/dialogs/scheduledoperationeditor.ui" line="94"/>
+        <location filename="../ui/dialogs/scheduledoperationeditor.ui" line="112"/>
         <source>Payment method:</source>
         <translation>Méthode de paiement :</translation>
     </message>
     <message>
-        <location filename="../ui/dialogs/scheduledoperationeditor.ui" line="108"/>
-        <source>Recipient:</source>
-        <translation>Destinataire :</translation>
+        <location filename="../ui/dialogs/scheduledoperationeditor.ui" line="126"/>
+        <location filename="../ui/dialogs/scheduledoperationeditor.cpp" line="116"/>
+        <source>Destination:</source>
+        <translation>Destination :</translation>
     </message>
     <message>
-        <location filename="../ui/dialogs/scheduledoperationeditor.ui" line="118"/>
+        <source>Recipient:</source>
+        <translation type="vanished">Destinataire :</translation>
+    </message>
+    <message>
+        <location filename="../ui/dialogs/scheduledoperationeditor.ui" line="136"/>
         <source>Description:</source>
         <translation>Description :</translation>
     </message>
     <message>
-        <location filename="../ui/dialogs/scheduledoperationeditor.ui" line="125"/>
+        <location filename="../ui/dialogs/scheduledoperationeditor.ui" line="143"/>
         <source>Scheduled operation&apos;s description goes here...</source>
         <translation>Entrez la description de l&apos;opération programmée ici...</translation>
     </message>
     <message>
-        <location filename="../ui/dialogs/scheduledoperationeditor.ui" line="135"/>
+        <location filename="../ui/dialogs/scheduledoperationeditor.ui" line="153"/>
         <source>Schedule</source>
         <translation>Planification</translation>
     </message>
@@ -1792,12 +1840,12 @@
         <translation type="vanished">Tous les</translation>
     </message>
     <message>
-        <location filename="../ui/dialogs/scheduledoperationeditor.ui" line="173"/>
+        <location filename="../ui/dialogs/scheduledoperationeditor.ui" line="191"/>
         <source>Save</source>
         <translation>Sauvegarder</translation>
     </message>
     <message>
-        <location filename="../ui/dialogs/scheduledoperationeditor.ui" line="184"/>
+        <location filename="../ui/dialogs/scheduledoperationeditor.ui" line="202"/>
         <source>Cancel</source>
         <translation>Annuler</translation>
     </message>

@@ -49,6 +49,12 @@ QString Amount::to_str(bool add_currency) const
     return str;
 }
 
+Amount &Amount::operator=(const Amount &other)
+{
+    m_value=other.m_value;
+    return *this;
+}
+
 QDebug operator<<(QDebug debug, const Amount &amount)
 {
     debug<<"Amount("<<amount.value()<<")";

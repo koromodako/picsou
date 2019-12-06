@@ -52,7 +52,7 @@ public:
               const Amount &amount,
               const QDate &date,
               const QString &budget,
-              const QString &recipient,
+              const QString &srcdst,
               const QString &description,
               const QString &payment_method,
               PicsouDBO *parent);
@@ -70,7 +70,7 @@ public:
     inline Amount amount() const { return m_amount; }
     inline QDate date() const { return m_date; }
     inline QString budget() const { return m_budget; }
-    inline QString recipient() const { return m_recipient; }
+    inline QString srcdst() const { return m_srcdst; }
     inline QString description() const { return m_description; }
     inline QString payment_method() const { return m_payment_method; }
 
@@ -91,7 +91,7 @@ private:
     Amount m_amount;
     QDate m_date;
     QString m_budget;
-    QString m_recipient;
+    QString m_srcdst;
     QString m_description;
     QString m_payment_method;
     bool m_scheduled=false;

@@ -28,28 +28,28 @@
 
 bool Converter::convert(QJsonDocument *doc, SemVer from, PicsouUIServicePtr ui_svc)
 {
-    LOG_IN("doc="<<doc<<",from="<<from<<",ui_svc="<<ui_svc);
+    LOG_IN("doc="<<doc<<",from="<<from<<",ui_svc="<<ui_svc)
     /* initialize convesion list */
     bool converted=false;
     QList<QPair<SemVer, db_converter_t>> converter_list;
     converter_list.append(makeConverterPair(SemVer(1, 0, 0), convert_100_110));
     converter_list.append(makeConverterPair(SemVer(1, 1, 0), convert_110_200));
     /* apply conversions */
-    LOG_DEBUG("attempting conversion.");
+    LOG_DEBUG("attempting conversion.")
     for(const auto &converter : converter_list) {
-        LOG_DEBUG(converter.first.to_str()<<" == "<<from.to_str()<<" : "<<(converter.first==from));
+        LOG_DEBUG(converter.first.to_str()<<" == "<<from.to_str()<<" : "<<(converter.first==from))
         if(converter.first==from) {
             converted=true;
         }
         if(converted) {
-            LOG_DEBUG("applying converter for version: "<<converter.first.to_str());
+            LOG_DEBUG("applying converter for version: "<<converter.first.to_str())
             if(!converter.second(doc, ui_svc)) {
-                LOG_CRITICAL("conversion failed.");
-                LOG_BOOL_RETURN(false);
+                LOG_CRITICAL("conversion failed.")
+                LOG_BOOL_RETURN(false)
             }
         }
     }
-    LOG_BOOL_RETURN(converted);
+    LOG_BOOL_RETURN(converted)
 }
 
 #undef makeConverterPair

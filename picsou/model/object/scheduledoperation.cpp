@@ -28,7 +28,7 @@ ScheduledOperation::ScheduledOperation(PicsouDBO *parent) :
 
 ScheduledOperation::ScheduledOperation(const Amount &amount,
                                        const QString &budget,
-                                       const QString &recipient,
+                                       const QString &srcdst,
                                        const QString &description,
                                        const QString &payment_method,
                                        const QString &name,
@@ -38,7 +38,7 @@ ScheduledOperation::ScheduledOperation(const Amount &amount,
               amount,
               QDate(),
               budget,
-              recipient,
+              srcdst,
               description,
               payment_method,
               parent),
@@ -50,7 +50,7 @@ ScheduledOperation::ScheduledOperation(const Amount &amount,
 
 void ScheduledOperation::update(const Amount &amount,
                                 const QString &budget,
-                                const QString &recipient,
+                                const QString &srcdst,
                                 const QString &description,
                                 const QString &payment_method,
                                 const QString &name,
@@ -62,14 +62,14 @@ void ScheduledOperation::update(const Amount &amount,
                       amount,
                       QDate(),
                       budget,
-                      recipient,
+                      srcdst,
                       description,
                       payment_method);
 }
 
 bool ScheduledOperation::read(const QJsonObject &json)
 {
-    LOG_IN("<QJsonObject>");
+    LOG_IN("<QJsonObject>")
     static const QStringList keys=(QStringList()<<KW_NAME
                                                 <<Schedule::KW_FROM_YEAR
                                                 <<Schedule::KW_FROM_MONTH
@@ -95,12 +95,12 @@ bool ScheduledOperation::read(const QJsonObject &json)
                        QDate(stop_y, stop_m, stop_d),
                        endless, freq_value, freq_unit);
     set_valid(Operation::read(json));
-    LOG_BOOL_RETURN(valid());
+    LOG_BOOL_RETURN(valid())
 }
 
 bool ScheduledOperation::write(QJsonObject &json) const
 {
-    LOG_IN("<QJsonObject>");
+    LOG_IN("<QJsonObject>")
     json[KW_NAME]=m_name;
     json[Schedule::KW_FROM_YEAR]=m_schedule.from().year();
     json[Schedule::KW_FROM_MONTH]=m_schedule.from().month();
@@ -111,5 +111,5 @@ bool ScheduledOperation::write(QJsonObject &json) const
     json[Schedule::KW_ENDLESS]=m_schedule.endless();
     json[Schedule::KW_FREQ_VALUE]=m_schedule.freq_value();
     json[Schedule::KW_FREQ_UNIT]=Schedule::freq_unit2str(m_schedule.freq_unit());
-    LOG_BOOL_RETURN(Operation::write(json));
+    LOG_BOOL_RETURN(Operation::write(json))
 }

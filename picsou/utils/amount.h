@@ -26,8 +26,12 @@ public:
     Amount(int value);
     Amount(double value=0);
     Amount(const Amount &other);
+    Amount &operator=(const Amount &other);
 
+    inline bool debit() const { return m_value < 0; }
+    inline bool credit() const { return m_value > 0; }
     inline double value() const { return m_value; }
+    inline double absvalue() const { return qAbs(m_value); }
 
     QString to_str(bool add_currency=false) const;
 

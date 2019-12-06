@@ -43,16 +43,16 @@ static const std::string CRY_AEAD_MODE="AES-128/GCM";
 #define CHECK_SALT_CACHED() \
     do { \
         if(!salt_cached()) { \
-            LOG_CRITICAL("operation requires salt to be cached."); \
-            LOG_BOOL_RETURN(false); \
+            LOG_CRITICAL("operation requires salt to be cached.") \
+            LOG_BOOL_RETURN(false) \
         } \
     } while(0)
 
 #define CHECK_DPK_CACHED() \
     do { \
         if(!dpk_cached()) { \
-            LOG_CRITICAL("operation requires dpk to be cached."); \
-            LOG_BOOL_RETURN(false); \
+            LOG_CRITICAL("operation requires dpk to be cached.") \
+            LOG_BOOL_RETURN(false) \
         } \
     } while(0)
 
@@ -100,113 +100,113 @@ CryptoCtx::CryptoCtx(const QString &wkey,
 
 bool CryptoCtx::init(const QString &pswd)
 {
-    LOG_IN("pswd");
+    LOG_IN("pswd")
     /* if salt is already cached something is wrong */
     if(salt_cached()) {
-        LOG_CRITICAL("crypto context has been initialized already.");
-        LOG_BOOL_RETURN(false);
+        LOG_CRITICAL("crypto context has been initialized already.")
+        LOG_BOOL_RETURN(false)
     }
     /* generate new salt */
     QByteArray salt=rand(CRY_SALT_SIZE);
     CryptoBuf mk;
     if(!derive(pswd, salt, mk)) {
-        LOG_CRITICAL("failed to derive MK.");
-        LOG_BOOL_RETURN(false);
+        LOG_CRITICAL("failed to derive MK.")
+        LOG_BOOL_RETURN(false)
     }
     /* generate new DPK */
     CryptoBuf dpk=rand_secure(CRY_KEY_SIZE);
     if(!encrypt(mk, dpk, m_wkey)) {
-        LOG_CRITICAL("failed to wrap DPK.");
-        LOG_BOOL_RETURN(false);
+        LOG_CRITICAL("failed to wrap DPK.")
+        LOG_BOOL_RETURN(false)
     }
     /* success */
     m_salt=salt;
     m_dpk=dpk;
-    LOG_BOOL_RETURN(true);
+    LOG_BOOL_RETURN(true)
 }
 
 bool CryptoCtx::wrap(const QByteArray &cdata, QString &wdata) const
 {
-    LOG_IN("cdata,wdata");
+    LOG_IN("cdata,wdata")
     CHECK_SALT_CACHED();
     CHECK_DPK_CACHED();
     /* encrypt given data */
     if(!encrypt(m_dpk, cdata, wdata)) {
-        LOG_CRITICAL("data encryption failed.");
-        LOG_BOOL_RETURN(false);
+        LOG_CRITICAL("data encryption failed.")
+        LOG_BOOL_RETURN(false)
     }
-    LOG_BOOL_RETURN(true);
+    LOG_BOOL_RETURN(true)
 }
 
 bool CryptoCtx::unwrap(const QString &pswd, const QString &wdata, QByteArray &cdata)
 {
-    LOG_IN("pswd,wdata,cdata");
+    LOG_IN("pswd,wdata,cdata")
     CHECK_SALT_CACHED();
     /* if DPK is already cached something is wrong */
     if(dpk_cached()) {
-        LOG_CRITICAL("dpk is already cached meaning the object has been unwrapped already.");
-        LOG_BOOL_RETURN(false);
+        LOG_CRITICAL("dpk is already cached meaning the object has been unwrapped already.")
+        LOG_BOOL_RETURN(false)
     }
     /* retrieve MK */
     CryptoBuf mk;
     if(!derive(pswd, m_salt, mk)) {
-        LOG_CRITICAL("failed to derive MK.");
-        LOG_BOOL_RETURN(false);
+        LOG_CRITICAL("failed to derive MK.")
+        LOG_BOOL_RETURN(false)
     }
     /* decrypt DPK with MK */
     CryptoBuf dpk;
     if(!decrypt(mk, m_wkey, dpk)) {
-        LOG_CRITICAL("invalid user password.");
-        LOG_BOOL_RETURN(false);
+        LOG_CRITICAL("invalid user password.")
+        LOG_BOOL_RETURN(false)
     }
     /* decrypt data with DPK */
     if(!decrypt(dpk, wdata, cdata)) {
-        LOG_CRITICAL("failed to decrypt data.");
-        LOG_BOOL_RETURN(false);
+        LOG_CRITICAL("failed to decrypt data.")
+        LOG_BOOL_RETURN(false)
     }
     m_dpk=dpk;
-    LOG_BOOL_RETURN(true);
+    LOG_BOOL_RETURN(true)
 }
 
 bool CryptoCtx::rewrap(const QString &prev_pswd, const QString &next_pswd)
 {
-    LOG_IN("prev_pswd,next_pswd");
+    LOG_IN("prev_pswd,next_pswd")
     CHECK_SALT_CACHED();
     /* compute current MK */
     CryptoBuf prev_mk;
     if(!derive(prev_pswd, m_salt, prev_mk)) {
-        LOG_CRITICAL("failed to derive previous MK.");
-        LOG_BOOL_RETURN(false);
+        LOG_CRITICAL("failed to derive previous MK.")
+        LOG_BOOL_RETURN(false)
     }
     /* decrypt DPK using current MK */
     CryptoBuf dpk;
     if(!decrypt(prev_mk, m_wkey, dpk)) {
-        LOG_CRITICAL("invalid user password.");
-        LOG_BOOL_RETURN(false);
+        LOG_CRITICAL("invalid user password.")
+        LOG_BOOL_RETURN(false)
     }
     /* compute next MK */
     CryptoBuf next_mk;
     if(!derive(next_pswd, m_salt, next_mk)) {
-        LOG_CRITICAL("failed to derive next MK.");
-        LOG_BOOL_RETURN(false);
+        LOG_CRITICAL("failed to derive next MK.")
+        LOG_BOOL_RETURN(false)
     }
     /* encrypt DPK with next MK */
     if(!encrypt(next_mk, dpk, m_wkey)) {
-        LOG_CRITICAL("failed to wrap DPK.");
-        LOG_BOOL_RETURN(false);
+        LOG_CRITICAL("failed to wrap DPK.")
+        LOG_BOOL_RETURN(false)
     }
-    LOG_INFO("rewraping succeeded.");
-    LOG_BOOL_RETURN(true);
+    LOG_INFO("rewraping succeeded.")
+    LOG_BOOL_RETURN(true)
 }
 
 bool CryptoCtx::derive(const QString &pswd, const QByteArray &salt, CryptoBuf &out) const
 {
-    LOG_IN("pswd,salt,out");
+    LOG_IN("pswd,salt,out")
     QByteArray pswdba=pswd.toUtf8();
     PasswordHashFamilyPtr phf=Botan::PasswordHashFamily::create(CRY_PBKDF_FUNC);
     if(!phf) {
-        LOG_CRITICAL("failed to create PasswordHashFamily instance.");
-        LOG_BOOL_RETURN(false);
+        LOG_CRITICAL("failed to create PasswordHashFamily instance.")
+        LOG_BOOL_RETURN(false)
     }
     PasswordHashPtr pwdhash=phf->from_params(CRY_PBKDF_ITER_COUNT);
     CryptoBuf key(CRY_KEY_SIZE, 0);
@@ -214,25 +214,25 @@ bool CryptoCtx::derive(const QString &pswd, const QByteArray &salt, CryptoBuf &o
                         pswdba.data(), static_cast<size_t>(pswdba.size()),
                         reinterpret_cast<const uint8_t*>(salt.data()), static_cast<size_t>(salt.size()));
     out=key;
-    LOG_BOOL_RETURN(true);
+    LOG_BOOL_RETURN(true)
 }
 
 bool CryptoCtx::encrypt(const CryptoBuf &key, const QByteArray &in, QString &out) const
 {
-    LOG_IN("key,in");
-    LOG_BOOL_RETURN(encrypt(key, ba2cb(in), out));
+    LOG_IN("key,in")
+    LOG_BOOL_RETURN(encrypt(key, ba2cb(in), out))
 }
 
 bool CryptoCtx::encrypt(const CryptoBuf &key, const CryptoBuf &in, QString &out) const
 {
-    LOG_IN("key,in");
+    LOG_IN("key,in")
     /* generate random iv */
     CryptoBuf iv=rand_secure(CRY_IV_SIZE);
     /* encrypt */
     AEADModePtr cipher=Botan::AEAD_Mode::create(CRY_AEAD_MODE, Botan::ENCRYPTION);
     if(!cipher) {
-        LOG_CRITICAL("failed to instanciate AEAD_Mode.");
-        LOG_BOOL_RETURN(false);
+        LOG_CRITICAL("failed to instanciate AEAD_Mode.")
+        LOG_BOOL_RETURN(false)
     }
     cipher->set_key(key);
     cipher->start(iv);
@@ -243,23 +243,23 @@ bool CryptoCtx::encrypt(const CryptoBuf &key, const CryptoBuf &in, QString &out)
     packed+=cb2ba(iv);
     packed+=cb2ba(encbuf);
     out=packed.toBase64();
-    LOG_BOOL_RETURN(true);
+    LOG_BOOL_RETURN(true)
 }
 
 bool CryptoCtx::decrypt(const CryptoBuf &key, const QString &in, QByteArray &out) const
 {
-    LOG_IN("key,in,out");
+    LOG_IN("key,in,out")
     CryptoBuf plain;
     if(!decrypt(key, in, plain)) {
-        LOG_BOOL_RETURN(false);
+        LOG_BOOL_RETURN(false)
     }
     out=cb2ba(plain);
-    LOG_BOOL_RETURN(true);
+    LOG_BOOL_RETURN(true)
 }
 
 bool CryptoCtx::decrypt(const CryptoBuf &key, const QString &in, CryptoBuf &out) const
 {
-    LOG_IN("key,in,out");
+    LOG_IN("key,in,out")
     /* unpack data */
     QByteArray encbuf=QByteArray::fromBase64(in.toUtf8());
     QByteArray iv(encbuf.data(), CRY_IV_SIZE);
@@ -267,8 +267,8 @@ bool CryptoCtx::decrypt(const CryptoBuf &key, const QString &in, CryptoBuf &out)
     /* decrypt */
     AEADModePtr cipher=Botan::AEAD_Mode::create(CRY_AEAD_MODE, Botan::DECRYPTION);
     if(!cipher) {
-        LOG_CRITICAL("failed to instanciate AEAD_Mode.");
-        LOG_BOOL_RETURN(false);
+        LOG_CRITICAL("failed to instanciate AEAD_Mode.")
+        LOG_BOOL_RETURN(false)
     }
     cipher->set_key(key);
     cipher->start(ba2cb(iv));
@@ -276,10 +276,10 @@ bool CryptoCtx::decrypt(const CryptoBuf &key, const QString &in, CryptoBuf &out)
     try {
         cipher->finish(decbuf);
     } catch (Botan::Integrity_Failure&) {
-        LOG_CRITICAL("failed to decrypt data.");
-        LOG_BOOL_RETURN(false);
+        LOG_CRITICAL("failed to decrypt data.")
+        LOG_BOOL_RETURN(false)
     }
     /* success */
     out=decbuf;
-    LOG_BOOL_RETURN(true);
+    LOG_BOOL_RETURN(true)
 }

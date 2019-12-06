@@ -31,7 +31,7 @@ public:
                 const QDate &from, const QDate &to,
                 const Amount &min, const Amount &max,
                 const QString &description_filter,
-                const QString &recipient_filter,
+                const QString &srcdst_filter,
                 const QStringList &budgets,
                 const QStringList &pms);
 
@@ -48,7 +48,7 @@ private:
     Amount m_min;
     Amount m_max;
     QRegularExpression m_description_re;
-    QRegularExpression m_recipient_re;
+    QRegularExpression m_srcdst_re;
     QStringList m_budgets;
     QStringList m_pms;
 };

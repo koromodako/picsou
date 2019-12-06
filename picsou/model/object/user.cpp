@@ -38,21 +38,21 @@ User::User(const QString &name, const QString &pswd, PicsouDBO *parent) :
 
 bool User::update(const QString &name, const QString &old_pswd, const QString &new_pswd, QString &error)
 {
-    LOG_IN("name="<<name<<"old_pswd,new_pswd");
+    LOG_IN("name="<<name<<"old_pswd,new_pswd")
     if(!old_pswd.isEmpty()&&!new_pswd.isEmpty()) {
-        LOG_INFO("attemtping wkey rewraping.");
+        LOG_INFO("attemtping wkey rewraping.")
         if(!rewrap(old_pswd, new_pswd)) {
-            LOG_CRITICAL("failed to rewrap.");
+            LOG_CRITICAL("failed to rewrap.")
             error=tr("Failed to update user: MK rewraping failed.");
-            LOG_BOOL_RETURN(false);
+            LOG_BOOL_RETURN(false)
         }
-        LOG_INFO("rewraping succeeded.");
+        LOG_INFO("rewraping succeeded.")
     } else {
-        LOG_INFO("passphrase unchanged.");
+        LOG_INFO("passphrase unchanged.")
     }
     m_name=name;
     emit modified();
-    LOG_BOOL_RETURN(true);
+    LOG_BOOL_RETURN(true)
 }
 
 bool User::add_budget(const Amount &amount, const QString &name, const QString &description, QString &error)
@@ -197,39 +197,39 @@ AccountShPtr User::find_account(const QString &name) const
 
 bool User::read(const QJsonObject &json)
 {
-    LOG_IN("<QJsonObject>");
+    LOG_IN("<QJsonObject>")
     static const QStringList keys=(QStringList()<<KW_NAME);
     JSON_CHECK_KEYS(keys);
     m_name=json[KW_NAME].toString();
     set_valid(PicsouDBO::read_wrapped(json));
-    LOG_BOOL_RETURN(valid());
+    LOG_BOOL_RETURN(valid())
 }
 
 bool User::write(QJsonObject &json) const
 {
-    LOG_IN("<QJsonObject>");
+    LOG_IN("<QJsonObject>")
     json[KW_NAME]=m_name;
-    LOG_BOOL_RETURN(PicsouDBO::write_wrapped(json));
+    LOG_BOOL_RETURN(PicsouDBO::write_wrapped(json))
 }
 
 bool User::read_unwrapped(const QJsonObject &json)
 {
-    LOG_IN("<QJsonObject>");
+    LOG_IN("<QJsonObject>")
     static const QStringList keys=(QStringList()<<KW_BUDGETS
                                                 <<KW_ACCOUNTS);
     JSON_CHECK_KEYS(keys);
     JSON_READ_LIST(json, KW_BUDGETS, m_budgets, Budget, this);
     JSON_READ_LIST(json, KW_ACCOUNTS, m_accounts, Account, this);
     set_valid(true);
-    LOG_BOOL_RETURN(valid());
+    LOG_BOOL_RETURN(valid())
 }
 
 bool User::write_unwrapped(QJsonObject &json) const
 {
-    LOG_IN("<QJsonObject>");
+    LOG_IN("<QJsonObject>")
     JSON_WRITE_LIST(json, KW_BUDGETS, m_budgets.values());
     JSON_WRITE_LIST(json, KW_ACCOUNTS, m_accounts.values());
-    LOG_BOOL_RETURN(true);
+    LOG_BOOL_RETURN(true)
 }
 
 bool User::operator <(const User &other)

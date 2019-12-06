@@ -34,7 +34,7 @@
         QDebug debug=log_func(); \
         debug.nospace(); \
         debug<<__VA_ARGS__; \
-    } while(0)
+    } while(0);
 
 #ifdef QT_DEBUG
 #   define LOG_DEBUG(...)   LOG(qDebug, LOG_LVL_DBG, LOG_CLR_DBG, __VA_ARGS__)
@@ -52,17 +52,21 @@
 #define LOG_BOOL_RETURN(bool_expr) \
     do { \
         bool result=(bool_expr); \
-        LOG_DEBUG("-> "<<BOOL2STR(result)); \
+        LOG_DEBUG("-> "<<BOOL2STR(result)) \
         return result; \
-    } while(0)
+    } while(0);
 
 #define LOG_VOID_RETURN() \
-    LOG_DEBUG("-> (void)"); \
-    return
+    do { \
+        LOG_DEBUG("-> (void)") \
+        return; \
+    } while(0);
 
 #define LOG_CUST_RETURN(value, display) \
-    LOG_DEBUG("-> "<<display); \
-    return value
+    do { \
+        LOG_DEBUG("-> "<<display) \
+        return value; \
+    } while(0);
 
 #endif // MACRO_H
 

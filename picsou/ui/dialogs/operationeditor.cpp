@@ -30,7 +30,7 @@ OperationEditor::OperationEditor(QWidget *parent,
                                  const QDate &date,
                                  const Amount &amount,
                                  const QString &budget,
-                                 const QString &recipient,
+                                 const QString &srcdst,
                                  const QString &description,
                                  const QString &payment_method) :
     QDialog(parent),
@@ -40,7 +40,7 @@ OperationEditor::OperationEditor(QWidget *parent,
     m_date(date),
     m_amount(amount),
     m_budget(budget),
-    m_recipient(recipient),
+    m_srcdst(srcdst),
     m_description(description),
     m_payment_method(payment_method),
     ui(new Ui::OperationEditor)
@@ -52,7 +52,15 @@ OperationEditor::OperationEditor(QWidget *parent,
 
     ui->amount->setPrefix(tr("$"));
     ui->amount->setSuffix(tr(" "));
-    ui->amount->setValue(m_amount.value());
+    ui->amount->setMinimum(0);
+    ui->amount->setMaximum(9999999999);
+    ui->amount->setValue(m_amount.absvalue());
+
+    ui->debit_button->setText(tr("Debit"));
+    ui->debit_button->setChecked(m_amount.debit());
+    ui->credit_button->setText(tr("Credit"));
+    ui->credit_button->setChecked(m_amount.credit());
+    update(m_amount.credit());
 
     ui->verified->setChecked(m_verified);
 
@@ -78,8 +86,8 @@ OperationEditor::OperationEditor(QWidget *parent,
     ui->budget->setEditable(false);
     ui->payment_method->setEditable(false);
 
-    if(!m_recipient.isNull()){
-        ui->recipient->setText(m_recipient);
+    if(!m_srcdst.isNull()){
+        ui->srcdst->setText(m_srcdst);
     }
     if(!m_description.isNull()){
         ui->description->setPlainText(m_description);
@@ -87,6 +95,7 @@ OperationEditor::OperationEditor(QWidget *parent,
 
     connect(ui->save, &QPushButton::clicked, this, &OperationEditor::accept);
     connect(ui->cancel, &QPushButton::clicked, this, &OperationEditor::reject);
+    connect(ui->credit_button, &QRadioButton::toggled, this, &OperationEditor::update);
 }
 
 void OperationEditor::set_budgets(const QStringList &budgets)
@@ -112,10 +121,15 @@ void OperationEditor::accept()
 {
     m_verified=ui->verified->isChecked();
     m_date=ui->date->date();
-    m_amount=ui->amount->value();
+    m_amount=(ui->debit_button->isChecked()?-1:1) * ui->amount->value();
     m_payment_method=ui->payment_method->currentText();
     m_budget=ui->budget->currentText();
-    m_recipient=ui->recipient->text();
+    m_srcdst=ui->srcdst->text();
     m_description=ui->description->toPlainText();
     QDialog::accept();
+}
+
+void OperationEditor::update(bool credit_checked)
+{
+    ui->srcdst_label->setText((credit_checked?tr("Source:"):tr("Destination:")));
 }

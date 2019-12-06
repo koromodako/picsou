@@ -105,7 +105,7 @@ bool Account::remove_payment_method(QUuid id)
 
 bool Account::add_scheduled_operation(const Amount &amount,
                                       const QString &budget,
-                                      const QString &recipient,
+                                      const QString &srcdst,
                                       const QString &description,
                                       const QString &payment_method,
                                       const QString &name,
@@ -118,7 +118,7 @@ bool Account::add_scheduled_operation(const Amount &amount,
     }
     ScheduledOperationShPtr sop=ScheduledOperationShPtr(new ScheduledOperation(amount,
                                                                                budget,
-                                                                               recipient,
+                                                                               srcdst,
                                                                                description,
                                                                                payment_method,
                                                                                name,
@@ -300,7 +300,7 @@ QStringList Account::payment_methods_str(bool sorted) const
 
 bool Account::read(const QJsonObject &json)
 {
-    LOG_IN("<QJsonObject>");
+    LOG_IN("<QJsonObject>")
     static const QStringList keys=(QStringList()<<KW_NAME
                                                 <<KW_NOTES
                                                 <<KW_PAYMENT_METHODS
@@ -324,12 +324,12 @@ bool Account::read(const QJsonObject &json)
                    m_ops, Operation, this);
     /**/
     set_valid();
-    LOG_BOOL_RETURN(valid());
+    LOG_BOOL_RETURN(valid())
 }
 
 bool Account::write(QJsonObject &json) const
 {
-    LOG_IN("<QJsonObject>");
+    LOG_IN("<QJsonObject>")
     json[KW_NAME]=m_name;
     json[KW_NOTES]=m_notes;
     json[KW_ARCHIVED]=m_archived;
@@ -338,7 +338,7 @@ bool Account::write(QJsonObject &json) const
     JSON_WRITE_LIST(json, KW_SCHEDULED_OPS, m_scheduled_ops.values());
     JSON_WRITE_LIST(json, KW_OPS, m_ops.values());
     /**/
-    LOG_BOOL_RETURN(true);
+    LOG_BOOL_RETURN(true)
 }
 
 bool Account::operator <(const Account &other)

@@ -31,7 +31,7 @@ public:
     ScheduledOperation(PicsouDBO *parent);
     ScheduledOperation(const Amount &amount,
                        const QString &budget,
-                       const QString &recipient,
+                       const QString &srcdst,
                        const QString &description,
                        const QString &payment_method,
                        const QString &name,
@@ -43,7 +43,7 @@ public:
 
     void update(const Amount &amount,
                 const QString &budget,
-                const QString &recipient,
+                const QString &srcdst,
                 const QString &description,
                 const QString &payment_method,
                 const QString &name,

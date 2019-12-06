@@ -27,6 +27,7 @@ public:
     SemVer(int major=-1, int minor=0, int patch=0);
     SemVer(const QString &version_str);
     SemVer(const SemVer &other);
+    SemVer &operator=(const SemVer &other);
 
     enum Format {
         MMP_FORMAT,

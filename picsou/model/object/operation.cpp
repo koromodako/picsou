@@ -40,7 +40,7 @@ Operation::Operation(bool verified,
                      const Amount &amount,
                      const QDate &date,
                      const QString &budget,
-                     const QString &recipient,
+                     const QString &srcdst,
                      const QString &description,
                      const QString &payment_method,
                      PicsouDBO *parent) :
@@ -49,7 +49,7 @@ Operation::Operation(bool verified,
     m_amount(amount),
     m_date(date),
     m_budget(budget),
-    m_recipient(recipient),
+    m_srcdst(srcdst),
     m_description(description),
     m_payment_method(payment_method)
 {
@@ -60,7 +60,7 @@ void Operation::update(bool verified,
                        Amount amount,
                        const QDate &date,
                        const QString &budget,
-                       const QString &recipient,
+                       const QString &srcdst,
                        const QString &description,
                        const QString &payment_method)
 {
@@ -68,7 +68,7 @@ void Operation::update(bool verified,
     m_amount=amount;
     m_date=date;
     m_budget=budget;
-    m_recipient=recipient;
+    m_srcdst=srcdst;
     m_description=description;
     m_payment_method=payment_method;
     emit modified();
@@ -85,7 +85,7 @@ void Operation::set_verified(bool verified)
 
 bool Operation::read(const QJsonObject &json)
 {
-    LOG_IN("<QJsonObject>");
+    LOG_IN("<QJsonObject>")
     static const QStringList keys=(QStringList()<<KW_AMOUNT
                                                 <<KW_DAY
                                                 <<KW_MONTH
@@ -101,7 +101,7 @@ bool Operation::read(const QJsonObject &json)
                 json[KW_MONTH].toInt(),
                 json[KW_DAY].toInt());
     m_budget=json[KW_BUDGET].toString();
-    m_recipient=json[KW_RECIPIENT].toString();
+    m_srcdst=json[KW_RECIPIENT].toString();
     m_description=json[KW_DESCRIPTION].toString();
     m_payment_method=json[KW_PAYMENT_METHOD].toString();
     if(json.contains(KW_VERIFIED)) {
@@ -109,21 +109,21 @@ bool Operation::read(const QJsonObject &json)
     }
     /**/
     set_valid();
-    LOG_BOOL_RETURN(valid());
+    LOG_BOOL_RETURN(valid())
 }
 
 bool Operation::write(QJsonObject &json) const
 {
-    LOG_IN("<QJsonObject>");
+    LOG_IN("<QJsonObject>")
     json[KW_AMOUNT]=m_amount.value();
     json[KW_DAY]=m_date.day();
     json[KW_MONTH]=m_date.month();
     json[KW_YEAR]=m_date.year();
     json[KW_BUDGET]=m_budget;
-    json[KW_RECIPIENT]=m_recipient;
+    json[KW_RECIPIENT]=m_srcdst;
     json[KW_DESCRIPTION]=m_description;
     json[KW_PAYMENT_METHOD]=m_payment_method;
     json[KW_VERIFIED]=m_verified;
     /**/
-    LOG_BOOL_RETURN(true);
+    LOG_BOOL_RETURN(true)
 }

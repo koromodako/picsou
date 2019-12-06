@@ -22,39 +22,39 @@
 
 PicsouApplication::~PicsouApplication()
 {
-    LOG_IN_VOID();
+    LOG_IN_VOID()
     delete m_ui_svc;
     delete m_model_svc;
-    LOG_VOID_RETURN();
+    LOG_VOID_RETURN()
 }
 
 PicsouApplication::PicsouApplication(QObject *parent) :
     QObject(parent)
 {
-    LOG_IN("parent="<<parent);
+    LOG_IN("parent="<<parent)
     m_ui_svc=new PicsouUIService(this);
     m_model_svc=new PicsouModelService(this);
-    LOG_VOID_RETURN();
+    LOG_VOID_RETURN()
 }
 
 bool PicsouApplication::initialize()
 {
-    LOG_IN_VOID();
+    LOG_IN_VOID()
     if(!m_model_svc->initialize()) {
-        LOG_CRITICAL("model controller initialization failed.");
-        LOG_BOOL_RETURN(false);
+        LOG_CRITICAL("model controller initialization failed.")
+        LOG_BOOL_RETURN(false)
     }
     if(!m_ui_svc->initialize()) {
-        LOG_CRITICAL("ui controller initialization failed.");
-        LOG_BOOL_RETURN(false);
+        LOG_CRITICAL("ui controller initialization failed.")
+        LOG_BOOL_RETURN(false)
     }
-    LOG_BOOL_RETURN(true);
+    LOG_BOOL_RETURN(true)
 }
 
 void PicsouApplication::terminate()
 {
-    LOG_IN_VOID();
+    LOG_IN_VOID()
     m_ui_svc->terminate();
     m_model_svc->terminate();
-    LOG_VOID_RETURN();
+    LOG_VOID_RETURN()
 }

@@ -25,7 +25,7 @@ SearchQuery::SearchQuery(const QString &username,
                          const Amount &min,
                          const Amount &max,
                          const QString &description_filter,
-                         const QString &recipient_filter,
+                         const QString &srcdst_filter,
                          const QStringList &budgets,
                          const QStringList &pms) :
     m_username(username),
@@ -44,52 +44,52 @@ SearchQuery::SearchQuery(const QString &username,
            <<",min="<<min
            <<",max="<<max
            <<",description_filter="<<description_filter
-           <<",recipient_filter="<<recipient_filter
+           <<",recipient_filter="<<srcdst_filter
            <<",budgets="<<budgets
-           <<",pms="<<pms);
+           <<",pms="<<pms)
     QString description_re=description_filter.isEmpty()?"*":description_filter;
-    QString recipient_re=recipient_filter.isEmpty()?"*":recipient_filter;
+    QString recipient_re=srcdst_filter.isEmpty()?"*":srcdst_filter;
     m_budgets.append("");
     m_description_re=QRegularExpression(description_re.replace("*", "\\w*"),
                                         QRegularExpression::CaseInsensitiveOption);
-    m_recipient_re=QRegularExpression(recipient_re.replace("*", "\\w*"),
+    m_srcdst_re=QRegularExpression(recipient_re.replace("*", "\\w*"),
                                       QRegularExpression::CaseInsensitiveOption);
     m_description_re.optimize();
-    m_recipient_re.optimize();
-    LOG_VOID_RETURN();
+    m_srcdst_re.optimize();
+    LOG_VOID_RETURN()
 }
 
 bool SearchQuery::accepts(const OperationShPtr &op) const
 {
-    LOG_IN("op="<<op);
+    LOG_IN("op="<<op)
     QDate date=op->date();
     Amount amount=qAbs(op->amount());
-    QString recipient=op->recipient();
+    QString srcdst=op->srcdst();
     QString description=op->description();
     if(date<m_from||date>m_to) {
-        LOG_DEBUG("rejecting "<<op<<" because "<<date<<"<"<<m_from<<"||"<<date<<">"<<m_to);
-        LOG_BOOL_RETURN(false);
+        LOG_DEBUG("rejecting "<<op<<" because "<<date<<"<"<<m_from<<"||"<<date<<">"<<m_to)
+        LOG_BOOL_RETURN(false)
     }
     if(amount<m_min||amount>m_max) {
-        LOG_DEBUG("rejecting "<<op<<" because "<<amount.value()<<"<"<<m_min.value()<<"||"<<amount.value()<<">"<<m_max.value());
-        LOG_BOOL_RETURN(false);
+        LOG_DEBUG("rejecting "<<op<<" because "<<amount.value()<<"<"<<m_min.value()<<"||"<<amount.value()<<">"<<m_max.value())
+        LOG_BOOL_RETURN(false)
     }
     if(!m_budgets.contains(op->budget())) {
-        LOG_DEBUG("rejecting "<<op<<" because "<<op->budget()<<" not in "<<m_budgets);
-        LOG_BOOL_RETURN(false);
+        LOG_DEBUG("rejecting "<<op<<" because "<<op->budget()<<" not in "<<m_budgets)
+        LOG_BOOL_RETURN(false)
     }
     if(!m_pms.contains(op->payment_method())) {
-        LOG_DEBUG("rejecting "<<op<<" because "<<op->payment_method()<<" not in "<<m_pms);
-        LOG_BOOL_RETURN(false);
+        LOG_DEBUG("rejecting "<<op<<" because "<<op->payment_method()<<" not in "<<m_pms)
+        LOG_BOOL_RETURN(false)
     }
-    if(!recipient.isEmpty()&&!m_recipient_re.match(recipient).hasMatch()) {
-        LOG_DEBUG("rejecting "<<op<<" because \""<<recipient<<"\" is not matched by "<<m_recipient_re.pattern());
-        LOG_BOOL_RETURN(false);
+    if(!srcdst.isEmpty()&&!m_srcdst_re.match(srcdst).hasMatch()) {
+        LOG_DEBUG("rejecting "<<op<<" because \""<<srcdst<<"\" is not matched by "<<m_srcdst_re.pattern())
+        LOG_BOOL_RETURN(false)
     }
     if(!description.isEmpty()&&!m_description_re.match(description).hasMatch()) {
-        LOG_DEBUG("rejecting "<<op<<" because \""<<description<<"\" is not matched by "<<m_description_re.pattern());
-        LOG_BOOL_RETURN(false);
+        LOG_DEBUG("rejecting "<<op<<" because \""<<description<<"\" is not matched by "<<m_description_re.pattern())
+        LOG_BOOL_RETURN(false)
     }
-    LOG_DEBUG("accepting "<<op);
-    LOG_BOOL_RETURN(true);
+    LOG_DEBUG("accepting "<<op)
+    LOG_BOOL_RETURN(true)
 }

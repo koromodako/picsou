@@ -41,19 +41,19 @@ void PaymentMethod::update(const QString &name)
 
 bool PaymentMethod::read(const QJsonObject &json)
 {
-    LOG_IN("<QJsonObject>");
+    LOG_IN("<QJsonObject>")
     static const QStringList keys=(QStringList()<<KW_NAME);
     JSON_CHECK_KEYS(keys);
     m_name=json[KW_NAME].toString();
     set_valid();
-    LOG_BOOL_RETURN(valid());
+    LOG_BOOL_RETURN(valid())
 }
 
 bool PaymentMethod::write(QJsonObject &json) const
 {
-    LOG_IN("<QJsonObject>");
+    LOG_IN("<QJsonObject>")
     json[KW_NAME]=m_name;
-    LOG_BOOL_RETURN(true);
+    LOG_BOOL_RETURN(true)
 }
 
 bool PaymentMethod::operator <(const PaymentMethod &other)

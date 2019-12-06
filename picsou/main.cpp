@@ -34,7 +34,7 @@ int main(int argc, char *argv[])
     /* configure logging handler before everything else */
     qInstallMessageHandler(picsou_message_handler);
     /* start main function */
-    LOG_IN("argc="<<argc<<",argv="<<argv);
+    LOG_IN("argc="<<argc<<",argv="<<argv)
     /* configure application */
     QScopedPointer<QApplication> app(new QApplication(argc, argv));
     app->setStyle(QStyleFactory::create("Fusion"));
@@ -60,7 +60,7 @@ int main(int argc, char *argv[])
     QObject::connect(app.data(), &QCoreApplication::aboutToQuit, &papp, &PicsouApplication::terminate);
     /* initialize Picsou application */
     if(!papp.initialize()) {
-        LOG_CRITICAL("failed to initialize application.");
+        LOG_CRITICAL("failed to initialize application.")
         return 1;
     }
     papp.ui_svc()->show_mainwindow();
@@ -68,6 +68,6 @@ int main(int argc, char *argv[])
         papp.ui_svc()->db_open_file(args.at(0));
     }
     int rcode=app->exec();
-    LOG_DEBUG("-> rcode="<<rcode);
+    LOG_DEBUG("-> rcode="<<rcode)
     return rcode;
 }

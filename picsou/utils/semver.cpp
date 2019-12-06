@@ -73,6 +73,14 @@ SemVer::SemVer(const SemVer &other) :
 
 }
 
+SemVer &SemVer::operator=(const SemVer &other)
+{
+    m_major=other.m_major;
+    m_minor=other.m_minor;
+    m_patch=other.m_patch;
+    return *this;
+}
+
 QString SemVer::to_str(SemVer::Format fmt) const
 {
     switch (fmt) {

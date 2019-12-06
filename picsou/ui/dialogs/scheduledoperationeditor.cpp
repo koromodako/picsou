@@ -28,7 +28,7 @@ ScheduledOperationEditor::~ScheduledOperationEditor()
 ScheduledOperationEditor::ScheduledOperationEditor(QWidget *parent,
                                                    const Amount &amount,
                                                    const QString &budget,
-                                                   const QString &recipient,
+                                                   const QString &srcdst,
                                                    const QString &description,
                                                    const QString &payment_method,
                                                    const QString &name,
@@ -36,7 +36,7 @@ ScheduledOperationEditor::ScheduledOperationEditor(QWidget *parent,
     QDialog(parent),
     m_amount(amount),
     m_budget(budget),
-    m_recipient(recipient),
+    m_srcdst(srcdst),
     m_description(description),
     m_payment_method(payment_method),
     m_name(name),
@@ -55,13 +55,21 @@ ScheduledOperationEditor::ScheduledOperationEditor(QWidget *parent,
 
     ui->amount->setPrefix(tr("$"));
     ui->amount->setSuffix(tr(" "));
-    ui->amount->setValue(m_amount.value());
+    ui->amount->setMinimum(0);
+    ui->amount->setMaximum(9999999999);
+    ui->amount->setValue(m_amount.absvalue());
+
+    ui->debit_button->setText(tr("Debit"));
+    ui->debit_button->setChecked(m_amount.debit());
+    ui->credit_button->setText(tr("Credit"));
+    ui->credit_button->setChecked(m_amount.credit());
+    update(m_amount.credit());
 
     ui->budget->setEditable(false);
     ui->payment_method->setEditable(false);
 
-    if(!m_recipient.isNull()) {
-        ui->recipient->setText(m_recipient);
+    if(!m_srcdst.isNull()) {
+        ui->srcdst->setText(m_srcdst);
     }
     if(!m_description.isNull()) {
         ui->description->setPlainText(m_description);
@@ -69,6 +77,7 @@ ScheduledOperationEditor::ScheduledOperationEditor(QWidget *parent,
 
     connect(ui->save, &QPushButton::clicked, this, &ScheduledOperationEditor::accept);
     connect(ui->cancel, &QPushButton::clicked, this, &ScheduledOperationEditor::reject);
+    connect(ui->credit_button, &QPushButton::toggled, this, &ScheduledOperationEditor::update);
 }
 
 void ScheduledOperationEditor::set_budgets(const QStringList &budgets)
@@ -92,12 +101,17 @@ void ScheduledOperationEditor::set_payment_methods(const QStringList &payment_me
 
 void ScheduledOperationEditor::accept()
 {
-    m_amount=ui->amount->value();
+    m_amount=(ui->debit_button->isChecked()?-1:1) * ui->amount->value();
     m_payment_method=ui->payment_method->currentText();
     m_budget=ui->budget->currentText();
-    m_recipient=ui->recipient->text();
+    m_srcdst=ui->srcdst->text();
     m_description=ui->description->toPlainText();
     m_name=ui->name->text();
     m_schedule=m_schedule_form->schedule();
     QDialog::accept();
+}
+
+void ScheduledOperationEditor::update(bool credit_checked)
+{
+    ui->srcdst_label->setText((credit_checked?tr("Source:"):tr("Destination:")));
 }

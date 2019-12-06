@@ -28,14 +28,14 @@
 
 MainWindow::~MainWindow()
 {
-    LOG_IN_VOID();
+    LOG_IN_VOID()
     if(m_details_widget!=nullptr) {
         delete m_details_widget;
     }
     delete m_search_ops_stats;
     delete m_search_table;
     delete ui;
-    LOG_VOID_RETURN();
+    LOG_VOID_RETURN()
 }
 
 MainWindow::MainWindow(PicsouUIServicePtr ui_svc, QWidget *parent) :
@@ -44,7 +44,7 @@ MainWindow::MainWindow(PicsouUIServicePtr ui_svc, QWidget *parent) :
     m_state(DB_CLOSED),
     ui(new Ui::MainWindow)
 {
-    LOG_IN("ui_svc="<<ui_svc<<",parent="<<parent);
+    LOG_IN("ui_svc="<<ui_svc<<",parent="<<parent)
     ui->setupUi(this);
 
     m_details_widget=nullptr;
@@ -93,85 +93,85 @@ MainWindow::MainWindow(PicsouUIServicePtr ui_svc, QWidget *parent) :
     connect(ui_svc, &PicsouUIService::svc_op_failed, this, &MainWindow::op_failed);
 
     refresh(DB_CLOSED);
-    LOG_VOID_RETURN();
+    LOG_VOID_RETURN()
 }
 
 void MainWindow::db_opened()
 {
-    LOG_IN_VOID();
+    LOG_IN_VOID()
     refresh(DB_OPENED);
-    LOG_VOID_RETURN();
+    LOG_VOID_RETURN()
 }
 
 void MainWindow::db_modified()
 {
-    LOG_IN_VOID();
+    LOG_IN_VOID()
     refresh(DB_MODIFIED);
-    LOG_VOID_RETURN();
+    LOG_VOID_RETURN()
 }
 
 void MainWindow::db_unwrapped()
 {
-    LOG_IN_VOID();
+    LOG_IN_VOID()
     refresh(DB_UNWRAPPED);
-    LOG_VOID_RETURN();
+    LOG_VOID_RETURN()
 }
 
 void MainWindow::db_saved()
 {
-    LOG_IN_VOID();
+    LOG_IN_VOID()
     refresh(DB_SAVED);
-    LOG_VOID_RETURN();
+    LOG_VOID_RETURN()
 }
 
 void MainWindow::db_closed()
 {
-    LOG_IN_VOID();
+    LOG_IN_VOID()
     refresh(DB_CLOSED);
-    LOG_VOID_RETURN();
+    LOG_VOID_RETURN()
 }
 
 void MainWindow::op_canceled()
 {
-    LOG_IN_VOID();
-    LOG_WARNING("Operation canceled.");
+    LOG_IN_VOID()
+    LOG_WARNING("Operation canceled.")
     ui->statusbar->showMessage(tr("Operation canceled."), TIMEOUT);
-    LOG_VOID_RETURN();
+    LOG_VOID_RETURN()
 }
 
 void MainWindow::op_failed(const QString &error)
 {
-    LOG_IN("error="<<error);
-    LOG_CRITICAL("Operation failed.");
+    LOG_IN("error="<<error)
+    LOG_CRITICAL("Operation failed.")
     ui->statusbar->showMessage(tr("Operation failed."), TIMEOUT);
     QMessageBox::critical(this,
                           tr("An error occurred"),
                           error,
                           QMessageBox::Ok,
                           QMessageBox::Ok);
-    LOG_VOID_RETURN();
+    LOG_VOID_RETURN()
 }
 
 void MainWindow::show_status(const QString &message)
 {
-    LOG_IN("message="<<message);
+    LOG_IN("message="<<message)
     ui->statusbar->showMessage(message, TIMEOUT);
-    LOG_VOID_RETURN();
+    LOG_VOID_RETURN()
 }
 
 void MainWindow::update_viewer(QTreeWidgetItem *, int)
 {
-    LOG_IN_VOID();
+    LOG_IN_VOID()
     QList<QTreeWidgetItem*> items=ui->tree->selectedItems();
     if(items.length()>0) {
         p_update_viewer(items.first(), 0);
     }
-    LOG_VOID_RETURN();
+    LOG_VOID_RETURN()
 }
 
 void MainWindow::update_search()
 {
-    LOG_IN_VOID();
+    LOG_IN_VOID()
     m_search_table->clear();
     OperationCollection ops=ui_svc()->search_operations(m_search_form->query());
     if(ops.length()>0) {
@@ -182,19 +182,19 @@ void MainWindow::update_search()
         m_search_table->clear();
         m_search_ops_stats->clear();
     }
-    LOG_VOID_RETURN();
+    LOG_VOID_RETURN()
 }
 
 bool MainWindow::close()
 {
-    LOG_IN_VOID();
+    LOG_IN_VOID()
     ui_svc()->db_close();
-    LOG_BOOL_RETURN(QWidget::close());
+    LOG_BOOL_RETURN(QWidget::close())
 }
 
 void MainWindow::p_update_viewer(QTreeWidgetItem *item, int)
 {
-    LOG_IN("item="<<item);
+    LOG_IN("item="<<item)
     if(m_details_widget!=nullptr) {
         for(auto *action : m_details_widget->actions()) {
             ui->toolbar->removeAction(action);
@@ -212,12 +212,12 @@ void MainWindow::p_update_viewer(QTreeWidgetItem *item, int)
         }
     }
     ui->tab_widget->setCurrentIndex(0);
-    LOG_VOID_RETURN();
+    LOG_VOID_RETURN()
 }
 
 void MainWindow::refresh(MainWindow::State state)
 {
-    LOG_IN("state="<<state);
+    LOG_IN("state="<<state)
     m_state=state;
     switch (m_state) {
     case DB_CLOSED:
@@ -269,19 +269,19 @@ void MainWindow::refresh(MainWindow::State state)
         ui->action_save->setEnabled(false);
         break;
     }
-    LOG_VOID_RETURN();
+    LOG_VOID_RETURN()
 }
 
 void MainWindow::refresh_tree()
 {
-    LOG_IN_VOID();
+    LOG_IN_VOID()
     ui->tree->clear();
     if(!ui_svc()->populate_db_tree(ui->tree)) {
         ui->tree->clear();
-        LOG_CRITICAL("Failed to update database tree.");
+        LOG_CRITICAL("Failed to update database tree.")
         ui->statusbar->showMessage(tr("Failed to update database tree."), TIMEOUT);
     }
-    LOG_VOID_RETURN();
+    LOG_VOID_RETURN()
 }
 
 

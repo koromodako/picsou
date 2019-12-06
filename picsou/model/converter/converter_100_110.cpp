@@ -7,7 +7,7 @@
 
 bool convert_100_110(QJsonDocument *doc, PicsouUIServicePtr)
 {
-    LOG_IN("doc="<<doc);
+    LOG_IN("doc="<<doc)
     QJsonObject db=doc->object();
     QJsonArray user_ary=db[PicsouDB::KW_USERS].toArray(),
                account_ary,
@@ -27,5 +27,5 @@ bool convert_100_110(QJsonDocument *doc, PicsouUIServicePtr)
     db[PicsouDB::KW_VERSION]=SemVer(1, 1, 0).to_str();
     db[PicsouDB::KW_USERS]=new_user_ary;
     doc->setObject(db);
-    LOG_BOOL_RETURN(true);
+    LOG_BOOL_RETURN(true)
 }

@@ -39,7 +39,7 @@ void OperationTableWidget::clear()
 {
     static QStringList labels=QStringList()<<tr("Date")
                                              <<tr("Description")
-                                             <<tr("Recipient")
+                                             <<tr("Src/Dst")
                                              <<tr("Payment Method")
                                              <<tr("Budget")
                                              <<tr("Amount")
@@ -77,9 +77,9 @@ void OperationTableWidget::refresh(OperationCollection ops)
     QColor bgcolor;
     QList<QTableWidgetItem*> items;
     OperationShPtrList ops_list=ops.list();
-    LOG_DEBUG("adding operations...");
+    LOG_DEBUG("adding operations...")
     for(const auto &op : ops_list) {
-        LOG_DEBUG("adding op: "<<op);
+        LOG_DEBUG("adding op: "<<op)
         items.clear();
         switch (op->type()) {
         case Operation::NEUTRAL:
@@ -100,7 +100,7 @@ void OperationTableWidget::refresh(OperationCollection ops)
                                          op->id(),
                                          op->scheduled()?PicsouTableItem::SCHEDULED:PicsouTableItem::NORMAL));
         items.append(new QTableWidgetItem(op->description()));
-        items.append(new QTableWidgetItem(op->recipient()));
+        items.append(new QTableWidgetItem(op->srcdst()));
         items.append(new QTableWidgetItem(op->payment_method()));
         items.append(new QTableWidgetItem(op->budget()));
         items.append(new QTableWidgetItem(op->amount().to_str(true)));
@@ -131,7 +131,7 @@ bool OperationTableWidget::is_current_op_scheduled() const
     if(itm!=nullptr) {
         return itm->type()==PicsouTableItem::SCHEDULED;
     }
-    LOG_WARNING("invalid item returned!");
+    LOG_WARNING("invalid item returned!")
     return false;
 }
 

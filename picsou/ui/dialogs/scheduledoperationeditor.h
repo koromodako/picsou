@@ -36,7 +36,7 @@ public:
     explicit ScheduledOperationEditor(QWidget *parent,
                                       const Amount &amount = Amount(),
                                       const QString &budget = QString(),
-                                      const QString &recipient = QString(),
+                                      const QString &srcdst = QString(),
                                       const QString &description = QString(),
                                       const QString &payment_method = QString(),
                                       const QString &name = QString(),
@@ -47,7 +47,7 @@ public:
 
     inline Amount amount() const { return m_amount; }
     inline QString budget() const { return m_budget; }
-    inline QString recipient() const { return m_recipient; }
+    inline QString srcdst() const { return m_srcdst; }
     inline QString description() const { return m_description; }
     inline QString payment_method() const { return m_payment_method; }
     inline QString name() const { return m_name; }
@@ -55,11 +55,12 @@ public:
 
 public slots:
     void accept();
+    void update(bool credit);
 
 private:
     Amount m_amount;
     QString m_budget;
-    QString m_recipient;
+    QString m_srcdst;
     QString m_description;
     QString m_payment_method;
     QString m_name;

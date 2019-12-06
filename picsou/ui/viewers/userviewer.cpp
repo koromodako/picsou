@@ -66,7 +66,7 @@ void UserViewer::refresh(const PicsouDBShPtr db)
     bool has_accounts, has_budgets;
     UserShPtr user=db->find_user(mod_obj_id());
     if(user.isNull()) {
-        LOG_WARNING("failed to find user!");
+        LOG_WARNING("failed to find user!")
         return;
     }
     ui->accounts_list->clear();

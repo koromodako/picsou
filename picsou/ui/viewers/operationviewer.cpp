@@ -90,7 +90,7 @@ void OperationViewer::refresh(const PicsouDBShPtr db)
 
     UserShPtr user=db->find_user(m_user_id);
     if(user.isNull()) {
-        LOG_WARNING("invalid user pointer");
+        LOG_WARNING("invalid user pointer")
         return;
     }
     m_ops_stats->refresh(ops, user->budgets());
