@@ -281,7 +281,7 @@ QStringList Account::srcdst() const
     for(const auto &sop : m_scheduled_ops) {
         srcdst.insert(sop->srcdst());
     }
-    return QStringList(srcdst.toList());
+    return QStringList(srcdst.values());
 }
 
 #undef min

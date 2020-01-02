@@ -2,7 +2,7 @@ REM
 REM Variables
 REM
 set cwd=%cd%
-set botan=%cwd%\botan-2.8.0
+set botan=%cwd%\botan-2.12.1
 set distdir=%cwd%\..\picsou\third-party\build
 REM
 REM Script
