@@ -15,7 +15,7 @@
   </property>
   <property name="windowIcon">
    <iconset resource="../picsou.qrc">
-    <normaloff>:/resources/euro-money-80x80.png</normaloff>:/resources/euro-money-80x80.png</iconset>
+    <normaloff>:/resources/picsou.png</normaloff>:/resources/picsou.png</iconset>
   </property>
   <widget class="QWidget" name="centralWidget">
    <layout class="QGridLayout" name="gridLayout">
