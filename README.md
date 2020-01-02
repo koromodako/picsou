@@ -33,11 +33,10 @@ Build process does not cover dependencies installation.
 
 Successfully built using the following configuration:
 
- + Ubuntu 18.10 LTS
- + GCC 8
- + Qt 5.12.0
- + Botan 2.8.0
-
+ + Ubuntu 19.10 LTS
+ + GCC 9.2.1
+ + Qt 5.14.0
+ + Botan 2.12.1
 
 **Process:**
 
@@ -49,26 +48,24 @@ cd third-party
 ./build.sh
 # 2. Build Picsou
 mkdir /tmp/build && cd /tmp/build
-/path/to/Qt/5.12.0/gcc_64/bin/qmake /path/to/picsou/picsou/picsou.pro
+/path/to/Qt/5.14.0/gcc_64/bin/qmake /path/to/picsou/picsou/picsou.pro
 make -j4
 ```
 
 Picsou should be available in `/path/to/picsou/dist/release`.
 
-
 **Note:**
 
-It should build on any linux distribution providing appropriate packages are available.
+It should build on any Linux distribution (providing appropriate dependencies are available).
  
 ### Windows
 
 Successfully built using the following configuration:
 
  + Windows 10
- + MinGW 7.3.0
- + Qt 5.12.0
- + Botan 2.8.0
-
+ + MinGW 7.3.0 64-bit
+ + Qt 5.14.0
+ + Botan 2.12.1
 
 **Process:**
 
@@ -76,7 +73,6 @@ Successfully built using the following configuration:
 
  1. Start a PowerShell command line go to `third-party/` and run `build.bat`.
  2. Open `picsou/picsou.pro` with QtCreator, configure the project and build.
-
 
 **Note:**
 
