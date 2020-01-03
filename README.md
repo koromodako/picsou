@@ -71,7 +71,7 @@ Successfully built using the following configuration:
 
 *Warning: Ensure that Qt's MinGW location is part of your PATH before building Botan !*
 
- 1. Start a PowerShell command line go to `third-party/` and run `build.bat`.
+ 1. Start a PowerShell command line go to `third-party/` and run `build.ps1`.
  2. Open `picsou/picsou.pro` with QtCreator, configure the project and build.
 
 **Note:**
