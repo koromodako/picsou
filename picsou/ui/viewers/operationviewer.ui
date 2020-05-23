@@ -80,6 +80,11 @@
    </property>
   </action>
  </widget>
+ <tabstops>
+  <tabstop>op_add</tabstop>
+  <tabstop>op_edit</tabstop>
+  <tabstop>op_remove</tabstop>
+ </tabstops>
  <resources>
   <include location="../../picsou.qrc"/>
  </resources>

@@ -131,6 +131,13 @@
    </item>
   </layout>
  </widget>
+ <tabstops>
+  <tabstop>amount</tabstop>
+  <tabstop>name</tabstop>
+  <tabstop>description</tabstop>
+  <tabstop>save</tabstop>
+  <tabstop>cancel</tabstop>
+ </tabstops>
  <resources>
   <include location="../../picsou.qrc"/>
  </resources>

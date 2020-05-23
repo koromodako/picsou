@@ -219,6 +219,19 @@
    </item>
   </layout>
  </widget>
+ <tabstops>
+  <tabstop>user</tabstop>
+  <tabstop>account</tabstop>
+  <tabstop>from</tabstop>
+  <tabstop>until</tabstop>
+  <tabstop>max_amount</tabstop>
+  <tabstop>min_amount</tabstop>
+  <tabstop>budgets</tabstop>
+  <tabstop>pms</tabstop>
+  <tabstop>recipient</tabstop>
+  <tabstop>description</tabstop>
+  <tabstop>search</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

@@ -122,6 +122,13 @@
    </item>
   </layout>
  </widget>
+ <tabstops>
+  <tabstop>from</tabstop>
+  <tabstop>until</tabstop>
+  <tabstop>endless</tabstop>
+  <tabstop>freq_value</tabstop>
+  <tabstop>freq_unit</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

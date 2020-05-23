@@ -169,6 +169,14 @@
    </item>
   </layout>
  </widget>
+ <tabstops>
+  <tabstop>sender</tabstop>
+  <tabstop>recipient</tabstop>
+  <tabstop>date</tabstop>
+  <tabstop>amount</tabstop>
+  <tabstop>description</tabstop>
+  <tabstop>schedule_box</tabstop>
+ </tabstops>
  <resources/>
  <connections>
   <connection>

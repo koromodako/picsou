@@ -211,6 +211,18 @@
    </item>
   </layout>
  </widget>
+ <tabstops>
+  <tabstop>name</tabstop>
+  <tabstop>amount</tabstop>
+  <tabstop>debit_button</tabstop>
+  <tabstop>credit_button</tabstop>
+  <tabstop>budget</tabstop>
+  <tabstop>payment_method</tabstop>
+  <tabstop>srcdst</tabstop>
+  <tabstop>description</tabstop>
+  <tabstop>save</tabstop>
+  <tabstop>cancel</tabstop>
+ </tabstops>
  <resources>
   <include location="../../picsou.qrc"/>
  </resources>

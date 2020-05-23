@@ -226,11 +226,11 @@
   </action>
  </widget>
  <tabstops>
+  <tabstop>description</tabstop>
   <tabstop>users_list</tabstop>
   <tabstop>add_user</tabstop>
   <tabstop>edit_user</tabstop>
   <tabstop>remove_user</tabstop>
-  <tabstop>description</tabstop>
  </tabstops>
  <resources>
   <include location="../../picsou.qrc"/>

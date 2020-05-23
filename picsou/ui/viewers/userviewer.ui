@@ -211,6 +211,17 @@
    </property>
   </action>
  </widget>
+ <tabstops>
+  <tabstop>budgets_list</tabstop>
+  <tabstop>add_budget</tabstop>
+  <tabstop>edit_budget</tabstop>
+  <tabstop>remove_budget</tabstop>
+  <tabstop>accounts_list</tabstop>
+  <tabstop>add_account</tabstop>
+  <tabstop>edit_account</tabstop>
+  <tabstop>remove_account</tabstop>
+  <tabstop>transfer</tabstop>
+ </tabstops>
  <resources>
   <include location="../../picsou.qrc"/>
  </resources>

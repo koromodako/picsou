@@ -304,6 +304,10 @@
   </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
+ <tabstops>
+  <tabstop>tree</tabstop>
+  <tabstop>tab_widget</tabstop>
+ </tabstops>
  <resources>
   <include location="../picsou.qrc"/>
  </resources>

@@ -331,9 +331,16 @@
   <tabstop>pm_add</tabstop>
   <tabstop>pm_edit</tabstop>
   <tabstop>pm_remove</tabstop>
+  <tabstop>sops</tabstop>
   <tabstop>sop_add</tabstop>
   <tabstop>sop_edit</tabstop>
   <tabstop>sop_remove</tabstop>
+  <tabstop>notes</tabstop>
+  <tabstop>op_add</tabstop>
+  <tabstop>op_edit</tabstop>
+  <tabstop>op_remove</tabstop>
+  <tabstop>ops_import</tabstop>
+  <tabstop>ops_export</tabstop>
  </tabstops>
  <resources>
   <include location="../../picsou.qrc"/>

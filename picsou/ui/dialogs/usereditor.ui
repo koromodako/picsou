@@ -161,6 +161,14 @@
    </item>
   </layout>
  </widget>
+ <tabstops>
+  <tabstop>username</tabstop>
+  <tabstop>old_pswd</tabstop>
+  <tabstop>new_pswd</tabstop>
+  <tabstop>repeat_new_pswd</tabstop>
+  <tabstop>save</tabstop>
+  <tabstop>cancel</tabstop>
+ </tabstops>
  <resources>
   <include location="../../picsou.qrc"/>
  </resources>
