@@ -2,7 +2,7 @@
 # Variables
 #
 $refd=$pwd.Path
-$botan="$($refd)\botan-2.12.1"
+$botan="$($refd)\botan-2.14.0"
 $distdir=(Resolve-Path "$($refd)\..\picsou\third-party\build").Path
 #
 # Script

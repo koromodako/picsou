@@ -7,7 +7,7 @@ set -e
 # Variables
 #
 CWD="$(pwd)"
-BOTAN="botan-2.12.1"
+BOTAN="botan-2.14.0"
 DIST_DIR="${CWD}/../picsou/third-party/build"
 #
 # Script
