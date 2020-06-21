@@ -25,5 +25,5 @@ PicsouTableItem::PicsouTableItem(const QIcon &icon,
     PicsouItem(id)
 {
     setIcon(icon);
-    setText(date.toString(Qt::DefaultLocaleShortDate));
+    setText(QLocale::system().toString(date, QLocale::ShortFormat));
 }

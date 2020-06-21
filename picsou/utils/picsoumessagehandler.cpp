@@ -60,10 +60,10 @@ void picsou_message_handler(QtMsgType type, const QMessageLogContext &ctx, const
     QMutexLocker locker(&LOG_MTX);
     /* critical section starts here */
 #ifdef COLORIZE
-    err<<color<<timestamp<<prefix<<msg<<location<<COLOR_END<<endl;
+    err<<color<<timestamp<<prefix<<msg<<location<<COLOR_END<<Qt::endl;
 #else
-    err<<timestamp<<prefix<<msg<<location<<endl;
+    err<<timestamp<<prefix<<msg<<location<<Qt::endl;
 #endif
-    log<<timestamp<<prefix<<msg<<location<<endl;
+    log<<timestamp<<prefix<<msg<<location<<Qt::endl;
     /* critical section ends here */
 }
