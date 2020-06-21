@@ -1,4 +1,4 @@
-*.user
+*.user*
 *.qm
 picsou.h
 *.o
