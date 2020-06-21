@@ -48,7 +48,7 @@ cd third-party
 ./build.sh
 # 2. Build Picsou
 mkdir /tmp/build && cd /tmp/build
-/path/to/Qt/5.14.0/gcc_64/bin/qmake /path/to/picsou/picsou/picsou.pro
+/path/to/Qt/5.15.0/gcc_64/bin/qmake /path/to/picsou/picsou/picsou.pro
 make -j4
 ```
 
