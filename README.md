@@ -33,12 +33,12 @@ Build process does not cover dependencies installation.
 
 Successfully built using the following configuration:
 
- + Ubuntu 19.10 LTS
- + GCC 9.2.1
- + Qt 5.14.0
- + Botan 2.12.1
+ + Ubuntu 20.04 LTS
+ + GCC 9.3.0
+ + Qt 5.15.0
+ + Botan 2.14.0
 
-**Process:**
+**Build process:**
 
 ```bash
 git clone https://github.com/koromodako/picsou
@@ -64,8 +64,8 @@ Successfully built using the following configuration:
 
  + Windows 10
  + MinGW 7.3.0 64-bit
- + Qt 5.14.0
- + Botan 2.12.1
+ + Qt 5.15.0
+ + Botan 2.14.0
 
 **Process:**
 
